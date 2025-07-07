@@ -1,7 +1,8 @@
 'use client';
 
-import { useState,ReactElement } from 'react';
+import { useState } from 'react';
 import { Truck, Car, Bike } from 'lucide-react';
+import type { ReactElement } from 'react';
 
 type Vehicle = {
   id: string;
@@ -44,6 +45,7 @@ export default function VehicleSelector() {
       {vehicleOptions.map((vehicle) => (
         <button
           key={vehicle.id}
+          type="button"
           onClick={() => setSelected(vehicle.id)}
           className={`w-full text-left border rounded-xl p-4 flex items-center gap-4 transition ${
             selected === vehicle.id
