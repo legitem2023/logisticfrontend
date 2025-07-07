@@ -40,6 +40,8 @@ export default function VehicleSelector() {
   const [selected, setSelected] = useState<string>('bike');
 
   return (
+    <div className="relative max-w-md mx-auto p-4 bg-white rounded-2xl shadow space-y-4">
+
     <div className="space-y-3 max-w-md mx-auto">
       <h2 className="text-xl font-semibold mb-2">🚚 Choose Vehicle Type</h2>
       {vehicleOptions.map((vehicle) => (
@@ -62,5 +64,6 @@ export default function VehicleSelector() {
         </button>
       ))}
     </div>
+  </div>
   );
 }
