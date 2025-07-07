@@ -71,5 +71,5 @@ export default function DeliveryMap() {
     };
   }, []);
 
-  return <div ref={mapContainerRef} id="map" style={{ width: '100%', height: '500px' }} />;
+  return <div ref={mapContainerRef} id="map" style={{ width: '100%', height: '500px',zIndex:'-1' }} />;
 }
