@@ -5,22 +5,45 @@ import DeliveryCard from "./DeliveryCard";
 import VehicleSelector from "./VehicleSelector";
 import DeliveryFormCard from "./DeliveryFormCard";
 import dynamic from 'next/dynamic';
-import ServiceCarousel from './ServiceCarousel';
+import HomeDataCarousel from './HomeDataCarousel';
+
+
+
 const DeliveryMap = dynamic(() => import('./DeliveryMap'), {
   ssr: false,
 });
+type CarouselItem = {
+  id: string;
+  title: string;
+  subtitle?: string;
+  imageUrl?: string;
+  actionLabel?: string;
+};
 
 export default function Menu() {
-
-const services = [
-  { label: 'Motor', icon: '🏍️' },
-  { label: 'Car', icon: '🚗' },
-  { label: 'Van', icon: '🚐' },
-  { label: 'Truck', icon: '🚚' },
-  { label: 'Purchase', icon: '🛒' },
-  { label: 'Food', icon: '🍔' },
+const mockItems: CarouselItem[] = [
+  {
+    id: 'promo1',
+    title: '₱50 off on your next delivery',
+    subtitle: 'Use code: LALA50',
+    imageUrl: '/images/promo1.jpg',
+    actionLabel: 'Use Now',
+  },
+  {
+    id: 'rec1',
+    title: 'Recently Delivered: 📦',
+    subtitle: 'Sent to Makati – 2 days ago',
+    imageUrl: '/images/order1.jpg',
+  },
+  {
+    id: 'service1',
+    title: 'Try Grocery – new service',
+    subtitle: 'Order now and save ₱30',
+    imageUrl: '/images/grocery.jpg',
+    actionLabel: 'Order Now',
+  },
+  // ... more items ...
 ];
-
   
   const progressitem = [
     { label: 'In Progress', content: (
@@ -70,7 +93,7 @@ const services = [
       label: 'Home',
       content: (
         <div>
-          <ServiceCarousel services={services} />
+          <HomeDataCarousel items={services} />
           <DeliveryFormCard />
           <VehicleSelector />
         </div>
