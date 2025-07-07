@@ -1,6 +1,8 @@
 'use client'
 import Sidebar from "./Sidebar";
 import DeliveryCard from "./DeliveryCard";
+import VehicleSelector from "./VehicleSelector";
+import DeliveryFormCard from "./DeliveryFormCard";
 // import DeliveryMap from "./components/DeliveryMap";
 import dynamic from 'next/dynamic';
 
@@ -9,8 +11,11 @@ const DeliveryMap = dynamic(() => import('./DeliveryMap'), {
 });
 export default function Menu() {
   const tabItems = [
-    { label: 'Tab 1', content: <div><DeliveryMap/></div> },
-    { label: 'Tab 2', content: <div><DeliveryCard
+    { label: 'Home', content:<div>
+      <DeliveryFormCard/>
+      <VehicleSelector/></div>},
+    { label: 'Map', content: <div><DeliveryMap/></div> },
+    { label: 'Order', content: <div><DeliveryCard
         pickup="SM North EDSA, Quezon City"
         dropoff="Bonifacio Global City, Taguig"
         status="in_progress"
