@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { MapPin, Trash2, Plus, Crosshair } from 'lucide-react';
+import { MapPin, Trash2, Plus, Crosshair, X } from 'lucide-react';
 
 type Stop = {
   id: number;
@@ -10,6 +10,8 @@ type Stop = {
 
 export default function DeliveryFormCard() {
   const [pickup, setPickup] = useState('');
+  const [pickupNote, setPickupNote] = useState('');
+  const [showPopup, setShowPopup] = useState(false);
   const [loadingLocation, setLoadingLocation] = useState(false);
   const [stops, setStops] = useState<Stop[]>([]);
 
@@ -38,13 +40,13 @@ export default function DeliveryFormCard() {
         const { latitude, longitude } = position.coords;
 
         try {
-          // Use reverse geocoding via Nominatim (OpenStreetMap)
           const res = await fetch(
             `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`
           );
           const data = await res.json();
           if (data.display_name) {
             setPickup(data.display_name);
+            setShowPopup(true); // Show popup after location is set
           } else {
             alert('Could not determine address.');
           }
@@ -60,15 +62,25 @@ export default function DeliveryFormCard() {
         setLoadingLocation(false);
       },
       {
-        enableHighAccuracy: true, // ✅ Increased accuracy
+        enableHighAccuracy: true,
         timeout: 10000,
         maximumAge: 0,
       }
     );
   };
 
+  const closePopup = () => {
+    setShowPopup(false);
+  };
+
+  const submitPopup = () => {
+    // Do something with pickupNote if needed
+    console.log('Additional Note:', pickupNote);
+    setShowPopup(false);
+  };
+
   return (
-    <div className="max-w-md mx-auto p-4 bg-white rounded-2xl shadow space-y-4">
+    <div className="relative max-w-md mx-auto p-4 bg-white rounded-2xl shadow space-y-4">
       <h2 className="text-xl font-bold mb-2">📦 Create Delivery</h2>
 
       {/* Pickup card */}
@@ -124,6 +136,35 @@ export default function DeliveryFormCard() {
         <Plus className="mr-1" size={18} />
         Add Drop-off Stop
       </button>
+
+      {/* Popup Modal */}
+      {showPopup && (
+        <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-xl shadow-lg p-6 w-full max-w-sm relative">
+            <button
+              onClick={closePopup}
+              className="absolute top-3 right-3 text-gray-500 hover:text-gray-800"
+            >
+              <X size={18} />
+            </button>
+            <h3 className="text-lg font-semibold mb-2">Additional Info</h3>
+            <p className="text-sm text-gray-600 mb-3">You can add landmark or pickup note:</p>
+            <input
+              type="text"
+              className="w-full border rounded p-2 text-sm mb-4"
+              placeholder="e.g. Near 7-Eleven or Sender name"
+              value={pickupNote}
+              onChange={(e) => setPickupNote(e.target.value)}
+            />
+            <button
+              onClick={submitPopup}
+              className="bg-blue-600 text-white rounded w-full py-2 text-sm hover:bg-blue-700 transition"
+            >
+              Save Note
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
