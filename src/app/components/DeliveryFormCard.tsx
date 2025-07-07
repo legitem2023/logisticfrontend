@@ -1,13 +1,13 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { MapPin, Trash2, Plus, Crosshair, X } from 'lucide-react';
 
 type Stop = {
   id: number;
   address: string;
   lat?: number;
-  lng?: number;
+  lon?: number;
   suggestions?: { display_name: string; lat: string; lon: string }[];
 };
 
@@ -22,7 +22,7 @@ export default function DeliveryFormCard() {
   const [recipientName, setRecipientName] = useState('');
 
   const addStop = () => {
-    setStops((prev) => [...prev, { id: Date.now(), address: '' }]);
+    setStops((prev) => [...prev, { id: Date.now(), address: '', suggestions: [] }]);
   };
 
   const removeStop = (id: number) => {
@@ -34,29 +34,30 @@ export default function DeliveryFormCard() {
       prev.map((s) => (s.id === id ? { ...s, address, suggestions: [] } : s))
     );
 
-    // Trigger auto-suggest
     if (address.length > 3) {
-      fetchSuggestions(id, address);
+      setTimeout(() => fetchSuggestions(id, address), 500); // debounce
     }
   };
 
   const fetchSuggestions = async (id: number, query: string) => {
     try {
       const res = await fetch(
-        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`
+        `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(
+          query
+        )}&format=json&addressdetails=1&limit=5`
       );
-      const data = await res.json();
+      const results = await res.json();
       setStops((prev) =>
         prev.map((s) =>
-          s.id === id ? { ...s, suggestions: data.slice(0, 5) } : s
+          s.id === id ? { ...s, suggestions: results.slice(0, 5) } : s
         )
       );
-    } catch (error) {
-      console.error('Autocomplete failed:', error);
+    } catch (err) {
+      console.error('Error fetching suggestions:', err);
     }
   };
 
-  const selectSuggestion = (id: number, suggestion: any) => {
+  const selectSuggestion = (id: number, suggestion: { display_name: string; lat: string; lon: string }) => {
     setStops((prev) =>
       prev.map((s) =>
         s.id === id
@@ -64,7 +65,7 @@ export default function DeliveryFormCard() {
               ...s,
               address: suggestion.display_name,
               lat: parseFloat(suggestion.lat),
-              lng: parseFloat(suggestion.lon),
+              lon: parseFloat(suggestion.lon),
               suggestions: [],
             }
           : s
@@ -105,6 +106,11 @@ export default function DeliveryFormCard() {
       (error) => {
         alert('Error getting location: ' + error.message);
         setLoadingLocation(false);
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 0,
       }
     );
   };
@@ -125,7 +131,7 @@ export default function DeliveryFormCard() {
     <div className="relative max-w-md mx-auto p-4 bg-white rounded-2xl shadow space-y-4">
       <h2 className="text-xl font-bold mb-2">📦 Create Delivery</h2>
 
-      {/* Pickup Section */}
+      {/* Pickup card */}
       <div className="border rounded-xl p-4 flex gap-3 items-start bg-gray-50">
         <MapPin className="text-blue-600 mt-1" />
         <div className="flex-1">
@@ -150,10 +156,10 @@ export default function DeliveryFormCard() {
         </div>
       </div>
 
-      {/* Drop-off Stops */}
+      {/* Stop cards */}
       {stops.map((stop, index) => (
-        <div key={stop.id} className="border rounded-xl p-4 bg-white">
-          <div className="flex gap-3 items-start">
+        <div key={stop.id} className="border rounded-xl p-4 bg-white mb-2">
+          <div className="flex items-start gap-3">
             <MapPin className="text-green-600 mt-1" />
             <div className="flex-1">
               <p className="text-sm text-gray-500 mb-1">Drop-off Stop {index + 1}</p>
@@ -164,39 +170,28 @@ export default function DeliveryFormCard() {
                 value={stop.address}
                 onChange={(e) => updateStopAddress(stop.id, e.target.value)}
               />
-              {/* Suggestions */}
               {stop.suggestions && stop.suggestions.length > 0 && (
-                <div className="bg-white border rounded mt-1 max-h-32 overflow-y-auto">
-                  {stop.suggestions.map((sug, i) => (
-                    <button
+                <ul className="border mt-1 rounded bg-white shadow text-sm max-h-40 overflow-auto z-10">
+                  {stop.suggestions.map((s, i) => (
+                    <li
                       key={i}
-                      className="block w-full text-left px-2 py-1 text-sm hover:bg-gray-100"
-                      onClick={() => selectSuggestion(stop.id, sug)}
+                      onClick={() => selectSuggestion(stop.id, s)}
+                      className="px-2 py-1 hover:bg-blue-100 cursor-pointer"
                     >
-                      {sug.display_name}
-                    </button>
+                      {s.display_name}
+                    </li>
                   ))}
-                </div>
-              )}
-
-              {/* Coordinates */}
-              {stop.lat && stop.lng && (
-                <p className="text-xs text-gray-500 mt-1">
-                  📍 Lat: {stop.lat.toFixed(5)}, Lng: {stop.lng.toFixed(5)}
-                </p>
+                </ul>
               )}
             </div>
-            <button
-              onClick={() => removeStop(stop.id)}
-              className="text-red-500 hover:text-red-700 mt-1"
-            >
+            <button onClick={() => removeStop(stop.id)} className="text-red-500 hover:text-red-700">
               <Trash2 size={18} />
             </button>
           </div>
         </div>
       ))}
 
-      {/* Add Stop Button */}
+      {/* Add stop button */}
       <button
         onClick={addStop}
         className="flex items-center justify-center w-full border-2 border-dashed rounded-xl py-2 text-sm text-gray-600 hover:border-blue-500 hover:text-blue-600 transition"
@@ -205,7 +200,7 @@ export default function DeliveryFormCard() {
         Add Drop-off Stop
       </button>
 
-      {/* Additional Info Popup */}
+      {/* Popup Modal */}
       {showPopup && (
         <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-xl shadow-lg p-6 w-full max-w-sm relative">
@@ -216,6 +211,7 @@ export default function DeliveryFormCard() {
               <X size={18} />
             </button>
             <h3 className="text-lg font-semibold mb-4">📍 Additional Pickup Info</h3>
+
             <input
               type="text"
               className="w-full border rounded p-2 text-sm mb-3"
@@ -248,4 +244,4 @@ export default function DeliveryFormCard() {
       )}
     </div>
   );
-                      }
+}
