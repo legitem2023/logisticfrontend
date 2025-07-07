@@ -6,6 +6,8 @@ import { MapPin, Trash2, Plus, Crosshair, X } from 'lucide-react';
 type Stop = {
   id: number;
   address: string;
+  lat?: number;
+  lng?: number;
 };
 
 export default function DeliveryFormCard() {
@@ -50,7 +52,7 @@ export default function DeliveryFormCard() {
           const data = await res.json();
           if (data.display_name) {
             setPickup(data.display_name);
-            setShowPopup(true); // Show popup form
+            setShowPopup(true);
           } else {
             alert('Could not determine address.');
           }
@@ -78,7 +80,6 @@ export default function DeliveryFormCard() {
   };
 
   const submitPopup = () => {
-    // You can use this to submit to API or add to your pickup object
     console.log('Pickup details:', {
       pickup,
       houseNumber,
@@ -86,6 +87,28 @@ export default function DeliveryFormCard() {
       recipientName,
     });
     setShowPopup(false);
+  };
+
+  const geocodeAddress = async (id: number, address: string) => {
+    try {
+      const res = await fetch(
+        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`
+      );
+      const data = await res.json();
+      if (data.length > 0) {
+        const { lat, lon } = data[0];
+        setStops((prev) =>
+          prev.map((stop) =>
+            stop.id === id ? { ...stop, lat: parseFloat(lat), lng: parseFloat(lon) } : stop
+          )
+        );
+      } else {
+        alert('Address not found');
+      }
+    } catch (error) {
+      console.error('Geocoding failed:', error);
+      alert('Failed to geocode drop-off address.');
+    }
   };
 
   return (
@@ -129,7 +152,13 @@ export default function DeliveryFormCard() {
               placeholder="Enter drop-off address"
               value={stop.address}
               onChange={(e) => updateStop(stop.id, e.target.value)}
+              onBlur={() => geocodeAddress(stop.id, stop.address)}
             />
+            {stop.lat && stop.lng && (
+              <p className="text-xs text-gray-500 mt-1">
+                📍 Lat: {stop.lat.toFixed(5)}, Lng: {stop.lng.toFixed(5)}
+              </p>
+            )}
           </div>
           <button onClick={() => removeStop(stop.id)} className="text-red-500 hover:text-red-700">
             <Trash2 size={18} />
