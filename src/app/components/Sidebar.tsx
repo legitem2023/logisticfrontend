@@ -42,7 +42,7 @@ export default function SidebarTabs({ tabs }: SidebarTabsProps) {
   }, [isMobileOpen]);
 
   return (
-    <div className="flex h-screen w-full">
+    <div className="flex h-[95vh] w-full">
       {/* Mobile toggle */}
       <div className="md:hidden absolute top-4 left-4 z-50">
         <button
@@ -62,7 +62,7 @@ export default function SidebarTabs({ tabs }: SidebarTabsProps) {
           md:static md:translate-x-0
         `}
       >
-        <div className="customgrad h-[10vh] w-full"></div>
+        <div className="customgrad w-full"></div>
         {tabs.map((tab, i) => (
           <button
             key={i}

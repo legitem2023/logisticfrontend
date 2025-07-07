@@ -1,5 +1,5 @@
 'use client';
-
+import Image from 'next/image';
 import { FC } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
@@ -30,7 +30,7 @@ const HomeDataCarousel: FC<Props> = ({ items }) => {
           >
             <div className="bg-white shadow-sm overflow-hidden">
               {item.imageUrl && (
-                <img
+                <Image
                   src={item.imageUrl}
                   alt={item.title}
                   className="w-full h-32 object-cover"

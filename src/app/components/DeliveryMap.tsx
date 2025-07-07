@@ -69,7 +69,7 @@ export default function DeliveryMap() {
         mapRef.current = null;
       }
     };
-  }, []);
+  }, [receiver, receiverIcon, sender, senderIcon]);
 
   return (
     <div

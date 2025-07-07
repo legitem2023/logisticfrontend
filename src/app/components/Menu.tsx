@@ -6,6 +6,8 @@ import VehicleSelector from "./VehicleSelector";
 import DeliveryFormCard from "./DeliveryFormCard";
 import dynamic from 'next/dynamic';
 import HomeDataCarousel from './HomeDataCarousel';
+import LoginCard from "./LoginCard";
+import Image from 'next/image';
 
 
 
@@ -114,12 +116,20 @@ const mockItems: CarouselItem[] = [
         </div>
       ),
     },
+    {
+      label: 'Login',
+      content: (
+        <div>
+          <LoginCard/>
+        </div>
+      ),
+    },
   ];
 
   return (
     <div>
-      <div className="customgrad h-[70px] w-full flex items-center justify-center">
-        <img src="/Logo.svg" className="h-[80%] w-auto" />
+      <div className="customgrad h-[10vh] w-full flex items-center justify-center">
+        <Image src="/Logo.svg" className="h-[80%] w-auto" alt="1"/>
       </div>
       <Sidebar tabs={tabItems} />
     </div>

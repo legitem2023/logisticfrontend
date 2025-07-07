@@ -1,10 +1,10 @@
 'use client'
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '/ui/button'
-import { Input } from '/ui/input'
+import { Card, CardContent, CardHeader, CardTitle } from './ui/Card'
+import { Button } from './ui/Button'
+import { Input } from './ui/Input'
 import { FcGoogle } from 'react-icons/fc'
-import { FaFacebook } from 'react-icons/fa'
+import FacebookLogin from './Auth/FacebookLogin'
 
 export default function LoginCard() {
   const handleGoogleLogin = () => {
@@ -18,8 +18,8 @@ export default function LoginCard() {
   }
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100 px-4">
-      <Card className="w-full max-w-md shadow-xl p-6 rounded-2xl">
+    <div className="flex justify-center items-center px-4">
+      <Card className="w-full max-w-md shadow-xl p-6 ">
         <CardHeader>
           <CardTitle className="text-center text-2xl font-semibold">Login</CardTitle>
         </CardHeader>
@@ -46,10 +46,9 @@ export default function LoginCard() {
           <Button
             onClick={handleFacebookLogin}
             variant="outline"
-            className="w-full flex items-center gap-2 text-blue-600 border-blue-600 hover:bg-blue-50"
+            className="w-full flex items-center text-blue-600 border-blue-600 hover:bg-blue-50"
           >
-            <FaFacebook className="text-xl" />
-            Continue with Facebook
+            <FacebookLogin/>
           </Button>
         </CardContent>
       </Card>
