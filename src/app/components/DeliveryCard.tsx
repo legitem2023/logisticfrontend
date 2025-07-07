@@ -4,7 +4,7 @@ import { MapPin, Navigation } from 'lucide-react';
 type Props = {
   pickup: string;
   dropoff: string;
-  status?: 'in_progress' | 'completed' | 'pending';
+  status?: 'in_progress' | 'completed' | 'pending' | 'cancelled';
 };
 
 export default function DeliveryCard({ pickup, dropoff, status = 'in_progress' }: Props) {
@@ -12,12 +12,14 @@ export default function DeliveryCard({ pickup, dropoff, status = 'in_progress' }
     in_progress: 'In Progress',
     completed: 'Completed',
     pending: 'Pending',
+    cancelled: 'Cancelled',
   }[status];
 
   const statusColor = {
     in_progress: 'text-yellow-600',
     completed: 'text-green-600',
     pending: 'text-gray-500',
+    cancelled: 'text-red-600',
   }[status];
 
   return (
