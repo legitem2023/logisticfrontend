@@ -7,7 +7,7 @@ import 'leaflet-routing-machine';
 
 export default function DeliveryMap() {
   const mapRef = useRef<L.Map | null>(null);
-  const routingRef = useRef<any>(null);
+  const routingRef = useRef<L.Routing.Control | null>(null);
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
 
   const sender = L.latLng(14.5995, 120.9842);
@@ -26,33 +26,50 @@ export default function DeliveryMap() {
   });
 
   useEffect(() => {
-    // Prevent reinitialization
-    if (mapRef.current || !mapContainerRef.current) return;
+    if (!mapContainerRef.current || mapRef.current) return;
 
+    // Initialize map
     const map = L.map(mapContainerRef.current).setView(sender, 13);
     mapRef.current = map;
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+    // Add tile layer
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors',
+    }).addTo(map);
 
+    // Add markers
     L.marker(sender, { icon: senderIcon }).bindPopup('Rider').addTo(map);
     L.marker(receiver, { icon: receiverIcon }).bindPopup('Dropzone').addTo(map);
 
+    // Lazy-load and add routing control
     import('leaflet-routing-machine').then(() => {
-      routingRef.current = L.Routing.control({
+      if (!mapRef.current) return;
+
+      const routingControl = L.Routing.control({
         waypoints: [sender, receiver],
-        // @ts-expect-error - not typed in leaflet-routing-machine
         createMarker: () => null,
-      }).addTo(map);
+        addWaypoints: false,
+        routeWhileDragging: false,
+        show: false,
+      } as any).addTo(mapRef.current!);
+
+      routingRef.current = routingControl;
+      routingControl.addTo(mapRef.current);
     });
 
     // Cleanup on unmount
     return () => {
+      if (routingRef.current) {
+        routingRef.current.remove();
+        routingRef.current = null;
+      }
+
       if (mapRef.current) {
         mapRef.current.remove();
         mapRef.current = null;
       }
     };
-  }, [sender, receiver]);
+  }, []);
 
-  return <div ref={mapContainerRef} id="map" style={{ height: '500px' }} />;
+  return <div ref={mapContainerRef} id="map" style={{ width: '100%', height: '500px' }} />;
 }
