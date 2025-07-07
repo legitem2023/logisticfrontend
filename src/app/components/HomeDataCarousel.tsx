@@ -28,7 +28,7 @@ const HomeDataCarousel: FC<Props> = ({ items }) => {
             key={item.id}
             className="!w-[100%]"
           >
-            <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
+            <div className="bg-white shadow-sm overflow-hidden">
               {item.imageUrl && (
                 <img
                   src={item.imageUrl}
