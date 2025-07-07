@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { MapPin, Trash2, Plus, Crosshair, X } from 'lucide-react';
 
 type Stop = {
@@ -21,6 +21,8 @@ export default function DeliveryFormCard() {
   const [contactNumber, setContactNumber] = useState('');
   const [recipientName, setRecipientName] = useState('');
 
+  const debounceRefs = useRef<{ [key: number]: NodeJS.Timeout }>({});
+
   const addStop = () => {
     setStops((prev) => [...prev, { id: Date.now(), address: '', suggestions: [] }]);
   };
@@ -31,20 +33,36 @@ export default function DeliveryFormCard() {
 
   const updateStopAddress = (id: number, address: string) => {
     setStops((prev) =>
-      prev.map((s) => (s.id === id ? { ...s, address, suggestions: [] } : s))
+      prev.map((s) => (s.id === id ? { ...s, address } : s))
     );
 
+    if (debounceRefs.current[id]) {
+      clearTimeout(debounceRefs.current[id]);
+    }
+
     if (address.length > 3) {
-      setTimeout(() => fetchSuggestions(id, address), 500);
+      debounceRefs.current[id] = setTimeout(() => {
+        fetchSuggestions(id, address);
+      }, 500);
+    } else {
+      setStops((prev) =>
+        prev.map((s) => (s.id === id ? { ...s, suggestions: [] } : s))
+      );
     }
   };
 
   const fetchSuggestions = async (id: number, query: string) => {
     try {
       const res = await fetch(
-        `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(
-          query
-        )}&format=json&addressdetails=1&limit=5`
+        `https://nominatim.openstreetmap.org/search?` +
+          new URLSearchParams({
+            q: query,
+            format: 'json',
+            addressdetails: '1',
+            limit: '5',
+            countrycodes: 'ph',
+            dedupe: '1',
+          })
       );
       const results = await res.json();
       setStops((prev) =>
@@ -73,6 +91,18 @@ export default function DeliveryFormCard() {
     );
   };
 
+  const highlightMatch = (text: string, query: string) => {
+    const index = text.toLowerCase().indexOf(query.toLowerCase());
+    if (index === -1) return text;
+    return (
+      <>
+        {text.slice(0, index)}
+        <span className="bg-yellow-200">{text.slice(index, index + query.length)}</span>
+        {text.slice(index + query.length)}
+      </>
+    );
+  };
+
   const useCurrentLocation = () => {
     if (!navigator.geolocation) {
       alert('Geolocation is not supported by your browser.');
@@ -95,7 +125,6 @@ export default function DeliveryFormCard() {
             setShowPopup(true);
           } else {
             alert('Could not determine address from current location.');
-            console.warn('Reverse geocoding response:', data);
           }
         } catch (error) {
           console.error('Reverse geocoding error:', error);
@@ -183,14 +212,14 @@ export default function DeliveryFormCard() {
                 onChange={(e) => updateStopAddress(stop.id, e.target.value)}
               />
               {stop.suggestions && stop.suggestions.length > 0 && (
-                <ul className="border mt-1 rounded bg-white shadow text-sm max-h-40 overflow-auto z-10">
+                <ul className="border mt-1 rounded bg-white shadow text-sm max-h-40 overflow-auto z-10 relative">
                   {stop.suggestions.map((s, i) => (
                     <li
                       key={i}
                       onClick={() => selectSuggestion(stop.id, s)}
                       className="px-2 py-1 hover:bg-blue-100 cursor-pointer"
                     >
-                      {s.display_name}
+                      {highlightMatch(s.display_name, stop.address)}
                     </li>
                   ))}
                 </ul>
