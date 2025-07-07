@@ -42,7 +42,7 @@ export default function SidebarTabs({ tabs }: SidebarTabsProps) {
   }, [isMobileOpen]);
 
   return (
-    <div className="flex h-[95vh] w-full">
+    <div className="flex h-[89vh] w-full">
       {/* Mobile toggle */}
       <div className="md:hidden absolute top-4 left-4 z-50">
         <button
