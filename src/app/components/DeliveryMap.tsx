@@ -28,20 +28,16 @@ export default function DeliveryMap() {
   useEffect(() => {
     if (!mapContainerRef.current || mapRef.current) return;
 
-    // Initialize map
     const map = L.map(mapContainerRef.current).setView(sender, 13);
     mapRef.current = map;
 
-    // Add tile layer
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; OpenStreetMap contributors',
     }).addTo(map);
 
-    // Add markers
     L.marker(sender, { icon: senderIcon }).bindPopup('Rider').addTo(map);
     L.marker(receiver, { icon: receiverIcon }).bindPopup('Dropzone').addTo(map);
 
-    // Lazy-load and add routing control
     import('leaflet-routing-machine').then(() => {
       if (!mapRef.current) return;
 
@@ -54,16 +50,20 @@ export default function DeliveryMap() {
       } as any).addTo(mapRef.current!);
 
       routingRef.current = routingControl;
-      routingControl.addTo(mapRef.current);
     });
 
-    // Cleanup on unmount
+    // Ensure map resizes properly on window size change
+    const handleResize = () => {
+      map.invalidateSize();
+    };
+    window.addEventListener('resize', handleResize);
+
     return () => {
+      window.removeEventListener('resize', handleResize);
       if (routingRef.current) {
         routingRef.current.remove();
         routingRef.current = null;
       }
-
       if (mapRef.current) {
         mapRef.current.remove();
         mapRef.current = null;
@@ -71,5 +71,17 @@ export default function DeliveryMap() {
     };
   }, []);
 
-  return <div ref={mapContainerRef} id="map" style={{ width: '100%', height: '500px',zIndex:'-1' }} />;
+  return (
+    <div
+      ref={mapContainerRef}
+      id="map"
+      style={{
+        width: '100%',
+        height: '100vh',
+        maxHeight: '100dvh',
+        position: 'relative',
+        zIndex: 0,
+      }}
+    />
+  );
 }
