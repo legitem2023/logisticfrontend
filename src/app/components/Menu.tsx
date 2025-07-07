@@ -15,6 +15,7 @@ export default function Menu() {
 
   return (
     <div className="p-4">
+      <div className="customgrad h-[50px] w-[100%]"></div>
       <Sidebar tabs={tabItems} />
     </div>
   );
