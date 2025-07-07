@@ -5,12 +5,23 @@ import DeliveryCard from "./DeliveryCard";
 import VehicleSelector from "./VehicleSelector";
 import DeliveryFormCard from "./DeliveryFormCard";
 import dynamic from 'next/dynamic';
-
+import ServiceCarousel from './ServiceCarousel';
 const DeliveryMap = dynamic(() => import('./DeliveryMap'), {
   ssr: false,
 });
 
 export default function Menu() {
+
+const services = [
+  { label: 'Motor', icon: '🏍️' },
+  { label: 'Car', icon: '🚗' },
+  { label: 'Van', icon: '🚐' },
+  { label: 'Truck', icon: '🚚' },
+  { label: 'Purchase', icon: '🛒' },
+  { label: 'Food', icon: '🍔' },
+];
+
+  
   const progressitem = [
     { label: 'In Progress', content: (
         <div>
@@ -59,6 +70,7 @@ export default function Menu() {
       label: 'Home',
       content: (
         <div>
+          <ServiceCarousel services={services} />
           <DeliveryFormCard />
           <VehicleSelector />
         </div>
