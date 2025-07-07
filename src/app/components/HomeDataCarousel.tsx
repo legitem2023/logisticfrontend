@@ -3,7 +3,13 @@
 import { FC } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
-
+type CarouselItem = {
+  id: string;
+  title: string;
+  subtitle?: string;
+  imageUrl?: string;
+  actionLabel?: string;
+};
 type Props = {
   items: CarouselItem[];
 };
