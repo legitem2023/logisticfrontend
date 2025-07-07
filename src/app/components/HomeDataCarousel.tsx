@@ -26,7 +26,7 @@ const HomeDataCarousel: FC<Props> = ({ items }) => {
         {items.map(item => (
           <SwiperSlide
             key={item.id}
-            className="!w-[80%] sm:!w-[45%] md:!w-[30%] lg:!w-[22%]"
+            className="!w-[100%]"
           >
             <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
               {item.imageUrl && (
