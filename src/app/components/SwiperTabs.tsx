@@ -42,7 +42,7 @@ const SwiperTabs: FC<SwiperTabsProps> = ({ tabs }) => {
   return (
     <div className="w-full">
       {/* Tab headers */}
-      <div className="relative flex space-x-4 border-b">
+      <div className="relative flex space-x-4 border-b w-[100%] overflow-x">
         {tabs.map((tab, index) => (
           <button
             key={index}
