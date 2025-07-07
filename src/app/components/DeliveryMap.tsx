@@ -16,14 +16,8 @@ import 'leaflet-routing-machine';
 
 export default function DeliveryMap() {
   const mapRef = useRef<L.Map | null>(null);
-  const markerRef = useRef<L.Marker | null>(null);
   const routingRef = useRef<any>(null);
 
-  const riderIcon = L.icon({
-    iconUrl: '/icons/rider.png',
-    iconSize: [40, 40],
-    iconAnchor: [20, 40],
-  });
   
   const senderIcon = L.icon({
     iconUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSHYgpRPaXFg8x_RiFJXQRSXfxzmP8Ci1E18Q&s',

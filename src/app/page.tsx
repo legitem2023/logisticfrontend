@@ -1,6 +1,4 @@
-import Image from "next/image";
 import Sidebar from "./components/Sidebar";
-import SwiperTabs from "./components/SwiperTabs";
 import DeliveryMap from "./components/DeliveryMap";
 
 export default function Home() {
