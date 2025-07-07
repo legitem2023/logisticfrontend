@@ -26,7 +26,7 @@ const mockItems: CarouselItem[] = [
     id: 'promo1',
     title: '₱50 off on your next delivery',
     subtitle: 'Use code: LALA50',
-    imageUrl: 'https://images.unsplash.com/photo-1581579185169-22168c0529d0?auto=format&fit=crop&w=800&q=80', // delivery driver
+    imageUrl: 'https://www.lalamove.com/hs-fs/hubfs/power-up-rewards-ph/promo-banner.jpg?width=1200&name=promo-banner.jpg', // official Lalamove carousel banner
     actionLabel: 'Use Now',
   },
   {
