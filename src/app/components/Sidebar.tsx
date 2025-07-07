@@ -62,7 +62,7 @@ export default function SidebarTabs({ tabs }: SidebarTabsProps) {
           md:static md:translate-x-0
         `}
       >
-        <div className="customgrad h-[70px] w-full"></div>
+        <div className="customgrad h-[10vh] w-full"></div>
         {tabs.map((tab, i) => (
           <button
             key={i}
@@ -80,7 +80,7 @@ export default function SidebarTabs({ tabs }: SidebarTabsProps) {
       </aside>
 
       {/* Content Area */}
-      <main className="flex-1 p-2 overflow-auto md:ml-0 ml-0">
+      <main className="flex-1 p-2 overflow-auto md:ml-0 ml-0 h-[89vh]">
         {tabs[activeIndex]?.content}
       </main>
     </div>
