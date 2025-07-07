@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, ReactNode } from 'react';
+import { useEffect, useRef, useState, ReactNode } from 'react';
 import { Menu } from 'lucide-react';
 
 type Tab = {
@@ -16,15 +16,33 @@ type SidebarTabsProps = {
 export default function SidebarTabs({ tabs }: SidebarTabsProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const sidebarRef = useRef<HTMLDivElement>(null);
 
   const handleTabClick = (index: number) => {
     setActiveIndex(index);
     setIsMobileOpen(false); // auto-close sidebar on mobile
   };
 
+  // 👇 Handle outside click
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        isMobileOpen &&
+        sidebarRef.current &&
+        !sidebarRef.current.contains(event.target as Node)
+      ) {
+        setIsMobileOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isMobileOpen]);
+
   return (
     <div className="flex h-screen w-full">
-      
       {/* Mobile toggle */}
       <div className="md:hidden absolute top-4 left-4 z-50">
         <button
@@ -37,12 +55,14 @@ export default function SidebarTabs({ tabs }: SidebarTabsProps) {
 
       {/* Sidebar */}
       <aside
+        ref={sidebarRef}
         className={`
           fixed z-40 inset-y-0 left-0 w-60 bg-gray-100 border-r space-y-2 transform transition-transform duration-300 ease-in-out
           ${isMobileOpen ? 'translate-x-0' : '-translate-x-full'} 
           md:static md:translate-x-0
         `}
-      ><div className="customgrad h-[70px] w-[100%]"></div>
+      >
+        <div className="customgrad h-[70px] w-full"></div>
         {tabs.map((tab, i) => (
           <button
             key={i}
