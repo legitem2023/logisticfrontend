@@ -1,12 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useState,ReactElement } from 'react';
 import { Truck, Car, Bike } from 'lucide-react';
 
 type Vehicle = {
   id: string;
   name: string;
-  icon: JSX.Element;
+  icon: ReactElement;
   description: string;
   price: string;
 };
