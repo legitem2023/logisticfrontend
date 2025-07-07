@@ -10,10 +10,14 @@ type Stop = {
 
 export default function DeliveryFormCard() {
   const [pickup, setPickup] = useState('');
-  const [pickupNote, setPickupNote] = useState('');
-  const [showPopup, setShowPopup] = useState(false);
   const [loadingLocation, setLoadingLocation] = useState(false);
+  const [showPopup, setShowPopup] = useState(false);
   const [stops, setStops] = useState<Stop[]>([]);
+
+  // Additional pickup info
+  const [houseNumber, setHouseNumber] = useState('');
+  const [contactNumber, setContactNumber] = useState('');
+  const [recipientName, setRecipientName] = useState('');
 
   const addStop = () => {
     setStops((prev) => [...prev, { id: Date.now(), address: '' }]);
@@ -46,7 +50,7 @@ export default function DeliveryFormCard() {
           const data = await res.json();
           if (data.display_name) {
             setPickup(data.display_name);
-            setShowPopup(true); // Show popup after location is set
+            setShowPopup(true); // Show popup form
           } else {
             alert('Could not determine address.');
           }
@@ -74,8 +78,13 @@ export default function DeliveryFormCard() {
   };
 
   const submitPopup = () => {
-    // Do something with pickupNote if needed
-    console.log('Additional Note:', pickupNote);
+    // You can use this to submit to API or add to your pickup object
+    console.log('Pickup details:', {
+      pickup,
+      houseNumber,
+      contactNumber,
+      recipientName,
+    });
     setShowPopup(false);
   };
 
@@ -147,20 +156,34 @@ export default function DeliveryFormCard() {
             >
               <X size={18} />
             </button>
-            <h3 className="text-lg font-semibold mb-2">Additional Info</h3>
-            <p className="text-sm text-gray-600 mb-3">You can add landmark or pickup note:</p>
+            <h3 className="text-lg font-semibold mb-4">📍 Additional Pickup Info</h3>
+
+            <input
+              type="text"
+              className="w-full border rounded p-2 text-sm mb-3"
+              placeholder="🏠 House No. / Street"
+              value={houseNumber}
+              onChange={(e) => setHouseNumber(e.target.value)}
+            />
+            <input
+              type="text"
+              className="w-full border rounded p-2 text-sm mb-3"
+              placeholder="📞 Contact Number"
+              value={contactNumber}
+              onChange={(e) => setContactNumber(e.target.value)}
+            />
             <input
               type="text"
               className="w-full border rounded p-2 text-sm mb-4"
-              placeholder="e.g. Near 7-Eleven or Sender name"
-              value={pickupNote}
-              onChange={(e) => setPickupNote(e.target.value)}
+              placeholder="👤 Recipient Name"
+              value={recipientName}
+              onChange={(e) => setRecipientName(e.target.value)}
             />
             <button
               onClick={submitPopup}
               className="bg-blue-600 text-white rounded w-full py-2 text-sm hover:bg-blue-700 transition"
             >
-              Save Note
+              Save Details
             </button>
           </div>
         </div>
