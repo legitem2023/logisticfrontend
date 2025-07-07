@@ -58,6 +58,11 @@ export default function DeliveryFormCard() {
       (error) => {
         alert('Error getting location: ' + error.message);
         setLoadingLocation(false);
+      },
+      {
+        enableHighAccuracy: true, // ✅ Increased accuracy
+        timeout: 10000,
+        maximumAge: 0,
       }
     );
   };
