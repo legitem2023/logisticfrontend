@@ -127,7 +127,7 @@ const mockItems: CarouselItem[] = [
   ];
 
   return (
-    <div>
+    <div className="h-[98vh]">
       <div className="customgrad h-[10vh] w-full flex items-center justify-center">
         <Image src="/Logo.svg" className="h-[80%] w-auto" alt="1"/>
       </div>
