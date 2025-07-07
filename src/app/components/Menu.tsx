@@ -93,7 +93,7 @@ const mockItems: CarouselItem[] = [
       label: 'Home',
       content: (
         <div>
-          <HomeDataCarousel items={services} />
+          <HomeDataCarousel items={mockItems} />
           <DeliveryFormCard />
           <VehicleSelector />
         </div>
