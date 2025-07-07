@@ -18,6 +18,7 @@ const SwiperTabs: FC<SwiperTabsProps> = ({ tabs }) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const swiperRef = useRef<SwiperCore | null>(null);
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const scrollContainerRef = useRef<HTMLDivElement | null>(null);
 
   const [underlineStyle, setUnderlineStyle] = useState({
     left: 0,
@@ -29,6 +30,13 @@ const SwiperTabs: FC<SwiperTabsProps> = ({ tabs }) => {
     if (el) {
       const { offsetLeft, offsetWidth } = el;
       setUnderlineStyle({ left: offsetLeft, width: offsetWidth });
+
+      // Auto-scroll to active tab if overflowed
+      el.scrollIntoView({
+        behavior: 'smooth',
+        inline: 'center',
+        block: 'nearest',
+      });
     }
   }, [activeIndex]);
 
@@ -42,32 +50,37 @@ const SwiperTabs: FC<SwiperTabsProps> = ({ tabs }) => {
   return (
     <div className="w-full">
       {/* Tab headers */}
-      <div className="relative flex space-x-4 border-b w-[100%] overflow-x">
-        {tabs.map((tab, index) => (
-          <button
-            key={index}
-            ref={(el) => {
-              tabRefs.current[index] = el;
+      <div
+        ref={scrollContainerRef}
+        className="relative overflow-x-auto no-scrollbar border-b"
+      >
+        <div className="flex space-x-4 relative w-max px-2">
+          {tabs.map((tab, index) => (
+            <button
+              key={index}
+              ref={(el) => {
+                tabRefs.current[index] = el;
+              }}
+              className={`relative py-3 px-4 text-sm font-medium whitespace-nowrap transition-colors duration-300 ${
+                activeIndex === index
+                  ? 'text-blue-600'
+                  : 'text-gray-500 hover:text-blue-500'
+              }`}
+              onClick={() => handleTabClick(index)}
+            >
+              {tab.label}
+            </button>
+          ))}
+
+          {/* Animated underline */}
+          <span
+            className="absolute bottom-0 h-0.5 bg-blue-600 transition-all duration-300"
+            style={{
+              left: underlineStyle.left,
+              width: underlineStyle.width,
             }}
-            
-            className={`relative py-3 px-4 text-sm font-medium transition-colors duration-300 ${
-              activeIndex === index
-                ? 'text-blue-600'
-                : 'text-gray-500 hover:text-blue-500'
-            }`}
-            onClick={() => handleTabClick(index)}
-          >
-            {tab.label}
-          </button>
-        ))}
-        {/* Animated underline */}
-        <span
-          className="absolute bottom-0 h-0.5 bg-blue-600 transition-all duration-300"
-          style={{
-            left: underlineStyle.left,
-            width: underlineStyle.width,
-          }}
-        />
+          />
+        </div>
       </div>
 
       {/* Swiper slides */}
