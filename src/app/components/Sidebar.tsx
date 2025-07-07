@@ -62,7 +62,7 @@ export default function SidebarTabs({ tabs }: SidebarTabsProps) {
           md:static md:translate-x-0
         `}
       >
-        <div className="customgrad w-full"></div>
+        <div className="customgrad w-full h-[10vh]"></div>
         {tabs.map((tab, i) => (
           <button
             key={i}
