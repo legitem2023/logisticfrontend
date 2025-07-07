@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { MapPin, Trash2, Plus, Crosshair, X } from 'lucide-react';
 
 type Stop = {
@@ -8,69 +8,31 @@ type Stop = {
   address: string;
   lat?: number;
   lon?: number;
-  suggestions?: { display_name: string; lat: string; lon: string }[];
 };
 
 export default function DeliveryFormCard() {
   const [pickup, setPickup] = useState('');
   const [loadingLocation, setLoadingLocation] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
+  const [editingType, setEditingType] = useState<'pickup' | number | null>(null);
+
   const [stops, setStops] = useState<Stop[]>([]);
 
   const [houseNumber, setHouseNumber] = useState('');
   const [contactNumber, setContactNumber] = useState('');
   const [recipientName, setRecipientName] = useState('');
 
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchSuggestions, setSearchSuggestions] = useState<
+    { display_name: string; lat: string; lon: string }[]
+  >([]);
+
   const addStop = () => {
-    setStops((prev) => [...prev, { id: Date.now(), address: '', suggestions: [] }]);
+    setStops((prev) => [...prev, { id: Date.now(), address: '' }]);
   };
 
   const removeStop = (id: number) => {
     setStops((prev) => prev.filter((s) => s.id !== id));
-  };
-
-  const updateStopAddress = (id: number, address: string) => {
-    setStops((prev) =>
-      prev.map((s) => (s.id === id ? { ...s, address, suggestions: [] } : s))
-    );
-
-    if (address.length > 3) {
-      setTimeout(() => fetchSuggestions(id, address), 500); // debounce
-    }
-  };
-
-  const fetchSuggestions = async (id: number, query: string) => {
-    try {
-      const res = await fetch(
-        `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(
-          query
-        )}&format=json&addressdetails=1&limit=5`
-      );
-      const results = await res.json();
-      setStops((prev) =>
-        prev.map((s) =>
-          s.id === id ? { ...s, suggestions: results.slice(0, 5) } : s
-        )
-      );
-    } catch (err) {
-      console.error('Error fetching suggestions:', err);
-    }
-  };
-
-  const selectSuggestion = (id: number, suggestion: { display_name: string; lat: string; lon: string }) => {
-    setStops((prev) =>
-      prev.map((s) =>
-        s.id === id
-          ? {
-              ...s,
-              address: suggestion.display_name,
-              lat: parseFloat(suggestion.lat),
-              lon: parseFloat(suggestion.lon),
-              suggestions: [],
-            }
-          : s
-      )
-    );
   };
 
   const useCurrentLocation = () => {
@@ -115,7 +77,12 @@ export default function DeliveryFormCard() {
     );
   };
 
-  const closePopup = () => setShowPopup(false);
+  const closePopup = () => {
+    setShowPopup(false);
+    setEditingType(null);
+    setSearchQuery('');
+    setSearchSuggestions([]);
+  };
 
   const submitPopup = () => {
     console.log('Pickup details:', {
@@ -126,6 +93,22 @@ export default function DeliveryFormCard() {
     });
     setShowPopup(false);
   };
+
+  useEffect(() => {
+    const delayDebounce = setTimeout(() => {
+      if (searchQuery.length > 2) {
+        fetch(
+          `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(
+            searchQuery
+          )}&format=json&limit=5`
+        )
+          .then((res) => res.json())
+          .then((data) => setSearchSuggestions(data))
+          .catch((err) => console.error(err));
+      }
+    }, 400);
+    return () => clearTimeout(delayDebounce);
+  }, [searchQuery]);
 
   return (
     <div className="relative max-w-md mx-auto p-4 bg-white rounded-2xl shadow space-y-4">
@@ -148,43 +131,40 @@ export default function DeliveryFormCard() {
           </div>
           <input
             type="text"
-            className="w-full border rounded p-2 text-sm"
+            className="w-full border rounded p-2 text-sm bg-white cursor-pointer"
             placeholder="Enter pick-up address"
             value={pickup}
-            onChange={(e) => setPickup(e.target.value)}
+            readOnly
+            onClick={() => {
+              setEditingType('pickup');
+              setSearchQuery('');
+              setSearchSuggestions([]);
+              setShowPopup(true);
+            }}
           />
         </div>
       </div>
 
-      {/* Stop cards */}
+      {/* Drop-off Stops */}
       {stops.map((stop, index) => (
         <div key={stop.id} className="border rounded-xl p-4 bg-white mb-2">
           <div className="flex items-start gap-3">
             <MapPin className="text-green-600 mt-1" />
             <div className="flex-1">
               <p className="text-sm text-gray-500 mb-1">Drop-off Stop {index + 1}</p>
-              <div className="relative">
-                <input
-                  type="text"
-                  className="w-full border rounded p-2 text-sm"
-                  placeholder="Enter drop-off address"
-                  value={stop.address}
-                  onChange={(e) => updateStopAddress(stop.id, e.target.value)}
-                />
-                {stop.suggestions && stop.suggestions.length > 0 && (
-                  <ul className="absolute w-full border mt-1 rounded bg-white shadow text-sm max-h-40 overflow-auto z-20 left-0">
-                    {stop.suggestions.map((s, i) => (
-                      <li
-                        key={i}
-                        onClick={() => selectSuggestion(stop.id, s)}
-                        className="px-2 py-1 hover:bg-blue-100 cursor-pointer"
-                      >
-                        {s.display_name}
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
+              <input
+                type="text"
+                className="w-full border rounded p-2 text-sm bg-white cursor-pointer"
+                placeholder="Enter drop-off address"
+                value={stop.address}
+                readOnly
+                onClick={() => {
+                  setEditingType(stop.id);
+                  setSearchQuery('');
+                  setSearchSuggestions([]);
+                  setShowPopup(true);
+                }}
+              />
             </div>
             <button onClick={() => removeStop(stop.id)} className="text-red-500 hover:text-red-700">
               <Trash2 size={18} />
@@ -202,45 +182,52 @@ export default function DeliveryFormCard() {
         Add Drop-off Stop
       </button>
 
-      {/* Full-Screen Mobile Popup Modal */}
+      {/* Full-Screen Search Modal */}
       {showPopup && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50">
-          <div className="fixed bottom-0 left-0 right-0 top-0 md:top-1/4 md:bottom-1/4 md:left-1/4 md:right-1/4 bg-white rounded-t-2xl md:rounded-xl shadow-lg p-6 overflow-y-auto transition-transform duration-300 ease-out transform translate-y-0">
-            <button
-              onClick={closePopup}
-              className="absolute top-3 right-3 text-gray-500 hover:text-gray-800"
-            >
-              <X size={18} />
-            </button>
-            <h3 className="text-lg font-semibold mb-4">📍 Additional Pickup Info</h3>
-
-            <input
-              type="text"
-              className="w-full border rounded p-2 text-sm mb-3"
-              placeholder="🏠 House No. / Street"
-              value={houseNumber}
-              onChange={(e) => setHouseNumber(e.target.value)}
-            />
-            <input
-              type="text"
-              className="w-full border rounded p-2 text-sm mb-3"
-              placeholder="📞 Contact Number"
-              value={contactNumber}
-              onChange={(e) => setContactNumber(e.target.value)}
-            />
+          <div className="absolute top-4 left-2 right-2 bottom-4 bg-white rounded-2xl shadow-lg p-4 flex flex-col">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold">📍 Search Address</h3>
+              <button onClick={closePopup} className="text-gray-500 hover:text-gray-800">
+                <X size={20} />
+              </button>
+            </div>
             <input
               type="text"
               className="w-full border rounded p-2 text-sm mb-4"
-              placeholder="👤 Recipient Name"
-              value={recipientName}
-              onChange={(e) => setRecipientName(e.target.value)}
+              placeholder="🔍 Search for a location"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
             />
-            <button
-              onClick={submitPopup}
-              className="bg-blue-600 text-white rounded w-full py-2 text-sm hover:bg-blue-700 transition"
-            >
-              Save Details
-            </button>
+            <ul className="flex-1 overflow-auto space-y-2">
+              {searchSuggestions.map((s, idx) => (
+                <li
+                  key={idx}
+                  onClick={() => {
+                    if (editingType === 'pickup') {
+                      setPickup(s.display_name);
+                    } else if (typeof editingType === 'number') {
+                      setStops((prev) =>
+                        prev.map((stop) =>
+                          stop.id === editingType
+                            ? {
+                                ...stop,
+                                address: s.display_name,
+                                lat: parseFloat(s.lat),
+                                lon: parseFloat(s.lon),
+                              }
+                            : stop
+                        )
+                      );
+                    }
+                    closePopup();
+                  }}
+                  className="p-2 border rounded hover:bg-blue-100 cursor-pointer text-sm"
+                >
+                  {s.display_name}
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
       )}
