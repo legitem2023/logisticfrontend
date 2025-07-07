@@ -1,5 +1,3 @@
-//can you make it more intelligent the obtaining correct address
-
 'use client';
 
 import { useState } from 'react';
@@ -37,7 +35,7 @@ export default function DeliveryFormCard() {
     );
 
     if (address.length > 3) {
-      setTimeout(() => fetchSuggestions(id, address), 500); // debounce
+      setTimeout(() => fetchSuggestions(id, address), 500);
     }
   };
 
@@ -89,29 +87,43 @@ export default function DeliveryFormCard() {
 
         try {
           const res = await fetch(
-            `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`
+            `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json&zoom=18&addressdetails=1`
           );
           const data = await res.json();
-          if (data.display_name) {
+          if (data && data.display_name) {
             setPickup(data.display_name);
             setShowPopup(true);
           } else {
-            alert('Could not determine address.');
+            alert('Could not determine address from current location.');
+            console.warn('Reverse geocoding response:', data);
           }
         } catch (error) {
-          console.error(error);
-          alert('Failed to retrieve address.');
+          console.error('Reverse geocoding error:', error);
+          alert('Failed to retrieve address. Please check your internet connection.');
         } finally {
           setLoadingLocation(false);
         }
       },
       (error) => {
-        alert('Error getting location: ' + error.message);
+        console.error('Geolocation error:', error);
+        switch (error.code) {
+          case error.PERMISSION_DENIED:
+            alert('Permission denied. Please enable location access in your browser settings.');
+            break;
+          case error.POSITION_UNAVAILABLE:
+            alert('Location position unavailable.');
+            break;
+          case error.TIMEOUT:
+            alert('Request timed out. Try again in a few seconds.');
+            break;
+          default:
+            alert('An unknown error occurred while getting location.');
+        }
         setLoadingLocation(false);
       },
       {
         enableHighAccuracy: true,
-        timeout: 10000,
+        timeout: 15000,
         maximumAge: 0,
       }
     );
@@ -133,7 +145,6 @@ export default function DeliveryFormCard() {
     <div className="relative max-w-md mx-auto p-4 bg-white rounded-2xl shadow space-y-4">
       <h2 className="text-xl font-bold mb-2">📦 Create Delivery</h2>
 
-      {/* Pickup card */}
       <div className="border rounded-xl p-4 flex gap-3 items-start bg-gray-50">
         <MapPin className="text-blue-600 mt-1" />
         <div className="flex-1">
@@ -158,7 +169,6 @@ export default function DeliveryFormCard() {
         </div>
       </div>
 
-      {/* Stop cards */}
       {stops.map((stop, index) => (
         <div key={stop.id} className="border rounded-xl p-4 bg-white mb-2">
           <div className="flex items-start gap-3">
@@ -193,7 +203,6 @@ export default function DeliveryFormCard() {
         </div>
       ))}
 
-      {/* Add stop button */}
       <button
         onClick={addStop}
         className="flex items-center justify-center w-full border-2 border-dashed rounded-xl py-2 text-sm text-gray-600 hover:border-blue-500 hover:text-blue-600 transition"
@@ -202,7 +211,6 @@ export default function DeliveryFormCard() {
         Add Drop-off Stop
       </button>
 
-      {/* Popup Modal */}
       {showPopup && (
         <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-xl shadow-lg p-6 w-full max-w-sm relative">
@@ -246,4 +254,4 @@ export default function DeliveryFormCard() {
       )}
     </div>
   );
-              }
+}
