@@ -38,7 +38,7 @@ export default function SidebarTabs({ tabs }: SidebarTabsProps) {
       {/* Sidebar */}
       <aside
         className={`
-          fixed z-40 inset-y-0 left-0 w-60 bg-gray-100 border-r p-4 space-y-2 transform transition-transform duration-300 ease-in-out
+          fixed z-40 inset-y-0 left-0 w-60 bg-gray-100 border-r space-y-2 transform transition-transform duration-300 ease-in-out
           ${isMobileOpen ? 'translate-x-0' : '-translate-x-full'} 
           md:static md:translate-x-0
         `}
