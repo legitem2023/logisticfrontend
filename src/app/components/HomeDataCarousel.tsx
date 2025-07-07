@@ -36,17 +36,6 @@ const HomeDataCarousel: FC<Props> = ({ items }) => {
                   className="w-full h-32 object-cover"
                 />
               )}
-              <div className="p-4">
-                <h3 className="text-sm font-semibold mb-1">{item.title}</h3>
-                {item.subtitle && (
-                  <p className="text-xs text-gray-500">{item.subtitle}</p>
-                )}
-                {item.actionLabel && (
-                  <button className="mt-3 w-full py-2 bg-blue-600 text-white rounded-lg text-xs">
-                    {item.actionLabel}
-                  </button>
-                )}
-              </div>
             </div>
           </SwiperSlide>
         ))}
