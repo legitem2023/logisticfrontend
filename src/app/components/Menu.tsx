@@ -26,20 +26,20 @@ const mockItems: CarouselItem[] = [
     id: 'promo1',
     title: '₱50 off on your next delivery',
     subtitle: 'Use code: LALA50',
-    imageUrl: 'https://www.lalamove.com/hs-fs/hubfs/power-up-rewards-ph/promo-banner.jpg?width=1200&name=promo-banner.jpg', // official Lalamove carousel banner
+    imageUrl: '/Banner1.webp', // official Lalamove carousel banner
     actionLabel: 'Use Now',
   },
   {
     id: 'rec1',
     title: 'Recently Delivered: 📦',
     subtitle: 'Sent to Makati – 2 days ago',
-    imageUrl: 'https://images.unsplash.com/photo-1616627989736-d3b25d4ac7f2?auto=format&fit=crop&w=800&q=80', // package on doorstep
+    imageUrl: '/Banner1.webp', // official Lalamove carousel banner
   },
   {
     id: 'service1',
     title: 'Try Grocery – new service',
     subtitle: 'Order now and save ₱30',
-    imageUrl: 'https://images.unsplash.com/photo-1586201375761-83865001e17b?auto=format&fit=crop&w=800&q=80', // grocery basket
+    imageUrl: '/Banner1.webp', // official Lalamove carousel banner
     actionLabel: 'Order Now',
   },
 ];
