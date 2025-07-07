@@ -25,7 +25,7 @@ export default function Menu() {
 
   return (
     <div>
-      <div className="customgrad h-[70px] w-[100%]">
+      <div className="customgrad h-[70px] w-[100%] flex item-center justify-center">
         <img src='/Logo.svg' className="h-[80%] w-[auto]"/>
       </div>
       <Sidebar tabs={tabItems} />
