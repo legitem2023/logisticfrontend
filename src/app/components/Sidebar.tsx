@@ -47,7 +47,7 @@ export default function SidebarTabs({ tabs }: SidebarTabsProps) {
           <button
             key={i}
             onClick={() => handleTabClick(i)}
-            className={`w-full flex items-center gap-2 px-4 py-2 text-left transition-colors ${
+            className={`w-full flex items-center gap-2 px-2 py-2 text-left transition-colors ${
               activeIndex === i
                 ? 'bg-lime-400 text-white'
                 : 'text-gray-700 hover:bg-gray-200'
