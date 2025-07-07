@@ -1,4 +1,3 @@
-//can you make it more intelligent the obtaining correct address
 'use client';
 
 import { useState } from 'react';
@@ -164,26 +163,28 @@ export default function DeliveryFormCard() {
             <MapPin className="text-green-600 mt-1" />
             <div className="flex-1">
               <p className="text-sm text-gray-500 mb-1">Drop-off Stop {index + 1}</p>
-              <input
-                type="text"
-                className="w-full border rounded p-2 text-sm"
-                placeholder="Enter drop-off address"
-                value={stop.address}
-                onChange={(e) => updateStopAddress(stop.id, e.target.value)}
-              />
-              {stop.suggestions && stop.suggestions.length > 0 && (
-                <ul className="border mt-1 rounded bg-white shadow text-sm max-h-40 overflow-auto z-10">
-                  {stop.suggestions.map((s, i) => (
-                    <li
-                      key={i}
-                      onClick={() => selectSuggestion(stop.id, s)}
-                      className="px-2 py-1 hover:bg-blue-100 cursor-pointer"
-                    >
-                      {s.display_name}
-                    </li>
-                  ))}
-                </ul>
-              )}
+              <div className="relative">
+                <input
+                  type="text"
+                  className="w-full border rounded p-2 text-sm"
+                  placeholder="Enter drop-off address"
+                  value={stop.address}
+                  onChange={(e) => updateStopAddress(stop.id, e.target.value)}
+                />
+                {stop.suggestions && stop.suggestions.length > 0 && (
+                  <ul className="absolute w-full border mt-1 rounded bg-white shadow text-sm max-h-40 overflow-auto z-20 left-0">
+                    {stop.suggestions.map((s, i) => (
+                      <li
+                        key={i}
+                        onClick={() => selectSuggestion(stop.id, s)}
+                        className="px-2 py-1 hover:bg-blue-100 cursor-pointer"
+                      >
+                        {s.display_name}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
             </div>
             <button onClick={() => removeStop(stop.id)} className="text-red-500 hover:text-red-700">
               <Trash2 size={18} />
@@ -201,10 +202,10 @@ export default function DeliveryFormCard() {
         Add Drop-off Stop
       </button>
 
-      {/* Popup Modal */}
+      {/* Full-Screen Mobile Popup Modal */}
       {showPopup && (
-        <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl shadow-lg p-6 w-full max-w-sm relative">
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50">
+          <div className="fixed bottom-0 left-0 right-0 top-0 md:top-1/4 md:bottom-1/4 md:left-1/4 md:right-1/4 bg-white rounded-t-2xl md:rounded-xl shadow-lg p-6 overflow-y-auto transition-transform duration-300 ease-out transform translate-y-0">
             <button
               onClick={closePopup}
               className="absolute top-3 right-3 text-gray-500 hover:text-gray-800"
@@ -245,4 +246,4 @@ export default function DeliveryFormCard() {
       )}
     </div>
   );
-}
+            }
