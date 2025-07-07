@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { MapPin, Trash2, Plus } from 'lucide-react';
+import { MapPin, Trash2, Plus, Crosshair } from 'lucide-react';
 
 type Stop = {
   id: number;
@@ -10,6 +10,7 @@ type Stop = {
 
 export default function DeliveryFormCard() {
   const [pickup, setPickup] = useState('');
+  const [loadingLocation, setLoadingLocation] = useState(false);
   const [stops, setStops] = useState<Stop[]>([]);
 
   const addStop = () => {
@@ -24,6 +25,43 @@ export default function DeliveryFormCard() {
     setStops((prev) => prev.filter((s) => s.id !== id));
   };
 
+  const useCurrentLocation = () => {
+    if (!navigator.geolocation) {
+      alert('Geolocation is not supported by your browser.');
+      return;
+    }
+
+    setLoadingLocation(true);
+
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const { latitude, longitude } = position.coords;
+
+        try {
+          // Use reverse geocoding via Nominatim (OpenStreetMap)
+          const res = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`
+          );
+          const data = await res.json();
+          if (data.display_name) {
+            setPickup(data.display_name);
+          } else {
+            alert('Could not determine address.');
+          }
+        } catch (error) {
+          console.error(error);
+          alert('Failed to retrieve address.');
+        } finally {
+          setLoadingLocation(false);
+        }
+      },
+      (error) => {
+        alert('Error getting location: ' + error.message);
+        setLoadingLocation(false);
+      }
+    );
+  };
+
   return (
     <div className="max-w-md mx-auto p-4 bg-white rounded-2xl shadow space-y-4">
       <h2 className="text-xl font-bold mb-2">📦 Create Delivery</h2>
@@ -32,7 +70,17 @@ export default function DeliveryFormCard() {
       <div className="border rounded-xl p-4 flex gap-3 items-start bg-gray-50">
         <MapPin className="text-blue-600 mt-1" />
         <div className="flex-1">
-          <p className="text-sm text-gray-500 mb-1">Pick-up Location</p>
+          <div className="flex justify-between items-center mb-1">
+            <p className="text-sm text-gray-500">Pick-up Location</p>
+            <button
+              onClick={useCurrentLocation}
+              className="text-xs text-blue-600 hover:underline flex items-center gap-1"
+              disabled={loadingLocation}
+            >
+              <Crosshair size={14} />
+              {loadingLocation ? 'Locating...' : 'Use my location'}
+            </button>
+          </div>
           <input
             type="text"
             className="w-full border rounded p-2 text-sm"
