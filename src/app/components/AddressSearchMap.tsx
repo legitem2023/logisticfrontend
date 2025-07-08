@@ -135,7 +135,7 @@ export default function AddressSearchMap() {
         }
       },
       (err) => {
-        alert('Location access denied or unavailable');
+        alert('Location access denied or unavailable' + err);
       }
     );
   };
