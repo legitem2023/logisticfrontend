@@ -1,5 +1,6 @@
 'use client'
 import Sidebar from "./Sidebar";
+import ProfileCard from "./ProfileCard";
 import SwiperTabs from "./SwiperTabs";
 import DeliveryCard from "./DeliveryCard";
 import VehicleSelector from "./VehicleSelector";
@@ -95,7 +96,7 @@ const mockItems: CarouselItem[] = [
       icon:(<User color="gray"/>),
       content: (
         <div>
-
+         <ProfileCard/>
         </div>
       ),
     },{
