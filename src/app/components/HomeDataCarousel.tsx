@@ -16,7 +16,7 @@ type Props = {
 
 const HomeDataCarousel: FC<Props> = ({ items }) => {
   return (
-    <div className="w-full py-4 aspect-[1/3]">
+    <div className="w-full py-4 aspect-[3/1]">
       <Swiper
         spaceBetween={12}
         slidesPerView="auto"
