@@ -5,7 +5,7 @@ import ProfileCard from "./ProfileCard";
 import SwiperTabs from "./SwiperTabs";
 import DeliveryCard from "./DeliveryCard";
 import VehicleSelector from "./VehicleSelector";
-import DeliveryFormCard from "./DeliveryFormCard";
+//import DeliveryFormCard from "./DeliveryFormCard";
 import dynamic from 'next/dynamic';
 import HomeDataCarousel from './HomeDataCarousel';
 import LoginCard from "./LoginCard";
