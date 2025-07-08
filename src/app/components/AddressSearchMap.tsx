@@ -7,13 +7,14 @@ import 'leaflet-routing-machine';
 
 export default function AddressSearchMap() {
   const [address, setAddress] = useState('');
+  const [coordinates, setCoordinates] = useState<{ lat: number; lng: number } | null>(null);
   const [showMap, setShowMap] = useState(false);
 
   const mapRef = useRef<L.Map | null>(null);
   const markerRef = useRef<L.Marker | null>(null);
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
 
-  // Auto-geocode on input
+  // Handle typing and geocoding
   useEffect(() => {
     const delayDebounce = setTimeout(() => {
       if (address.trim() !== '') {
@@ -22,16 +23,21 @@ export default function AddressSearchMap() {
           .then((data) => {
             if (data && data.length > 0) {
               const { lat, lon } = data[0];
-              const latLng = L.latLng(parseFloat(lat), parseFloat(lon));
-              mapRef.current?.setView(latLng, 14);
+              const latNum = parseFloat(lat);
+              const lonNum = parseFloat(lon);
+              const latLng = L.latLng(latNum, lonNum);
 
-              if (markerRef.current) {
-                markerRef.current.setLatLng(latLng);
-              } else {
-                markerRef.current = L.marker(latLng).addTo(mapRef.current!);
-              }
-
+              setCoordinates({ lat: latNum, lng: lonNum });
               setShowMap(true);
+
+              if (mapRef.current) {
+                mapRef.current.setView(latLng, 14);
+                if (markerRef.current) {
+                  markerRef.current.setLatLng(latLng);
+                } else {
+                  markerRef.current = L.marker(latLng).addTo(mapRef.current);
+                }
+              }
             }
           })
           .catch((err) => {
@@ -46,7 +52,7 @@ export default function AddressSearchMap() {
     return () => clearTimeout(delayDebounce);
   }, [address]);
 
-  // Initialize map and handle click-to-reverse-geocode
+  // Initialize map + handle click
   useEffect(() => {
     if (!mapContainerRef.current || mapRef.current) return;
 
@@ -59,6 +65,8 @@ export default function AddressSearchMap() {
 
     map.on('click', async (e: L.LeafletMouseEvent) => {
       const { lat, lng } = e.latlng;
+      setCoordinates({ lat, lng });
+      setShowMap(true);
 
       if (markerRef.current) {
         markerRef.current.setLatLng(e.latlng);
@@ -71,7 +79,6 @@ export default function AddressSearchMap() {
         const data = await res.json();
         if (data && data.display_name) {
           setAddress(data.display_name);
-          setShowMap(true);
         }
       } catch (err) {
         console.error('Reverse geocoding failed:', err);
@@ -84,7 +91,7 @@ export default function AddressSearchMap() {
       mapRef.current = null;
       markerRef.current = null;
     };
-  }, [showMap]);
+  }, []);
 
   return (
     <div className="w-full h-screen flex flex-col">
@@ -98,6 +105,12 @@ export default function AddressSearchMap() {
 
       {showMap && (
         <div ref={mapContainerRef} className="flex-1 mt-2 rounded border border-gray-300" />
+      )}
+
+      {coordinates && (
+        <div className="mt-2 text-sm text-gray-600 p-2">
+          <strong>Coordinates:</strong> {coordinates.lat.toFixed(6)}, {coordinates.lng.toFixed(6)}
+        </div>
       )}
     </div>
   );
