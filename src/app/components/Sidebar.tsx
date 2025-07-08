@@ -45,7 +45,7 @@ return () => {
 return (
 <div className="flex h-[89vh] w-full">
 {/* Mobile toggle */}
-<div className="md:hidden absolute top-4 left-4 z-50">
+<div className="md:hidden absolute top-4 left-4 z-30">
 <button
 onClick={() => setIsMobileOpen(!isMobileOpen)}
 className="customgrad p-2 rounded-md bg-gray-200 hover:bg-gray-300 backdrop-blur-md bg-white/20 border border-white/30 shadow-md"
