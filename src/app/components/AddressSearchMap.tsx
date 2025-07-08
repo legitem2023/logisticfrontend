@@ -75,16 +75,17 @@ export default function AddressSearchMap() {
         L.latLng(selectedCoords.lat, selectedCoords.lng),
       ]);
     } else {
-      routingControl.current = L.Routing.control({
-        waypoints: [
-          L.latLng(selectedCoords.lat, selectedCoords.lng),
-          L.latLng(selectedCoords.lat, selectedCoords.lng),
-        ],
-        createMarker: () => null,
-        routeWhileDragging: false,
-        addWaypoints: false,
-        show: false,
-      }).addTo(mapRef.current);
+  routingControl.current = L.Routing.control({
+  waypoints: [
+    L.latLng(selectedCoords.lat, selectedCoords.lng),
+    L.latLng(selectedCoords.lat, selectedCoords.lng),
+  ],
+  // @ts-ignore – createMarker is valid at runtime but not typed
+  createMarker: () => null,
+  routeWhileDragging: false,
+  addWaypoints: false,
+  show: false,
+} as any).addTo(mapRef.current);
     }
   }, [selectedCoords]);
 
