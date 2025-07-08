@@ -29,28 +29,13 @@ export default function LoginCard() {
           <Input type="email" placeholder="Email" />
           <Input type="password" placeholder="Password" />
           <Button className="w-full" variant="default">Login</Button>
-
           <div className="flex items-center gap-2">
             <hr className="flex-grow border-gray-300" />
             <span className="text-gray-500 text-sm">OR</span>
             <hr className="flex-grow border-gray-300" />
           </div>
-
-          <Button
-            onClick={handleGoogleLogin}
-            variant="outline"
-            className="w-full flex items-center gap-2"
-          >
             <GoogleLoginButton/>
-          </Button>
-
-          <Button
-            onClick={handleFacebookLogin}
-            variant="outline"
-            className="w-full flex items-center text-blue-600 border-blue-600 hover:bg-blue-50"
-          >
             <FacebookLoginButton/>
-          </Button>
         </CardContent>
       </Card>
     </div>
