@@ -63,7 +63,7 @@ const SwiperTabs: FC<SwiperTabsProps> = ({ tabs }) => {
               }}
               className={`relative py-3 px-4 text-sm font-medium whitespace-nowrap transition-colors duration-300 ${
                 activeIndex === index
-                  ? 'text-blue-600'
+                  ? 'text-green-600'
                   : 'text-gray-500 hover:text-blue-500'
               }`}
               onClick={() => handleTabClick(index)}
@@ -74,7 +74,7 @@ const SwiperTabs: FC<SwiperTabsProps> = ({ tabs }) => {
 
           {/* Animated underline */}
           <span
-            className="absolute bottom-0 h-0.5 bg-blue-600 transition-all duration-300"
+            className="absolute bottom-0 h-0.5 bg-green-600 transition-all duration-300"
             style={{
               left: underlineStyle.left,
               width: underlineStyle.width,
