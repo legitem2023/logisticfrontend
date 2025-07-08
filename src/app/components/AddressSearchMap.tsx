@@ -345,7 +345,7 @@ export default function AddressSearchMap() {
           <MapContainer
             center={[selectedCoords.lat, selectedCoords.lng]}
             zoom={13}
-            style={{ height: '400px', width: '100%' }}
+            style={{ height: '400px', width: '100%', zIndex:'0' }}
             ref={(mapInstance) => {
               if (mapInstance && !mapRef.current) {
                 mapRef.current = mapInstance;
