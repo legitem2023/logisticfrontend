@@ -7,13 +7,12 @@ import 'leaflet-routing-machine';
 
 export default function AddressSearchMap() {
   const [address, setAddress] = useState('');
-  const [_coordinates, setCoordinates] = useState<{ lat: number; lng: number } | null>(null); // use `_coordinates` to avoid lint error
 
   const mapRef = useRef<L.Map | null>(null);
   const markerRef = useRef<L.Marker | null>(null);
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
 
-  // Search address when user types
+  // Auto-geocode on input
   useEffect(() => {
     const delayDebounce = setTimeout(() => {
       if (address.trim() !== '') {
@@ -30,18 +29,16 @@ export default function AddressSearchMap() {
               } else {
                 markerRef.current = L.marker(latLng).addTo(mapRef.current!);
               }
-
-              setCoordinates({ lat: parseFloat(lat), lng: parseFloat(lon) });
             }
           })
           .catch((err) => console.error('Geocoding failed:', err));
       }
-    }, 500); // debounce keyup
+    }, 500);
 
     return () => clearTimeout(delayDebounce);
   }, [address]);
 
-  // Initialize map
+  // Initialize map and handle click-to-reverse-geocode
   useEffect(() => {
     if (!mapContainerRef.current || mapRef.current) return;
 
@@ -54,7 +51,6 @@ export default function AddressSearchMap() {
 
     map.on('click', async (e: L.LeafletMouseEvent) => {
       const { lat, lng } = e.latlng;
-      setCoordinates({ lat, lng });
 
       if (markerRef.current) {
         markerRef.current.setLatLng(e.latlng);
