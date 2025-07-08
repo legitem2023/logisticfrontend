@@ -5,6 +5,8 @@ import { Button } from './ui/Button'
 import { Input } from './ui/Input'
 import { FcGoogle } from 'react-icons/fc'
 import FacebookLogin from './Auth/FacebookLogin'
+import FacebookLoginButton from './Auth/FacebookLoginButton'
+import GoogleLoginButton from './Auth/GoogleLoginButton'
 
 export default function LoginCard() {
   const handleGoogleLogin = () => {
@@ -39,8 +41,7 @@ export default function LoginCard() {
             variant="outline"
             className="w-full flex items-center gap-2"
           >
-            <FcGoogle className="text-xl" />
-            Continue with Google
+            <GoogleLoginButton/>
           </Button>
 
           <Button
@@ -48,7 +49,7 @@ export default function LoginCard() {
             variant="outline"
             className="w-full flex items-center text-blue-600 border-blue-600 hover:bg-blue-50"
           >
-            <FacebookLogin/>
+            <FacebookLoginButton/>
           </Button>
         </CardContent>
       </Card>
