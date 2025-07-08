@@ -92,7 +92,6 @@ export default function AddressSearchMap() {
           waypoints: [pickupCoords, dropoffCoords],
           show: false,
           addWaypoints: false,
-          draggableWaypoints: false,
           routeWhileDragging: false,
         }).addTo(mapRef.current);
       }
