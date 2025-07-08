@@ -77,8 +77,8 @@ export default function DeliveryMap() {
       id="map"
       style={{
         width: '100%',
-        height: '100vh',
-        maxHeight: '100dvh',
+        height: '90vh',
+        maxHeight: '90dvh',
         position: 'relative',
         zIndex: 0,
       }}
