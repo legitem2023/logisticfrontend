@@ -56,8 +56,7 @@ export default function AddressSearchMap() {
         `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`
       );
       const data = await res.json();
-      console.log('Reverse geocoded address:', data);
-      if (data && data.display_name) {
+      if (data?.display_name) {
         setAddress(data.display_name);
         setSuggestions([]);
       }
@@ -75,17 +74,17 @@ export default function AddressSearchMap() {
         L.latLng(selectedCoords.lat, selectedCoords.lng),
       ]);
     } else {
-  routingControl.current = L.Routing.control({
-  waypoints: [
-    L.latLng(selectedCoords.lat, selectedCoords.lng),
-    L.latLng(selectedCoords.lat, selectedCoords.lng),
-  ],
-  // @ts-ignore – createMarker is valid at runtime but not typed
-  createMarker: () => null,
-  routeWhileDragging: false,
-  addWaypoints: false,
-  show: false,
-} as any).addTo(mapRef.current);
+      // @ts-expect-error: createMarker is a valid runtime option but not typed in RoutingControlOptions
+      routingControl.current = L.Routing.control({
+        waypoints: [
+          L.latLng(selectedCoords.lat, selectedCoords.lng),
+          L.latLng(selectedCoords.lat, selectedCoords.lng),
+        ],
+        createMarker: () => null,
+        routeWhileDragging: false,
+        addWaypoints: false,
+        show: false,
+      }).addTo(mapRef.current);
     }
   }, [selectedCoords]);
 
@@ -102,7 +101,6 @@ export default function AddressSearchMap() {
             `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`
           );
           const data = await res.json();
-          console.log('Initial reverse geocode:', data);
           if (data?.display_name) {
             setAddress(data.display_name);
           }
