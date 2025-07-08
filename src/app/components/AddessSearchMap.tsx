@@ -41,7 +41,7 @@ export default function AddressSearchMap() {
 
       setResult(data[0]);
     } catch (err) {
-      setError('Error fetching location');
+      setError('Error fetching location'+ err);
     }
   };
 
