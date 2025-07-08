@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import 'leaflet-routing-machine';
+import 'leaflet-routing-machine/dist/leaflet-routing-machine.css';
 
 type Suggestion = {
   display_name: string;
@@ -12,115 +13,135 @@ type Suggestion = {
 };
 
 export default function AddressSearchMap() {
-  const [address, setAddress] = useState('');
-  const [coordinates, setCoordinates] = useState<{ lat: number; lng: number } | null>(null);
+  const [pickup, setPickup] = useState('');
+  const [dropoff, setDropoff] = useState('');
+  const [pickupCoords, setPickupCoords] = useState<{ lat: number; lng: number } | null>(null);
+  const [dropoffCoords, setDropoffCoords] = useState<{ lat: number; lng: number } | null>(null);
+  const [activeField, setActiveField] = useState<'pickup' | 'dropoff' | null>(null);
   const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
-  const [showMap, setShowMap] = useState(false);
 
   const mapRef = useRef<L.Map | null>(null);
-  const markerRef = useRef<L.Marker | null>(null);
+  const pickupMarker = useRef<L.Marker | null>(null);
+  const dropoffMarker = useRef<L.Marker | null>(null);
+  const routingControl = useRef<L.Routing.Control | null>(null);
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
 
-  // Debounced live search suggestions
+  // Debounced search
   useEffect(() => {
-    const delayDebounce = setTimeout(() => {
-      if (address.trim() !== '') {
-        fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(address)}&format=json`)
+    const query = activeField === 'pickup' ? pickup : dropoff;
+    const delay = setTimeout(() => {
+      if (query.trim() !== '') {
+        fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json`)
           .then((res) => res.json())
-          .then((data: Suggestion[]) => {
-            setSuggestions(data.slice(0, 5)); // Limit to top 5 suggestions
-          })
+          .then((data: Suggestion[]) => setSuggestions(data.slice(0, 5)))
           .catch(() => setSuggestions([]));
       } else {
         setSuggestions([]);
       }
     }, 300);
 
-    return () => clearTimeout(delayDebounce);
-  }, [address]);
+    return () => clearTimeout(delay);
+  }, [pickup, dropoff, activeField]);
 
-  // When user selects a suggestion
-  const handleSuggestionSelect = (suggestion: Suggestion) => {
+  // Handle suggestion click
+  const handleSelect = (suggestion: Suggestion) => {
     const lat = parseFloat(suggestion.lat);
-    const lon = parseFloat(suggestion.lon);
-    const latLng = L.latLng(lat, lon);
+    const lng = parseFloat(suggestion.lon);
+    const coords = { lat, lng };
+    const label = suggestion.display_name;
 
-    setAddress(suggestion.display_name);
-    setCoordinates({ lat, lng: lon });
-    setSuggestions([]);
-    setShowMap(true);
-
-    if (mapRef.current) {
-      mapRef.current.setView(latLng, 16);
-      if (markerRef.current) {
-        markerRef.current.setLatLng(latLng);
+    if (activeField === 'pickup') {
+      setPickup(label);
+      setPickupCoords(coords);
+      if (pickupMarker.current) {
+        pickupMarker.current.setLatLng(coords);
       } else {
-        markerRef.current = L.marker(latLng).addTo(mapRef.current);
+        pickupMarker.current = L.marker(coords, { icon: blueIcon }).addTo(mapRef.current!);
       }
+      mapRef.current?.setView(coords, 14);
+    } else if (activeField === 'dropoff') {
+      setDropoff(label);
+      setDropoffCoords(coords);
+      if (dropoffMarker.current) {
+        dropoffMarker.current.setLatLng(coords);
+      } else {
+        dropoffMarker.current = L.marker(coords, { icon: redIcon }).addTo(mapRef.current!);
+      }
+      mapRef.current?.setView(coords, 14);
     }
+
+    setSuggestions([]);
   };
 
-  // Initialize map + handle click
+  // Initialize map
   useEffect(() => {
     if (!mapContainerRef.current || mapRef.current) return;
 
-    const map = L.map(mapContainerRef.current).setView([14.5995, 120.9842], 11);
+    const map = L.map(mapContainerRef.current).setView([14.5995, 120.9842], 10);
     mapRef.current = map;
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; OpenStreetMap contributors',
     }).addTo(map);
-
-    map.on('click', async (e: L.LeafletMouseEvent) => {
-      const { lat, lng } = e.latlng;
-      setCoordinates({ lat, lng });
-      setShowMap(true);
-
-      if (markerRef.current) {
-        markerRef.current.setLatLng(e.latlng);
-      } else {
-        markerRef.current = L.marker(e.latlng).addTo(map);
-      }
-
-      try {
-        const res = await fetch(
-          `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`
-        );
-        const data = await res.json();
-        if (data && data.display_name) {
-          setAddress(data.display_name);
-        }
-      } catch (err) {
-        console.error('Reverse geocoding failed:', err);
-      }
-    });
-
-    return () => {
-      map.off();
-      map.remove();
-      mapRef.current = null;
-      markerRef.current = null;
-    };
   }, []);
 
+  // Draw route when both coords are available
+  useEffect(() => {
+    if (pickupCoords && dropoffCoords && mapRef.current) {
+      if (routingControl.current) {
+        routingControl.current.setWaypoints([pickupCoords, dropoffCoords]);
+      } else {
+        routingControl.current = L.Routing.control({
+          waypoints: [pickupCoords, dropoffCoords],
+          routeWhileDragging: false,
+          show: false,
+        }).addTo(mapRef.current);
+      }
+    }
+  }, [pickupCoords, dropoffCoords]);
+
+  // Custom marker icons
+  const blueIcon = new L.Icon({
+    iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+  });
+
+  const redIcon = new L.Icon({
+    iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-red.png',
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+  });
+
   return (
-    <div className="w-full h-screen p-4 flex flex-col">
+    <div className="w-full h-screen flex flex-col p-4">
       <input
         type="text"
-        value={address}
-        onChange={(e) => setAddress(e.target.value)}
-        className="p-3 text-lg border border-gray-300 rounded focus:outline-none focus:ring w-full"
-        placeholder="Search for a pickup or drop-off point"
+        value={pickup}
+        onFocus={() => setActiveField('pickup')}
+        onChange={(e) => setPickup(e.target.value)}
+        className="p-3 text-lg border border-gray-300 rounded mb-2"
+        placeholder="Enter pickup location"
       />
 
-      {/* Live Suggestions Dropdown */}
+      <input
+        type="text"
+        value={dropoff}
+        onFocus={() => setActiveField('dropoff')}
+        onChange={(e) => setDropoff(e.target.value)}
+        className="p-3 text-lg border border-gray-300 rounded mb-2"
+        placeholder="Enter drop-off location"
+      />
+
       {suggestions.length > 0 && (
-        <ul className="bg-white border border-gray-200 shadow rounded mt-1 max-h-40 overflow-y-auto z-10">
+        <ul className="bg-white border border-gray-300 shadow rounded z-10 max-h-48 overflow-y-auto">
           {suggestions.map((s, i) => (
             <li
               key={i}
-              onClick={() => handleSuggestionSelect(s)}
-              className="p-2 hover:bg-gray-100 cursor-pointer text-sm"
+              onClick={() => handleSelect(s)}
+              className="p-2 text-sm cursor-pointer hover:bg-gray-100"
             >
               {s.display_name}
             </li>
@@ -128,15 +149,20 @@ export default function AddressSearchMap() {
         </ul>
       )}
 
-      {showMap && (
-        <div ref={mapContainerRef} className="flex-1 mt-4 rounded border border-gray-300" />
-      )}
+      <div ref={mapContainerRef} className="flex-1 mt-4 rounded border border-gray-300" />
 
-      {coordinates && (
-        <div className="mt-2 text-sm text-gray-600">
-          <strong>Coordinates:</strong> {coordinates.lat.toFixed(6)}, {coordinates.lng.toFixed(6)}
-        </div>
-      )}
+      <div className="mt-2 text-sm text-gray-700 space-y-1">
+        {pickupCoords && (
+          <div>
+            <strong>Pickup:</strong> {pickupCoords.lat.toFixed(6)}, {pickupCoords.lng.toFixed(6)}
+          </div>
+        )}
+        {dropoffCoords && (
+          <div>
+            <strong>Drop-off:</strong> {dropoffCoords.lat.toFixed(6)}, {dropoffCoords.lng.toFixed(6)}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
