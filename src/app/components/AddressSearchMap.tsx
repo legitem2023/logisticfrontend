@@ -142,14 +142,14 @@ export default function AddressSearchMap() {
 
       {showMap && selectedCoords && (
         <MapContainer
-          center={selectedCoords}
-          zoom={13}
-          style={{ height: '400px', width: '100%' }}
-          whenCreated={(mapInstance) => {
-            mapRef.current = mapInstance;
-            mapInstance.on('click', handleMapClick);
-          }}
-        >
+  center={selectedCoords}
+  zoom={13}
+  style={{ height: '400px', width: '100%' }}
+  whenReady={({ target: mapInstance }) => {
+    mapRef.current = mapInstance;
+    mapInstance.on('click', handleMapClick);
+  }}
+>
           <TileLayer
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             attribution="© OpenStreetMap contributors"
