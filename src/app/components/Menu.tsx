@@ -96,7 +96,13 @@ const mockItems: CarouselItem[] = [
       icon:(<User color="gray"/>),
       content: (
         <div>
-         <ProfileCard/>
+         <ProfileCard
+           name="Juan Dela Cruz"
+           email="juan@example.com"
+           contactNumber="+63 912 345 6789"
+           address="123 Mabini Street, Quezon City, PH"
+           avatarUrl="https://i.pravatar.cc/100?img=12"
+      />
         </div>
       ),
     },{
