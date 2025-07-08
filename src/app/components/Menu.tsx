@@ -117,7 +117,7 @@ const mockItems: CarouselItem[] = [
         <div>
           <HomeDataCarousel items={mockItems} />
           <AddressSearchMap/>
-          <DeliveryFormCard />
+          
           <VehicleSelector />
         </div>
       ),
