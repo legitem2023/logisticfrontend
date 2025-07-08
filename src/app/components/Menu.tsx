@@ -92,7 +92,7 @@ const mockItems: CarouselItem[] = [
   const tabItems = [
     {
       label: 'Home',
-      icon:(<Home/>),
+      icon:(<Home color="green"/>),
       content: (
         <div>
           <HomeDataCarousel items={mockItems} />
@@ -103,7 +103,7 @@ const mockItems: CarouselItem[] = [
     },
     {
       label: 'Map',
-      icon:(<Map/>),
+      icon:(<Map color="green"/>),
       content: (
         <div>
           <DeliveryMap />
@@ -112,7 +112,7 @@ const mockItems: CarouselItem[] = [
     },
     {
       label: 'Order',
-      icon:(<Package/>),
+      icon:(<Package color="green"/>),
       content: (
         <div>
           <SwiperTabs tabs={progressitem} />
@@ -121,7 +121,7 @@ const mockItems: CarouselItem[] = [
     },
     {
       label: 'Login',
-      icon:(<LogIn/>),
+      icon:(<LogIn color="green"/>),
       content: (
         <div>
           <LoginCard/>
