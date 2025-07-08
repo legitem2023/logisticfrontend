@@ -7,6 +7,7 @@ import 'leaflet-routing-machine';
 
 export default function AddressSearchMap() {
   const [address, setAddress] = useState('');
+  const [showMap, setShowMap] = useState(false);
 
   const mapRef = useRef<L.Map | null>(null);
   const markerRef = useRef<L.Marker | null>(null);
@@ -29,9 +30,16 @@ export default function AddressSearchMap() {
               } else {
                 markerRef.current = L.marker(latLng).addTo(mapRef.current!);
               }
+
+              setShowMap(true);
             }
           })
-          .catch((err) => console.error('Geocoding failed:', err));
+          .catch((err) => {
+            console.error('Geocoding failed:', err);
+            setShowMap(false);
+          });
+      } else {
+        setShowMap(false);
       }
     }, 500);
 
@@ -63,6 +71,7 @@ export default function AddressSearchMap() {
         const data = await res.json();
         if (data && data.display_name) {
           setAddress(data.display_name);
+          setShowMap(true);
         }
       } catch (err) {
         console.error('Reverse geocoding failed:', err);
@@ -75,7 +84,7 @@ export default function AddressSearchMap() {
       mapRef.current = null;
       markerRef.current = null;
     };
-  }, []);
+  }, [showMap]);
 
   return (
     <div className="w-full h-screen flex flex-col">
@@ -86,7 +95,10 @@ export default function AddressSearchMap() {
         className="p-4 text-lg border border-gray-300 focus:outline-none focus:ring w-full"
         placeholder="Search for address or click on the map"
       />
-      <div ref={mapContainerRef} className="flex-1" />
+
+      {showMap && (
+        <div ref={mapContainerRef} className="flex-1 mt-2 rounded border border-gray-300" />
+      )}
     </div>
   );
 }
