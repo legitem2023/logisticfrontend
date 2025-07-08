@@ -154,7 +154,7 @@ const mockItems: CarouselItem[] = [
   return (
     <div className="h-[98vh]">
       <div className="h-[10vh] w-full flex items-center justify-center customgrad border-b-4 border-green-500">
-        <Image src="/Logo.svg" className="h-[80%] w-auto" alt="1"/>
+        <Image src="/Logo.svg" className="h-[80%] w-auto" alt="1" width="100" height="100"/>
       </div>
       <Sidebar tabs={tabItems} />
     </div>

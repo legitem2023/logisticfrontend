@@ -3,13 +3,25 @@
 import { useState } from 'react';
 import { Truck, Car, Bike } from 'lucide-react';
 import type { ReactElement } from 'react';
-
+import { useQuery } from '@apollo/client';
+import { VEHICLEQUERY } from '../../../graphql/query';
+import Loading from './ui/Loading';
 type Vehicle = {
   id: string;
   name: string;
   icon: ReactElement;
   description: string;
   price: string;
+};
+type VehicleType = {
+  id: string;
+  name: string;
+  maxCapacityKg: number;
+  maxVolumeM3: number;
+  description: string | null;
+  createdAt: string; // or number, depending on how you use timestamps
+  updatedAt: string; // or number
+  icon:string
 };
 
 const vehicleOptions: Vehicle[] = [
@@ -37,14 +49,19 @@ const vehicleOptions: Vehicle[] = [
 ];
 
 export default function VehicleSelector() {
-  const [selected, setSelected] = useState<string>('bike');
+  const { loading, error, data } = useQuery(VEHICLEQUERY);
 
+  const [selected, setSelected] = useState<string>('bike');
+  if (loading) return <Loading lines={4} />;
+  if (error) return <p>Error: {error.message}</p>;
+  console.log(data.getVehicleTypes);
+  // return
   return (
     <div className="relative max-w-md mx-auto p-4 bg-white rounded-2xl shadow space-y-4">
 
     <div className="space-y-3 max-w-md mx-auto">
       <h2 className="text-xl font-semibold mb-2">🚚 Choose Vehicle Type</h2>
-      {vehicleOptions.map((vehicle) => (
+      {data.getVehicleTypes.map((vehicle:VehicleType) => (
         <button
           key={vehicle.id}
           type="button"
@@ -60,7 +77,7 @@ export default function VehicleSelector() {
             <p className="text-base font-semibold">{vehicle.name}</p>
             <p className="text-sm text-gray-500">{vehicle.description}</p>
           </div>
-          <div className="text-sm font-bold text-gray-700">{vehicle.price}</div>
+          <div className="text-sm font-bold text-gray-700">{vehicle.name}</div>
         </button>
       ))}
     </div>
