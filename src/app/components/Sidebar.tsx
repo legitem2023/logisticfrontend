@@ -63,12 +63,12 @@ className="customgrad p-2 rounded-md bg-gray-200 hover:bg-gray-300 backdrop-blur
       md:static md:translate-x-0  
     `}  
   >  
-    <div className="customgrad w-full h-[10vh]"></div>  
+    {/* <div className="customgrad w-full h-[10vh]"></div>  */}
     {tabs.map((tab, i) => (  
       <button  
         key={i}  
         onClick={() => handleTabClick(i)}  
-        className={`w-full flex items-center gap-2 px-2 py-2 text-left transition-colors ${  
+        className={tab.label `w-full flex items-center gap-2 px-2 py-2 text-left transition-colors ${  
           activeIndex === i  
             ? 'bg-green-400 text-gray-700 backdrop-blur-md bg-white/20 border border-white/30 shadow-md'  
             : 'text-gray-400 hover:bg-gray-200'  
