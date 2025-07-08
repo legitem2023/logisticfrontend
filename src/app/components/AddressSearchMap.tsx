@@ -74,7 +74,6 @@ export default function AddressSearchMap() {
         L.latLng(selectedCoords.lat, selectedCoords.lng),
       ]);
     } else {
-      // @ts-expect-error: createMarker is a valid runtime option but not typed in RoutingControlOptions
       routingControl.current = L.Routing.control({
         waypoints: [
           L.latLng(selectedCoords.lat, selectedCoords.lng),
