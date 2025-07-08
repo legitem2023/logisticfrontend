@@ -32,3 +32,20 @@ body {
   height:10vh;
   background-color:#c0c0c0;
 }
+.shimmergreen {
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(0, 255, 128, 0.3),
+    transparent
+  );
+  animation: shimmer 2s infinite;
+}
+@keyframes shimmer {
+  0% {
+    left: -60%;
+  }
+  100% {
+    left: 100%;
+  }
+}
