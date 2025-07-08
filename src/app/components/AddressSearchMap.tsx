@@ -12,36 +12,20 @@ type Suggestion = {
   lon: string;
 };
 
-type Coords = { lat: number; lng: number };
-
 export default function AddressSearchMap() {
   const [pickupAddress, setPickupAddress] = useState('');
   const [dropoffAddress, setDropoffAddress] = useState('');
-  const [pickupCoords, setPickupCoords] = useState<Coords | null>(null);
-  const [dropoffCoords, setDropoffCoords] = useState<Coords | null>(null);
-  const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
+  const [pickupCoords, setPickupCoords] = useState<L.LatLng | null>(null);
+  const [dropoffCoords, setDropoffCoords] = useState<L.LatLng | null>(null);
+  const [pickupSuggestions, setPickupSuggestions] = useState<Suggestion[]>([]);
+  const [dropoffSuggestions, setDropoffSuggestions] = useState<Suggestion[]>([]);
   const [activeInput, setActiveInput] = useState<'pickup' | 'dropoff' | null>(null);
 
   const mapRef = useRef<L.Map | null>(null);
+  const pickupMarker = useRef<L.Marker | null>(null);
+  const dropoffMarker = useRef<L.Marker | null>(null);
+  const routingControl = useRef<any>(null);
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
-  const pickupMarkerRef = useRef<L.Marker | null>(null);
-  const dropoffMarkerRef = useRef<L.Marker | null>(null);
-  const routingControl = useRef<L.Routing.Control | null>(null);
-
-  // Suggestion search
-  useEffect(() => {
-    const keyword = activeInput === 'pickup' ? pickupAddress : dropoffAddress;
-    if (!keyword.trim()) return;
-
-    const timeout = setTimeout(() => {
-      fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(keyword)}&format=json`)
-        .then((res) => res.json())
-        .then((data: Suggestion[]) => setSuggestions(data.slice(0, 5)))
-        .catch(() => setSuggestions([]));
-    }, 300);
-
-    return () => clearTimeout(timeout);
-  }, [pickupAddress, dropoffAddress, activeInput]);
 
   // Initialize map once
   useEffect(() => {
@@ -53,117 +37,171 @@ export default function AddressSearchMap() {
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; OpenStreetMap contributors',
     }).addTo(map);
-
-    map.on('click', async (e: L.LeafletMouseEvent) => {
-      const { lat, lng } = e.latlng;
-
-      try {
-        const res = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`);
-        const data = await res.json();
-        const label = data.display_name;
-
-        if (activeInput === 'pickup') {
-          setPickupCoords({ lat, lng });
-          setPickupAddress(label);
-        } else if (activeInput === 'dropoff') {
-          setDropoffCoords({ lat, lng });
-          setDropoffAddress(label);
-        }
-      } catch (err) {
-        console.error('Reverse geocoding error:', err);
-      }
-    });
-
-    return () => {
-      map.off();
-      map.remove();
-    };
   }, []);
 
-  // Routing update
+  // Live search for pickup/dropoff
   useEffect(() => {
-    if (pickupCoords && dropoffCoords && mapRef.current) {
-      const from = L.latLng(pickupCoords.lat, pickupCoords.lng);
-      const to = L.latLng(dropoffCoords.lat, dropoffCoords.lng);
+    const query = activeInput === 'pickup' ? pickupAddress : dropoffAddress;
+    const setter = activeInput === 'pickup' ? setPickupSuggestions : setDropoffSuggestions;
 
-      if (pickupMarkerRef.current) {
-        pickupMarkerRef.current.setLatLng(from);
-      } else {
-        pickupMarkerRef.current = L.marker(from).addTo(mapRef.current).bindPopup('Pickup').openPopup();
-      }
-
-      if (dropoffMarkerRef.current) {
-        dropoffMarkerRef.current.setLatLng(to);
-      } else {
-        dropoffMarkerRef.current = L.marker(to).addTo(mapRef.current).bindPopup('Drop-off').openPopup();
-      }
-
-      if (routingControl.current) {
-        routingControl.current.setWaypoints([from, to]);
-      } else {
-        routingControl.current = L.Routing.control({
-          waypoints: [from, to],
-          routeWhileDragging: false,
-          show: false,
-        }).addTo(mapRef.current);
-      }
-
-      mapRef.current.fitBounds(L.latLngBounds([from, to]), { padding: [50, 50] });
+    if (!query.trim()) {
+      setter([]);
+      return;
     }
-  }, [pickupCoords, dropoffCoords]);
 
-  // Handle suggestion selection
-  const handleSuggestionClick = (s: Suggestion) => {
-    const lat = parseFloat(s.lat);
-    const lng = parseFloat(s.lon);
-    const coords = { lat, lng };
+    const debounce = setTimeout(() => {
+      fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json`)
+        .then((res) => res.json())
+        .then((data: Suggestion[]) => {
+          setter(data.slice(0, 5));
+        })
+        .catch(() => setter([]));
+    }, 300);
+
+    return () => clearTimeout(debounce);
+  }, [pickupAddress, dropoffAddress, activeInput]);
+
+  // Select from suggestions
+  const handleSuggestionSelect = async (s: Suggestion) => {
+    const latLng = L.latLng(parseFloat(s.lat), parseFloat(s.lon));
 
     if (activeInput === 'pickup') {
       setPickupAddress(s.display_name);
-      setPickupCoords(coords);
+      setPickupCoords(latLng);
+      setPickupSuggestions([]);
+      if (pickupMarker.current) pickupMarker.current.setLatLng(latLng);
+      else pickupMarker.current = L.marker(latLng).addTo(mapRef.current!);
     } else if (activeInput === 'dropoff') {
       setDropoffAddress(s.display_name);
-      setDropoffCoords(coords);
+      setDropoffCoords(latLng);
+      setDropoffSuggestions([]);
+      if (dropoffMarker.current) dropoffMarker.current.setLatLng(latLng);
+      else dropoffMarker.current = L.marker(latLng).addTo(mapRef.current!);
     }
 
-    setSuggestions([]);
-    mapRef.current?.setView([lat, lng], 15);
+    mapRef.current?.setView(latLng, 15);
+  };
+
+  // Draw route if both are set
+  useEffect(() => {
+    if (pickupCoords && dropoffCoords && mapRef.current) {
+      if (routingControl.current) {
+        routingControl.current.setWaypoints([pickupCoords, dropoffCoords]);
+      } else {
+        routingControl.current = L.Routing.control({
+          waypoints: [pickupCoords, dropoffCoords],
+          show: false,
+          addWaypoints: false,
+          draggableWaypoints: false,
+          routeWhileDragging: false,
+        }).addTo(mapRef.current);
+      }
+    }
+  }, [pickupCoords, dropoffCoords]);
+
+  // Use current location
+  const handleUseCurrentLocation = () => {
+    if (!navigator.geolocation) {
+      alert('Geolocation is not supported.');
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      async (pos) => {
+        const lat = pos.coords.latitude;
+        const lng = pos.coords.longitude;
+        const coords = L.latLng(lat, lng);
+
+        try {
+          const res = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`);
+          const data = await res.json();
+          const displayName = data?.display_name || 'Current location';
+
+          if (activeInput === 'pickup') {
+            setPickupAddress(displayName);
+            setPickupCoords(coords);
+            if (pickupMarker.current) pickupMarker.current.setLatLng(coords);
+            else pickupMarker.current = L.marker(coords).addTo(mapRef.current!);
+          } else if (activeInput === 'dropoff') {
+            setDropoffAddress(displayName);
+            setDropoffCoords(coords);
+            if (dropoffMarker.current) dropoffMarker.current.setLatLng(coords);
+            else dropoffMarker.current = L.marker(coords).addTo(mapRef.current!);
+          }
+
+          mapRef.current?.setView(coords, 15);
+        } catch (err) {
+          alert('Failed to reverse geocode location');
+        }
+      },
+      (err) => {
+        alert('Location access denied or unavailable');
+      }
+    );
   };
 
   return (
-    <div className="w-full h-screen p-4 flex flex-col gap-2">
+    <div className="w-full h-screen p-4 flex flex-col">
+      {/* Input Fields */}
       <input
         type="text"
         value={pickupAddress}
         onFocus={() => setActiveInput('pickup')}
         onChange={(e) => setPickupAddress(e.target.value)}
-        className="p-3 border rounded text-sm"
-        placeholder="Enter pickup location"
+        className="p-3 text-lg border border-gray-300 rounded focus:outline-none focus:ring w-full mb-2"
+        placeholder="Pickup location"
       />
       <input
         type="text"
         value={dropoffAddress}
         onFocus={() => setActiveInput('dropoff')}
         onChange={(e) => setDropoffAddress(e.target.value)}
-        className="p-3 border rounded text-sm"
-        placeholder="Enter drop-off location"
+        className="p-3 text-lg border border-gray-300 rounded focus:outline-none focus:ring w-full mb-2"
+        placeholder="Drop-off location"
       />
 
-      {suggestions.length > 0 && (
-        <ul className="bg-white border shadow rounded text-sm z-50 max-h-40 overflow-y-auto absolute mt-1 w-full">
-          {suggestions.map((s, i) => (
+      {/* 📍 Use Current Location Button */}
+      {activeInput && (
+        <button
+          onClick={handleUseCurrentLocation}
+          className="text-blue-600 underline text-sm mb-2 w-fit"
+        >
+          📍 Use current location for {activeInput}
+        </button>
+      )}
+
+      {/* Suggestions */}
+      {(activeInput === 'pickup' && pickupSuggestions.length > 0) ||
+      (activeInput === 'dropoff' && dropoffSuggestions.length > 0) ? (
+        <ul className="bg-white border border-gray-300 rounded shadow mt-1 max-h-40 overflow-y-auto z-10">
+          {(activeInput === 'pickup' ? pickupSuggestions : dropoffSuggestions).map((s, i) => (
             <li
               key={i}
-              className="p-2 hover:bg-gray-100 cursor-pointer"
-              onClick={() => handleSuggestionClick(s)}
+              onClick={() => handleSuggestionSelect(s)}
+              className="p-2 hover:bg-gray-100 cursor-pointer text-sm"
             >
               {s.display_name}
             </li>
           ))}
         </ul>
-      )}
+      ) : null}
 
-      <div ref={mapContainerRef} className="flex-1 mt-2 rounded border" />
+      {/* Map */}
+      <div ref={mapContainerRef} className="flex-1 mt-4 rounded border border-gray-300" />
+
+      {/* Coordinates Display */}
+      <div className="mt-2 text-sm text-gray-600 space-y-1">
+        {pickupCoords && (
+          <div>
+            <strong>Pickup:</strong> {pickupCoords.lat.toFixed(6)}, {pickupCoords.lng.toFixed(6)}
+          </div>
+        )}
+        {dropoffCoords && (
+          <div>
+            <strong>Drop-off:</strong> {dropoffCoords.lat.toFixed(6)}, {dropoffCoords.lng.toFixed(6)}
+          </div>
+        )}
+      </div>
     </div>
   );
-}
+              }
