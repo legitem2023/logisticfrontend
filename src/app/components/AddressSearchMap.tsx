@@ -79,6 +79,7 @@ export default function AddressSearchMap() {
           L.latLng(selectedCoords.lat, selectedCoords.lng),
           L.latLng(selectedCoords.lat, selectedCoords.lng),
         ],
+        // TypeScript doesn't recognize this option, but it's valid.
         createMarker: () => null,
         routeWhileDragging: false,
         addWaypoints: false,
