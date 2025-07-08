@@ -31,7 +31,7 @@ const HomeDataCarousel: FC<Props> = ({ items }) => {
       >
         {items.map(item => (
           <SwiperSlide key={item.id} className="!w-[100%]">
-            <div className="bg-white shadow-sm overflow-hidden rounded-lg">
+            <div className="bg-white shadow-sm overflow-hidden ">
               {item.imageUrl && (
                 <Image
                   src={item.imageUrl}
@@ -41,17 +41,6 @@ const HomeDataCarousel: FC<Props> = ({ items }) => {
                   height={267}
                 />
               )}
-              <div className="p-4">
-                <h3 className="text-lg font-semibold">{item.title}</h3>
-                {item.subtitle && (
-                  <p className="text-sm text-gray-600">{item.subtitle}</p>
-                )}
-                {item.actionLabel && (
-                  <button className="mt-2 text-blue-600 hover:underline">
-                    {item.actionLabel}
-                  </button>
-                )}
-              </div>
             </div>
           </SwiperSlide>
         ))}
