@@ -145,18 +145,20 @@ export default function AddressSearchMap() {
   center={selectedCoords}
   zoom={13}
   style={{ height: '400px', width: '100%' }}
-  whenReady={({ target: mapInstance }) => {
-    mapRef.current = mapInstance;
-    mapInstance.on('click', handleMapClick);
+  ref={(mapInstance) => {
+    if (mapInstance && !mapRef.current) {
+      mapRef.current = mapInstance;
+      mapInstance.on('click', handleMapClick);
+    }
   }}
 >
-          <TileLayer
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            attribution="© OpenStreetMap contributors"
-          />
-          <Marker position={selectedCoords} />
-          <SetMapView coords={selectedCoords} />
-        </MapContainer>
+  <TileLayer
+    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+    attribution="© OpenStreetMap contributors"
+  />
+  <Marker position={selectedCoords} />
+  <SetMapView coords={selectedCoords} />
+</MapContainer>
       )}
     </div>
   );
