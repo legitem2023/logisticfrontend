@@ -57,8 +57,7 @@ export default function SidebarTabs({ tabs }: SidebarTabsProps) {
       <div className="md:hidden absolute top-4 left-4 z-50">
         <button
           onClick={() => setIsMobileOpen(!isMobileOpen)}
-          className="customgrad p-2 rounded-md bg-gray-200 hover:bg-gray-300"
-        >
+          className="customgrad p-2 rounded-md bg-gray-200 hover:bg-gray-300">
           <Menu size={20} />
         </button>
       </div>
