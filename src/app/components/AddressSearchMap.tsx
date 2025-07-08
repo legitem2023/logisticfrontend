@@ -34,35 +34,79 @@ function SetMapView({ coords }: { coords: Coords }) {
 }
 
 export default function AddressSearchMap() {
-  const [address, setAddress] = useState('');
-  const [suggestions, setSuggestions] = useState<any[]>([]);
+  const [pickupAddress, setPickupAddress] = useState('');
+  const [pickupSuggestions, setPickupSuggestions] = useState<any[]>([]);
   const [selectedCoords, setSelectedCoords] = useState<Coords | null>(null);
+  
+  const [dropOffSearch, setDropOffSearch] = useState('');
+  const [dropOffSuggestions, setDropOffSuggestions] = useState<any[]>([]);
   const [dropOffLocations, setDropOffLocations] = useState<DropOffLocation[]>([]);
+  
   const [showMap, setShowMap] = useState(false);
   const [totalDistance, setTotalDistance] = useState<number>(0);
   const mapRef = useRef<L.Map | null>(null);
   const routingControl = useRef<L.Routing.Control | null>(null);
 
-  const handleSearch = async (query: string) => {
+  // Handle pickup location search
+  const handlePickupSearch = async (query: string) => {
     try {
       const res = await fetch(
         `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`
       );
       const data = await res.json();
-      setSuggestions(data);
+      setPickupSuggestions(data);
     } catch (err) {
-      console.error('Search error:', err);
+      console.error('Pickup search error:', err);
     }
   };
 
-  const handleSelectSuggestion = async (suggestion: any) => {
+  // Handle drop-off location search
+  const handleDropOffSearch = async (query: string) => {
+    try {
+      const res = await fetch(
+        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`
+      );
+      const data = await res.json();
+      setDropOffSuggestions(data);
+    } catch (err) {
+      console.error('Drop-off search error:', err);
+    }
+  };
+
+  const handleSelectPickupSuggestion = async (suggestion: any) => {
     const lat = parseFloat(suggestion.lat);
     const lng = parseFloat(suggestion.lon);
     const newCoords = { lat, lng, address: suggestion.display_name };
     setSelectedCoords(newCoords);
-    setAddress(suggestion.display_name);
-    setSuggestions([]);
+    setPickupAddress(suggestion.display_name);
+    setPickupSuggestions([]);
     setShowMap(true);
+  };
+
+  const handleSelectDropOffSuggestion = async (suggestion: any) => {
+    const lat = parseFloat(suggestion.lat);
+    const lng = parseFloat(suggestion.lon);
+    
+    try {
+      const res = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`
+      );
+      const data = await res.json();
+      
+      if (data?.display_name) {
+        const newLocation = {
+          id: Date.now().toString(),
+          coords: { lat, lng },
+          address: data.display_name
+        };
+        
+        setDropOffLocations(prev => [...prev, newLocation]);
+        setDropOffSearch('');
+        setDropOffSuggestions([]);
+      }
+    } catch (err) {
+      console.error('Reverse geocoding error:', err);
+    }
   };
 
   const handleMapClick = async (e: L.LeafletMouseEvent) => {
@@ -160,7 +204,7 @@ export default function AddressSearchMap() {
             lng: longitude,
             address: data?.display_name || 'Current Location'
           });
-          setAddress(data?.display_name || 'Current Location');
+          setPickupAddress(data?.display_name || 'Current Location');
           setShowMap(true);
         } catch (err) {
           console.error('Initial reverse geocoding error:', err);
@@ -173,6 +217,7 @@ export default function AddressSearchMap() {
 
   return (
     <div className="space-y-4">
+      {/* Pickup Location Input */}
       <div className="relative">
         <label className="block text-sm font-medium text-gray-700 mb-1">
           <span className="inline-flex items-center">
@@ -185,12 +230,12 @@ export default function AddressSearchMap() {
         <input
           type="text"
           className="w-full border border-gray-300 rounded-md px-3 py-2 pl-8"
-          value={address}
+          value={pickupAddress}
           placeholder="Search for pickup address..."
           onChange={(e) => {
             const val = e.target.value;
-            setAddress(val);
-            if (val.length > 2) handleSearch(val);
+            setPickupAddress(val);
+            if (val.length > 2) handlePickupSearch(val);
           }}
         />
         <div className="absolute left-2 top-9 text-gray-400">
@@ -200,13 +245,13 @@ export default function AddressSearchMap() {
         </div>
       </div>
 
-      {suggestions.length > 0 && (
+      {pickupSuggestions.length > 0 && (
         <ul className="border border-gray-300 rounded-md bg-white max-h-60 overflow-y-auto">
-          {suggestions.map((suggestion, idx) => (
+          {pickupSuggestions.map((suggestion, idx) => (
             <li
               key={idx}
               className="p-2 hover:bg-gray-100 cursor-pointer"
-              onClick={() => handleSelectSuggestion(suggestion)}
+              onClick={() => handleSelectPickupSuggestion(suggestion)}
             >
               {suggestion.display_name}
             </li>
@@ -226,9 +271,43 @@ export default function AddressSearchMap() {
               </span>
             </label>
             
+            {/* Drop-off Search Input */}
+            <div className="relative mb-3">
+              <input
+                type="text"
+                className="w-full border border-gray-300 rounded-md px-3 py-2 pl-8"
+                value={dropOffSearch}
+                placeholder="Search for drop-off address..."
+                onChange={(e) => {
+                  const val = e.target.value;
+                  setDropOffSearch(val);
+                  if (val.length > 2) handleDropOffSearch(val);
+                }}
+              />
+              <div className="absolute left-2 top-2.5 text-gray-400">
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd" />
+                </svg>
+              </div>
+            </div>
+
+            {dropOffSuggestions.length > 0 && (
+              <ul className="border border-gray-300 rounded-md bg-white max-h-60 overflow-y-auto mb-3">
+                {dropOffSuggestions.map((suggestion, idx) => (
+                  <li
+                    key={idx}
+                    className="p-2 hover:bg-gray-100 cursor-pointer"
+                    onClick={() => handleSelectDropOffSuggestion(suggestion)}
+                  >
+                    {suggestion.display_name}
+                  </li>
+                ))}
+              </ul>
+            )}
+
             {dropOffLocations.length === 0 && (
               <div className="text-sm text-gray-500 mb-2">
-                Click on the map to add drop-off locations
+                Click on the map or search above to add drop-off locations
               </div>
             )}
 
@@ -294,4 +373,4 @@ export default function AddressSearchMap() {
       )}
     </div>
   );
-          }
+}
