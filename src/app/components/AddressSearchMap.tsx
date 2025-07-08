@@ -131,7 +131,7 @@ export default function AddressSearchMap() {
 
           mapRef.current?.setView(coords, 15);
         } catch (err) {
-          alert('Failed to reverse geocode location');
+          alert('Failed to reverse geocode location' + err);
         }
       },
       (err) => {
