@@ -8,7 +8,7 @@ import dynamic from 'next/dynamic';
 import HomeDataCarousel from './HomeDataCarousel';
 import LoginCard from "./LoginCard";
 import Image from 'next/image';
-import { Home, Map, Package, LogIn } from "lucide-react";
+import { Home, Map, Package, LogIn, User } from "lucide-react";
 
 
 const DeliveryMap = dynamic(() => import('./DeliveryMap'), {
@@ -91,6 +91,14 @@ const mockItems: CarouselItem[] = [
 
   const tabItems = [
     {
+      label: 'Account',
+      icon:(<User color="gray"/>),
+      content: (
+        <div>
+
+        </div>
+      ),
+    },{
       label: 'Home',
       icon:(<Home color="green"/>),
       content: (
