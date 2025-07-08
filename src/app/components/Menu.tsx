@@ -12,6 +12,10 @@ import LoginCard from "./LoginCard";
 import Image from 'next/image';
 import { Home, Map, Package, LogIn, User } from "lucide-react";
 
+const AddressSearchMap = dynamic(() => import('./AddressSearchMap'), {
+  ssr: false,
+});
+
 
 const DeliveryMap = dynamic(() => import('./DeliveryMap'), {
   ssr: false,
@@ -112,7 +116,7 @@ const mockItems: CarouselItem[] = [
       content: (
         <div>
           <HomeDataCarousel items={mockItems} />
-          
+          <AddressSearchMap/>
           <DeliveryFormCard />
           <VehicleSelector />
         </div>
