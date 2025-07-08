@@ -1,6 +1,6 @@
 'use client'
 import Sidebar from "./Sidebar";
-import AddressSearchMap from "./AddressSearchMap";
+//import AddressSearchMap from "./AddressSearchMap";
 import ProfileCard from "./ProfileCard";
 import SwiperTabs from "./SwiperTabs";
 import DeliveryCard from "./DeliveryCard";
@@ -112,7 +112,7 @@ const mockItems: CarouselItem[] = [
       content: (
         <div>
           <HomeDataCarousel items={mockItems} />
-          <AddressSearchMap/>
+          
           <DeliveryFormCard />
           <VehicleSelector />
         </div>
