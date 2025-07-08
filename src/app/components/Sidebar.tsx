@@ -14,7 +14,7 @@ tabs: Tab[];
 };
 
 export default function SidebarTabs({ tabs }: SidebarTabsProps) {
-const [activeIndex, setActiveIndex] = useState(0);
+const [activeIndex, setActiveIndex] = useState(1);
 const [isMobileOpen, setIsMobileOpen] = useState(false);
 const sidebarRef = useRef<HTMLDivElement>(null);
 
