@@ -16,20 +16,27 @@ type SidebarTabsProps = {
 export default function SidebarTabs({ tabs }: SidebarTabsProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
   const sidebarRef = useRef<HTMLDivElement>(null);
+
+  // Hydration-safe rendering
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   const handleTabClick = (index: number) => {
     setActiveIndex(index);
     setIsMobileOpen(false); // auto-close sidebar on mobile
   };
 
-  // 👇 Handle outside click
+  // Handle click outside the sidebar (mobile)
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
         isMobileOpen &&
         sidebarRef.current &&
-        !sidebarRef.current.contains(event.target as Node)
+        event.target instanceof Node &&
+        !sidebarRef.current.contains(event.target)
       ) {
         setIsMobileOpen(false);
       }
@@ -41,9 +48,12 @@ export default function SidebarTabs({ tabs }: SidebarTabsProps) {
     };
   }, [isMobileOpen]);
 
+  // Don't render on server (for hydration mismatch safety)
+  if (!isMounted) return null;
+
   return (
-    <div className="flex h-[89vh] w-full">
-      {/* Mobile toggle */}
+    <div className="flex h-[89vh] w-full relative">
+      {/* Mobile Toggle Button */}
       <div className="md:hidden absolute top-4 left-4 z-50">
         <button
           onClick={() => setIsMobileOpen(!isMobileOpen)}
@@ -80,7 +90,7 @@ export default function SidebarTabs({ tabs }: SidebarTabsProps) {
       </aside>
 
       {/* Content Area */}
-      <main className="flex-1 p-2 overflow-auto md:ml-0 ml-0 h-[89vh]">
+      <main className="flex-1 p-2 overflow-auto h-[89vh] md:ml-0 ml-0">
         {tabs[activeIndex]?.content}
       </main>
     </div>
