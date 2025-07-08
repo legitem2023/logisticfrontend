@@ -83,7 +83,7 @@ export default function AddressSearchMap() {
         routeWhileDragging: false,
         addWaypoints: false,
         show: false,
-      }).addTo(mapRef.current);
+      } as any).addTo(mapRef.current);
     }
   }, [selectedCoords]);
 
