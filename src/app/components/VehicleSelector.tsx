@@ -1,18 +1,11 @@
 'use client';
-
+import { Icon } from '@iconify/react';
 import { useState } from 'react';
-import { Truck, Car, Bike } from 'lucide-react';
-import type { ReactElement } from 'react';
+
 import { useQuery } from '@apollo/client';
 import { VEHICLEQUERY } from '../../../graphql/query';
 import Loading from './ui/Loading';
-type Vehicle = {
-  id: string;
-  name: string;
-  icon: ReactElement;
-  description: string;
-  price: string;
-};
+
 type VehicleType = {
   id: string;
   name: string;
@@ -22,31 +15,8 @@ type VehicleType = {
   createdAt: string; // or number, depending on how you use timestamps
   updatedAt: string; // or number
   icon:string
+  cost:number
 };
-
-const vehicleOptions: Vehicle[] = [
-  {
-    id: 'bike',
-    name: 'Motorcycle',
-    icon: <Bike className="w-6 h-6 text-blue-600" />,
-    description: 'Small packages only (max 20kg)',
-    price: '₱80 base fare',
-  },
-  {
-    id: 'car',
-    name: 'Car',
-    icon: <Car className="w-6 h-6 text-yellow-600" />,
-    description: 'Up to 100kg — documents, boxes',
-    price: '₱150 base fare',
-  },
-  {
-    id: 'van',
-    name: 'Van',
-    icon: <Truck className="w-6 h-6 text-green-600" />,
-    description: 'Large and bulky items (up to 300kg)',
-    price: '₱250 base fare',
-  },
-];
 
 export default function VehicleSelector() {
   const { loading, error, data } = useQuery(VEHICLEQUERY);
@@ -72,12 +42,12 @@ export default function VehicleSelector() {
               : 'border-gray-200 bg-white hover:bg-gray-50'
           }`}
         >
-          <div>{vehicle.icon}</div>
+          <div><Icon icon={vehicle.icon} style={{height:'40px',width:'40px'}}/></div>
           <div className="flex-1">
             <p className="text-base font-semibold">{vehicle.name}</p>
             <p className="text-sm text-gray-500">{vehicle.description}</p>
           </div>
-          <div className="text-sm font-bold text-gray-700">{vehicle.name}</div>
+          <div className="text-sm font-bold text-gray-700">{vehicle.cost}</div>
         </button>
       ))}
     </div>

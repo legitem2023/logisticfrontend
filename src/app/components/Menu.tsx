@@ -9,7 +9,10 @@ import dynamic from 'next/dynamic';
 import HomeDataCarousel from './HomeDataCarousel';
 import LoginCard from "./LoginCard";
 import Image from 'next/image';
-import { Home, Map, Package, LogIn, User } from "lucide-react";
+import { Home, Package, LogIn, User , Bike, Settings, Hand } from "lucide-react";
+import Rider from "./Rider/Rider";
+import HelpPage from "./HelpPage";
+import SettingsPage from "./SettingsPage";
 
 const AddressSearchMap = dynamic(() => import('./AddressSearchMap'), {
   ssr: false,
@@ -147,14 +150,44 @@ export default function Menu() {
       ),
     },
     {
+      label: 'Rider',
+      icon: (<Bike color="green" />),
+      content: (
+        <div>
+          <Rider/>
+        </div>
+      ),
+    },
+    {
+      label: 'Settings',
+      icon: (<Settings color="green" />),
+      content: (
+        <div>
+          <SettingsPage/>
+        </div>
+      ),
+    },
+    {
+      label: 'Help Center',
+      icon: (<Hand color="green" />),
+      content: (
+        <div>
+          <HelpPage/>
+        </div>
+      ),
+    },
+    {
       label: 'Login',
       icon: (<LogIn color="green" />),
       content: (
         <div>
-          <LoginCard />
+          <LoginCard/>
         </div>
       ),
     },
+
+
+    
   ];
 
   return (

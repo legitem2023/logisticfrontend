@@ -1,6 +1,8 @@
 'use client'
+import Cookies from 'js-cookie'
 
 import React, { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { Card, CardContent, CardHeader, CardTitle } from './ui/Card'
 import { Button } from './ui/Button'
 import { Input } from './ui/Input'
@@ -8,14 +10,25 @@ import { useMutation } from '@apollo/client'
 import FacebookLoginButton from './Auth/FacebookLoginButton'
 import GoogleLoginButton from './Auth/GoogleLoginButton'
 import { LOGIN } from '../../../graphql/mutation'
+import { decryptToken } from '../../../utils/decryptToken'
 
 export default function LoginCard() {
+  const router = useRouter()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [login, { loading, error }] = useMutation(LOGIN, {
     onCompleted: (data) => {
-      console.log('Login successful:', data)
-      // TODO: Store token / decrypt it / navigate
+      const token = data?.login?.token
+      if (token) {
+        Cookies.set('token', token, {
+          expires: 7,
+          secure: true,
+          sameSite: 'lax',
+        })
+
+      } else {
+        console.error('No token returned')
+      }
     },
     onError: (err) => {
       console.error('Login failed:', err.message)
@@ -23,7 +36,10 @@ export default function LoginCard() {
   })
 
   const handleLogin = () => {
-    if (!email || !password) return alert('Please enter email and password.')
+    if (!email || !password) {
+      alert('Please enter email and password.')
+      return
+    }
 
     login({
       variables: {
@@ -36,7 +52,7 @@ export default function LoginCard() {
   }
 
   return (
-    <div className="flex justify-center items-center shimmergreen p-4 min-h-screen">
+    <div className="flex justify-center items-center bg-gray-100 p-4 min-h-screen">
       <Card className="w-full max-w-md shadow-xl p-6">
         <CardHeader>
           <CardTitle className="text-center text-2xl font-semibold">Login</CardTitle>
@@ -57,7 +73,7 @@ export default function LoginCard() {
             onChange={(e) => setPassword(e.target.value)}
           />
 
-          <Button className="w-full" onClick={handleLogin} disabled={loading}>
+          <Button className="w-full text-[#ffffff] shadow rounded-lg customgrad" onClick={handleLogin} disabled={loading}>
             {loading ? 'Logging in...' : 'Login'}
           </Button>
 
