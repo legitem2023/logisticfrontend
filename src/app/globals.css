@@ -29,7 +29,6 @@ body {
   background: linear-gradient(301deg, rgba(8, 137, 54, 1) 0%, rgba(0, 44, 16, 1) 50%);
 }
 .Account {
-  transform: scale(0);
   border-bottom: 4px solid #22c55e;
   height:0px;
   background: #088936;
