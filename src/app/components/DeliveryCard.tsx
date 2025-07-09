@@ -51,7 +51,7 @@ export default function DeliveryCard({ pickup, dropoff, status = 'in_progress', 
       </div>
           <div>
             {status==='in_progress' && (
-             <Collapsible title="View Map" defaultOpen>
+             <Collapsible title="View Map" defaultOpen={false}>
                {children}
             </Collapsible>
             )}  
