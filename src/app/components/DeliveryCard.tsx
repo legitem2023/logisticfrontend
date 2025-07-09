@@ -1,11 +1,11 @@
 // app/components/DeliveryCard.tsx
-import React from 'react';
+import React,{ ReactElement} from 'react';
 import { MapPin, Navigation } from 'lucide-react';
 import Collapsible from './ui/Collapsible';
 type Props = {
   pickup: string;
   dropoff: string;
-  children: React.ReactNode;
+  children: ReactElement;
   status?: 'in_progress' | 'completed' | 'pending' | 'cancelled';
 };
 
