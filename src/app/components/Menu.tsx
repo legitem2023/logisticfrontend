@@ -59,6 +59,7 @@ const mockItems: CarouselItem[] = [
             pickup="SM North EDSA, Quezon City"
             dropoff="Bonifacio Global City, Taguig"
             status="in_progress"
+            children={()=>(<DeliveryMap/>)}
           />
         </div>
       )
@@ -69,6 +70,7 @@ const mockItems: CarouselItem[] = [
             pickup="SM North EDSA, Quezon City"
             dropoff="Bonifacio Global City, Taguig"
             status="completed"
+            children={()=>(<DeliveryMap/>)}
           />
         </div>
       )
@@ -79,6 +81,7 @@ const mockItems: CarouselItem[] = [
             pickup="SM North EDSA, Quezon City"
             dropoff="Bonifacio Global City, Taguig"
             status="pending"
+            children={()=>(<DeliveryMap/>)}
           />
         </div>
       )
@@ -89,6 +92,7 @@ const mockItems: CarouselItem[] = [
             pickup="SM North EDSA, Quezon City"
             dropoff="Bonifacio Global City, Taguig"
             status="cancelled"
+            children={()=>(<DeliveryMap/>)}
           />
         </div>
       )
