@@ -138,15 +138,6 @@ export default function Menu() {
       ),
     },
     {
-      label: 'Map',
-      icon: (<Map color="green" />),
-      content: (
-        <div>
-          <DeliveryMap />
-        </div>
-      ),
-    },
-    {
       label: 'Order',
       icon: (<Package color="green" />),
       content: (
