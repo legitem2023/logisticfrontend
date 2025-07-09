@@ -44,6 +44,9 @@ export default function DeliveryCard({ pickup, dropoff, status = 'in_progress' }
             <p className="text-xs text-gray-500">Drop-off</p>
             <p className="text-base font-medium">{dropoff}</p>
           </div>
+          
+        </div>
+      </div>
           <div>
             {status==='in_progress' && (
              <Collapsible title="View Map" defaultOpen>
@@ -53,11 +56,8 @@ export default function DeliveryCard({ pickup, dropoff, status = 'in_progress' }
                  <li>Item Three</li>
              </ul>
             </Collapsible>
-            )}
-            
+            )}  
           </div>
-        </div>
-      </div>
     </div>
   );
 }
