@@ -299,7 +299,7 @@ export default function AddressSearchMap() {
                 {dropOffSuggestions.map((suggestion, idx) => (
                   <li
                     key={idx}
-                    className="p-2 hover:bg-gray-100 cursor-pointer"
+                    className="p-2 hover:bg-gray-100 cursor-pointer flex flex-row"
                     onClick={() => handleSelectDropOffSuggestion(suggestion)}
                   >
                     <svg className="w-4 h-4 mr-1 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
