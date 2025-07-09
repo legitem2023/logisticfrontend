@@ -1,11 +1,10 @@
 'use client'
+
 import Sidebar from "./Sidebar";
-//import AddressSearchMap from "./AddressSearchMap";
 import ProfileCard from "./ProfileCard";
 import SwiperTabs from "./SwiperTabs";
 import DeliveryCard from "./DeliveryCard";
 import VehicleSelector from "./VehicleSelector";
-//import DeliveryFormCard from "./DeliveryFormCard";
 import dynamic from 'next/dynamic';
 import HomeDataCarousel from './HomeDataCarousel';
 import LoginCard from "./LoginCard";
@@ -16,10 +15,10 @@ const AddressSearchMap = dynamic(() => import('./AddressSearchMap'), {
   ssr: false,
 });
 
-
 const DeliveryMap = dynamic(() => import('./DeliveryMap'), {
   ssr: false,
 });
+
 type CarouselItem = {
   id: string;
   title: string;
@@ -29,71 +28,83 @@ type CarouselItem = {
 };
 
 export default function Menu() {
-const mockItems: CarouselItem[] = [
-  {
-    id: 'promo1',
-    title: '₱50 off on your next delivery',
-    subtitle: 'Use code: LALA50',
-    imageUrl: '/Banner1.webp', // official Lalamove carousel banner
-    actionLabel: 'Use Now',
-  },
-  {
-    id: 'rec1',
-    title: 'Recently Delivered: 📦',
-    subtitle: 'Sent to Makati – 2 days ago',
-    imageUrl: '/Banner1.webp', // official Lalamove carousel banner
-  },
-  {
-    id: 'service1',
-    title: 'Try Grocery – new service',
-    subtitle: 'Order now and save ₱30',
-    imageUrl: '/Banner1.webp', // official Lalamove carousel banner
-    actionLabel: 'Order Now',
-  },
-];
-  
+  const mockItems: CarouselItem[] = [
+    {
+      id: 'promo1',
+      title: '₱50 off on your next delivery',
+      subtitle: 'Use code: LALA50',
+      imageUrl: '/Banner1.webp',
+      actionLabel: 'Use Now',
+    },
+    {
+      id: 'rec1',
+      title: 'Recently Delivered: 📦',
+      subtitle: 'Sent to Makati – 2 days ago',
+      imageUrl: '/Banner1.webp',
+    },
+    {
+      id: 'service1',
+      title: 'Try Grocery – new service',
+      subtitle: 'Order now and save ₱30',
+      imageUrl: '/Banner1.webp',
+      actionLabel: 'Order Now',
+    },
+  ];
+
   const progressitem = [
-    { label: 'In Progress', content: (
+    {
+      label: 'In Progress',
+      content: (
         <div>
           <DeliveryCard
             pickup="SM North EDSA, Quezon City"
             dropoff="Bonifacio Global City, Taguig"
             status="in_progress"
-            children={()=>(<></>)}
-          />
+          >
+            <DeliveryMap />
+          </DeliveryCard>
         </div>
       )
     },
-    { label: 'Completed', content: (
+    {
+      label: 'Completed',
+      content: (
         <div>
           <DeliveryCard
             pickup="SM North EDSA, Quezon City"
             dropoff="Bonifacio Global City, Taguig"
             status="completed"
-            children={()=>(<></>)}
-          />
+          >
+            <DeliveryMap />
+          </DeliveryCard>
         </div>
       )
     },
-    { label: 'Pending', content: (
+    {
+      label: 'Pending',
+      content: (
         <div>
           <DeliveryCard
             pickup="SM North EDSA, Quezon City"
             dropoff="Bonifacio Global City, Taguig"
             status="pending"
-            children={()=>(<DeliveryMap></DeliveryMap>)}
-          />
+          >
+            <DeliveryMap />
+          </DeliveryCard>
         </div>
       )
     },
-    { label: 'Cancelled', content: (
+    {
+      label: 'Cancelled',
+      content: (
         <div>
           <DeliveryCard
             pickup="SM North EDSA, Quezon City"
             dropoff="Bonifacio Global City, Taguig"
             status="cancelled"
-            children={()=>(<></>)}
-          />
+          >
+            <DeliveryMap />
+          </DeliveryCard>
         </div>
       )
     },
@@ -102,33 +113,33 @@ const mockItems: CarouselItem[] = [
   const tabItems = [
     {
       label: 'Account',
-      icon:(<User color="gray"/>),
+      icon: (<User color="gray" />),
       content: (
         <div>
-         <ProfileCard
-           name="Juan Dela Cruz"
-           email="juan@example.com"
-           contactNumber="+63 912 345 6789"
-           address="123 Mabini Street, Quezon City, PH"
-           avatarUrl="https://i.pravatar.cc/100?img=12"
-      />
+          <ProfileCard
+            name="Juan Dela Cruz"
+            email="juan@example.com"
+            contactNumber="+63 912 345 6789"
+            address="123 Mabini Street, Quezon City, PH"
+            avatarUrl="https://i.pravatar.cc/100?img=12"
+          />
         </div>
       ),
-    },{
+    },
+    {
       label: 'Home',
-      icon:(<Home color="green"/>),
+      icon: (<Home color="green" />),
       content: (
         <div>
           <HomeDataCarousel items={mockItems} />
-          <AddressSearchMap/>
-          
+          <AddressSearchMap />
           <VehicleSelector />
         </div>
       ),
     },
     {
       label: 'Map',
-      icon:(<Map color="green"/>),
+      icon: (<Map color="green" />),
       content: (
         <div>
           <DeliveryMap />
@@ -137,7 +148,7 @@ const mockItems: CarouselItem[] = [
     },
     {
       label: 'Order',
-      icon:(<Package color="green"/>),
+      icon: (<Package color="green" />),
       content: (
         <div className="relative max-w-md mx-auto p-4 bg-white rounded-2xl shadow space-y-4">
           <SwiperTabs tabs={progressitem} />
@@ -146,10 +157,10 @@ const mockItems: CarouselItem[] = [
     },
     {
       label: 'Login',
-      icon:(<LogIn color="green"/>),
+      icon: (<LogIn color="green" />),
       content: (
         <div>
-          <LoginCard/>
+          <LoginCard />
         </div>
       ),
     },
@@ -158,7 +169,7 @@ const mockItems: CarouselItem[] = [
   return (
     <div className="h-[98vh]">
       <div className="h-[10vh] w-full flex items-center justify-center customgrad border-b-4 border-green-500">
-        <Image src="/Logo.svg" className="h-[80%] w-auto" alt="1" width="100" height="100"/>
+        <Image src="/Logo.svg" className="h-[80%] w-auto" alt="Logo" width={100} height={100} />
       </div>
       <Sidebar tabs={tabItems} />
     </div>
