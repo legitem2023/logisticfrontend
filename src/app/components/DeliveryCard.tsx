@@ -45,13 +45,16 @@ export default function DeliveryCard({ pickup, dropoff, status = 'in_progress' }
             <p className="text-base font-medium">{dropoff}</p>
           </div>
           <div>
-            <Collapsible title="Another Section" defaultOpen>
+            {status==='in_progress' && (
+             <Collapsible title="Another Section" defaultOpen>
               <ul className="list-disc pl-4 text-sm text-gray-600">
                 <li>Item One</li>
                 <li>Item Two</li>
                  <li>Item Three</li>
              </ul>
             </Collapsible>
+            )}
+            
           </div>
         </div>
       </div>
