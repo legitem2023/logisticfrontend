@@ -135,7 +135,7 @@ const mockItems: CarouselItem[] = [
       label: 'Order',
       icon:(<Package color="green"/>),
       content: (
-        <div>
+        <div className="relative max-w-md mx-auto p-4 bg-white rounded-2xl shadow space-y-4">
           <SwiperTabs tabs={progressitem} />
         </div>
       ),
