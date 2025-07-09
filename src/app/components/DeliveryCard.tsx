@@ -25,7 +25,7 @@ export default function DeliveryCard({ pickup, dropoff, status = 'in_progress', 
   }[status];
 
   return (
-    <div>
+    <div className="mt-5">
       <div className="mb-4">
         <p className="text-sm font-medium text-gray-500">Status</p>
         <p className={`text-lg font-semibold ${statusColor}`}>{statusLabel}</p>
