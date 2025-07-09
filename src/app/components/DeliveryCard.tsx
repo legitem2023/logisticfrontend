@@ -1,15 +1,15 @@
 // app/components/DeliveryCard.tsx
-import React,{ ReactElement} from 'react';
+import React,{ ReactNode } from 'react';
 import { MapPin, Navigation } from 'lucide-react';
 import Collapsible from './ui/Collapsible';
 type Props = {
   pickup: string;
   dropoff: string;
-  children: ReactElement;
+  children: ReactNode;
   status?: 'in_progress' | 'completed' | 'pending' | 'cancelled';
 };
 
-export default function DeliveryCard({ pickup, dropoff, status = 'in_progress' }: Props) {
+export default function DeliveryCard({ pickup, dropoff, status = 'in_progress', children }: Props) {
   const statusLabel = {
     in_progress: 'In Progress',
     completed: 'Completed',
