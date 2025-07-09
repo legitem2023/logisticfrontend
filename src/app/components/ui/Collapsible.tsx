@@ -11,10 +11,10 @@ export default function Collapsible({ title, children, defaultOpen = false }: Co
   const [open, setOpen] = useState(defaultOpen);
 
   return (
-    <div className="border rounded-2xl shadow-sm overflow-hidden mb-4">
+    <div className="border shadow-sm overflow-hidden mb-2">
       <button
         onClick={() => setOpen(!open)}
-        className="w-full flex items-center justify-between px-4 py-3 bg-gray-100 hover:bg-gray-200 transition"
+        className="w-full flex items-center justify-between px-2 py-2 bg-gray-100 hover:bg-gray-200 transition"
       >
         <span className="font-medium text-left">{title}</span>
         {open ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
