@@ -52,11 +52,10 @@ body {
     left: 100%;
   }
 }
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width : 1080px) {
   .Account {
     height:10vh;
     background: #088936;
     background: linear-gradient(301deg, rgba(8, 137, 54, 1) 0%, rgba(0, 44, 16, 1) 50%);
-  }
-  
+  }  
 }
