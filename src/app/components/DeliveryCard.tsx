@@ -1,6 +1,6 @@
 // app/components/DeliveryCard.tsx
 import { MapPin, Navigation } from 'lucide-react';
-import Collapsible from 'ui/Collapsible';
+import Collapsible from './ui/Collapsible';
 type Props = {
   pickup: string;
   dropoff: string;
