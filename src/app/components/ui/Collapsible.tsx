@@ -21,8 +21,8 @@ export default function Collapsible({ title, children, defaultOpen = false }: Co
       </button>
 
       <div
-        className={`transition-all duration-300 ease-in-out px-4 overflow-hidden ${
-          open ? "max-h-screen py-3" : "max-h-0 py-0"
+        className={`transition-all duration-300 ease-in-out px-0 overflow-hidden ${
+          open ? "max-h-screen py-0" : "max-h-0 py-0"
         }`}
       >
         <div className={`${open ? "opacity-100" : "opacity-0"} transition-opacity duration-300`}>
