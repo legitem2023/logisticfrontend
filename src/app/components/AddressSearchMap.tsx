@@ -216,7 +216,7 @@ export default function AddressSearchMap() {
   }, []);
 
   return (
-    <div className="relative max-w-md mx-auto p-4 bg-white rounded-2xl shadow space-y-4">
+    <div className="relative max-w-md mx-auto p-4 bg-white space-y-4">
       <h2 className="text-xl font-bold mb-2">📦 Create Delivery</h2>
 
     <div className="space-y-4">
