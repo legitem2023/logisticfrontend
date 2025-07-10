@@ -56,14 +56,14 @@ export default function Menu() {
       id: 'service2',
       title: 'Your Cargo, Our Priority.',
       subtitle: 'Dedicated logistics support from pickup to drop-off.',
-      imageUrl: '/BannerC.jpg',
+      imageUrl: '/BannerD.jpg',
       actionLabel: 'Order Now',
     },
     {
       id: 'service3',
       title: 'Delivering More Than Just Packages.',
       subtitle: 'We deliver trust, speed, and peace of mind.',
-      imageUrl: '/BannerC.jpg',
+      imageUrl: '/BannerE.jpg',
       actionLabel: 'Order Now',
     },
   ];
