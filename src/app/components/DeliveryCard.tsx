@@ -1,15 +1,22 @@
-// app/components/DeliveryCard.tsx
-import React,{ ReactNode } from 'react';
+import React, { ReactNode } from 'react';
 import { MapPin, Navigation } from 'lucide-react';
 import Collapsible from './ui/Collapsible';
+
 type Props = {
   pickup: string;
   dropoff: string;
   children: ReactNode;
+  assignedDriver?: ReactNode; // <-- New prop
   status?: 'in_progress' | 'completed' | 'pending' | 'cancelled';
 };
 
-export default function DeliveryCard({ pickup, dropoff, status = 'in_progress', children }: Props) {
+export default function DeliveryCard({
+  pickup,
+  dropoff,
+  status = 'in_progress',
+  children,
+  assignedDriver, // <-- Receive it here
+}: Props) {
   const statusLabel = {
     in_progress: 'In Progress',
     completed: 'Completed',
@@ -46,16 +53,24 @@ export default function DeliveryCard({ pickup, dropoff, status = 'in_progress', 
             <p className="text-xs text-gray-500">Drop-off</p>
             <p className="text-base font-medium">{dropoff}</p>
           </div>
-          
         </div>
       </div>
-          <div>
-            {status==='in_progress' && (
-             <Collapsible title="View Map" defaultOpen={false}>
-               {children}
-            </Collapsible>
-            )}  
-          </div>
+
+      {/* Assigned Driver Collapsible */}
+      {assignedDriver && (
+        <div className="mb-3">
+          <Collapsible title="Assigned Driver" defaultOpen={false}>
+            {assignedDriver}
+          </Collapsible>
+        </div>
+      )}
+
+      {/* Map Collapsible */}
+      {status === 'in_progress' && (
+        <Collapsible title="View Map" defaultOpen={false}>
+          {children}
+        </Collapsible>
+      )}
     </div>
   );
 }
