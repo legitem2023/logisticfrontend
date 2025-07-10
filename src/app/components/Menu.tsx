@@ -9,7 +9,7 @@ import dynamic from 'next/dynamic';
 import HomeDataCarousel from './HomeDataCarousel';
 import LoginCard from "./LoginCard";
 import Image from 'next/image';
-import { Home, Package, LogIn, User , Bike, Settings, Hand } from "lucide-react";
+import { Home, Package, LogIn, User , Bike, Settings, Hand, LogOut } from "lucide-react";
 import Rider from "./Rider/Rider";
 import HelpPage from "./HelpPage";
 import SettingsPage from "./SettingsPage";
@@ -185,7 +185,15 @@ export default function Menu() {
         </div>
       ),
     },
-
+    {
+      label: 'Logout',
+      icon: (<LogIn color="green" />),
+      content: (
+        <div>
+          <LoginCard/>
+        </div>
+      ),
+    },
 
     
   ];
