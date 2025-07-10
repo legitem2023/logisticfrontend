@@ -5,24 +5,27 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import 'leaflet-routing-machine';
 import 'leaflet-routing-machine/dist/leaflet-routing-machine.css';
+
 export default function DeliveryMap() {
   const mapRef = useRef<L.Map | null>(null);
   const routingRef = useRef<L.Routing.Control | null>(null);
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
 
-  const sender = L.latLng(14.5995, 120.9842);
-  const receiver = L.latLng(14.8874, 120.3666);
+  const sender = L.latLng(14.5995, 120.9842);   // Manila
+  const receiver = L.latLng(14.8874, 120.3666); // Pampanga
 
   const senderIcon = L.icon({
-    iconUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSHYgpRPaXFg8x_RiFJXQRSXfxzmP8Ci1E18Q&s',
-    iconSize: [30, 30],
-    iconAnchor: [15, 30],
+    iconUrl: 'https://cdn-icons-png.flaticon.com/512/891/891462.png', // 📦 box icon
+    iconSize: [40, 40],
+    iconAnchor: [20, 40],
+    popupAnchor: [0, -35],
   });
 
   const receiverIcon = L.icon({
-    iconUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSv8ctukBNdRmOgtQjXzS2YP55ik9J2YtXFZg&s',
-    iconSize: [30, 30],
-    iconAnchor: [15, 30],
+    iconUrl: 'https://cdn-icons-png.flaticon.com/512/535/535137.png', // 📍 location pin
+    iconSize: [40, 40],
+    iconAnchor: [20, 40],
+    popupAnchor: [0, -35],
   });
 
   useEffect(() => {
@@ -35,8 +38,8 @@ export default function DeliveryMap() {
       attribution: '&copy; OpenStreetMap contributors',
     }).addTo(map);
 
-    L.marker(sender, { icon: senderIcon }).bindPopup('Rider').addTo(map);
-    L.marker(receiver, { icon: receiverIcon }).bindPopup('Dropzone').addTo(map);
+    L.marker(sender, { icon: senderIcon }).bindPopup('📦 Pickup Point').addTo(map);
+    L.marker(receiver, { icon: receiverIcon }).bindPopup('📍 Delivery Point').addTo(map);
 
     import('leaflet-routing-machine').then(() => {
       if (!mapRef.current) return;
@@ -52,24 +55,17 @@ export default function DeliveryMap() {
       routingRef.current = routingControl;
     });
 
-    // Ensure map resizes properly on window size change
-    const handleResize = () => {
-      map.invalidateSize();
-    };
+    const handleResize = () => map.invalidateSize();
     window.addEventListener('resize', handleResize);
 
     return () => {
       window.removeEventListener('resize', handleResize);
-      if (routingRef.current) {
-        routingRef.current.remove();
-        routingRef.current = null;
-      }
-      if (mapRef.current) {
-        mapRef.current.remove();
-        mapRef.current = null;
-      }
+      routingRef.current?.remove();
+      routingRef.current = null;
+      mapRef.current?.remove();
+      mapRef.current = null;
     };
-  }, [receiver, receiverIcon, sender, senderIcon]);
+  }, [sender, receiver]);
 
   return (
     <div
