@@ -36,20 +36,20 @@ export default function Menu() {
       id: 'promo1',
       title: '₱50 off on your next delivery',
       subtitle: 'Use code: LALA50',
-      imageUrl: '/Banner1.webp',
+      imageUrl: '/BannerA.jpg',
       actionLabel: 'Use Now',
     },
     {
       id: 'rec1',
       title: 'Recently Delivered: 📦',
       subtitle: 'Sent to Makati – 2 days ago',
-      imageUrl: '/Banner1.webp',
+      imageUrl: '/BannerB.jpg',
     },
     {
       id: 'service1',
       title: 'Try Grocery – new service',
       subtitle: 'Order now and save ₱30',
-      imageUrl: '/Banner1.webp',
+      imageUrl: '/BannerC.jpg',
       actionLabel: 'Order Now',
     },
   ];
