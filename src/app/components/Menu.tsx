@@ -77,6 +77,7 @@ export default function Menu() {
             pickup="SM North EDSA, Quezon City"
             dropoff="Bonifacio Global City, Taguig"
             status="in_progress"
+            assignedDriver={()=>(<>Driver</>)}
           >
             <DeliveryMap />
           </DeliveryCard>
