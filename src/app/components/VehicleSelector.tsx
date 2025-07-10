@@ -49,7 +49,7 @@ export default function VehicleSelector() {
               >
                 {/* Check icon */}
                 {isSelected && (
-                  <div className="absolute top-2 right-2 w-6 h-6 rounded-full bg-green-500 text-white flex items-center justify-center">
+                  <div className="absolute top-[-5] right-[-5] w-6 h-6 rounded-full bg-green-500 text-white flex items-center justify-center">
                     <Icon icon="mdi:check" className="text-sm" />
                   </div>
                 )}
