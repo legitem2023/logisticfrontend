@@ -8,6 +8,8 @@ import VehicleSelector from "./VehicleSelector";
 import dynamic from 'next/dynamic';
 import HomeDataCarousel from './HomeDataCarousel';
 import LoginCard from "./LoginCard";
+
+import SignupCard from "./SignupCard";
 import Image from 'next/image';
 import { Home, Package, LogIn, User , Bike, Settings, Hand, LogOut, HelpCircle } from "lucide-react";
 import Rider from "./Rider/Rider";
@@ -188,6 +190,15 @@ export default function Menu() {
       content: (
         <div>
           <HelpPage/>
+        </div>
+      ),
+    },
+    {
+      label: 'Signup',
+      icon: (<LogIn color="green" />),
+      content: (
+        <div>
+          <SignupCard/>
         </div>
       ),
     },
