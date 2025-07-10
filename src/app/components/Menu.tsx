@@ -34,21 +34,21 @@ export default function Menu() {
   const mockItems: CarouselItem[] = [
     {
       id: 'promo1',
-      title: '₱50 off on your next delivery',
-      subtitle: 'Use code: LALA50',
+      title: 'We Move What Matters!',
+      subtitle: 'Fast, reliable logistics solutions for businesses of all sizes.',
       imageUrl: '/BannerA.jpg',
       actionLabel: 'Use Now',
     },
     {
       id: 'rec1',
-      title: 'Recently Delivered: 📦',
-      subtitle: 'Sent to Makati – 2 days ago',
+      title: 'From Point A to Anywhere.',
+      subtitle: 'Local and nationwide delivery you can count on—on time, every time.',
       imageUrl: '/BannerB.jpg',
     },
     {
       id: 'service1',
-      title: 'Try Grocery – new service',
-      subtitle: 'Order now and save ₱30',
+      title: 'Smart Deliveries. Seamless Tracking.',
+      subtitle: 'Real-time updates, flexible scheduling, and secure transport.',
       imageUrl: '/BannerC.jpg',
       actionLabel: 'Order Now',
     },
