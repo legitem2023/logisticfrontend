@@ -69,7 +69,7 @@ const SignupCard = () => {
             <Label htmlFor="license">Driver’s License (Upload)</Label>
             <Input id="license" name="license" type="file" accept="image/*,application/pdf" onChange={handleChange} />
           </div>
-          <Button type="submit" className="w-full mt-4">
+          <Button type="submit" className="w-full text-[#ffffff] shadow rounded-lg customgrad">
             Sign Up
           </Button>
         </form>

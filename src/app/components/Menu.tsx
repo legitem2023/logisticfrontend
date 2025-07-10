@@ -1,5 +1,5 @@
 'use client'
-
+import Cookies from 'js-cookie'
 import Sidebar from "./Sidebar";
 import ProfileCard from "./ProfileCard";
 import SwiperTabs from "./SwiperTabs";
@@ -133,6 +133,7 @@ export default function Menu() {
   const tabItems = [
     {
       label: 'Account',
+      role: '',
       icon: (<User color="gray" />),
       content: (
         <div>
@@ -148,6 +149,7 @@ export default function Menu() {
     },
     {
       label: 'Home',
+      role: '',
       icon: (<Home color="green" />),
       content: (
         <div>
@@ -159,6 +161,7 @@ export default function Menu() {
     },
     {
       label: 'Order',
+      role: '',
       icon: (<Package color="green" />),
       content: (
         <div className="relative max-w-md mx-auto p-4 bg-white rounded-2xl shadow space-y-4">
@@ -168,6 +171,7 @@ export default function Menu() {
     },
     {
       label: 'Rider',
+      role: '',
       icon: (<Bike color="green"/>),
       content: (
         <div>
@@ -177,6 +181,7 @@ export default function Menu() {
     },
     {
       label: 'Settings',
+      role: '',
       icon: (<Settings color="green"/>),
       content: (
         <div>
@@ -186,6 +191,7 @@ export default function Menu() {
     },
     {
       label: 'Help Center',
+      role: '',
       icon: (<HelpCircle color="green"/>),
       content: (
         <div>
@@ -195,6 +201,7 @@ export default function Menu() {
     },
     {
       label: 'Signup',
+      role: '',
       icon: (<UserPlus color="green"/>),
       content: (
         <div>
@@ -204,6 +211,7 @@ export default function Menu() {
     },
     {
       label: 'Login',
+      role: '',
       icon: (<LogIn color="green"/>),
       content: (
         <div>
@@ -213,6 +221,7 @@ export default function Menu() {
     },
     {
       label: 'Logout',
+      role: '',
       icon: (<LogOut color="green"/>),
       content: (
         <div>
