@@ -33,7 +33,7 @@ const SignupCard = () => {
   };
 
   return (
-    <Card className="max-w-xl mx-auto mt-10 shadow-xl p-6">
+    <Card className="max-w-xl mx-auto shadow-xl p-6">
       <CardContent>
         <h2 className="text-2xl font-bold mb-6 text-center">Driver Sign Up</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
