@@ -9,7 +9,7 @@ import dynamic from 'next/dynamic';
 import HomeDataCarousel from './HomeDataCarousel';
 import LoginCard from "./LoginCard";
 import Image from 'next/image';
-import { Home, Package, LogIn, User , Bike, Settings, Hand, LogOut } from "lucide-react";
+import { Home, Package, LogIn, User , Bike, Settings, Hand, LogOut, HelpCircle } from "lucide-react";
 import Rider from "./Rider/Rider";
 import HelpPage from "./HelpPage";
 import SettingsPage from "./SettingsPage";
@@ -169,7 +169,7 @@ export default function Menu() {
     },
     {
       label: 'Help Center',
-      icon: (<Hand color="green" />),
+      icon: (<HelpCircle color="green" />),
       content: (
         <div>
           <HelpPage/>
