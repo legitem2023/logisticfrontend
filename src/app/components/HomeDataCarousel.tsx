@@ -31,15 +31,22 @@ const HomeDataCarousel: FC<Props> = ({ items }) => {
       >
         {items.map(item => (
           <SwiperSlide key={item.id} className="!w-[100%]">
-            <div className="bg-white shadow-sm overflow-hidden ">
+            <div className="bg-white shadow-sm overflow-hidden relative">
               {item.imageUrl && (
-                <Image
-                  src={item.imageUrl}
-                  alt={item.title}
-                  className="w-full aspect-[16/9] object-cover"
-                  width={800}
-                  height={267}
-                />
+                <div className="relative w-full aspect-[16/9]">
+                  <Image
+                    src={item.imageUrl}
+                    alt={item.title}
+                    className="w-full h-full object-cover"
+                    fill
+                  />
+                  <div className="absolute inset-0 bg-black/40 flex flex-col justify-end p-4 text-white">
+                    <h2 className="text-2xl font-bold">{item.title}</h2>
+                    {item.subtitle && (
+                      <p className="text-sm mt-1">{item.subtitle}</p>
+                    )}
+                  </div>
+                </div>
               )}
             </div>
           </SwiperSlide>
