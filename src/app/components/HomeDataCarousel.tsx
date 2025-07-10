@@ -2,7 +2,7 @@
 import Image from 'next/image';
 import { FC } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Pagination } from 'swiper/modules';
+import { Pagination, Autoplay } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/pagination';
 
@@ -24,10 +24,12 @@ const HomeDataCarousel: FC<Props> = ({ items }) => {
       <Swiper
         spaceBetween={12}
         slidesPerView="auto"
+        modules={[Autoplay,Pagination]}
+        autoplay={{ delay: 3000, disableOnInteraction: false }}
+        loop={true}
         grabCursor
         centeredSlides={false}
         pagination={{ clickable: true, dynamicBullets: true }}
-        modules={[Pagination]}
       >
         {items.map(item => (
           <SwiperSlide key={item.id} className="!w-[100%]">
