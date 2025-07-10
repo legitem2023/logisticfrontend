@@ -187,7 +187,7 @@ export default function Menu() {
     },
     {
       label: 'Logout',
-      icon: (<LogIn color="green" />),
+      icon: (<LogOut color="green" />),
       content: (
         <div>
           <LoginCard/>
