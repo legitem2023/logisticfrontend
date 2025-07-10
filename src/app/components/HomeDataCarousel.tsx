@@ -20,7 +20,7 @@ type Props = {
 
 const HomeDataCarousel: FC<Props> = ({ items }) => {
   return (
-    <div className="w-full py-4">
+    <div className="w-full">
       <Swiper
         spaceBetween={12}
         slidesPerView="auto"
