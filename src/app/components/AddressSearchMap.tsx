@@ -270,7 +270,7 @@ export default function AddressSearchMap() {
 
       {/* Drop-off Popup */}
       {showPopup && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-end">
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center">
           <div className="bg-white w-full h-1/2 rounded-t-lg p-4 overflow-y-auto">
             <h3 className="text-lg font-bold mb-4">Add Drop-off Location</h3>
             
