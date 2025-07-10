@@ -36,7 +36,7 @@ const HomeDataCarousel: FC<Props> = ({ items }) => {
                 <Image
                   src={item.imageUrl}
                   alt={item.title}
-                  className="w-full aspect-[3/1] object-cover"
+                  className="w-full aspect-[16/9] object-cover"
                   width={800}
                   height={267}
                 />
