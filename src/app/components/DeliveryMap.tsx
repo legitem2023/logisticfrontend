@@ -15,11 +15,11 @@ export default function DeliveryMap() {
   const receiver = L.latLng(14.8874, 120.3666); // Pampanga
 
   const senderIcon = L.icon({
-    iconUrl: 'https://cdn-icons-png.flaticon.com/512/891/891462.png', // 📦 box icon
-    iconSize: [40, 40],
-    iconAnchor: [20, 40],
-    popupAnchor: [0, -35],
-  });
+  iconUrl: 'https://cdn-icons-png.flaticon.com/512/8839/8839014.png', // 🛵 motorcycle
+  iconSize: [40, 40],
+  iconAnchor: [20, 40],
+  popupAnchor: [0, -35],
+});
 
   const receiverIcon = L.icon({
     iconUrl: 'https://cdn-icons-png.flaticon.com/512/535/535137.png', // 📍 location pin
