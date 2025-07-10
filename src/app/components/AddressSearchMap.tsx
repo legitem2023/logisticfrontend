@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 
 type Coords = { lat: number; lng: number; address?: string };
 type DropOffLocation = { 
@@ -26,6 +26,12 @@ export default function AddressSearchMap() {
   const [houseUnit, setHouseUnit] = useState('');
   const [receiver, setReceiver] = useState('');
   const [contactNumber, setContactNumber] = useState('');
+  
+  // New states for fullscreen and current location
+  const [isPickupFullScreen, setIsPickupFullScreen] = useState(false);
+  const [currentLocation, setCurrentLocation] = useState<Coords | null>(null);
+  const [fetchingLocation, setFetchingLocation] = useState(false);
+  const pickupInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const savedDropOffs = localStorage.getItem('dropOffLocations');
@@ -41,6 +47,13 @@ export default function AddressSearchMap() {
   useEffect(() => {
     localStorage.setItem('dropOffLocations', JSON.stringify(dropOffLocations));
   }, [dropOffLocations]);
+
+  // Focus input when entering fullscreen mode
+  useEffect(() => {
+    if (isPickupFullScreen && pickupInputRef.current) {
+      pickupInputRef.current.focus();
+    }
+  }, [isPickupFullScreen]);
 
   const handlePickupSearch = async (query: string) => {
     try {
@@ -66,6 +79,55 @@ export default function AddressSearchMap() {
     }
   };
 
+  // Get current location using browser geolocation
+  const getCurrentLocation = async () => {
+    if (!navigator.geolocation) {
+      console.error("Geolocation is not supported by your browser");
+      return;
+    }
+
+    setFetchingLocation(true);
+    
+    try {
+      const position: GeolocationPosition = await new Promise((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(resolve, reject, {
+          timeout: 10000,
+          maximumAge: 0
+        });
+      });
+
+      const { latitude, longitude } = position.coords;
+      const address = await reverseGeocode(latitude, longitude);
+      
+      setCurrentLocation({
+        lat: latitude,
+        lng: longitude,
+        address
+      });
+      
+      return { lat: latitude, lng: longitude, address };
+    } catch (error) {
+      console.error("Error getting location:", error);
+      return null;
+    } finally {
+      setFetchingLocation(false);
+    }
+  };
+
+  // Reverse geocode coordinates to address
+  const reverseGeocode = async (lat: number, lng: number): Promise<string> => {
+    try {
+      const res = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`
+      );
+      const data = await res.json();
+      return data.display_name || 'Current Location';
+    } catch (err) {
+      console.error('Reverse geocoding error:', err);
+      return 'Current Location';
+    }
+  };
+
   const handleSelectPickupSuggestion = async (suggestion: any) => {
     const lat = parseFloat(suggestion.lat);
     const lng = parseFloat(suggestion.lon);
@@ -73,6 +135,17 @@ export default function AddressSearchMap() {
     setSelectedCoords(newCoords);
     setPickupAddress(suggestion.display_name);
     setPickupSuggestions([]);
+    setIsPickupFullScreen(false);
+  };
+
+  // Select current location for pickup
+  const handleSelectCurrentLocation = async () => {
+    if (!currentLocation) return;
+    
+    setSelectedCoords(currentLocation);
+    setPickupAddress(currentLocation.address || 'Current Location');
+    setPickupSuggestions([]);
+    setIsPickupFullScreen(false);
   };
 
   const handleSelectDropOffSuggestion = async (suggestion: any) => {
@@ -94,6 +167,21 @@ export default function AddressSearchMap() {
       console.error('Reverse geocoding error:', err);
     }
   };
+
+  // Add current location to drop-off suggestions
+  useEffect(() => {
+    if (currentLocation) {
+      setDropOffSuggestions(prev => [
+        { 
+          display_name: '📍 Current Location', 
+          lat: currentLocation.lat, 
+          lon: currentLocation.lng,
+          isCurrent: true
+        },
+        ...prev
+      ]);
+    }
+  }, [currentLocation]);
 
   const handleAddDropOff = () => {
     if (!tempDropOff || !houseUnit || !receiver || !contactNumber) return;
@@ -121,6 +209,15 @@ export default function AddressSearchMap() {
 
   const removeDropOffLocation = (id: string) => {
     setDropOffLocations(prev => prev.filter(loc => loc.id !== id));
+  };
+
+  // Fetch current location when pickup input is focused
+  const handlePickupFocus = async () => {
+    setIsPickupFullScreen(true);
+    
+    if (!currentLocation && !fetchingLocation) {
+      await getCurrentLocation();
+    }
   };
 
   return (
@@ -157,91 +254,160 @@ export default function AddressSearchMap() {
         </div>
       )}
 
-      {/* Pickup Input */}
-      <div className="relative">
-        <label className="block text-sm font-medium text-gray-700 mb-1">Pickup Location</label>
-        <input
-          type="text"
-          className="w-full border border-gray-300 rounded-md px-3 py-2"
-          value={pickupAddress}
-          placeholder="Search for pickup address..."
-          onChange={(e) => {
-            const val = e.target.value;
-            setPickupAddress(val);
-            if (val.length > 2) handlePickupSearch(val);
-          }}
-        />
-      </div>
-
-      {pickupSuggestions.length > 0 && (
-        <ul className="border border-gray-300 rounded-md bg-white max-h-60 overflow-y-auto">
-          {pickupSuggestions.map((suggestion, idx) => (
-            <li
-              key={idx}
-              className="p-2 hover:bg-gray-100 cursor-pointer"
-              onClick={() => handleSelectPickupSuggestion(suggestion)}
+      {/* Full-screen Pickup Overlay */}
+      {isPickupFullScreen && (
+        <div className="fixed inset-0 bg-white z-50 p-4">
+          <div className="flex items-center mb-4">
+            <button 
+              onClick={() => setIsPickupFullScreen(false)}
+              className="mr-2 text-gray-500"
             >
-              {suggestion.display_name}
-            </li>
-          ))}
-        </ul>
-      )}
-
-      {/* Drop-off Input */}
-      <div className="relative">
-        <label className="block text-sm font-medium text-gray-700 mb-1">Drop-off Location</label>
-        <input
-          type="text"
-          className="w-full border border-gray-300 rounded-md px-3 py-2"
-          value={dropOffSearch}
-          placeholder="Search for drop-off address..."
-          onChange={(e) => {
-            const val = e.target.value;
-            setDropOffSearch(val);
-            if (val.length > 2) handleDropOffSearch(val);
-          }}
-        />
-      </div>
-
-      {dropOffSuggestions.length > 0 && (
-        <ul className="border border-gray-300 rounded-md bg-white max-h-60 overflow-y-auto">
-          {dropOffSuggestions.map((suggestion, idx) => (
-            <li
-              key={idx}
-              className="p-2 hover:bg-gray-100 cursor-pointer"
-              onClick={() => handleSelectDropOffSuggestion(suggestion)}
-            >
-              {suggestion.display_name}
-            </li>
-          ))}
-        </ul>
-      )}
-
-      {/* Drop-off List */}
-      <div>
-        <h3 className="text-sm font-semibold text-gray-700 mb-2">Selected Drop-offs</h3>
-        {dropOffLocations.length === 0 && (
-          <p className="text-sm text-gray-500">No drop-off locations yet.</p>
-        )}
-        {dropOffLocations.map((loc, index) => (
-          <div key={loc.id} className="mb-3 p-3 bg-gray-50 rounded-md border">
-            <div className="flex justify-between">
-              <div>
-                <p className="font-medium">{loc.receiver}</p>
-                <p className="text-sm">{loc.address}</p>
-                <p className="text-sm">Unit: {loc.houseUnit}</p>
-                <p className="text-sm">Contact: {loc.contactNumber}</p>
-              </div>
-              <button
-                className="text-red-500 text-sm"
-                onClick={() => removeDropOffLocation(loc.id)}
-              >
-                Remove
-              </button>
-            </div>
+              &larr;
+            </button>
+            <h3 className="text-lg font-semibold">Set Pickup Location</h3>
           </div>
-        ))}
-      </div>
+          
+          <div className="relative mb-4">
+            <input
+              ref={pickupInputRef}
+              type="text"
+              className="w-full border border-gray-300 rounded-md px-3 py-3 text-lg"
+              value={pickupAddress}
+              placeholder="Search for pickup address..."
+              onChange={(e) => {
+                const val = e.target.value;
+                setPickupAddress(val);
+                if (val.length > 2) handlePickupSearch(val);
+              }}
+            />
+          </div>
+          
+          {pickupSuggestions.length > 0 || currentLocation ? (
+            <ul className="border border-gray-300 rounded-md bg-white max-h-[70vh] overflow-y-auto">
+              {currentLocation && (
+                <li
+                  className="p-3 hover:bg-gray-100 cursor-pointer border-b flex items-center"
+                  onClick={handleSelectCurrentLocation}
+                >
+                  <span className="mr-2">📍</span>
+                  <div>
+                    <div className="font-medium">Current Location</div>
+                    <div className="text-sm text-gray-600 truncate">
+                      {currentLocation.address || 'Using your device location'}
+                    </div>
+                  </div>
+                </li>
+              )}
+              
+              {pickupSuggestions.map((suggestion, idx) => (
+                <li
+                  key={idx}
+                  className="p-3 hover:bg-gray-100 cursor-pointer border-b"
+                  onClick={() => handleSelectPickupSuggestion(suggestion)}
+                >
+                  {suggestion.display_name}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <div className="text-center py-10 text-gray-500">
+              {fetchingLocation ? (
+                <p>Detecting your location...</p>
+              ) : (
+                <p>Start typing to search for pickup locations</p>
+              )}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Normal View */}
+      {!isPickupFullScreen && (
+        <>
+          {/* Pickup Input */}
+          <div className="relative">
+            <label className="block text-sm font-medium text-gray-700 mb-1">Pickup Location</label>
+            <input
+              type="text"
+              className="w-full border border-gray-300 rounded-md px-3 py-2"
+              value={pickupAddress}
+              placeholder="Search for pickup address..."
+              onFocus={handlePickupFocus}
+              onChange={(e) => {
+                const val = e.target.value;
+                setPickupAddress(val);
+                if (val.length > 2) handlePickupSearch(val);
+              }}
+            />
+          </div>
+
+          {/* Drop-off Input */}
+          <div className="relative">
+            <label className="block text-sm font-medium text-gray-700 mb-1">Drop-off Location</label>
+            <input
+              type="text"
+              className="w-full border border-gray-300 rounded-md px-3 py-2"
+              value={dropOffSearch}
+              placeholder="Search for drop-off address..."
+              onChange={(e) => {
+                const val = e.target.value;
+                setDropOffSearch(val);
+                if (val.length > 2) handleDropOffSearch(val);
+              }}
+              onFocus={() => {
+                if (!currentLocation && !fetchingLocation) {
+                  getCurrentLocation();
+                }
+              }}
+            />
+          </div>
+
+          {dropOffSuggestions.length > 0 && (
+            <ul className="border border-gray-300 rounded-md bg-white max-h-60 overflow-y-auto">
+              {dropOffSuggestions.map((suggestion, idx) => (
+                <li
+                  key={idx}
+                  className="p-2 hover:bg-gray-100 cursor-pointer flex items-start"
+                  onClick={() => handleSelectDropOffSuggestion(suggestion)}
+                >
+                  {suggestion.isCurrent ? (
+                    <span className="mr-2 mt-0.5">📍</span>
+                  ) : null}
+                  <span className={suggestion.isCurrent ? 'font-medium' : ''}>
+                    {suggestion.display_name}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          )}
+
+          {/* Drop-off List */}
+          <div>
+            <h3 className="text-sm font-semibold text-gray-700 mb-2">Selected Drop-offs</h3>
+            {dropOffLocations.length === 0 && (
+              <p className="text-sm text-gray-500">No drop-off locations yet.</p>
+            )}
+            {dropOffLocations.map((loc, index) => (
+              <div key={loc.id} className="mb-3 p-3 bg-gray-50 rounded-md border">
+                <div className="flex justify-between">
+                  <div>
+                    <p className="font-medium">{loc.receiver}</p>
+                    <p className="text-sm">{loc.address}</p>
+                    <p className="text-sm">Unit: {loc.houseUnit}</p>
+                    <p className="text-sm">Contact: {loc.contactNumber}</p>
+                  </div>
+                  <button
+                    className="text-red-500 text-sm"
+                    onClick={() => removeDropOffLocation(loc.id)}
+                  >
+                    Remove
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
     </div>
   );
-}
+        }
