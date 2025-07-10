@@ -11,7 +11,7 @@ import LoginCard from "./LoginCard";
 
 import SignupCard from "./SignupCard";
 import Image from 'next/image';
-import { Home, Package, LogIn, User , Bike, Settings, Hand, LogOut, HelpCircle } from "lucide-react";
+import { Home, Package, LogIn, User , Bike, Settings, Hand, LogOut, HelpCircle, UserPlus } from "lucide-react";
 import Rider from "./Rider/Rider";
 import HelpPage from "./HelpPage";
 import SettingsPage from "./SettingsPage";
@@ -168,7 +168,7 @@ export default function Menu() {
     },
     {
       label: 'Rider',
-      icon: (<Bike color="green" />),
+      icon: (<Bike color="green"/>),
       content: (
         <div>
           <Rider/>
@@ -177,7 +177,7 @@ export default function Menu() {
     },
     {
       label: 'Settings',
-      icon: (<Settings color="green" />),
+      icon: (<Settings color="green"/>),
       content: (
         <div>
           <SettingsPage/>
@@ -186,7 +186,7 @@ export default function Menu() {
     },
     {
       label: 'Help Center',
-      icon: (<HelpCircle color="green" />),
+      icon: (<HelpCircle color="green"/>),
       content: (
         <div>
           <HelpPage/>
@@ -195,7 +195,7 @@ export default function Menu() {
     },
     {
       label: 'Signup',
-      icon: (<LogIn color="green" />),
+      icon: (<UserPlus color="green"/>),
       content: (
         <div>
           <SignupCard/>
@@ -204,7 +204,7 @@ export default function Menu() {
     },
     {
       label: 'Login',
-      icon: (<LogIn color="green" />),
+      icon: (<LogIn color="green"/>),
       content: (
         <div>
           <LoginCard/>
@@ -213,7 +213,7 @@ export default function Menu() {
     },
     {
       label: 'Logout',
-      icon: (<LogOut color="green" />),
+      icon: (<LogOut color="green"/>),
       content: (
         <div>
           <LoginCard/>
