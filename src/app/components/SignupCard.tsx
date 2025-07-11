@@ -35,6 +35,7 @@ const SignupCard = () => {
     e.preventDefault();
     // TODO: send form data to API
     console.log(form);
+    alert(form);
   };
 
   if (loading) return <p>Loading...</p>;
