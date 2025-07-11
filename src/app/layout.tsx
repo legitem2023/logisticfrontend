@@ -1,4 +1,4 @@
-import { metadata as baseMetadata } from 'components/seo';
+import { metadata as baseMetadata } from './components/seo';
 export const metadata = baseMetadata;
 
 import { Geist, Geist_Mono } from "next/font/google";
