@@ -267,7 +267,7 @@ const LogisticsForm = () => {
           <p className="mt-2 opacity-90">Fast and reliable logistics solutions</p>
         </div>
         
-        <form onSubmit={handleSubmit} className="p-6">
+        <form onSubmit={handleSubmit} className="p-2">
           {/* Pickup Section */}
           <div className="bg-blue-50 p-5 rounded-xl mb-6 border border-blue-100">
             <h2 className="text-lg font-semibold mb-3 flex items-center text-blue-800">
