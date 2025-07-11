@@ -259,7 +259,7 @@ const LogisticsForm = () => {
   return (
     <div className="max-w-4xl mx-auto pt-2">
       <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
-        <div className="bg-blue-600 p-6 text-white">
+        <div className="bg-green-600 p-6 text-white">
           <h1 className="text-2xl md:text-3xl font-bold flex items-center">
             <Truck className="h-8 w-8 mr-3" />
             Express Delivery Service
@@ -269,22 +269,22 @@ const LogisticsForm = () => {
         
         <form onSubmit={handleSubmit} className="p-2">
           {/* Pickup Section */}
-          <div className="bg-blue-50 p-5 rounded-xl mb-6 border border-blue-100">
-            <h2 className="text-lg font-semibold mb-3 flex items-center text-blue-800">
+          <div className="bg-green-50 p-5 rounded-xl mb-6 border border-green-100">
+            <h2 className="text-lg font-semibold mb-3 flex items-center text-green-800">
               <MapPin className="h-5 w-5 mr-2" />
               Pickup Location
             </h2>
             <button
               type="button"
               onClick={() => openLocationDetails('pickup')}
-              className="w-full text-left p-4 border-2 border-dashed border-blue-300 rounded-xl mb-3 hover:bg-blue-100 flex items-center"
+              className="w-full text-left p-4 border-2 border-dashed border-green-300 rounded-xl mb-3 hover:bg-green-100 flex items-center"
             >
               {pickup.address ? (
                 <span className="truncate flex-1">{pickup.address}</span>
               ) : (
-                <span className="text-blue-500 flex-1">Enter pickup address</span>
+                <span className="text-green-500 flex-1">Enter pickup address</span>
               )}
-              <Home className="h-5 w-5 text-blue-500 ml-2" />
+              <Home className="h-5 w-5 text-green-500 ml-2" />
             </button>
           </div>
 
@@ -367,13 +367,13 @@ const LogisticsForm = () => {
                   onClick={() => setSelectedVehicle(vehicle.id)}
                   className={`p-4 rounded-xl border-2 cursor-pointer transition-all ${
                     selectedVehicle === vehicle.id
-                      ? 'border-blue-500 bg-blue-50 shadow-sm'
+                      ? 'border-green-500 bg-green-50 shadow-sm'
                       : 'border-gray-200 hover:bg-gray-100'
                   }`}
                 >
                   <div className="flex items-center mb-2">
                     <vehicle.icon className={`h-6 w-6 mr-2 ${
-                      selectedVehicle === vehicle.id ? 'text-blue-600' : 'text-gray-600'
+                      selectedVehicle === vehicle.id ? 'text-green-600' : 'text-gray-600'
                     }`} />
                     <span className="font-medium">{vehicle.name}</span>
                   </div>
@@ -397,13 +397,13 @@ const LogisticsForm = () => {
                   onClick={() => setSelectedService(service.id)}
                   className={`p-4 rounded-xl border-2 cursor-pointer transition-all ${
                     selectedService === service.id
-                      ? 'border-blue-500 bg-blue-50 shadow-sm'
+                      ? 'border-green-500 bg-green-50 shadow-sm'
                       : 'border-gray-200 hover:bg-gray-100'
                   }`}
                 >
                   <div className="flex items-center mb-2">
                     <service.icon className={`h-6 w-6 mr-2 ${
-                      selectedService === service.id ? 'text-blue-600' : 'text-gray-600'
+                      selectedService === service.id ? 'text-green-600' : 'text-gray-600'
                     }`} />
                     <span className="font-medium">{service.name}</span>
                   </div>
@@ -417,7 +417,7 @@ const LogisticsForm = () => {
           {/* Submit Button */}
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-3 px-4 rounded-xl hover:bg-blue-700 transition-colors flex items-center justify-center font-medium text-lg"
+            className="w-full customgrad text-white py-3 px-4 rounded-xl hover:bg-green-700 transition-colors flex items-center justify-center font-medium text-lg"
           >
             <Truck className="h-5 w-5 mr-2" />
             Schedule Delivery
@@ -433,7 +433,7 @@ const LogisticsForm = () => {
               <div className="flex justify-between items-center">
                 <h2 className="text-xl font-bold flex items-center">
                   {activeLocation.type === 'pickup' 
-                    ? <><Home className="h-5 w-5 mr-2 text-blue-500" /> Pickup Details</> 
+                    ? <><Home className="h-5 w-5 mr-2 text-green-500" /> Pickup Details</> 
                     : <><MapPin className="h-5 w-5 mr-2 text-orange-500" /> Drop-off #{activeLocation.index + 1} Details</>}
                 </h2>
                 <button 
