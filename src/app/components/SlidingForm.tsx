@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-const MotionDiv = motion.div;
+const MotionDiv = motion.div as React.FC<React.HTMLProps<HTMLDivElement>>;
 
 export default function SlidingForm() {
   const [open, setOpen] = useState(false);
@@ -11,7 +11,6 @@ export default function SlidingForm() {
 
   return (
     <>
-      {/* Trigger Button */}
       <button
         onClick={() => setOpen(true)}
         className="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white px-6 py-2 rounded-full shadow-lg"
@@ -22,7 +21,6 @@ export default function SlidingForm() {
       <AnimatePresence>
         {open && (
           <>
-            {/* Overlay */}
             <MotionDiv
               className="fixed inset-0 bg-black bg-opacity-50"
               initial={{ opacity: 0 }}
@@ -31,7 +29,6 @@ export default function SlidingForm() {
               onClick={() => setOpen(false)}
             />
 
-            {/* Sliding Form */}
             <MotionDiv
               initial={{ y: "100%" }}
               animate={{ y: "50%" }}
