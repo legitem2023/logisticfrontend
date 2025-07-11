@@ -52,7 +52,7 @@ const InstallPWAButton: React.FC = () => {
           font-weight: bold;
           font-family: 'Segoe UI', sans-serif;
           color: #fff;
-          background: linear-gradient(45deg, #5C3317, #703C1D);
+          background: linear-gradient(45deg,rgb(23, 92, 40),rgb(29, 112, 57));
           border: none;
           border-radius: 5px;
           cursor: pointer;

@@ -1,15 +1,16 @@
 'use client';
 import { Icon } from '@iconify/react';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, use } from 'react';
 import { useQuery } from '@apollo/client';
 import { VEHICLEQUERY } from '../../../graphql/query';
 import Loading from './ui/Loading';
-import { useSelector,useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { 
-  setSelectedVehicle
-} from '../../../Redux/vehicleSlice';
+  setPickupDetails, 
+  addDropoffDetails, 
+  clearDeliveryDetails 
+} from '../../../Redux/deliverySlice';
 
-import VehicleSelector from "./VehicleSelector";
 import { 
   Home, 
   MapPin, 
@@ -33,11 +34,11 @@ const LogisticsForm = () => {
   const [selected, setSelected] = useState<string>('bike');
   const [expandedDetails, setExpandedDetails] = useState<string | null>(null);
   const dispatch = useDispatch();
+  const deliveryDetails = useSelector((state:any) => state.delivery);
+
   const toggleDetails = (vehicleId: string) => {
     setExpandedDetails(prev => (prev === vehicleId ? null : vehicleId));
-   // dispatch(setSelectedVehicle(vehicleId));
   };
-  
   
   // State management
   const [pickup, setPickup] = useState({
@@ -82,6 +83,7 @@ const LogisticsForm = () => {
     setDropoffs(updatedDropoffs);
   };
 
+  // console.log(dropoffs)
   // Location management
   const addDropoff = () => {
     setDropoffs([...dropoffs, {
@@ -222,10 +224,10 @@ const LogisticsForm = () => {
     }
   }, [pickup, dropoffs]);
 
-  // Submit handler
+  // Submit handler with Redux integration
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
     // Basic validation
     if (!pickup.address) {
       alert('Please enter a pickup address');
@@ -243,15 +245,36 @@ const LogisticsForm = () => {
       alert('Please select a vehicle type');
       return;
     }
-    
-    const formData = {
-      pickup,
-      dropoffs,
-      selectedVehicle,
-      selectedService
-    };
-    
-    console.log('Form submitted:', formData);
+    console.log(pickup.address, pickup.lat, pickup.lng, pickup.contact, pickup.houseNumber, pickup.name)
+    // Dispatch to Redux
+    dispatch(setPickupDetails({
+      address: pickup.address,
+      latitude: pickup.lat,
+      longitude: pickup.lng,
+      contact: pickup.contact,
+      houseNumber: pickup.houseNumber,
+      name: pickup.name,
+      vehicle: selectedVehicle,
+      deliveryOption: selectedService
+    }));
+    console.log(deliveryDetails)
+
+    // Clear existing dropoffs in Redux
+    dispatch(clearDeliveryDetails());
+
+    // Add all dropoffs to Redux
+    dropoffs.forEach(dropoff => {
+      dispatch(addDropoffDetails({
+        address: dropoff.address,
+        latitude: dropoff.lat,
+        longitude: dropoff.lng,
+        contact: dropoff.contact,
+        houseNumber: dropoff.houseNumber,
+        name: dropoff.name
+      }));
+    });
+
+    console.log('Form submitted!');
     setShowSuccess(true);
     setTimeout(() => setShowSuccess(false), 3000);
   };
@@ -263,41 +286,36 @@ const LogisticsForm = () => {
     }
   }, [activeLocation]);
 
-  // Vehicle data
-  const vehicles = [
-    { id: 'Motorcycle', name: 'Motorcycle', icon: Truck, capacity: 'Small packages', price: '$5' },
-    { id: 'Car', name: 'Car', icon: Truck, capacity: 'Medium loads', price: '$15' },
-    { id: 'Truck', name: 'Truck', icon: Truck, capacity: 'Large shipments', price: '$35' }
-  ];
 
   // Service data
   const services = [
-    { id: 'Priority', name: 'Priority', icon: Rocket, time: '1-3 hours', price: '+$10' },
-    { id: 'Regular', name: 'Regular', icon: Clock, time: 'Same day', price: '' },
-    { id: 'Polling', name: 'Polling', icon: Move, time: 'Multi-day', price: '-$5' }
+    { id: 'Priority', name: 'Priority', icon: Rocket, time: '1-3 hours', price: '10' },
+    { id: 'Regular', name: 'Regular', icon: Clock, time: 'Same day', price: '5' },
+    { id: 'Polling', name: 'Polling', icon: Move, time: 'Multi-day', price: '5' }
   ];
-if (loading) return <Loading lines={4} />;
-if (error) return <p>Error: {error.message}</p>;
+
+  if (loading) return <Loading lines={4} />;
+  if (error) return <p>Error: {error.message}</p>;
  
   return (
     <div className="max-w-4xl mx-auto pt-2">
-      <div className="bg-white shadow-xl overflow-hidden">
-        <div className="bg-green-600 p-6 text-white">
-          <h1 className="text-2xl md:text-3xl font-bold flex items-center">
-            <Truck className="h-8 w-8 mr-3" />
-            Express Delivery Service
-          </h1>
-          <p className="mt-2 opacity-90">Fast and reliable logistics solutions</p>
-        </div>
+            <div className="bg-white shadow-xl overflow-hidden">
+         <div className="bg-green-600 customgrad p-6 text-white">
+           <h1 className="text-2xl md:text-3xl font-bold flex items-center">
+             <Truck className="h-8 w-8 mr-3" />
+             Express Delivery Service
+           </h1>
+           <p className="mt-2 opacity-90">Fast and reliable logistics solutions</p>
+         </div>
         
-        <form onSubmit={handleSubmit} className="p-2">
-          {/* Pickup Section */}
-          <div className="bg-green-50 p-5 rounded-xl mb-6 border border-green-100">
-            <h2 className="text-lg font-semibold mb-3 flex items-center text-green-800">
-              <MapPin className="h-5 w-5 mr-2" />
-              Pickup Location
-            </h2>
-            <button
+         <form onSubmit={handleSubmit} className="p-2">
+          
+           <div className="bg-green-50 p-5 rounded-xl mb-6 border border-green-100">
+             <h2 className="text-lg font-semibold mb-3 flex items-center text-green-800">
+               <MapPin className="h-5 w-5 mr-2" />
+               Pickup Location
+             </h2>
+             <button
               type="button"
               onClick={() => openLocationDetails('pickup')}
               className="w-full text-left p-4 border-2 border-dashed border-green-300 rounded-xl mb-3 hover:bg-green-100 flex items-center"
@@ -334,7 +352,7 @@ if (error) return <p>Error: {error.message}</p>;
                   <button
                     type="button"
                     onClick={() => openLocationDetails('dropoff', index)}
-                    className="flex-1 text-left p-4 border-2 border-dashed border-orange-300 rounded-xl hover:bg-orange-100 flex items-center"
+                    className="flex-1 text-left p-4 border-2 border-dashed border-orange-300 rounded-xl hover:bg-orange-100 flex items-center max-w-[100%] w-[auto]"
                   >
                     {dropoff.address ? (
                       <span className="truncate flex-1">{dropoff.address}</span>
@@ -349,7 +367,7 @@ if (error) return <p>Error: {error.message}</p>;
                     <button
                       type="button"
                       onClick={() => removeDropoff(index)}
-                      className="ml-2 text-red-500 hover:text-red-700 p-2 rounded-full hover:bg-red-50"
+                      className="ml-[-20px] text-red-500 hover:text-red-700 p-2 rounded-full hover:bg-red-50"
                     >
                       <X className="h-5 w-5" />
                     </button>
@@ -359,41 +377,28 @@ if (error) return <p>Error: {error.message}</p>;
             ))}
           </div>
 
-          {/* Map Preview */}
-          {mapPreview && (
-            <div className="bg-gray-50 p-5 rounded-xl mb-6 border border-gray-200">
-              <h2 className="text-lg font-semibold mb-3 flex items-center">
-                <Route className="h-5 w-5 mr-2 text-gray-700" />
-                Route Preview
-              </h2>
-              <div className="aspect-video w-full rounded-lg overflow-hidden border border-gray-300">
-                <iframe 
-                  src={mapPreview}
-                  className="w-full h-full"
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                />
-              </div>
-            </div>
-          )}
 
           {/* Vehicle Selection */}
           <div className="bg-gray-50 p-5 rounded-xl mb-6 border border-gray-200">
             <h2 className="text-lg font-semibold mb-4 flex items-center">
               <Truck className="h-5 w-5 mr-2 text-gray-700" />
-              Vehicle Type
+              Vehicle Type 
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {data.getVehicleTypes.map((vehicle: any) => {
           const isSelected = selected === vehicle.id;
           const showDetails = expandedDetails === vehicle.id;
           return (
-            <div key={vehicle.id} className="border rounded-xl overflow-hidden">
+            <div key={vehicle.id} className={`border-2 rounded-xl overflow-hidden ${
+              isSelected
+                ? 'border-green-500'
+                : 'border-gray-200'
+            }`}>
               <div
                 onClick={() => setSelected(vehicle.id)}
                 className={`relative w-full text-left p-4 flex items-center gap-4 cursor-pointer transition ${
                   isSelected
-                    ? 'border-green-500 bg-green-50'
+                    ? 'border-green-800 bg-green-50'
                     : 'border-gray-200 bg-white hover:bg-gray-50'
                 }`}
               >
@@ -411,7 +416,7 @@ if (error) return <p>Error: {error.message}</p>;
                   <p className="text-base font-semibold">{vehicle.name}</p>
                   <p className="text-sm text-gray-500">{vehicle.description}</p>
                 </div>
-                <div className="text-sm font-bold text-gray-700">{vehicle.cost}</div>
+                <div className="text-sm font-bold text-gray-700">₱ {vehicle.cost}</div>
               </div>
 
               {/* Toggle Additional Services Button */}
@@ -465,7 +470,7 @@ if (error) return <p>Error: {error.message}</p>;
                     <span className="font-medium">{service.name}</span>
                   </div>
                   <div className="text-sm text-gray-600 mt-1">Delivery: {service.time}</div>
-                  <div className="text-sm font-medium mt-2">{service.price}</div>
+                  <div className="text-sm font-medium mt-2">₱{service.price}</div>
                 </div>
               ))}
             </div>
@@ -484,9 +489,9 @@ if (error) return <p>Error: {error.message}</p>;
 
       {/* Location Details Slide-up Panel */}
       {activeLocation && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-end md:items-center justify-end md:justify-center">
+        <div className="fixed inset-0 bg-[rgba(0,0,0,0.5)] z-50 flex items-end md:items-center justify-end md:justify-center">
           <div className="bg-white w-full max-w-md rounded-t-2xl md:rounded-2xl shadow-lg animate-slide-up md:animate-scale-in max-h-[90vh] flex flex-col">
-            <div className="p-5 border-b border-gray-200">
+            <div className="p-3 border-b border-gray-200">
               <div className="flex justify-between items-center">
                 <h2 className="text-xl font-bold flex items-center">
                   {activeLocation.type === 'pickup' 
@@ -502,7 +507,7 @@ if (error) return <p>Error: {error.message}</p>;
               </div>
             </div>
             
-            <div className="p-5 overflow-y-auto flex-grow">
+            <div className="p-2 overflow-y-auto flex-grow">
               <div className="space-y-5">
                 <div>
                   <label className="block text-sm font-medium mb-2 flex items-center">
@@ -529,19 +534,19 @@ if (error) return <p>Error: {error.message}</p>;
                   </div>
                   
                   {isLoading && (
-                    <div className="mt-2 text-sm text-gray-500 flex items-center">
+                    <div className="absolute bg-white-100 mt-2 text-sm text-gray-500 flex items-center">
                       <Loader2 className="animate-spin h-4 w-4 mr-2 text-blue-500" />
                       Searching...
                     </div>
                   )}
                   
                   {suggestions.length > 0 && (
-                    <div className="mt-2 border border-gray-200 rounded-lg overflow-hidden">
+                    <div className="absolute left-0 right-0 mx-2 mt-2 border border-gray-200 rounded-lg overflow-hidden z-50 box-border">
                       {suggestions.map((suggestion, index) => (
                         <div 
                           key={index}
                           onClick={() => selectSuggestion(suggestion)}
-                          className="p-3 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-b-0 flex items-start"
+                          className="p-3 bg-white hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-b-0 flex items-start"
                         >
                           <MapPin className="h-4 w-4 text-blue-500 mr-2 mt-0.5 flex-shrink-0" />
                           <span className="truncate">{suggestion.formatted_address}</span>
@@ -643,7 +648,7 @@ if (error) return <p>Error: {error.message}</p>;
               <button
                 type="button"
                 onClick={closeLocationDetails}
-                className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 flex items-center justify-center font-medium"
+                className="w-full customgrad text-white py-3 px-4 rounded-lg hover:bg-blue-700 flex items-center justify-center font-medium"
               >
                 <CheckCircle2 className="h-5 w-5 mr-2" />
                 Save Details
@@ -660,6 +665,7 @@ if (error) return <p>Error: {error.message}</p>;
           Delivery scheduled successfully!
         </div>
       )}
+
     </div>
   );
 };

@@ -2,11 +2,11 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface VehicleState {
-  selectedVehicle: string | null;
+  selectedVehicle: string;
 }
 
 const initialState: VehicleState = {
-  selectedVehicle: null,
+  selectedVehicle: '',
 };
 
 const vehicleSlice = createSlice({

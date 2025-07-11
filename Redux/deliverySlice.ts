@@ -1,19 +1,24 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
+interface DropoffDetail {
+  dropoffAddress: string;
+  dropoffLatitude: number;
+  dropoffLongitude: number;
+  dropoffContact: string;
+  dropoffHouseNumber: string;
+  dropoffReciever: string;
+}
+
 interface DeliveryDetails {
   pickupAddress: string;
   pickupLatitude: number;
   pickupLongitude: number;
   pickupContact: string;
   pickupHouseNumber: string;
-  pickupUnitNumber: string;
-
-  dropoffAddress: string;
-  dropoffLatitude: number;
-  dropoffLongitude: number;
-  dropoffContact: string;
-  dropoffHouseNumber: string;
-  dropoffUnitNumber: string;
+  pickupSender: string;
+  dropoffs: DropoffDetail[]; // Now supports multiple dropoffs
+  vehicleId: string;
+  deliveryOption: string;
 }
 
 const initialState: DeliveryDetails = {
@@ -22,14 +27,10 @@ const initialState: DeliveryDetails = {
   pickupLongitude: 0,
   pickupContact: '',
   pickupHouseNumber: '',
-  pickupUnitNumber: '',
-
-  dropoffAddress: '',
-  dropoffLatitude: 0,
-  dropoffLongitude: 0,
-  dropoffContact: '',
-  dropoffHouseNumber: '',
-  dropoffUnitNumber: '',
+  pickupSender: '',
+  dropoffs: [], // Initialize as empty array
+  vehicleId: '',
+  deliveryOption: ''
 };
 
 export const deliverySlice = createSlice({
@@ -42,29 +43,35 @@ export const deliverySlice = createSlice({
       longitude: number;
       contact: string;
       houseNumber: string;
-      unitNumber: string;
+      name: string;
+      vehicle: string;
+      deliveryOption: string;
     }>) {
       state.pickupAddress = action.payload.address;
       state.pickupLatitude = action.payload.latitude;
       state.pickupLongitude = action.payload.longitude;
       state.pickupContact = action.payload.contact;
       state.pickupHouseNumber = action.payload.houseNumber;
-      state.pickupUnitNumber = action.payload.unitNumber;
+      state.pickupSender = action.payload.name;
+      state.vehicleId = action.payload.vehicle;
+      state.deliveryOption = action.payload.deliveryOption;
     },
-    setDropoffDetails(state, action: PayloadAction<{
+    addDropoffDetails(state, action: PayloadAction<{
       address: string;
       latitude: number;
       longitude: number;
       contact: string;
       houseNumber: string;
-      unitNumber: string;
+      name: string;
     }>) {
-      state.dropoffAddress = action.payload.address;
-      state.dropoffLatitude = action.payload.latitude;
-      state.dropoffLongitude = action.payload.longitude;
-      state.dropoffContact = action.payload.contact;
-      state.dropoffHouseNumber = action.payload.houseNumber;
-      state.dropoffUnitNumber = action.payload.unitNumber;
+      state.dropoffs.push({
+        dropoffAddress: action.payload.address,
+        dropoffLatitude: action.payload.latitude,
+        dropoffLongitude: action.payload.longitude,
+        dropoffContact: action.payload.contact,
+        dropoffHouseNumber: action.payload.houseNumber,
+        dropoffReciever: action.payload.name
+      });
     },
     clearDeliveryDetails(state) {
       Object.assign(state, initialState);
@@ -72,6 +79,10 @@ export const deliverySlice = createSlice({
   },
 });
 
-export const { setPickupDetails, setDropoffDetails, clearDeliveryDetails } = deliverySlice.actions;
+export const { 
+  setPickupDetails, 
+  addDropoffDetails, 
+  clearDeliveryDetails 
+} = deliverySlice.actions;
 
 export default deliverySlice.reducer;

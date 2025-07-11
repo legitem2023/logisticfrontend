@@ -5,7 +5,6 @@ import Sidebar from "./Sidebar";
 import ProfileCard from "./ProfileCard";
 import SwiperTabs from "./SwiperTabs";
 import DeliveryCard from "./DeliveryCard";
-import VehicleSelector from "./VehicleSelector";
 import dynamic from 'next/dynamic';
 import HomeDataCarousel from './HomeDataCarousel';
 import LoginCard from "./LoginCard";
@@ -16,7 +15,6 @@ import Rider from "./Rider/Rider";
 import HelpPage from "./HelpPage";
 import SettingsPage from "./SettingsPage";
 import LogisticsForm from "./LogisticsForm";
-const AddressSearchMap = dynamic(() => import('./AddressSearchMap'), { ssr: false });
 const DeliveryMap = dynamic(() => import('./DeliveryMap'), { ssr: false });
 
 type CarouselItem = {
@@ -144,8 +142,6 @@ export default function Menu() {
       content: (
         <>
           <HomeDataCarousel items={mockItems} />
-          {/*<AddressSearchMap />
-          <VehicleSelector />*/}
           <LogisticsForm/>
         </>
       ),
