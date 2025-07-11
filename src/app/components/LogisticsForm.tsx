@@ -33,7 +33,10 @@ const LogisticsForm = () => {
   const [selected, setSelected] = useState<string>('bike');
   const [expandedDetails, setExpandedDetails] = useState<string | null>(null);
   const dispatch = useDispatch();
-
+  const toggleDetails = (vehicleId: string) => {
+    setExpandedDetails(prev => (prev === vehicleId ? null : vehicleId));
+    dispatch(setSelectedVehicle(vehicleId));
+  };
   
   if (loading) return <Loading lines={4} />;
   if (error) return <p>Error: {error.message}</p>;
