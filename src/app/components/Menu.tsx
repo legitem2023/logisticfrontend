@@ -157,6 +157,7 @@ export default function Menu() {
           <HomeDataCarousel items={mockItems} />
           <AddressSearchMap />
           <VehicleSelector />
+          <SlidingForm/>
         </div>
       ),
     },
