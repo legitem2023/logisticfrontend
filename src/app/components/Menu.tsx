@@ -15,7 +15,7 @@ import { Home, Package, LogIn, User, Bike, Settings, LogOut, HelpCircle, UserPlu
 import Rider from "./Rider/Rider";
 import HelpPage from "./HelpPage";
 import SettingsPage from "./SettingsPage";
-
+import LogisticsForm from "./LogisticsForm";
 const AddressSearchMap = dynamic(() => import('./AddressSearchMap'), { ssr: false });
 const DeliveryMap = dynamic(() => import('./DeliveryMap'), { ssr: false });
 
@@ -144,8 +144,9 @@ export default function Menu() {
       content: (
         <>
           <HomeDataCarousel items={mockItems} />
-          <AddressSearchMap />
-          <VehicleSelector />
+          {/*<AddressSearchMap />
+          <VehicleSelector />*/}
+          <LogisticsForm/>
         </>
       ),
     },
