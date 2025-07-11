@@ -177,12 +177,15 @@ export default function Menu() {
       icon: <HelpCircle color="green" />,
       content: <HelpPage />,
     },
+    // ✅ Show "Signup" only if user is NOT active
+  ...(!isUserActive() ? [
     {
       label: 'Signup',
       role: '',
       icon: <UserPlus color="green" />,
       content: <SignupCard />,
-    },
+    }
+  ] : []),
     {
       label: isUserActive() ? 'Logout' : 'Login',
       role: '',
