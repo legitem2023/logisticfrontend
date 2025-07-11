@@ -1,5 +1,5 @@
 'use client';
-
+import InstallPWAButton from './InstallPWAButton';
 import Cookies from 'js-cookie';
 import Sidebar from "./Sidebar";
 import ProfileCard from "./ProfileCard";
@@ -200,6 +200,7 @@ export default function Menu() {
 
   return (
     <div className="h-[98vh]">
+      <InstallPWAButton/>
       <div className="h-[10vh] w-full flex items-center justify-center customgrad border-b-4 border-green-500">
         <Image src="/Logo.svg" className="h-[80%] w-auto" alt="Logo" width={100} height={100} />
       </div>
