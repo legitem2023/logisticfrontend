@@ -1,4 +1,7 @@
-import type { Metadata } from "next";
+//import type { Metadata } from "next";
+import { metadata as baseMetadata } from 'components/seo'
+export const metadata = baseMetadata;
+
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import 'swiper/css';
