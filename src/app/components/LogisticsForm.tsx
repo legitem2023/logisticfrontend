@@ -38,9 +38,7 @@ const LogisticsForm = () => {
    // dispatch(setSelectedVehicle(vehicleId));
   };
   
-  if (loading) return <Loading lines={4} />;
-  if (error) return <p>Error: {error.message}</p>;
- 
+  
   // State management
   const [pickup, setPickup] = useState({
     address: '',
@@ -278,7 +276,9 @@ const LogisticsForm = () => {
     { id: 'Regular', name: 'Regular', icon: Clock, time: 'Same day', price: '' },
     { id: 'Polling', name: 'Polling', icon: Move, time: 'Multi-day', price: '-$5' }
   ];
-
+if (loading) return <Loading lines={4} />;
+if (error) return <p>Error: {error.message}</p>;
+ 
   return (
     <div className="max-w-4xl mx-auto pt-2">
       <div className="bg-white shadow-xl overflow-hidden">
