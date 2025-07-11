@@ -445,7 +445,7 @@ if (error) return <p>Error: {error.message}</p>;
           <div className="bg-gray-50 p-5 rounded-xl mb-8 border border-gray-200">
             <h2 className="text-lg font-semibold mb-4 flex items-center">
               <Clock className="h-5 w-5 mr-2 text-gray-700" />
-              Service Type
+              Delivery Option
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {services.map((service) => (
