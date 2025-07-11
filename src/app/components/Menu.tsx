@@ -15,6 +15,7 @@ import { Home, Package, LogIn, User , Bike, Settings, Hand, LogOut, HelpCircle, 
 import Rider from "./Rider/Rider";
 import HelpPage from "./HelpPage";
 import SettingsPage from "./SettingsPage";
+import SlidingForm from "./SlidingForm";
 
 const AddressSearchMap = dynamic(() => import('./AddressSearchMap'), {
   ssr: false,
