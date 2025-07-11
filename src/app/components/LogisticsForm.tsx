@@ -2,6 +2,10 @@ import { useState, useEffect, useRef } from 'react';
 import { useQuery } from '@apollo/client';
 import { VEHICLEQUERY } from '../../../graphql/query';
 import Loading from './ui/Loading';
+import { useSelector,useDispatch } from "react-redux";
+import { 
+  setSelectedVehicle
+} from '../../../Redux/vehicleSlice';
 
 import VehicleSelector from "./VehicleSelector";
 import { 
@@ -24,6 +28,11 @@ import {
 
 const LogisticsForm = () => {
   const { loading, error, data } = useQuery(VEHICLEQUERY);
+  const [selected, setSelected] = useState<string>('bike');
+  const [expandedDetails, setExpandedDetails] = useState<string | null>(null);
+  const dispatch = useDispatch();
+
+  
   if (loading) return <Loading lines={4} />;
   if (error) return <p>Error: {error.message}</p>;
  
