@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import VehicleSelector from "./VehicleSelector";
 import { 
   Home, 
   MapPin, 
@@ -381,6 +382,7 @@ const LogisticsForm = () => {
                   <div className="text-sm font-medium mt-2">{vehicle.price}</div>
                 </div>
               ))}
+              <VehicleSelector/>
             </div>
           </div>
 
