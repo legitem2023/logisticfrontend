@@ -1,3 +1,5 @@
+'use client';
+import { Icon } from '@iconify/react';
 import { useState, useEffect, useRef } from 'react';
 import { useQuery } from '@apollo/client';
 import { VEHICLEQUERY } from '../../../graphql/query';
