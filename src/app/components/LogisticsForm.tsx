@@ -35,7 +35,7 @@ const LogisticsForm = () => {
   const dispatch = useDispatch();
   const toggleDetails = (vehicleId: string) => {
     setExpandedDetails(prev => (prev === vehicleId ? null : vehicleId));
-    dispatch(setSelectedVehicle(vehicleId));
+   // dispatch(setSelectedVehicle(vehicleId));
   };
   
   if (loading) return <Loading lines={4} />;
