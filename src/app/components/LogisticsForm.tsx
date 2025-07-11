@@ -258,7 +258,7 @@ const LogisticsForm = () => {
 
   return (
     <div className="max-w-4xl mx-auto pt-2">
-      <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
+      <div className="bg-white shadow-xl overflow-hidden">
         <div className="bg-green-600 p-6 text-white">
           <h1 className="text-2xl md:text-3xl font-bold flex items-center">
             <Truck className="h-8 w-8 mr-3" />
