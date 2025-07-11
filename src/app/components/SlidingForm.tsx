@@ -19,7 +19,7 @@ export default function SlidingForm() {
       {/* Overlay */}
       {open && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-80"
+          className="fixed inset-0 bg-[rgba(0,0,0,0.5)] z-80"
           onClick={() => setOpen(false)}
         />
       )}
