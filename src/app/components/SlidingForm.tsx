@@ -6,8 +6,9 @@ export default function SlidingForm() {
   const selectedVehicle = useSelector((state: any) => state.vehicle.selectedVehicle);
   const options = ["Regular", "Priority", "Pooling"];
   useEffect(()=>{
-    alert(selectedVehicle);
-    
+    if(selectedVehicle){
+     alert(selectedVehicle); 
+    }  
   },[selectedVehicle])
   return (
     <>
