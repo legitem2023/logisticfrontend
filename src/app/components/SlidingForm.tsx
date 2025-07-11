@@ -19,14 +19,14 @@ export default function SlidingForm() {
       {/* Overlay */}
       {open && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-90"
+          className="fixed inset-0 bg-black bg-opacity-50 z-80"
           onClick={() => setOpen(false)}
         />
       )}
 
       {/* Sliding/Modal Form */}
       <div
-        className={`fixed inset-0 flex items-end md:items-center justify-center transition-all duration-300 z-20 ${
+        className={`fixed inset-0 flex items-end md:items-center justify-center transition-all duration-300 z-90 ${
           open
             ? "translate-y-0 opacity-100"
             : "translate-y-full md:translate-y-0 md:scale-95 md:opacity-0 pointer-events-none"
