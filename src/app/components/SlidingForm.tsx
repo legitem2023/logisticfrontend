@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 export default function SlidingForm() {
   const [open, setOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState("");
-  const selectedVehicle = useSelector((state: RootState) => state.vehicle.selectedVehicle);
+  const selectedVehicle = useSelector((state: any) => state.vehicle.selectedVehicle);
   const options = ["Regular", "Priority", "Pooling"];
   useEffect(()=>{
     alert(selectedVehicle);
