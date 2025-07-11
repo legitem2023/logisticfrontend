@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useQuery } from '@apollo/client';
 import { VEHICLEQUERY } from '../../../graphql/query';
 import Loading from './ui/Loading';
+import SlidingForm from "./SlidingForm";
 
 type VehicleType = {
   id: string;
@@ -88,6 +89,7 @@ export default function VehicleSelector() {
           );
         })}
       </div>
+      <SlidingForm/>
     </div>
   );
 }
