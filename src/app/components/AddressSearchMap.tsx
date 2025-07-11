@@ -764,7 +764,7 @@ export default function AddressSearchMap() {
   };
 
   return (
-    <div className="relative max-w-md mx-auto p-4 bg-white rounded-lg shadow-sm">
+    <div className="relative max-w-md mx-auto p-4 bg-white rounded-lg shadow-sm mb-2">
       <h2 className="text-xl font-bold mb-6">📦 Create Delivery</h2>
 
       {showPickupPopup && renderLocationPopup(true)}
