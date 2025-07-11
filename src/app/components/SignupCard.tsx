@@ -4,8 +4,17 @@ import { Button } from "./ui/Button";
 import { Input } from "./ui/Input";
 import { Label } from "./ui/Label";
 import { Card, CardContent } from "./ui/Card";
+import { useQuery } from '@apollo/client';
+import { VEHICLEQUERY } from '../../../graphql/query';
 
 const SignupCard = () => {
+ const { loading, error, data } = useQuery(VEHICLEQUERY);
+  const [selected, setSelected] = useState<string>('bike');
+  
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error.message}</p>;
+
+  
   const [form, setForm] = useState({
     fullName: "",
     email: "",
@@ -56,6 +65,13 @@ const SignupCard = () => {
           <div>
             <Label htmlFor="vehicleType">Vehicle Type</Label>
             <Input id="vehicleType" name="vehicleType" value={form.vehicleType} onChange={handleChange} required />
+            <Select id="vehicleType" name="vehicleType" value={form.vehicleType} onChange={handleChange} required >
+            {
+              data.getVehicleTypes.map((vehicle:any,idx:number) => (
+              <option key={idx}>{vehicle.name}</option>
+             )
+            }
+          </Select>
           </div>
           <div>
             <Label htmlFor="plateNumber">Plate Number</Label>
