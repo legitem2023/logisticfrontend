@@ -54,7 +54,7 @@ export default function SlidingForm() {
 
           <div>
             <h2 className="text-xl font-semibold mb-4">Select Delivery Type</h2>
-            <div className="space-y-3">
+            <div className="space-y-3">{selectedVehicle }
               {options.map((option) => (
                 <button
                   key={option}
