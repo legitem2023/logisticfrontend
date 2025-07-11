@@ -391,7 +391,7 @@ const LogisticsForm = () => {
                 </div>
               ))}
 
-             {data.getVehicleTypes.map((vehicle: VehicleType) => {
+             {data.getVehicleTypes.map((vehicle: any) => {
           const isSelected = selected === vehicle.id;
           const showDetails = expandedDetails === vehicle.id;
 
