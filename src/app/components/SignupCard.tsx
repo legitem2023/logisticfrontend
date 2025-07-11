@@ -4,17 +4,13 @@ import { Button } from "./ui/Button";
 import { Input } from "./ui/Input";
 import { Label } from "./ui/Label";
 import { Card, CardContent } from "./ui/Card";
-import { useQuery } from '@apollo/client';
-import { VEHICLEQUERY } from '../../../graphql/query';
+import { Select } from "./ui/Select"; // ✅ Added Select import
+import { useQuery } from "@apollo/client";
+import { VEHICLEQUERY } from "../../../graphql/query";
 
 const SignupCard = () => {
- const { loading, error, data } = useQuery(VEHICLEQUERY);
-  const [selected, setSelected] = useState<string>('bike');
-  
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error.message}</p>;
+  const { loading, error, data } = useQuery(VEHICLEQUERY);
 
-  
   const [form, setForm] = useState({
     fullName: "",
     email: "",
@@ -22,12 +18,12 @@ const SignupCard = () => {
     password: "",
     vehicleType: "",
     plateNumber: "",
-    photo: null,
-    license: null,
+    photo: null as File | null,
+    license: null as File | null,
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, files } = e.target;
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value, files } = e.target as HTMLInputElement;
     if (files) {
       setForm({ ...form, [name]: files[0] });
     } else {
@@ -40,6 +36,9 @@ const SignupCard = () => {
     // TODO: send form data to API
     console.log(form);
   };
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error.message}</p>;
 
   return (
     <Card className="max-w-xl mx-auto shadow-xl p-6">
@@ -64,14 +63,20 @@ const SignupCard = () => {
           </div>
           <div>
             <Label htmlFor="vehicleType">Vehicle Type</Label>
-            <Input id="vehicleType" name="vehicleType" value={form.vehicleType} onChange={handleChange} required />
-            <Select id="vehicleType" name="vehicleType" value={form.vehicleType} onChange={handleChange} required >
-            {
-              data.getVehicleTypes.map((vehicle:any,idx:number) => (
-              <option key={idx}>{vehicle.name}</option>
-             )
-            }
-          </Select>
+            <Select
+              id="vehicleType"
+              name="vehicleType"
+              value={form.vehicleType}
+              onChange={handleChange}
+              required
+            >
+              <option value="">Select a vehicle type</option>
+              {data.getVehicleTypes.map((vehicle: any, idx: number) => (
+                <option key={idx} value={vehicle.name}>
+                  {vehicle.name}
+                </option>
+              ))}
+            </Select>
           </div>
           <div>
             <Label htmlFor="plateNumber">Plate Number</Label>
@@ -85,7 +90,7 @@ const SignupCard = () => {
             <Label htmlFor="license">Driver’s License (Upload)</Label>
             <Input id="license" name="license" type="file" accept="image/*,application/pdf" onChange={handleChange} />
           </div>
-          <Button type="submit" className="w-full text-[#ffffff] shadow rounded-lg customgrad">
+          <Button type="submit" className="w-full text-white shadow rounded-lg customgrad">
             Sign Up
           </Button>
         </form>
