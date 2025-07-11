@@ -384,31 +384,9 @@ if (error) return <p>Error: {error.message}</p>;
               Vehicle Type
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {vehicles.map((vehicle) => (
-                <div
-                  key={vehicle.id}
-                  onClick={() => setSelectedVehicle(vehicle.id)}
-                  className={`p-4 rounded-xl border-2 cursor-pointer transition-all ${
-                    selectedVehicle === vehicle.id
-                      ? 'border-green-500 bg-green-50 shadow-sm'
-                      : 'border-gray-200 hover:bg-gray-100'
-                  }`}
-                >
-                  <div className="flex items-center mb-2">
-                    <vehicle.icon className={`h-6 w-6 mr-2 ${
-                      selectedVehicle === vehicle.id ? 'text-green-600' : 'text-gray-600'
-                    }`} />
-                    <span className="font-medium">{vehicle.name}</span>
-                  </div>
-                  <div className="text-sm text-gray-600 mt-1">{vehicle.capacity}</div>
-                  <div className="text-sm font-medium mt-2">{vehicle.price}</div>
-                </div>
-              ))}
-
-             {data.getVehicleTypes.map((vehicle: any) => {
+        {data.getVehicleTypes.map((vehicle: any) => {
           const isSelected = selected === vehicle.id;
           const showDetails = expandedDetails === vehicle.id;
-
           return (
             <div key={vehicle.id} className="border rounded-xl overflow-hidden">
               <div
@@ -459,10 +437,7 @@ if (error) return <p>Error: {error.message}</p>;
             </div>
           );
         })}
-
-
-
-              
+         
             </div>
           </div>
 
