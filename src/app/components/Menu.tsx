@@ -34,6 +34,10 @@ type CarouselItem = {
 };
 
 export default function Menu() {
+ function isUserActive(): boolean {
+  const token = Cookies.get("token");
+  return !!token;
+ } 
   const mockItems: CarouselItem[] = [
     {
       id: 'promo1',
@@ -211,27 +215,15 @@ export default function Menu() {
       ),
     },
     {
-      label: 'Login',
+      label: `${isUserActive()?'Logout':'Login'}`,
       role: '',
-      icon: (<LogIn color="green"/>),
+      icon: `${isUserActive()?(<LogOut color="green"/>):(<LogIn color="green"/>)   }`,
       content: (
         <div>
-          <LoginCard/>
+          `${isUserActive()?(<></>):(<LoginCard/>)}`,
         </div>
       ),
-    },
-    {
-      label: 'Logout',
-      role: '',
-      icon: (<LogOut color="green"/>),
-      content: (
-        <div>
-          <LoginCard/>
-        </div>
-      ),
-    },
-
-    
+    } 
   ];
 
   return (
