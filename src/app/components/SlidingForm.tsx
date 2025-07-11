@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
+const MotionDiv = motion.div;
+
 export default function SlidingForm() {
   const [open, setOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState("");
@@ -17,11 +19,11 @@ export default function SlidingForm() {
         Open Form
       </button>
 
-      {/* Overlay */}
       <AnimatePresence>
         {open && (
           <>
-            <motion.div
+            {/* Overlay */}
+            <MotionDiv
               className="fixed inset-0 bg-black bg-opacity-50"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -30,7 +32,7 @@ export default function SlidingForm() {
             />
 
             {/* Sliding Form */}
-            <motion.div
+            <MotionDiv
               initial={{ y: "100%" }}
               animate={{ y: "50%" }}
               exit={{ y: "100%" }}
@@ -64,7 +66,7 @@ export default function SlidingForm() {
               >
                 Confirm
               </button>
-            </motion.div>
+            </MotionDiv>
           </>
         )}
       </AnimatePresence>
