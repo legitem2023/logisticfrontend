@@ -9,7 +9,7 @@ export default function SlidingForm() {
     if(selectedVehicle){
      alert(selectedVehicle); 
     }  
-  },[selectedVehicle])
+  })
   return (
     <>
       {/* Trigger Button */}
