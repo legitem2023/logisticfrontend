@@ -7,6 +7,7 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import ReduxWrapper from "./components/ApolloProvider/ReduxWrapper"; 
+import { SessionProvider } from "next-auth/react";
 import TokenSyncer from "./components/TokenSyncer";
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,7 +29,9 @@ export default function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <LoadEruda/>
         <TokenSyncer/>
-        <ReduxWrapper>{children}</ReduxWrapper>
+       <SessionProvider>
+         <ReduxWrapper>{children}</ReduxWrapper>
+       </SessionProvider>
       </body>
     </html>
   );
