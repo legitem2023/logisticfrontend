@@ -18,6 +18,7 @@ export const metadata: Metadata = {
     'Philippine Logistics',
   ],
   authors: [{ name: 'Robert Marquez', url: 'https://github.com/robertmarquez' }],
+  
   viewport: {
     width: 'device-width',
     initialScale: 1,
@@ -25,18 +26,21 @@ export const metadata: Metadata = {
     maximumScale: 1,
     userScalable: false,
   },
+
   icons: {
     icon: '/favicon.ico',
     apple: '/apple-touch-icon.png',
     shortcut: '/favicon-32x32.png',
   },
+
   metadataBase: new URL('https://logisticfrontend.vercel.app'),
+
   other: {
     'format-detection': 'telephone=no',
-    'viewport': 'width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no',
     'theme-color': '#0F172A',
     'msapplication-TileColor': '#0F172A',
   },
+
   openGraph: {
     type: 'website',
     title: 'Adiviso Logistic - We move what matters',
@@ -52,6 +56,7 @@ export const metadata: Metadata = {
       },
     ],
   },
+
   twitter: {
     card: 'summary_large_image',
     title: 'Adiviso Logistic - We move what matters',
