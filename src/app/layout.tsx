@@ -1,5 +1,7 @@
-import { metadata as baseMetadata } from './components/seo';
+import { metadata as baseMetadata, viewport as baseViewport } from './components/seo'; // Import both
 export const metadata = baseMetadata;
+export const viewport = baseViewport; // Add viewport export
+
 import LoadEruda from './LoadEruda';
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
@@ -9,6 +11,7 @@ import 'swiper/css/pagination';
 import ReduxWrapper from "./components/ApolloProvider/ReduxWrapper"; 
 import { SessionProvider } from "next-auth/react";
 import TokenSyncer from "./components/TokenSyncer";
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -29,9 +32,9 @@ export default function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <LoadEruda/>
         <TokenSyncer/>
-       <SessionProvider>
-         <ReduxWrapper>{children}</ReduxWrapper>
-       </SessionProvider>
+        <SessionProvider>
+          <ReduxWrapper>{children}</ReduxWrapper>
+        </SessionProvider>
       </body>
     </html>
   );
