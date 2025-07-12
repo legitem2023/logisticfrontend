@@ -9,36 +9,37 @@ declare global {
     FB: any;
     google: any;
     fbAsyncInit: () => void;
+    __fbReady?: boolean;
   }
 }
 
-// Shared Facebook SDK loader to ensure FB.init runs before FB.login
-let fbInitPromise: Promise<void> | null = null;
+// Facebook SDK loader
 function loadFacebookSDK(): Promise<void> {
-  if (fbInitPromise) return fbInitPromise;
+  if (window.__fbReady) return Promise.resolve();
 
-  fbInitPromise = new Promise((resolve) => {
-    if (window.FB) return resolve();
+  return new Promise((resolve) => {
+    if (window.FB && window.__fbReady) return resolve();
 
     window.fbAsyncInit = function () {
       window.FB.init({
-        appId: process.env.FACEBOOK_CLIENT_ID,
+        appId: process.env.FACEBOOK_CLIENT_ID!,
         cookie: true,
         xfbml: true,
         version: "v19.0",
       });
+      window.__fbReady = true;
       resolve();
     };
 
-    const script = document.createElement("script");
-    script.src = "https://connect.facebook.net/en_US/sdk.js";
-    script.async = true;
-    script.defer = true;
-    script.id = "facebook-jssdk";
-    document.body.appendChild(script);
+    if (!document.getElementById("facebook-jssdk")) {
+      const script = document.createElement("script");
+      script.id = "facebook-jssdk";
+      script.src = "https://connect.facebook.net/en_US/sdk.js";
+      script.async = true;
+      script.defer = true;
+      document.body.appendChild(script);
+    }
   });
-
-  return fbInitPromise;
 }
 
 export function GoogleLoginButton() {
@@ -117,7 +118,7 @@ export function FacebookLoginButton() {
   const handleFacebookLogin = async () => {
     setIsLoading(true);
     try {
-      await loadFacebookSDK();
+      await loadFacebookSDK(); // ensures FB.init() has run
 
       const response: any = await new Promise((resolve) => {
         window.FB.login(resolve, { scope: "email,public_profile" });
