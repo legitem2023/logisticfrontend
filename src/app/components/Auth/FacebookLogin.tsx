@@ -16,7 +16,7 @@ const FacebookLogin = () => {
 
       window.fbAsyncInit = function () {
         window.FB.init({
-          appId: '1180670142279337', // ← replace this!
+          appId: process.env.FACEBOOK_CLIENT_ID, // ← replace this!
           cookie: true,
           xfbml: true,
           version: 'v19.0',
