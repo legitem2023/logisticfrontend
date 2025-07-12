@@ -1,5 +1,5 @@
 // lib/seoConfig.ts
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'; // Import Viewport type
 
 export const metadata: Metadata = {
   title: 'Adiviso Logistic - We move what matters',
@@ -19,13 +19,7 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: 'Robert Marquez', url: 'https://github.com/robertmarquez' }],
   
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-    minimumScale: 1,
-    maximumScale: 1,
-    userScalable: false,
-  },
+  // REMOVED: viewport property
 
   icons: {
     icon: '/favicon.ico',
@@ -64,4 +58,13 @@ export const metadata: Metadata = {
     images: ['/og-image.jpg'],
     creator: '@advisologistics',
   },
-}
+};
+
+// Add a separate viewport export
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  minimumScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+};
