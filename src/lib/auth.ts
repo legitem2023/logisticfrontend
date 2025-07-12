@@ -1,7 +1,6 @@
-// src/lib/auth.ts
-import GoogleProvider from "next-auth/providers/google";
-import FacebookProvider from "next-auth/providers/facebook"; // 👈 Add this
-import { NextAuthOptions } from "next-auth";
+import GoogleProvider from "next-auth/providers/google"
+import FacebookProvider from "next-auth/providers/facebook"
+import { NextAuthOptions } from "next-auth"
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -15,4 +14,20 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   secret: process.env.NEXTAUTH_SECRET,
-};
+  callbacks: {
+    async jwt({ token, account, user }) {
+      // Store accessToken from Facebook or Google in JWT token
+      if (account) {
+        token.accessToken = account.access_token
+        token.provider = account.provider
+      }
+      return token
+    },
+    async session({ session, token }) {
+      // Pass accessToken to session
+      session.accessToken = token.accessToken as string
+      session.provider = token.provider as string
+      return session
+    },
+  },
+}
