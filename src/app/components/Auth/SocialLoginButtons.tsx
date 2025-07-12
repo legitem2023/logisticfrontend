@@ -160,7 +160,7 @@ export function FacebookLoginButton() {
     loadFacebookSDK()
       .then(() => setIsSdkReady(true))
       .catch(console.error);
-  }, []);
+  });
 
   const handleFacebookLogin = async () => {
     if (!isSdkReady) return;
