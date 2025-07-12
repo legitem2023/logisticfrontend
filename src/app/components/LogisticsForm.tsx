@@ -227,6 +227,7 @@ const LogisticsForm = () => {
   // Submit handler with Redux integration
   const handleSubmit = (e) => {
     e.preventDefault();
+    
 
     // Basic validation
     if (!pickup.address) {
@@ -245,6 +246,7 @@ const LogisticsForm = () => {
       alert('Please select a vehicle type');
       return;
     }
+    dispatch(clearDeliveryDetails());
     // Dispatch to Redux
     dispatch(setPickupDetails({
       address: pickup.address,
@@ -257,10 +259,7 @@ const LogisticsForm = () => {
       deliveryOption: selectedService
     }));
     
-
-    //Clear existing dropoffs in Redux
-    //dispatch(clearDeliveryDetails());
-
+    //Clear existing dropoffs in Redux 
     // Add all dropoffs to Redux
     dropoffs.forEach(dropoff => {
       dispatch(addDropoffDetails({
@@ -273,7 +272,7 @@ const LogisticsForm = () => {
       }));
     });
     console.log(deliveryDetails);
-    //console.log('Form submitted!');
+    ///console.log('Form submitted!');
     setShowSuccess(true);
     setTimeout(() => setShowSuccess(false), 3000);
   };
