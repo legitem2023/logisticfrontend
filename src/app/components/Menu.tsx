@@ -1,4 +1,5 @@
 'use client';
+
 import InstallPWAButton from './InstallPWAButton';
 import Cookies from 'js-cookie';
 import Sidebar from "./Sidebar";
@@ -10,12 +11,25 @@ import HomeDataCarousel from './HomeDataCarousel';
 import LoginCard from "./LoginCard";
 import SignupCard from "./SignupCard";
 import Image from 'next/image';
-import { Home, Package, LogIn, User, Bike, Settings, LogOut, HelpCircle, UserPlus } from "lucide-react";
+import {
+  Home,
+  Package,
+  LogIn,
+  User,
+  Bike,
+  Settings,
+  LogOut,
+  HelpCircle,
+  UserPlus
+} from "lucide-react";
+
 import Rider from "./Rider/Rider";
 import HelpPage from "./HelpPage";
 import SettingsPage from "./SettingsPage";
 import LogisticsForm from "./LogisticsForm";
+
 const DeliveryMap = dynamic(() => import('./DeliveryMap'), { ssr: false });
+
 type CarouselItem = {
   id: string;
   title: string;
@@ -125,13 +139,15 @@ export default function Menu() {
       role: '',
       icon: <User color="gray" />,
       content: (
-        <ProfileCard
-          name="Juan Dela Cruz"
-          email="juan@example.com"
-          contactNumber="+63 912 345 6789"
-          address="123 Mabini Street, Quezon City, PH"
-          avatarUrl="https://i.pravatar.cc/100?img=12"
-        />
+        <div className="px-4 sm:px-6 md:px-8 lg:px-12 py-4">
+          <ProfileCard
+            name="Juan Dela Cruz"
+            email="juan@example.com"
+            contactNumber="+63 912 345 6789"
+            address="123 Mabini Street, Quezon City, PH"
+            avatarUrl="https://i.pravatar.cc/100?img=12"
+          />
+        </div>
       ),
     },
     {
@@ -139,10 +155,10 @@ export default function Menu() {
       role: '',
       icon: <Home color="green" />,
       content: (
-        <>
+        <div className="px-4 sm:px-6 md:px-8 lg:px-12 py-4 space-y-6">
           <HomeDataCarousel items={mockItems} />
-          <LogisticsForm/>
-        </>
+          <LogisticsForm />
+        </div>
       ),
     },
     {
@@ -150,8 +166,10 @@ export default function Menu() {
       role: '',
       icon: <Package color="green" />,
       content: (
-        <div className="relative max-w-md mx-auto p-4 bg-white rounded-2xl shadow space-y-4">
-          <SwiperTabs tabs={progressitem} />
+        <div className="w-full max-w-5xl mx-auto px-4 sm:px-6 md:px-8 lg:px-12 py-6">
+          <div className="bg-white rounded-2xl shadow-md p-4 sm:p-6 md:p-8">
+            <SwiperTabs tabs={progressitem} />
+          </div>
         </div>
       ),
     },
@@ -159,48 +177,80 @@ export default function Menu() {
       label: 'Rider',
       role: '',
       icon: <Bike color="green" />,
-      content: <Rider />,
+      content: (
+        <div className="px-4 sm:px-6 md:px-8 lg:px-12 py-4">
+          <Rider />
+        </div>
+      ),
     },
     {
       label: 'Settings',
       role: '',
       icon: <Settings color="green" />,
-      content: <SettingsPage />,
+      content: (
+        <div className="px-4 sm:px-6 md:px-8 lg:px-12 py-4">
+          <SettingsPage />
+        </div>
+      ),
     },
     {
       label: 'Help Center',
       role: '',
       icon: <HelpCircle color="green" />,
-      content: <HelpPage />,
+      content: (
+        <div className="px-4 sm:px-6 md:px-8 lg:px-12 py-4">
+          <HelpPage />
+        </div>
+      ),
     },
-    // ✅ Show "Signup" only if user is NOT active
-  ...(!isUserActive() ? [
-    {
-      label: 'Signup',
-      role: '',
-      icon: <UserPlus color="green" />,
-      content: <SignupCard />,
-    }
-  ] : []),
+    ...(!isUserActive()
+      ? [
+          {
+            label: 'Signup',
+            role: '',
+            icon: <UserPlus color="green" />,
+            content: (
+              <div className="px-4 sm:px-6 md:px-8 lg:px-12 py-4">
+                <SignupCard />
+              </div>
+            ),
+          },
+        ]
+      : []),
     {
       label: isUserActive() ? 'Logout' : 'Login',
       role: '',
       icon: isUserActive() ? <LogOut color="green" /> : <LogIn color="green" />,
       content: isUserActive() ? (
-        <div className="p-4 text-center text-green-700 font-semibold">You are already logged in.</div>
+        <div className="p-6 text-center text-green-700 font-semibold">
+          You are already logged in.
+        </div>
       ) : (
-        <LoginCard />
+        <div className="px-4 sm:px-6 md:px-8 lg:px-12 py-4">
+          <LoginCard />
+        </div>
       ),
     },
   ];
 
   return (
-    <div className="h-[98vh]">
-      <InstallPWAButton/>
-      <div className="h-[10vh] w-full flex items-center justify-center customgrad border-b-4 border-green-500">
-        <Image src="/Logo.svg" className="h-[80%] w-auto" alt="Logo" width={100} height={100} />
+    <div className="min-h-screen flex flex-col bg-gray-50">
+      <InstallPWAButton />
+
+      {/* Logo Header */}
+      <div className="h-[10vh] w-full flex items-center justify-center customgrad border-b-4 border-green-500 px-4">
+        <Image
+          src="/Logo.svg"
+          className="h-[60%] md:h-[80%] w-auto"
+          alt="Logo"
+          width={100}
+          height={100}
+          priority
+        />
       </div>
-      <Sidebar tabs={tabItems} />
+
+      {/* Sidebar with tab content */}
+      <Sidebar tabs={tabItems}/>
     </div>
   );
 }

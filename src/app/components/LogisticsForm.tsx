@@ -1,8 +1,10 @@
 'use client';
 import { Icon } from '@iconify/react';
 import { useState, useEffect, useRef, use } from 'react';
-import { useQuery } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import { VEHICLEQUERY } from '../../../graphql/query';
+import { CREATEDELIVERY } from '../../../graphql/mutation';
+
 import Loading from './ui/Loading';
 import { useSelector, useDispatch } from "react-redux";
 import { 
@@ -30,7 +32,18 @@ import {
 } from 'lucide-react';
 
 const LogisticsForm = () => {
+
   const { loading, error, data } = useQuery(VEHICLEQUERY);
+
+  const [createDelivery] = useMutation(CREATEDELIVERY, {
+    onCompleted: (data) => {
+      console.log('Delivery created:', data);
+    },
+    onError: (error) => {
+      console.error('Delivery creation error:', error);
+    }
+  });
+
   const [selected, setSelected] = useState<string>('bike');
   const [expandedDetails, setExpandedDetails] = useState<string | null>(null);
   const dispatch = useDispatch();
@@ -246,32 +259,61 @@ const LogisticsForm = () => {
       alert('Please select a vehicle type');
       return;
     }
-    dispatch(clearDeliveryDetails());
-    // Dispatch to Redux
-    dispatch(setPickupDetails({
-      address: pickup.address,
-      latitude: pickup.lat,
-      longitude: pickup.lng,
-      contact: pickup.contact,
-      houseNumber: pickup.houseNumber,
-      name: pickup.name,
-      vehicle: selectedVehicle,
-      deliveryOption: selectedService
-    }));
+    // dispatch(clearDeliveryDetails());
+    // // Dispatch to Redux
+    // dispatch(setPickupDetails({
+    //   address: pickup.address,
+    //   latitude: pickup.lat,
+    //   longitude: pickup.lng,
+    //   contact: pickup.contact,
+    //   houseNumber: pickup.houseNumber,
+    //   name: pickup.name,
+    //   vehicle: selectedVehicle,
+    //   deliveryOption: selectedService
+    // }));
     
-    //Clear existing dropoffs in Redux 
-    // Add all dropoffs to Redux
-    dropoffs.forEach(dropoff => {
-      dispatch(addDropoffDetails({
-        address: dropoff.address,
-        latitude: dropoff.lat,
-        longitude: dropoff.lng,
-        contact: dropoff.contact,
-        houseNumber: dropoff.houseNumber,
-        name: dropoff.name
-      }));
-    });
-    console.log(deliveryDetails);
+    // //Clear existing dropoffs in Redux 
+    // // Add all dropoffs to Redux
+    // dropoffs.forEach(dropoff => {
+    //   dispatch(addDropoffDetails({
+    //     address: dropoff.address,
+    //     latitude: dropoff.lat,
+    //     longitude: dropoff.lng,
+    //     contact: dropoff.contact,
+    //     houseNumber: dropoff.houseNumber,
+    //     name: dropoff.name
+    //   }));
+    // });
+
+
+
+// Submit one delivery per dropoff
+dropoffs.forEach(async (dropoff) => {
+  const input = {
+    dropoffAddress: dropoff.address,
+    dropoffLatitude: dropoff.lat,
+    dropoffLongitude: dropoff.lng,
+    
+    estimatedDeliveryTime: new Date(),
+    pickupAddress: pickup.address,
+    pickupLatitude: pickup.lat,
+    pickupLongitude: pickup.lng,
+    recipientName: dropoff.name,
+    recipientPhone: dropoff.contact,
+    pickupHouseNumber: pickup.houseNumber,
+    senderId: '686ffdf59a1ad0a2e9c79f0b',//pickup.name,
+    assignedRiderId: '686d427603399308ff9a237a',
+  };
+    console.log(input);
+  await createDelivery({ variables: { input } });
+
+})
+
+
+
+
+
+
     ///console.log('Form submitted!');
     setShowSuccess(true);
     setTimeout(() => setShowSuccess(false), 3000);
