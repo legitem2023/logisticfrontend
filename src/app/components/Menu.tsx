@@ -16,7 +16,6 @@ import HelpPage from "./HelpPage";
 import SettingsPage from "./SettingsPage";
 import LogisticsForm from "./LogisticsForm";
 const DeliveryMap = dynamic(() => import('./DeliveryMap'), { ssr: false });
-
 type CarouselItem = {
   id: string;
   title: string;
