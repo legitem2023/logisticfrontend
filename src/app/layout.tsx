@@ -9,7 +9,7 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import ReduxWrapper from "./components/ApolloProvider/ReduxWrapper"; 
-import { SessionProvider } from "next-auth/react";
+import AuthProvider from "./components/Auth/AuthProvider";
 import TokenSyncer from "./components/TokenSyncer";
 
 const geistSans = Geist({
