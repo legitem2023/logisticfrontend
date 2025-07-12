@@ -256,10 +256,10 @@ const LogisticsForm = () => {
       vehicle: selectedVehicle,
       deliveryOption: selectedService
     }));
-    console.log(pickup,dropoffs);
+    
 
-    // Clear existing dropoffs in Redux
-    dispatch(clearDeliveryDetails());
+    //Clear existing dropoffs in Redux
+    //dispatch(clearDeliveryDetails());
 
     // Add all dropoffs to Redux
     dropoffs.forEach(dropoff => {
@@ -272,8 +272,8 @@ const LogisticsForm = () => {
         name: dropoff.name
       }));
     });
-
-    console.log('Form submitted!');
+    console.log(deliveryDetails);
+    //console.log('Form submitted!');
     setShowSuccess(true);
     setTimeout(() => setShowSuccess(false), 3000);
   };
