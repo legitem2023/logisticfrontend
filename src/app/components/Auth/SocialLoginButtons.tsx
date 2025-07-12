@@ -69,28 +69,89 @@ export function FacebookLoginButton() {
       return;
     }
 
-    setIsLoading(true);
-    try {
-      // Wait again just in case FB.init hasn't resolved
-      await loadFacebookSDK();
+"use client";
+import { signIn } from "next-auth/react";
+import { FaFacebook, FaGoogle } from "react-icons/fa";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
-      const response: any = await new Promise((resolve) => {
-        window.FB.login(resolve, { scope: "email,public_profile" });
-      });
+declare global {
+  interface Window {
+    FB: any;
+    google: any;
+    fbAsyncInit: () => void;
+    __fbReady?: boolean;
+  }
+}
 
-      if (response.authResponse?.accessToken) {
-        const result = await signIn("facebook-graphql", {
-          accessToken: response.authResponse.accessToken,
-          redirect: false,
+// --- Facebook SDK Loader ---
+let fbSDKReady: Promise<void> | null = null;
+
+function loadFacebookSDK(): Promise<void> {
+  if (window.__fbReady) return Promise.resolve(); // Already initialized
+
+  if (!fbSDKReady) {
+    fbSDKReady = new Promise((resolve) => {
+      window.fbAsyncInit = () => {
+        window.FB.init({
+          appId: process.env.NEXT_PUBLIC_FACEBOOK_CLIENT_ID!,
+          cookie: true,
+          xfbml: true,
+          version: "v19.0",
         });
+        window.__fbReady = true;
+        resolve();
+      };
 
-        if (result?.error) throw new Error(result.error);
-        router.push("/dashboard");
-      } else {
-        throw new Error("User cancelled login or did not authorize.");
+      if (!document.getElementById("facebook-jssdk")) {
+        const script = document.createElement("script");
+        script.id = "facebook-jssdk";
+        script.src = "https://connect.facebook.net/en_US/sdk.js";
+        script.async = true;
+        script.defer = true;
+        script.onerror = () => {
+          console.error("Failed to load Facebook SDK.");
+          resolve(); // Prevents hanging
+        };
+        document.body.appendChild(script);
       }
-    } catch (error) {
-      console.error("Facebook login failed:", error);
+    });
+  }
+
+  return fbSDKReady;
+}
+
+export function FacebookLoginButton() {
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+  const [sdkReady, setSdkReady] = useState(false);
+
+  useEffect(() => {
+    loadFacebookSDK().then(() => setSdkReady(true));
+  }, []);
+
+  const handleFacebookLogin = async () => {
+    setIsLoading(true);
+
+    try {
+      await loadFacebookSDK(); // Ensure init has run
+
+      window.FB.login(async (response: any) => {
+        if (response.authResponse?.accessToken) {
+          const result = await signIn("facebook-graphql", {
+            accessToken: response.authResponse.accessToken,
+            redirect: false,
+          });
+
+          if (result?.error) throw new Error(result.error);
+          router.push("/dashboard");
+        } else {
+          throw new Error("Facebook login failed or was cancelled.");
+        }
+      }, { scope: "email,public_profile" });
+
+    } catch (err) {
+      console.error("Facebook login error:", err);
       router.push("/auth-error?code=facebook_failed");
     } finally {
       setIsLoading(false);
@@ -100,14 +161,14 @@ export function FacebookLoginButton() {
   return (
     <button
       onClick={handleFacebookLogin}
-      disabled={isLoading || !isSdkReady}
+      disabled={isLoading || !sdkReady}
       className={`w-full flex items-center justify-center gap-2 px-4 py-2 bg-[#1877F2] text-white rounded-lg ${
-        isSdkReady ? "hover:bg-[#166FE5]" : "opacity-70 cursor-not-allowed"
+        sdkReady ? "hover:bg-[#166FE5]" : "opacity-70 cursor-not-allowed"
       } disabled:opacity-50`}
     >
       <FaFacebook />
       <span>
-        {!isSdkReady ? "Loading Facebook..." : isLoading ? "Processing..." : "Continue with Facebook"}
+        {!sdkReady ? "Loading Facebook..." : isLoading ? "Processing..." : "Continue with Facebook"}
       </span>
     </button>
   );
