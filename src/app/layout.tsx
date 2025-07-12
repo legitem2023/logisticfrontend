@@ -7,7 +7,7 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import ReduxWrapper from "./components/ApolloProvider/ReduxWrapper"; 
-
+import TokenSyncer from "./components/TokenSyncer";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
