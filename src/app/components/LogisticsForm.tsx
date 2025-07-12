@@ -245,7 +245,6 @@ const LogisticsForm = () => {
       alert('Please select a vehicle type');
       return;
     }
-    console.log(pickup.address, pickup.lat, pickup.lng, pickup.contact, pickup.houseNumber, pickup.name)
     // Dispatch to Redux
     dispatch(setPickupDetails({
       address: pickup.address,
@@ -257,7 +256,7 @@ const LogisticsForm = () => {
       vehicle: selectedVehicle,
       deliveryOption: selectedService
     }));
-    console.log(deliveryDetails)
+    console.log(pickup,droffs);
 
     // Clear existing dropoffs in Redux
     dispatch(clearDeliveryDetails());
