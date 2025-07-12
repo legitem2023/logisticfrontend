@@ -31,10 +31,10 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <LoadEruda/>
-        <TokenSyncer/>
-        <SessionProvider>
+        <AuthProvider>
+          <TokenSyncer/>
           <ReduxWrapper>{children}</ReduxWrapper>
-        </SessionProvider>
+        </AuthProvider>
       </body>
     </html>
   );
