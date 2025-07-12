@@ -24,7 +24,7 @@ function loadFacebookSDK(): Promise<void> {
 
     window.fbAsyncInit = function () {
       window.FB.init({
-        appId: process.env.FACEBOOK_CLIENT_ID!,
+        appId: process.env.NEXT_PUBLIC_FACEBOOK_CLIENT_ID!,
         cookie: true,
         xfbml: true,
         version: "v19.0",
