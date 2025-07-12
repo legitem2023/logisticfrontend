@@ -1,6 +1,6 @@
 import { metadata as baseMetadata } from './components/seo';
 export const metadata = baseMetadata;
-
+import LoadEruda from './LoadEruda';
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import 'swiper/css';
@@ -28,6 +28,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <LoadEruda/>
         <ReduxWrapper>{children}</ReduxWrapper>
       </body>
     </html>
