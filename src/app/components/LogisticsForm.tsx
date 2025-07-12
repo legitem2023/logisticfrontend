@@ -256,7 +256,7 @@ const LogisticsForm = () => {
       vehicle: selectedVehicle,
       deliveryOption: selectedService
     }));
-    console.log(pickup,droffs);
+    console.log(pickup,dropoffs);
 
     // Clear existing dropoffs in Redux
     dispatch(clearDeliveryDetails());
