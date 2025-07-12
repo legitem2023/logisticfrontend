@@ -288,19 +288,24 @@ const LogisticsForm = () => {
 
 
 // Submit one delivery per dropoff
+const today = new Date();
+const isoDateString = new Date(
+  Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate())
+).toISOString(); // "2025-07-12T00:00:00.000Z"
+
+
+
 dropoffs.forEach(async (dropoff) => {
   const input = {
     dropoffAddress: dropoff.address,
     dropoffLatitude: dropoff.lat,
     dropoffLongitude: dropoff.lng,
-    
-    estimatedDeliveryTime: new Date(),
+    estimatedDeliveryTime: isoDateString,
     pickupAddress: pickup.address,
     pickupLatitude: pickup.lat,
     pickupLongitude: pickup.lng,
     recipientName: dropoff.name,
     recipientPhone: dropoff.contact,
-    pickupHouseNumber: pickup.houseNumber,
     senderId: '686ffdf59a1ad0a2e9c79f0b',//pickup.name,
     assignedRiderId: '686d427603399308ff9a237a',
   };

@@ -1,4 +1,5 @@
 'use client';
+import Image from 'next/image';
 
 import { Mail, Phone, MapPin, User } from 'lucide-react';
 
@@ -21,9 +22,12 @@ export default function ProfileCard({
     <div className="max-w-md w-full p-6 rounded-2xl bg-white/20 backdrop-blur-md shadow-md border border-white/30 text-gray-900 dark:text-white">
       <div className="flex items-center gap-4 mb-6">
         {avatarUrl ? (
-          <img
+          <Image
             src={avatarUrl}
             alt="Profile"
+            width={200}
+            height={200}
+            priority
             className="w-16 h-16 rounded-full object-cover border border-white/40 shadow"
           />
         ) : (

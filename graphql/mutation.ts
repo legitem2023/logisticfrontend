@@ -7,7 +7,21 @@ mutation Login($input: LoginInput) {
     token
   }
 }`
-
+export const FBLOGIN = gql`
+mutation LoginWithFacebook($input: GoogleLoginInput!) {
+  loginWithFacebook(input: $input) {
+    token
+    statusText
+  }
+}
+`
+export const GOOGLELOGIN = gql`
+mutation LoginWithGoogle($input: GoogleLoginInput!) {
+  loginWithGoogle(input: $input) {
+    statusText
+    token
+  }
+}`
 
 export const CREATEDELIVERY = gql`
 mutation CreateDelivery($input: CreateDeliveryInput) {
