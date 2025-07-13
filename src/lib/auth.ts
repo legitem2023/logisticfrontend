@@ -202,7 +202,7 @@ export const authOptions: NextAuthOptions = {
     },
     async session({ session, token }) {
       // Pass accessToken to session
-      Cookies.set('token', account.access_token, {
+      Cookies.set('token', token.accessToken, {
           expires: 7,
           secure: true,
           sameSite: 'lax',
