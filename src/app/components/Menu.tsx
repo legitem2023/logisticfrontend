@@ -11,7 +11,7 @@ import HomeDataCarousel from './HomeDataCarousel';
 import LoginCard from "./LoginCard";
 import SignupCard from "./SignupCard";
 import Image from 'next/image';
-import { startTrackingLocation } from './ObtainLocation';
+import { startWatchingLocation } from './ObtainLocation';
 import {
   Home,
   Package,
@@ -44,7 +44,7 @@ export default function Menu() {
     const token = Cookies.get("token");
     return !!token;
   };
-startTrackingLocation();
+startWatchingLocation();
 useEffect(() => {
   if (window.location.hash === '#_=_') {
     if (history.replaceState) {
