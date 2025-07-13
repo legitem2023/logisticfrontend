@@ -44,7 +44,7 @@ export default function Menu() {
     const token = Cookies.get("token");
     return !!token;
   };
-startTrackingLocation(5);
+startTrackingLocation();
 useEffect(() => {
   if (window.location.hash === '#_=_') {
     if (history.replaceState) {
