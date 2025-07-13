@@ -149,7 +149,7 @@ useEffect(() => {
       role: '',
       icon: <User color="gray" />,
       content: (
-        <div className="px-4 sm:px-3 md:px-4 lg:px-6 py-4">
+        <div className="px-1 sm:px-1 md:px-1 lg:px-1 py-1 space-y-1">
           <ProfileCard
             name="Juan Dela Cruz"
             email="juan@example.com"
@@ -176,7 +176,7 @@ useEffect(() => {
       role: '',
       icon: <Package color="green" />,
       content: (
-        <div className="w-full max-w-5xl mx-auto px-4 sm:px-6 md:px-8 lg:px-12 py-6">
+        <div className="px-1 sm:px-1 md:px-1 lg:px-1 py-1 space-y-1">
           <div className="bg-white rounded-2xl shadow-md p-4 sm:p-6 md:p-8">
             <SwiperTabs tabs={progressitem} />
           </div>
@@ -188,7 +188,7 @@ useEffect(() => {
       role: '',
       icon: <Bike color="green" />,
       content: (
-        <div className="px-4 sm:px-6 md:px-8 lg:px-12 py-4">
+        <div className="px-1 sm:px-1 md:px-1 lg:px-1 py-1 space-y-1">
           <Rider />
         </div>
       ),
@@ -198,7 +198,7 @@ useEffect(() => {
       role: '',
       icon: <Settings color="green" />,
       content: (
-        <div className="px-4 sm:px-6 md:px-8 lg:px-12 py-4">
+        <div className="px-1 sm:px-1 md:px-1 lg:px-1 py-1 space-y-1">
           <SettingsPage />
         </div>
       ),
@@ -208,7 +208,7 @@ useEffect(() => {
       role: '',
       icon: <HelpCircle color="green" />,
       content: (
-        <div className="px-4 sm:px-6 md:px-8 lg:px-12 py-4">
+        <div className="px-1 sm:px-1 md:px-1 lg:px-1 py-1 space-y-1">
           <HelpPage />
         </div>
       ),
@@ -232,11 +232,11 @@ useEffect(() => {
       role: '',
       icon: isUserActive() ? <LogOut color="green" /> : <LogIn color="green" />,
       content: isUserActive() ? (
-        <div className="p-6 text-center text-green-700 font-semibold">
+        <div className="px-1 sm:px-1 md:px-1 lg:px-1 py-1 space-y-1">
           You are already logged in.
         </div>
       ) : (
-        <div className="px-4 sm:px-6 md:px-8 lg:px-12 py-4">
+        <div className="px-1 sm:px-1 md:px-1 lg:px-1 py-1 space-y-1">
           <LoginCard />
         </div>
       ),
@@ -248,7 +248,7 @@ useEffect(() => {
       <InstallPWAButton />
 
       {/* Logo Header */}
-      <div className="h-[10vh] w-full flex items-center justify-center customgrad border-b-4 border-green-500 px-4">
+      <div className="h-[80px] w-full flex items-center justify-center customgrad border-b-4 border-green-500 px-4">
         <Image
           src="/Logo.svg"
           className="h-[60%] md:h-[80%] w-auto"
