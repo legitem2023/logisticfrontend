@@ -116,8 +116,7 @@ useEffect(() => {
   }, []);
 
 
-    if(loading) return
-  console.log(data);
+ 
 
   const mockItems: CarouselItem[] = [
     {
@@ -347,7 +346,7 @@ useEffect(() => {
   ];
   // if(loading) return <Loading lines={4} />
   // if(error) return <div>Error: {error.message}</div>
-  console.log(data,"<<<")
+  console.log(data,"<---")
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
       <InstallPWAButton />
