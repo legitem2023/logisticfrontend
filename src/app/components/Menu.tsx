@@ -12,7 +12,7 @@ import LoginCard from "./LoginCard";
 import SignupCard from "./SignupCard";
 import DriverDashboard from "./DriverDashboard";
 import SenderDashboard from "./SenderDashboard";
-
+import ReceiverView from "./ReceiverView";
 import Image from 'next/image';
 import { startWatchingLocation } from './ObtainLocation';
 import {
@@ -181,6 +181,16 @@ useEffect(() => {
       content: (
         <div className="px-1 sm:px-1 md:px-1 lg:px-1 py-1 space-y-1">
           <DriverDashboard/>
+        </div>
+      ),
+    },
+        {
+      label:'Receiver View',
+      role: 'RIDER',
+      icon: <Home color="green" />,
+      content: (
+        <div className="px-1 sm:px-1 md:px-1 lg:px-1 py-1 space-y-1">
+          <ReceiverView/>
         </div>
       ),
     },
