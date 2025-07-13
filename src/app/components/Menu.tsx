@@ -220,7 +220,7 @@ useEffect(() => {
             role: '',
             icon: <UserPlus color="green" />,
             content: (
-              <div className="px-4 sm:px-6 md:px-8 lg:px-12 py-4">
+              <div className="px-1 sm:px-1 md:px-1 lg:px-1 py-1 space-y-1">
                 <SignupCard />
               </div>
             ),
