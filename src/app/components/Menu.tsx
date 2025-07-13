@@ -21,7 +21,8 @@ import {
   Settings,
   LogOut,
   HelpCircle,
-  UserPlus
+  UserPlus,
+  Truck
 } from "lucide-react";
 
 import Rider from "./Rider/Rider";
@@ -173,7 +174,7 @@ useEffect(() => {
     {
       label: 'Create Delivery',
       role: '',
-      icon: <Package color="green" />,
+      icon: <Truck color="green" />,
       content: (
         <div className="px-1 sm:px-1 md:px-1 lg:px-1 py-1 space-y-1">
           <LogisticsForm />
