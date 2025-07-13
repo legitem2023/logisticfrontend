@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { Button } from "./ui/Button";
 
+// Dynamically import the map component to avoid SSR issues
 const Map = dynamic(() => import("./ReceiverMap"), { ssr: false });
 
 export default function ReceiverView() {
@@ -23,8 +24,8 @@ export default function ReceiverView() {
     dropoff: "Your Address, Makati",
     status: "In Transit",
     eta: "15 mins",
-    riderLocation: [14.5566, 121.0234],
-    receiverLocation: [14.5547, 121.0244],
+    riderLocation: [14.5566, 121.0234] as [number, number],
+    receiverLocation: [14.5547, 121.0244] as [number, number],
   };
 
   return (
