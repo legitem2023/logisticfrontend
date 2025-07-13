@@ -67,3 +67,30 @@ mutation CreateRider($input: CreateRiderInput) {
 //     "vehicleTypeId": "686d3d615d788ba6da7f3598",
 //   }
 // }
+
+export const LOCATIONTRACKING = gql`
+mutation LocationTracking($input: LocationTrackingInput) {
+  locationTracking(input: $input) {
+    latitude
+    longitude
+    speed
+    heading
+    accuracy
+    batteryLevel
+    timestamp
+    userID
+  }
+}
+`
+// {
+//   "input": {
+//     "accuracy": 1,
+//     "batteryLevel":2,
+//     "heading": 1,
+//     "latitude": 1,
+//     "longitude": 1,
+//     "speed": 1,
+//     "timestamp": "1",
+//     "userID": "2"
+//   }
+// }

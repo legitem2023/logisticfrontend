@@ -21,10 +21,15 @@ export async function decryptToken(token: string, secretString: string): Promise
 
   try {
     const { payload } = await jwtDecrypt(token, secret);
-    console.log(payload)
+    
     return payload;
   } catch (err: any) {
     console.error('Decryption failed:', err.message);
     throw new Error('Invalid or corrupted token');
   }
+}
+
+export const capitalize = (str: string): string => {
+  if (!str) return '';
+  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 }

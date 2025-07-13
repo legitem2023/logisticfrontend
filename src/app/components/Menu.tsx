@@ -1,5 +1,5 @@
 'use client';
-import { useEffect } from 'react';
+import { use, useEffect, useState } from 'react';
 import InstallPWAButton from './InstallPWAButton';
 import Cookies from 'js-cookie';
 import Sidebar from "./Sidebar";
@@ -27,6 +27,7 @@ import {
   LayoutDashboard,
   Settings,
   LogOut,
+  ClipboardCheck,
   HelpCircle,
   UserPlus,
   Truck,
@@ -37,6 +38,11 @@ import Rider from "./Rider/Rider";
 import HelpPage from "./HelpPage";
 import SettingsPage from "./SettingsPage";
 import LogisticsForm from "./Sender/LogisticsForm";
+import { capitalize, decryptToken } from '../../../utils/decryptToken';
+import { useMutation, useSubscription } from '@apollo/client';
+import { LocationTracking } from '../../../graphql/subscription';
+import { LOCATIONTRACKING } from '../../../graphql/mutation';
+import Loading from './ui/Loading';
 
 const DeliveryMap = dynamic(() => import('./DeliveryMap'), { ssr: false });
 
@@ -49,20 +55,70 @@ type CarouselItem = {
 };
 
 export default function Menu() {
+  const [useRole,setRole] = useState();
+  const [useID,setID] = useState();
+  const [LocationTracker] = useMutation(LOCATIONTRACKING, {
+    onCompleted: (data) => {
+      console.log(data,"HowsData?");
+    },
+  });
+  const {data, loading, error} = useSubscription(LocationTracking);
+
+useEffect(() => {
+  if (useID) {
+    const stopWatching = startWatchingLocation((location) => {
+      LocationTracker({
+        variables: {
+          input: {
+            accuracy: location.accuracy,
+            batteryLevel: location.batteryLevel,
+            heading: location.heading,
+            latitude: location.latitude,
+            longitude: location.longitude,
+            speed: location.speed,
+            timestamp: location.timestamp,
+            userID: useID
+          }
+        }
+      });
+    });
+
+    return () => stopWatching && stopWatching(); // cleanup
+  }
+}, [useID]);
+
+
+
   const isUserActive = (): boolean => {
     const token = Cookies.get("token");
     return !!token;
   };
-startWatchingLocation();
-useEffect(() => {
-  if (window.location.hash === '#_=_') {
-    if (history.replaceState) {
-      history.replaceState(null, null, window.location.href.split('#')[0]);
-    } else {
-      window.location.hash = '';
-    }
-  }
-}, []);
+// startWatchingLocation();
+
+  useEffect(() => {
+    const getRole = async () => {
+      try {
+        const token = Cookies.get('token');
+        const secret = process.env.NEXT_PUBLIC_JWT_SECRET as string; // expose in env as NEXT_PUBLIC_*
+
+        if (token && secret) {
+          const payload = await decryptToken(token, secret);
+          setRole(payload.role);
+          setID(payload.id);
+        }
+      } catch (err) {
+        console.error('Error getting role:', err);
+        setRole(null); // fallback
+      }
+    };
+
+    getRole();
+  }, []);
+
+
+    if(loading) return
+  console.log(data);
+
   const mockItems: CarouselItem[] = [
     {
       id: 'promo1',
@@ -154,22 +210,6 @@ useEffect(() => {
 
   const tabItems = [
     {
-      label: 'Account',
-      role: '',
-      icon: <User color="gray" />,
-      content: (
-        <div className="px-1 sm:px-1 md:px-1 lg:px-1 py-1 space-y-1">
-          <ProfileCard
-            name="Juan Dela Cruz"
-            email="juan@example.com"
-            contactNumber="+63 912 345 6789"
-            address="123 Mabini Street, Quezon City, PH"
-            avatarUrl="https://i.pravatar.cc/100?img=12"
-          />
-        </div>
-      ),
-    },
-    {
       label: 'Home',
       role: '',
       icon: <Home color="green" />,
@@ -181,9 +221,9 @@ useEffect(() => {
       ),
     },
     {
-      label:'DriverDashboard',
+      label:'Assigned Deliveries',
       role: 'Rider',
-      icon: <Home color="green" />,
+      icon: <ClipboardCheck color="green" />,
       content: (
         <div className="px-1 sm:px-1 md:px-1 lg:px-1 py-1 space-y-1">
           <DriverDashboard/>
@@ -215,7 +255,7 @@ useEffect(() => {
     
     {
       label:'SenderDashboard',
-      role: 'SENDER',
+      role: 'Sender',
       icon: <LayoutDashboard color="green" />,
       content: (
         <div className="px-1 sm:px-1 md:px-1 lg:px-1 py-1 space-y-1">
@@ -225,7 +265,7 @@ useEffect(() => {
     },
     {
       label: 'Create Delivery',
-      role: '',
+      role: 'Sender',
       icon: <Truck color="green" />,
       content: (
         <div className="px-1 sm:px-1 md:px-1 lg:px-1 py-1 space-y-1">
@@ -235,7 +275,7 @@ useEffect(() => {
     },
     {
       label: 'Order',
-      role: '',
+      role: 'Sender',
       icon: <Package color="green" />,
       content: (
         <div className="px-1 sm:px-1 md:px-1 lg:px-1 py-1 space-y-1">
@@ -247,7 +287,7 @@ useEffect(() => {
     },
     {
       label: 'Rider',
-      role: '',
+      role: 'Sender',
       icon: <Bike color="green" />,
       content: (
         <div className="px-1 sm:px-1 md:px-1 lg:px-1 py-1 space-y-1">
@@ -289,22 +329,25 @@ useEffect(() => {
           },
         ]
       : []),
-    {
-      label: isUserActive() ? 'Logout' : 'Login',
-      role: '',
-      icon: isUserActive() ? <LogOut color="green" /> : <LogIn color="green" />,
-      content: isUserActive() ? (
-        <div className="px-1 sm:px-1 md:px-1 lg:px-1 py-1 space-y-1">
-          You are already logged in.
-        </div>
-      ) : (
-        <div className="px-1 sm:px-1 md:px-1 lg:px-1 py-1 space-y-1">
-          <LoginCard />
-        </div>
-      ),
-    },
-  ];
 
+    ...(!isUserActive()
+      ? [
+          {
+            label: 'Login',
+            role: '',
+            icon: <LogIn color="green" />,
+            content: (
+              <div className="px-1 sm:px-1 md:px-1 lg:px-1 py-1 space-y-1">
+                <LoginCard />
+              </div>
+            ),
+          },
+        ]
+      : [])
+  ];
+  // if(loading) return <Loading lines={4} />
+  // if(error) return <div>Error: {error.message}</div>
+  console.log(data,"<<<")
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
       <InstallPWAButton />
@@ -322,7 +365,7 @@ useEffect(() => {
       </div>
 
       {/* Sidebar with tab content */}
-      <Sidebar tabs={tabItems}/>
+      <Sidebar tabs={tabItems.filter((tab) => tab.role === capitalize(useRole) || tab.role === '') }/>
     </div>
   );
 }

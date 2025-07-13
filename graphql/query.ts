@@ -46,3 +46,51 @@ query GetRiders {
   }
 }
 `
+export const DELIVERIES = gql`
+query GetRidersDelivery($getRidersDeliveryId: String) {
+  getRidersDelivery(id: $getRidersDeliveryId) {
+    id
+    trackingNumber
+    recipientName
+    recipientPhone
+    pickupAddress
+    pickupLatitude
+    pickupLongitude
+    dropoffAddress
+    dropoffLatitude
+    dropoffLongitude
+    deliveryStatus
+    estimatedDeliveryTime
+    actualDeliveryTime
+    createdAt
+    updatedAt
+    senderId
+    assignedRiderId
+    assignedRider {
+      id
+      image
+      name
+      email
+      phoneNumber
+      vehicleType {
+        id
+        name
+        maxCapacityKg
+        maxVolumeM3
+        description
+        createdAt
+        updatedAt
+        icon
+        cost
+      }
+      licensePlate
+      status
+      currentLatitude
+      currentLongitude
+      lastUpdatedAt
+      createdAt
+      updatedAt
+      role
+    }
+  }
+}`

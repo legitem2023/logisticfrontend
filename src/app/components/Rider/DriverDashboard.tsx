@@ -2,7 +2,10 @@
 import { useState } from "react";
 import { Button } from "../ui/Button";
 import { Card, CardContent } from "../ui/Card";
+import { useQuery } from "@apollo/client";
+import { DELIVERIES } from "../../../../graphql/query";
 import { MapPin, Clock, CheckCircle, PackageCheck } from "lucide-react";
+import Loading from "../ui/Loading";
 
 const mockDeliveries = [
   {
@@ -24,7 +27,24 @@ const mockDeliveries = [
 ];
 
 export default function DriverDashboard() {
-  const [deliveries, setDeliveries] = useState(mockDeliveries);
+  const { data, loading, error } = useQuery(DELIVERIES,{
+    variables: {
+      "getRidersDeliveryId": "686d427603399308ff9a237a"
+    },
+});
+
+// if(loading) return <Loading lines={4} />
+// if(error) return <div>Error: {error.message}</div>
+// const mockDeliveriess = data.getRidersDelivery.map((delivery: any) => ({
+//   id: delivery.id,
+//   pickup: delivery.pickupAddress,
+//   dropoff: delivery.dropoffAddress,
+//   eta: delivery.estimatedDeliveryTime,
+//   customer: delivery.recipientName,
+//   status: delivery.deliveryStatus,
+// }))
+
+const [deliveries, setDeliveries] = useState(mockDeliveries);
 
   const handleAccept = (id: string) => {
     setDeliveries((prev) =>
