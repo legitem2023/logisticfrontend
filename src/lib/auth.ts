@@ -5,13 +5,13 @@ import Cookies from 'js-cookie'
 import { gql, ApolloClient, InMemoryCache, HttpLink } from '@apollo/client'
 
 // 🔸 GraphQL Mutation
-const GOOGLELOGIN = gql`
-  mutation LoginWithGoogle($input: GoogleLoginInput!) {
-    loginWithGoogle(input: $input) {
-      token
-      statusText
-    }
+export const FBLOGIN = gql`
+mutation LoginWithFacebook($input: GoogleLoginInput!) {
+  loginWithFacebook(input: $input) {
+    token
+    statusText
   }
+}
 `
 
 // 🔸 Apollo Client Setup
@@ -42,11 +42,9 @@ export const authOptions: NextAuthOptions = {
         // 🔸 Call backend with Google access token
         try {
           const { data } = await client.mutate({
-            mutation: GOOGLELOGIN,
+            mutation: FBLOGIN,
             variables: {
-              input: {
-                accessToken: account.access_token,
-              },
+              input: account.access_token, 
             },
           })
 
