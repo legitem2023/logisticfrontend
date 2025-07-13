@@ -6,17 +6,20 @@ import { gql, ApolloClient, InMemoryCache, HttpLink } from '@apollo/client'
 
 // 🔸 GraphQL Mutation
 export const FBLOGIN = gql`
-mutation LoginWithFacebook($input: GoogleLoginInput!) {
-  loginWithFacebook(input: $input) {
-    token
-    statusText
+  mutation LoginWithFacebook($input: GoogleLoginInput!) {
+    loginWithFacebook(input: $input) {
+      token
+      statusText
+    }
   }
-}
 `
 
 // 🔸 Apollo Client Setup
 const client = new ApolloClient({
-  link: new HttpLink({ uri: process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT!, fetch }),
+  link: new HttpLink({
+    uri: process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT!,
+    fetch,
+  }),
   cache: new InMemoryCache(),
 })
 
@@ -35,44 +38,51 @@ export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
     async jwt({ token, account }) {
-      if (account && account.provider === "google") {
-        token.accessToken = account.access_token
-        token.provider = account.provider
-
-        // 🔸 Call backend with Google access token
+      if (account && account.provider === "facebook") {
         try {
           const { data } = await client.mutate({
             mutation: FBLOGIN,
             variables: {
-              input: account.access_token, 
+              input: {
+                idToken: account.access_Token, // ✅ use idToken here
+              },
             },
-          })
-         localStorage.setItem("localstorage", data);
-          // 🔸 Save backend token and optional status
-          token.accessToken = data?.loginWithFacebook?.token
-          token.statusText = data?.loginWithFacebook?.statusText
+          });
+
+          // ✅ Optional: store in localStorage (only in browser)
+          if (typeof window !== 'undefined' && data?.loginWithFacebook?.token) {
+            localStorage.setItem(
+              "localstorage",
+              JSON.stringify(data.loginWithFacebook)
+            );
+          }
+
+          // ✅ Save backend token to JWT
+          token.accessToken = data?.loginWithFacebook?.token;
+          token.statusText = data?.loginWithFacebook?.statusText;
         } catch (error) {
-          console.error("GraphQL loginWithGoogle mutation failed:", error)
+          console.error("GraphQL loginWithFacebook mutation failed:", error);
         }
       }
 
-      return token
+      return token;
     },
 
     async session({ session, token }) {
-      // 🔸 Store backend token in cookie
+      // ✅ Save backend token to a cookie
       if (token.accessToken) {
         Cookies.set('token', token.accessToken as string, {
           expires: 7,
           secure: true,
           sameSite: 'lax',
-        })
-
+        });
       }
 
-      session.accessToken = token.token as string
-      session.provider = token.provider as string
-      return session
+      session.accessToken = token.accessToken as string;
+      session.provider = token.provider as string;
+      session.statusText = token.statusText as string;
+
+      return session;
     },
   },
 }
