@@ -10,7 +10,7 @@ import {
   ChevronUp,
   ChevronDown,
 } from "lucide-react";
-import { Button } from "./ui/Button";
+import { Button } from "../ui/Button";
 
 // Dynamically import the map component to avoid SSR issues
 const Map = dynamic(() => import("./ReceiverMap"), { ssr: false });

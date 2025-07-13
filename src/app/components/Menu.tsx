@@ -10,10 +10,10 @@ import dynamic from 'next/dynamic';
 import HomeDataCarousel from './HomeDataCarousel';
 import LoginCard from "./LoginCard";
 import SignupCard from "./SignupCard";
-import DriverDashboard from "./DriverDashboard";
-import SenderDashboard from "./SenderDashboard";
-import ReceiverView from "./ReceiverView";
-import RiderView from "./RiderView";
+import DriverDashboard from "./Rider/DriverDashboard";
+import SenderDashboard from "./Sender/SenderDashboard";
+import ReceiverView from "./Receiver/ReceiverView";
+import RiderView from "./Rider/RiderView";
 import Image from 'next/image';
 import { startWatchingLocation } from './ObtainLocation';
 import LogisticsHomePage from './LogisticsHomePage';
@@ -23,17 +23,20 @@ import {
   LogIn,
   User,
   Bike,
+  PackageCheck,
+  LayoutDashboard,
   Settings,
   LogOut,
   HelpCircle,
   UserPlus,
-  Truck
+  Truck,
+  Navigation
 } from "lucide-react";
 
 import Rider from "./Rider/Rider";
 import HelpPage from "./HelpPage";
 import SettingsPage from "./SettingsPage";
-import LogisticsForm from "./LogisticsForm";
+import LogisticsForm from "./Sender/LogisticsForm";
 
 const DeliveryMap = dynamic(() => import('./DeliveryMap'), { ssr: false });
 
@@ -190,7 +193,7 @@ useEffect(() => {
     {
       label:'Receiver View',
       role: 'Receiver',
-      icon: <Home color="green" />,
+      icon: <PackageCheck color="green" />,
       content: (
         <div className="px-1 sm:px-1 md:px-1 lg:px-1 py-1 space-y-1">
           <ReceiverView/>
@@ -200,7 +203,7 @@ useEffect(() => {
     {
       label:'RiderView View',
       role: 'Rider',
-      icon: <Home color="green" />,
+      icon: <Navigation color="green" />,
       content: (
         <div className="px-1 sm:px-1 md:px-1 lg:px-1 py-1 space-y-1">
           <RiderView/>
@@ -213,7 +216,7 @@ useEffect(() => {
     {
       label:'SenderDashboard',
       role: 'SENDER',
-      icon: <Home color="green" />,
+      icon: <LayoutDashboard color="green" />,
       content: (
         <div className="px-1 sm:px-1 md:px-1 lg:px-1 py-1 space-y-1">
           <SenderDashboard/>

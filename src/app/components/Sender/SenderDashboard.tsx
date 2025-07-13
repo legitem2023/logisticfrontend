@@ -1,5 +1,5 @@
 // components/SenderDashboard.tsx
-import { Card, CardContent } from "./ui/Card";
+import { Card, CardContent } from "../ui/Card";
 import { Clock, MapPin, Bike, CheckCheck } from "lucide-react";
 
 const acceptedDeliveries = [

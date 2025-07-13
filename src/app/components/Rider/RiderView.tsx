@@ -9,7 +9,7 @@ import {
   ChevronUp,
   ChevronDown,
 } from "lucide-react";
-import { Button } from "./ui/Button";
+import { Button } from "../ui/Button";
 
 // Lazy load the map to avoid SSR issues
 const RiderMap = dynamic(() => import("./RiderMap"), { ssr: false });

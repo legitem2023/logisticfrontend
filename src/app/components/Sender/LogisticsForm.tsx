@@ -2,16 +2,16 @@
 import { Icon } from '@iconify/react';
 import { useState, useEffect, useRef, use } from 'react';
 import { useMutation, useQuery } from '@apollo/client';
-import { VEHICLEQUERY } from '../../../graphql/query';
-import { CREATEDELIVERY } from '../../../graphql/mutation';
+import { VEHICLEQUERY } from '../../../../graphql/query';
+import { CREATEDELIVERY } from '../../../../graphql/mutation';
 
-import Loading from './ui/Loading';
+import Loading from '../ui/Loading';
 import { useSelector, useDispatch } from "react-redux";
 import { 
   setPickupDetails, 
   addDropoffDetails, 
   clearDeliveryDetails 
-} from '../../../Redux/deliverySlice';
+} from '../../../../Redux/deliverySlice';
 
 import { 
   Home, 

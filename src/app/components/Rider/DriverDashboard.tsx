@@ -1,7 +1,7 @@
 // components/DriverDashboard.tsx
 import { useState } from "react";
-import { Button } from "./ui/Button";
-import { Card, CardContent } from "./ui/Card";
+import { Button } from "../ui/Button";
+import { Card, CardContent } from "../ui/Card";
 import { MapPin, Clock, CheckCircle, PackageCheck } from "lucide-react";
 
 const mockDeliveries = [
