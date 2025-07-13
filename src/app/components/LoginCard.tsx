@@ -9,7 +9,7 @@ import { Input } from './ui/Input'
 import { useMutation } from '@apollo/client'
 import FacebookLoginButton from './Auth/FacebookLoginButton'
 // import GoogleLoginButton from './Auth/GoogleLoginButton'
-import { GoogleLoginButton } from './Auth/SocialLoginButtons'
+//import { GoogleLoginButton } from './Auth/SocialLoginButtons'
 //import { FacebookLoginButton } from './Auth/SocialLoginButtons'
 import { LOGIN } from '../../../graphql/mutation'
 import { decryptToken } from '../../../utils/decryptToken'
@@ -87,7 +87,7 @@ export default function LoginCard() {
             <hr className="flex-grow border-gray-300" />
           </div>
 
-          <GoogleLoginButton />
+          
           <FacebookLoginButton />
         </CardContent>
       </Card>
