@@ -194,11 +194,7 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, account, user }) {
       // Store accessToken from Facebook or Google in JWT token
       if (account) {
-        Cookies.set('token', account.access_token, {
-          expires: 7,
-          secure: true,
-          sameSite: 'lax',
-        })
+        
         token.accessToken = account.access_token
         token.provider = account.provider
       }
@@ -206,6 +202,11 @@ export const authOptions: NextAuthOptions = {
     },
     async session({ session, token }) {
       // Pass accessToken to session
+      Cookies.set('token', account.access_token, {
+          expires: 7,
+          secure: true,
+          sameSite: 'lax',
+        })
       session.accessToken = token.accessToken as string
       session.provider = token.provider as string
       return session
