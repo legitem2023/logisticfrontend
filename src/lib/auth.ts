@@ -64,13 +64,14 @@ export const authOptions: NextAuthOptions = {
     async session({ session, token }) {
       // 🔸 Store backend token in cookie
       if (token.backendToken) {
-        Cookies.set('token', token.backendToken, {
+        Cookies.set('token', token.backendToken as string, {
           expires: 7,
           secure: true,
           sameSite: 'lax',
         })
-        session.backendToken = token.backendToken
-        session.statusText = token.statusText
+
+        session.backendToken = token.backendToken as string
+        session.statusText = token.statusText as string
       }
 
       session.accessToken = token.accessToken as string
