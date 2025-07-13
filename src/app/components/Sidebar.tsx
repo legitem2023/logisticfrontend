@@ -79,7 +79,7 @@ export default function SidebarTabs({ tabs }: SidebarTabsProps) {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 p-4 overflow-y-auto ml-0 md:ml-0">
+      <main className="flex-1 p-0 overflow-y-auto ml-0 md:ml-0">
         {tabs[activeIndex]?.content}
       </main>
     </div>
