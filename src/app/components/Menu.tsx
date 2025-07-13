@@ -13,6 +13,7 @@ import SignupCard from "./SignupCard";
 import DriverDashboard from "./DriverDashboard";
 import SenderDashboard from "./SenderDashboard";
 import ReceiverView from "./ReceiverView";
+import RiderView from "./RiderView";
 import Image from 'next/image';
 import { startWatchingLocation } from './ObtainLocation';
 import {
@@ -176,7 +177,7 @@ useEffect(() => {
     },
     {
       label:'DriverDashboard',
-      role: 'RIDER',
+      role: 'Rider',
       icon: <Home color="green" />,
       content: (
         <div className="px-1 sm:px-1 md:px-1 lg:px-1 py-1 space-y-1">
@@ -184,9 +185,9 @@ useEffect(() => {
         </div>
       ),
     },
-        {
+    {
       label:'Receiver View',
-      role: 'RIDER',
+      role: 'Receiver',
       icon: <Home color="green" />,
       content: (
         <div className="px-1 sm:px-1 md:px-1 lg:px-1 py-1 space-y-1">
@@ -194,6 +195,19 @@ useEffect(() => {
         </div>
       ),
     },
+    {
+      label:'RiderView View',
+      role: 'Rider',
+      icon: <Home color="green" />,
+      content: (
+        <div className="px-1 sm:px-1 md:px-1 lg:px-1 py-1 space-y-1">
+          <RiderView/>
+        </div>
+      ),
+    },
+
+
+    
     {
       label:'SenderDashboard',
       role: 'SENDER',
