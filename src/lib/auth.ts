@@ -72,7 +72,7 @@ export const authOptions: NextAuthOptions = {
 
       }
 
-      session.accessToken = token.accessToken as string
+      session.accessToken = token.token as string
       session.provider = token.provider as string
       return session
     },
