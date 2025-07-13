@@ -1,4 +1,4 @@
-"use client";
+/*"use client";
 import { signIn } from "next-auth/react";
 import { FaGoogle, FaFacebook } from "react-icons/fa";
 import { useEffect, useState } from "react";
@@ -178,5 +178,5 @@ className="w-[100%] flex items-center justify-center gap-2 px-4 py-2 bg-white bo
 <span>{isLoading ? "Processing..." : "Continue with Google"}</span>
 </button>
 );
-}
+}*/
 
