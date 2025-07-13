@@ -70,8 +70,6 @@ export const authOptions: NextAuthOptions = {
           sameSite: 'lax',
         })
 
-        session.token = token.token as string
-        session.statusText = token.statusText as string
       }
 
       session.accessToken = token.accessToken as string
