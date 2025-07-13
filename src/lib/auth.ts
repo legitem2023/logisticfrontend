@@ -44,7 +44,7 @@ export const authOptions: NextAuthOptions = {
             mutation: FBLOGIN,
             variables: {
               input: {
-                idToken: account.access_Token, // ✅ use idToken here
+                idToken: account.access_token, // ✅ use idToken here
               },
             },
           });
