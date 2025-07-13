@@ -1,4 +1,6 @@
-import Image from 'next/image'; import { Button } from '@/components/ui/button'; import { Input } from '@/components/ui/input';
+import Image from 'next/image'; 
+import { Button } from './ui/Button'; 
+import { Input } from './ui/Input';
 
 export default function LogisticsHomePage() { return ( <main className="min-h-screen bg-white text-gray-800"> {/* Hero Section */} <section className="bg-gradient-to-br from-blue-600 to-blue-800 py-24 text-center text-white"> <div className="container mx-auto px-4"> <h1 className="text-5xl font-bold mb-6">Reliable Logistics for the Modern World</h1> <p className="text-lg mb-8">Seamlessly manage, track, and optimize your deliveries in real-time.</p> <div className="flex flex-col sm:flex-row items-center justify-center gap-4 max-w-xl mx-auto"> <Input placeholder="Enter tracking number..." className="w-full" /> <Button className="w-full sm:w-auto">Track Package</Button> </div> </div> </section>
 
