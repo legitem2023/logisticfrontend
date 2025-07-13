@@ -2,7 +2,20 @@ import Image from 'next/image';
 import { Button } from './ui/Button'; 
 import { Input } from './ui/Input';
 
-export default function LogisticsHomePage() { return ( <main className="min-h-screen bg-white text-gray-800"> {/* Hero Section */} <section className="bg-gradient-to-br from-blue-600 to-blue-800 py-24 text-center text-white"> <div className="container mx-auto px-4"> <h1 className="text-5xl font-bold mb-6">Reliable Logistics for the Modern World</h1> <p className="text-lg mb-8">Seamlessly manage, track, and optimize your deliveries in real-time.</p> <div className="flex flex-col sm:flex-row items-center justify-center gap-4 max-w-xl mx-auto"> <Input placeholder="Enter tracking number..." className="w-full" /> <Button className="w-full sm:w-auto">Track Package</Button> </div> </div> </section>
+export default function LogisticsHomePage() { 
+  
+  return ( 
+<main className="min-h-screen bg-white text-gray-800"> {/* Hero Section */} 
+  <section className="customgrad py-24 text-center text-white"> 
+    <div className="container mx-auto px-4"> 
+      <h1 className="text-5xl font-bold mb-6">Reliable Logistics for the Modern World</h1> 
+      <p className="text-lg mb-8">Seamlessly manage, track, and optimize your deliveries in real-time.</p> 
+    <div className="flex flex-col sm:flex-row items-center justify-center gap-4 max-w-xl mx-auto"> 
+    <Input placeholder="Enter tracking number..." className="w-full" /> 
+      <Button className="w-full sm:w-auto">Track Package</Button> 
+    </div> 
+    </div> 
+  </section>
 
 {/* Features Section */}
   <section className="py-20 bg-gray-50">
@@ -45,7 +58,7 @@ export default function LogisticsHomePage() { return ( <main className="min-h-sc
   </section>
 
   {/* Call to Action */}
-  <section className="py-20 bg-blue-700 text-white text-center">
+  <section className="py-20 customgrad text-white text-center">
     <div className="container mx-auto px-4">
       <h2 className="text-3xl font-bold mb-6">Ready to simplify your logistics?</h2>
       <p className="text-lg mb-8">Join thousands of businesses using our platform to deliver faster and better.</p>
