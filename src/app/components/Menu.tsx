@@ -165,7 +165,7 @@ useEffect(() => {
       role: '',
       icon: <Home color="green" />,
       content: (
-        <div className="px-2 sm:px-2 md:px-2 lg:px-2 py-2 space-y-2">
+        <div className="px-1 sm:px-1 md:px-1 lg:px-1 py-1 space-y-1">
           <HomeDataCarousel items={mockItems} />
           <LogisticsForm />
         </div>
