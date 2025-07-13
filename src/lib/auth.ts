@@ -80,7 +80,7 @@ export const authOptions: NextAuthOptions = {
 
       session.accessToken = token.accessToken as string;
       session.provider = token.provider as string;
-      session.statusText = token.statusText as string;
+      //session.statusText = token.statusText as string;
 
       return session;
     },
