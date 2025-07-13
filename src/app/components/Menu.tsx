@@ -149,7 +149,7 @@ useEffect(() => {
       role: '',
       icon: <User color="gray" />,
       content: (
-        <div className="px-4 sm:px-6 md:px-8 lg:px-12 py-4">
+        <div className="px-4 sm:px-3 md:px-4 lg:px-6 py-4">
           <ProfileCard
             name="Juan Dela Cruz"
             email="juan@example.com"
