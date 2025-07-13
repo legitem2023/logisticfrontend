@@ -16,6 +16,7 @@ import ReceiverView from "./ReceiverView";
 import RiderView from "./RiderView";
 import Image from 'next/image';
 import { startWatchingLocation } from './ObtainLocation';
+import LogisticsHomePage from './LogisticsHomePage';
 import {
   Home,
   Package,
@@ -172,6 +173,7 @@ useEffect(() => {
       content: (
         <div className="px-1 sm:px-1 md:px-1 lg:px-1 py-1 space-y-1">
           <HomeDataCarousel items={mockItems} />
+          <LogisticsHomePage/>
         </div>
       ),
     },
