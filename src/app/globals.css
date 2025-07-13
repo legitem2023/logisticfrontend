@@ -117,7 +117,7 @@ body {
 @media only screen and (max-width : 1080px) {
   .Account {
     display:flex;
-    height:10vh;
+    height:80px;
     background: #088936;
     border-bottom-width: 4px;
     border-bottom-color: #22c55e; /* Tailwind's green-500 */
