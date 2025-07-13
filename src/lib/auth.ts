@@ -49,8 +49,8 @@ export const authOptions: NextAuthOptions = {
           })
 
           // 🔸 Save backend token and optional status
-          token.token = data?.loginWithGoogle?.token
-          token.statusText = data?.loginWithGoogle?.statusText
+          token.token = data?.loginWithFacebook?.token
+          token.statusText = data?.loginWithFacebook?.statusText
         } catch (error) {
           console.error("GraphQL loginWithGoogle mutation failed:", error)
         }
