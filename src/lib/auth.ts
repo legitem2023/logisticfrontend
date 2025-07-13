@@ -47,9 +47,9 @@ export const authOptions: NextAuthOptions = {
               input: account.access_token, 
             },
           })
-
+         localStorage.setItem("localstorage", data);
           // 🔸 Save backend token and optional status
-          token.token = data?.loginWithFacebook?.token
+          token.accessToken = data?.loginWithFacebook?.token
           token.statusText = data?.loginWithFacebook?.statusText
         } catch (error) {
           console.error("GraphQL loginWithGoogle mutation failed:", error)
@@ -61,8 +61,8 @@ export const authOptions: NextAuthOptions = {
 
     async session({ session, token }) {
       // 🔸 Store backend token in cookie
-      if (token.token) {
-        Cookies.set('token', token.token as string, {
+      if (token.accessToken) {
+        Cookies.set('token', token.accessToken as string, {
           expires: 7,
           secure: true,
           sameSite: 'lax',
