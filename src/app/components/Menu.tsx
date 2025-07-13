@@ -1,5 +1,5 @@
 'use client';
-
+import { useEffect } from 'react';
 import InstallPWAButton from './InstallPWAButton';
 import Cookies from 'js-cookie';
 import Sidebar from "./Sidebar";
@@ -43,7 +43,15 @@ export default function Menu() {
     const token = Cookies.get("token");
     return !!token;
   };
-
+useEffect(() => {
+  if (window.location.hash === '#_=_') {
+    if (history.replaceState) {
+      history.replaceState(null, null, window.location.href.split('#')[0]);
+    } else {
+      window.location.hash = '';
+    }
+  }
+}, []);
   const mockItems: CarouselItem[] = [
     {
       id: 'promo1',
