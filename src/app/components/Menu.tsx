@@ -64,7 +64,7 @@ export default function Menu() {
     },
   });
   const {data, loading, error} = useSubscription(LocationTracking);
-
+console.log("id" + useID);
 useEffect(() => {
   if (useID) {
     const stopWatching = startWatchingLocation((location) => {
@@ -115,8 +115,6 @@ useEffect(() => {
 
     getRole();
   }, []);
-
-console.log(useID,"<<");
  
 
   const mockItems: CarouselItem[] = [
