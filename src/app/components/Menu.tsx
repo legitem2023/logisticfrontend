@@ -7,7 +7,7 @@ import { useMutation, useSubscription } from '@apollo/client';
 import { LOCATIONTRACKING } from '../../../graphql/mutation';
 import { LocationTracking } from '../../../graphql/subscription';
 import { decryptToken, capitalize } from '../../../utils/decryptToken';
-
+import NotificationDropdown from './NotificationDropdown';
 import InstallPWAButton from './InstallPWAButton';
 import Sidebar from './Sidebar';
 import HomeDataCarousel from './HomeDataCarousel';
@@ -314,6 +314,7 @@ export default function Menu() {
           height={100}
           priority
         />
+        <NotificationDropdown/>
       </div>
 
       {/* Sidebar with tab content */}
