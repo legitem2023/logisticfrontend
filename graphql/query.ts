@@ -65,10 +65,6 @@ query GetRidersDelivery($getRidersDeliveryId: String) {
     createdAt
     updatedAt
     senderId
-    sender {
-       id
-       name
-    }
     assignedRiderId
     assignedRider {
       id
