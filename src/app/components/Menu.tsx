@@ -231,7 +231,7 @@ console.log(useID,"<<");
       ),
     },
     {
-      label:'Receiver View',
+      label:'Live Map',
       role: 'Receiver',
       icon: <PackageCheck color="green" />,
       content: (
@@ -241,7 +241,7 @@ console.log(useID,"<<");
       ),
     },
     {
-      label:'Realtime Tracking',
+      label:'Live Map',
       role: 'Rider',
       icon: <Navigation color="green" />,
       content: (
