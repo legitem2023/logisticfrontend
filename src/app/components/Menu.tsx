@@ -1,49 +1,45 @@
 'use client';
-import { use, useEffect, useState } from 'react';
-import InstallPWAButton from './InstallPWAButton';
+import { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
-import Sidebar from "./Sidebar";
-import ProfileCard from "./ProfileCard";
-import SwiperTabs from "./SwiperTabs";
-import DeliveryCard from "./DeliveryCard";
 import dynamic from 'next/dynamic';
-import HomeDataCarousel from './HomeDataCarousel';
-import SenderShipmentHistory from './SenderShipmentHistory';
-import LoginCard from "./LoginCard";
-import SignupCard from "./SignupCard";
-import DriverDashboard from "./Rider/DriverDashboard";
-import SenderDashboard from "./Sender/SenderDashboard";
-import ReceiverView from "./Receiver/ReceiverView";
-import RiderView from "./Rider/RiderView";
 import Image from 'next/image';
-import { startWatchingLocation } from './ObtainLocation';
+import { useMutation, useSubscription } from '@apollo/client';
+import { LOCATIONTRACKING } from '../../../graphql/mutation';
+import { LocationTracking } from '../../../graphql/subscription';
+import { decryptToken, capitalize } from '../../../utils/decryptToken';
+
+import InstallPWAButton from './InstallPWAButton';
+import Sidebar from './Sidebar';
+import HomeDataCarousel from './HomeDataCarousel';
 import LogisticsHomePage from './LogisticsHomePage';
+import DriverDashboard from './Rider/DriverDashboard';
+import SenderDashboard from './Sender/SenderDashboard';
+import ReceiverView from './Receiver/ReceiverView';
+import RiderView from './Rider/RiderView';
+import SenderShipmentHistory from './Sender/SenderShipmentHistory';
+import LogisticsForm from './Sender/LogisticsForm';
+import Rider from './Rider/Rider';
+import SettingsPage from './SettingsPage';
+import HelpPage from './HelpPage';
+import LoginCard from './LoginCard';
+import SignupCard from './SignupCard';
+import SwiperTabs from './SwiperTabs';
+import { startWatchingLocation } from './ObtainLocation';
+
 import {
   Home,
   Package,
   LogIn,
-  User,
+  UserPlus,
   Bike,
   PackageCheck,
   LayoutDashboard,
   Settings,
-  LogOut,
   ClipboardCheck,
   HelpCircle,
-  UserPlus,
   Truck,
   Navigation
 } from "lucide-react";
-
-import Rider from "./Rider/Rider";
-import HelpPage from "./HelpPage";
-import SettingsPage from "./SettingsPage";
-import LogisticsForm from "./Sender/LogisticsForm";
-import { capitalize, decryptToken } from '../../../utils/decryptToken';
-import { useMutation, useSubscription } from '@apollo/client';
-import { LocationTracking } from '../../../graphql/subscription';
-import { LOCATIONTRACKING } from '../../../graphql/mutation';
-import Loading from './ui/Loading';
 
 const DeliveryMap = dynamic(() => import('./DeliveryMap'), { ssr: false });
 
@@ -56,52 +52,59 @@ type CarouselItem = {
 };
 
 export default function Menu() {
-  const [useRole,setRole] = useState();
-  const [useID,setID] = useState();
+  const [useRole, setRole] = useState('');
+  const [useID, setID] = useState('');
+
   const [LocationTracker] = useMutation(LOCATIONTRACKING, {
     onCompleted: (data) => {
-      console.log(data,"HowsData?");
+      console.log("Mutation Success:", data);
+    },
+    onError: (err) => {
+      console.error("Mutation Error:", err.message);
     },
   });
-  const {data, loading, error} = useSubscription(LocationTracking);
 
-useEffect(() => {
-  if (useID) {
-    const stopWatching = startWatchingLocation((location) => {
-      LocationTracker({
-        variables: {
-          input: {
-            accuracy: location.accuracy,
-            batteryLevel: location.batteryLevel,
-            heading: location.heading,
-            latitude: location.latitude,
-            longitude: location.longitude,
-            speed: location.speed,
-            timestamp: location.timestamp,
-            userID: useID
-          }
-        }
+  const { data: subscriptionData, error: subscriptionError } = useSubscription(LocationTracking);
+
+  useEffect(() => {
+    if (subscriptionData) {
+      console.log("Subscription Data:", subscriptionData);
+    }
+    if (subscriptionError) {
+      console.error("Subscription Error:", subscriptionError.message);
+    }
+  }, [subscriptionData, subscriptionError]);
+
+  useEffect(() => {
+    if (useID) {
+      console.log("Starting location watch with ID:", useID);
+      const stopWatching = startWatchingLocation((location) => {
+        console.log("Got location:", location);
+        LocationTracker({
+          variables: {
+            input: {
+              accuracy: location.accuracy,
+              batteryLevel: location.batteryLevel,
+              heading: location.heading,
+              latitude: location.latitude,
+              longitude: location.longitude,
+              speed: location.speed,
+              timestamp: location.timestamp,
+              userID: useID,
+            },
+          },
+        });
       });
-    });
 
-    return () => stopWatching && stopWatching(); // cleanup
-  }
-}, [useID]);
-
-console.log("Current Loc.",data);
-
-  const isUserActive = (): boolean => {
-    const token = Cookies.get("token");
-    return !!token;
-  };
-// startWatchingLocation();
+      return () => stopWatching && stopWatching(); // Cleanup
+    }
+  }, [useID]);
 
   useEffect(() => {
     const getRole = async () => {
       try {
         const token = Cookies.get('token');
-        const secret = process.env.NEXT_PUBLIC_JWT_SECRET as string; // expose in env as NEXT_PUBLIC_*
-
+        const secret = process.env.NEXT_PUBLIC_JWT_SECRET as string;
         if (token && secret) {
           const payload = await decryptToken(token, secret);
           setRole(payload.role);
@@ -109,13 +112,17 @@ console.log("Current Loc.",data);
         }
       } catch (err) {
         console.error('Error getting role:', err);
-        setRole(null); // fallback
+        setRole('');
       }
     };
 
     getRole();
   }, []);
- 
+
+  const isUserActive = (): boolean => {
+    const token = Cookies.get('token');
+    return !!token;
+  };
 
   const mockItems: CarouselItem[] = [
     {
@@ -155,30 +162,10 @@ console.log("Current Loc.",data);
   ];
 
   const progressitem = [
-    {
-      label: 'In Progress',
-      content: (
-        <SenderShipmentHistory/>
-      ),
-    },
-    {
-      label: 'Completed',
-      content: (
-       <SenderShipmentHistory/>
-      ),
-    },
-    {
-      label: 'Pending',
-      content: (
-          <SenderShipmentHistory/>
-      ),
-    },
-    {
-      label: 'Cancelled',
-      content: (
-        <SenderShipmentHistory/>
-      ),
-    },
+    { label: 'In Progress', content: <SenderShipmentHistory /> },
+    { label: 'Completed', content: <SenderShipmentHistory /> },
+    { label: 'Pending', content: <SenderShipmentHistory /> },
+    { label: 'Cancelled', content: <SenderShipmentHistory /> },
   ];
 
   const tabItems = [
@@ -187,52 +174,49 @@ console.log("Current Loc.",data);
       role: '',
       icon: <Home color="green" />,
       content: (
-        <div className="px-1 sm:px-1 md:px-1 lg:px-1 py-1 space-y-1">
+        <div className="px-1 py-1 space-y-1">
           <HomeDataCarousel items={mockItems} />
-          <LogisticsHomePage/>
+          <LogisticsHomePage />
         </div>
       ),
     },
     {
-      label:'Assigned Deliveries',
+      label: 'Assigned Deliveries',
       role: 'Rider',
       icon: <ClipboardCheck color="green" />,
       content: (
-        <div className="px-1 sm:px-1 md:px-1 lg:px-1 py-1 space-y-1">
-          <DriverDashboard/>
+        <div className="px-1 py-1 space-y-1">
+          <DriverDashboard />
         </div>
       ),
     },
     {
-      label:'Live Map',
+      label: 'Live Map',
       role: 'Receiver',
       icon: <PackageCheck color="green" />,
       content: (
-        <div className="px-1 sm:px-1 md:px-1 lg:px-1 py-1 space-y-1">
-          <ReceiverView/>
+        <div className="px-1 py-1 space-y-1">
+          <ReceiverView />
         </div>
       ),
     },
     {
-      label:'Live Map',
+      label: 'Live Map',
       role: 'Rider',
       icon: <Navigation color="green" />,
       content: (
-        <div className="px-1 sm:px-1 md:px-1 lg:px-1 py-1 space-y-1">
-          <RiderView/>
+        <div className="px-1 py-1 space-y-1">
+          <RiderView />
         </div>
       ),
     },
-
-
-    
     {
-      label:'SenderDashboard',
+      label: 'SenderDashboard',
       role: 'Sender',
       icon: <LayoutDashboard color="green" />,
       content: (
-        <div className="px-1 sm:px-1 md:px-1 lg:px-1 py-1 space-y-1">
-          <SenderDashboard/>
+        <div className="px-1 py-1 space-y-1">
+          <SenderDashboard />
         </div>
       ),
     },
@@ -241,7 +225,7 @@ console.log("Current Loc.",data);
       role: 'Sender',
       icon: <Truck color="green" />,
       content: (
-        <div className="px-1 sm:px-1 md:px-1 lg:px-1 py-1 space-y-1">
+        <div className="px-1 py-1 space-y-1">
           <LogisticsForm />
         </div>
       ),
@@ -251,8 +235,8 @@ console.log("Current Loc.",data);
       role: '',
       icon: <Package color="green" />,
       content: (
-        <div className="px-1 sm:px-1 md:px-1 lg:px-1 py-1 space-y-1">
-            <SwiperTabs tabs={progressitem}/>
+        <div className="px-1 py-1 space-y-1">
+          <SwiperTabs tabs={progressitem} />
         </div>
       ),
     },
@@ -261,7 +245,7 @@ console.log("Current Loc.",data);
       role: 'Sender',
       icon: <Bike color="green" />,
       content: (
-        <div className="px-1 sm:px-1 md:px-1 lg:px-1 py-1 space-y-1">
+        <div className="px-1 py-1 space-y-1">
           <Rider />
         </div>
       ),
@@ -271,7 +255,7 @@ console.log("Current Loc.",data);
       role: '',
       icon: <Settings color="green" />,
       content: (
-        <div className="px-1 sm:px-1 md:px-1 lg:px-1 py-1 space-y-1">
+        <div className="px-1 py-1 space-y-1">
           <SettingsPage />
         </div>
       ),
@@ -281,7 +265,7 @@ console.log("Current Loc.",data);
       role: '',
       icon: <HelpCircle color="green" />,
       content: (
-        <div className="px-1 sm:px-1 md:px-1 lg:px-1 py-1 space-y-1">
+        <div className="px-1 py-1 space-y-1">
           <HelpPage />
         </div>
       ),
@@ -293,14 +277,13 @@ console.log("Current Loc.",data);
             role: '',
             icon: <UserPlus color="green" />,
             content: (
-              <div className="px-1 sm:px-1 md:px-1 lg:px-1 py-1 space-y-1">
+              <div className="px-1 py-1 space-y-1">
                 <SignupCard />
               </div>
             ),
           },
         ]
       : []),
-
     ...(!isUserActive()
       ? [
           {
@@ -308,17 +291,15 @@ console.log("Current Loc.",data);
             role: '',
             icon: <LogIn color="green" />,
             content: (
-              <div className="px-1 sm:px-1 md:px-1 lg:px-1 py-1 space-y-1">
+              <div className="px-1 py-1 space-y-1">
                 <LoginCard />
               </div>
             ),
           },
         ]
-      : [])
+      : []),
   ];
-  // if(loading) return <Loading lines={4} />
-  // if(error) return <div>Error: {error.message}</div>
-  console.log(data,"<---")
+
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
       <InstallPWAButton />
@@ -336,7 +317,7 @@ console.log("Current Loc.",data);
       </div>
 
       {/* Sidebar with tab content */}
-      <Sidebar tabs={tabItems.filter((tab) => tab.role === capitalize(useRole) || tab.role === '') }/>
+      <Sidebar tabs={tabItems.filter((tab) => tab.role === capitalize(useRole) || tab.role === '')} />
     </div>
   );
 }
