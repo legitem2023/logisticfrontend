@@ -91,7 +91,7 @@ export default function Menu() {
               latitude: location.latitude,
               longitude: location.longitude,
               speed: location.speed,
-              timestamp: location.timestamp,
+              timestamp: location.timestamp.toString(),
               userID: useID,
             },
           },
