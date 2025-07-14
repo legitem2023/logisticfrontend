@@ -255,7 +255,7 @@ console.log(useID,"<<");
       content: (
         <div className="px-1 sm:px-1 md:px-1 lg:px-1 py-1 space-y-1">
           <div className="bg-white rounded-2xl shadow-md p-4 sm:p-6 md:p-8">
-            <SenderShipmentHistory/>
+            <SwiperTabs tabs={progressitem}/>
           </div>
         </div>
       ),
