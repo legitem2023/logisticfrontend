@@ -41,7 +41,7 @@ export default function SenderShipmentHistory({status}:any) {
 
   if (loading || !data) return null;
 
-const mockShipment = useMemo(() => {
+const mockShipment = (() => {
   return data.getRidersDelivery
     .map((delivery: any) => ({
       id: delivery.trackingNumber,
@@ -50,7 +50,7 @@ const mockShipment = useMemo(() => {
       status: capitalize(delivery.deliveryStatus),
       date: formatDate(delivery.createdAt),
     }));
-}, [data.getRidersDelivery, useStatus]);
+});
 console.log(mockShipment);
   const filtered = mockShipment.filter((s) =>
     s.id.toLowerCase().includes(search.toLowerCase())
