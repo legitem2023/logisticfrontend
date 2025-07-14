@@ -241,7 +241,7 @@ console.log(useID,"<<");
       ),
     },
     {
-      label:'RiderView View',
+      label:'Realtime Tracking',
       role: 'Rider',
       icon: <Navigation color="green" />,
       content: (
@@ -287,7 +287,7 @@ console.log(useID,"<<");
     },
     {
       label: 'Shipment History',
-      role: 'Sender',
+      role: '',
       icon: <Package color="green" />,
       content: (
         <div className="px-1 sm:px-1 md:px-1 lg:px-1 py-1 space-y-1">
