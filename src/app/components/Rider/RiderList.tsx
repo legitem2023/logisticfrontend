@@ -1,10 +1,21 @@
 import React, { useState } from "react";
-import { MapPin, X } from "lucide-react";
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { MapPin, Phone, MessageSquare, X } from "lucide-react";
+import L from "leaflet";
+
+// Optional: fix missing default marker icon
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
+  iconRetinaUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
+  shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
+});
 
 type Rider = {
   id: string;
   name: string;
   avatarUrl?: string;
+  phone?: string;
   location: {
     latitude: number;
     longitude: number;
@@ -44,8 +55,7 @@ const RiderList: React.FC<RiderListProps> = ({ riders }) => {
                 <h3 className="text-lg font-medium">{rider.name}</h3>
                 <p className="text-sm text-gray-500 flex items-center">
                   <MapPin className="w-4 h-4 mr-1 text-rose-500" />
-                  {rider.location.latitude.toFixed(4)},{" "}
-                  {rider.location.longitude.toFixed(4)}
+                  {rider.location.latitude.toFixed(4)}, {rider.location.longitude.toFixed(4)}
                 </p>
               </div>
             </div>
@@ -61,7 +71,7 @@ const RiderList: React.FC<RiderListProps> = ({ riders }) => {
         onClick={() => setSelectedRider(null)}
       >
         <div
-          className={`absolute bottom-0 left-0 w-full bg-white rounded-t-2xl p-6 transform transition-transform duration-300 ${
+          className={`absolute bottom-0 left-0 w-full bg-white rounded-t-2xl p-6 max-h-[90vh] overflow-y-auto transform transition-transform duration-300 ${
             selectedRider ? "translate-y-0" : "translate-y-full"
           }`}
           onClick={(e) => e.stopPropagation()}
@@ -75,6 +85,7 @@ const RiderList: React.FC<RiderListProps> = ({ riders }) => {
 
           {selectedRider && (
             <div className="space-y-4">
+              {/* Rider Info */}
               <div className="flex items-center space-x-4">
                 {selectedRider.avatarUrl ? (
                   <img
@@ -93,6 +104,7 @@ const RiderList: React.FC<RiderListProps> = ({ riders }) => {
                 </div>
               </div>
 
+              {/* Location Info */}
               <div className="text-sm text-gray-700">
                 <p className="flex items-center">
                   <MapPin className="w-4 h-4 mr-2 text-rose-500" />
@@ -102,6 +114,50 @@ const RiderList: React.FC<RiderListProps> = ({ riders }) => {
                   <MapPin className="w-4 h-4 mr-2 text-blue-500" />
                   Longitude: {selectedRider.location.longitude.toFixed(5)}
                 </p>
+              </div>
+
+              {/* Mini Map */}
+              <div className="h-52 w-full rounded-xl overflow-hidden border">
+                <MapContainer
+                  center={[
+                    selectedRider.location.latitude,
+                    selectedRider.location.longitude,
+                  ]}
+                  zoom={16}
+                  scrollWheelZoom={false}
+                  style={{ height: "100%", width: "100%" }}
+                >
+                  <TileLayer
+                    attribution='&copy; OpenStreetMap'
+                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                  />
+                  <Marker
+                    position={[
+                      selectedRider.location.latitude,
+                      selectedRider.location.longitude,
+                    ]}
+                  >
+                    <Popup>{selectedRider.name}</Popup>
+                  </Marker>
+                </MapContainer>
+              </div>
+
+              {/* Contact Buttons */}
+              <div className="flex space-x-4 pt-2">
+                <a
+                  href={`tel:${selectedRider.phone || ""}`}
+                  className="flex-1 inline-flex justify-center items-center bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-xl"
+                >
+                  <Phone className="w-5 h-5 mr-2" />
+                  Call
+                </a>
+                <a
+                  href={`sms:${selectedRider.phone || ""}`}
+                  className="flex-1 inline-flex justify-center items-center bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-xl"
+                >
+                  <MessageSquare className="w-5 h-5 mr-2" />
+                  Message
+                </a>
               </div>
             </div>
           )}
