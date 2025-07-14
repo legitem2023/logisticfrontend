@@ -91,8 +91,7 @@ const RiderList: React.FC<RiderListProps> = ({ riders }) => {
                   <img
                     src={selectedRider.avatarUrl}
                     className="w-14 h-14 rounded-full object-cover"
-                    alt={selectedRider.name}
-                  />
+                    alt={selectedRider.name}/>
                 ) : (
                   <div className="w-14 h-14 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 font-bold text-xl">
                     {selectedRider.name.charAt(0)}
