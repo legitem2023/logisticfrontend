@@ -50,14 +50,3 @@ export const mockItems: CarouselItem[] = [
 ];
 
 
-export interface ProgressItem {
-  label: string;
-  content: () => ReactNode;
-}
-
-export const progressItem: ProgressItem[] = [
-  { label: 'In Progress', content: () => SenderShipmentHistory() },
-  { label: 'Completed', content: () => SenderShipmentHistory() },
-  { label: 'Pending', content: () => SenderShipmentHistory() },
-  { label: 'Cancelled', content: () => SenderShipmentHistory() },
-];
