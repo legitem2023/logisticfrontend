@@ -9,7 +9,7 @@ import { useState, useEffect } from "react";
 import Cookies from 'js-cookie';
 import { useQuery } from '@apollo/client';
 import { DELIVERIES } from '../../../graphql/query'
-import { decryptToken } from '../../../utils/decryptToken';
+import { decryptToken,capitalize } from '../../../utils/decryptToken';
 
 export default function SenderShipmentHistory() {
   const [useID, setID] = useState();
@@ -41,12 +41,12 @@ export default function SenderShipmentHistory() {
   if (loading || !data) return null;
 
   const mockShipment = data.getRidersDelivery.map((delivery: any) => {
-    const status = delivery.deliveryStatus;
+    const status = capitalize(delivery.deliveryStatus);
     return {
       id: delivery.trackingNumber,
       receiver: delivery.recipientName,
       dropoff: delivery.dropoffAddress,
-      status: status.toLowerCase(),
+      status: status,
       date: delivery.createdAt,
     };
   });
