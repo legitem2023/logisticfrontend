@@ -167,6 +167,7 @@ export default function SenderShipmentHistory() {
   );
 
   return (
+    <div>
     <div className="relative p-6 space-y-4">
       <div className="flex items-center justify-between flex-wrap gap-2">
         <Input
@@ -251,7 +252,7 @@ export default function SenderShipmentHistory() {
     </div>
   )}
 </div>
-
+</div>
 {/* Overlay */}
 {drawerOpen && (
   <div
@@ -260,5 +261,6 @@ export default function SenderShipmentHistory() {
   />
 )}
     </div>
+        
   );
 }
