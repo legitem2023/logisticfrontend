@@ -41,11 +41,12 @@ export default function SenderShipmentHistory() {
   if (loading || !data) return null;
 
   const mockShipment = data.getRidersDelivery.map((delivery: any) => {
+    const status = delivery.deliveryStatus;
     return {
       id: delivery.trackingNumber,
       receiver: delivery.recipientName,
       dropoff: delivery.dropoffAddress,
-      status: delivery.deliveryStatus,
+      status: status.toLowerCase(),
       date: delivery.createdAt,
     };
   });
