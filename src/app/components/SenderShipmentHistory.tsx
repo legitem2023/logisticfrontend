@@ -195,14 +195,20 @@ export default function SenderShipmentHistory() {
               </div>
               <div className="flex items-center gap-2 flex-wrap">
                 <Badge
-                  variant={
-                    shipment.status === "Delivered"
-                      ? "success"
-                      : shipment.status === "In Transit"
-                      ? "secondary"
-                      : "destructive"
-                  }
-                >
+  variant={
+    shipment.status === "Delivered"
+      ? "success"      // Green
+      : shipment.status === "In Transit"
+      ? "info"         // Blue (custom, ensure your Badge supports this)
+      : shipment.status === "Pending"
+      ? "warning"      // Yellow (custom)
+      : shipment.status === "Canceled"
+      ? "destructive"  // Red
+      : "default"      // Fallback
+  }
+>
+  {shipment.status}
+</Badge>
                   {shipment.status}
                 </Badge>
                 <Button
