@@ -234,7 +234,7 @@ export default function SenderShipmentHistory() {
           <h2 className="text-lg font-semibold">Shipment Details</h2>
           <Button
             variant="ghost"
-            size="icon"
+            size="sm"
             onClick={() => setDrawerOpen(false)}
           >
             <XIcon className="w-5 h-5" />
