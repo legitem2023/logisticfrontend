@@ -10,6 +10,8 @@ import { useState,useEffect } from "react";
 import Cookies from 'js-cookie';
 import { useMutation, useSubscription, useQuery } from '@apollo/client';
 import { DELIVERIES } from '../../../graphql/query'
+import { capitalize, decryptToken } from '../../../utils/decryptToken';
+
 const mockShipments = [
   {
     id: "DEL-0001",
