@@ -67,7 +67,7 @@ useEffect(() => {
 const [search, setSearch] = useState("");
 if(loading) return
 
- const mockShipment = data.getRidersDeliver.map((delivery: any) => {
+ const mockShipment = data.getRidersDelivery.map((delivery: any) => {
   return {
     id: delivery.trackingNumber,
     receiver: delivery.recipientName,
