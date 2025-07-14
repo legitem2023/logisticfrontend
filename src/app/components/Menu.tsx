@@ -105,7 +105,7 @@ useEffect(() => {
         if (token && secret) {
           const payload = await decryptToken(token, secret);
           setRole(payload.role);
-          setID(payload.id);
+          setID(payload.userID);
         }
       } catch (err) {
         console.error('Error getting role:', err);
