@@ -43,7 +43,7 @@ export default function DriverDashboard() {
     const status = capitalize(delivery.deliveryStatus);
     return {
       id: delivery.trackingNumber,
-      receiver: delivery.recipientName,
+      sender: delivery.sender.name,
       pickup: delivery.pickupAddress,
       dropoff: delivery.dropoffAddress,
       status: status,
