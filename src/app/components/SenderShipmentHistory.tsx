@@ -5,15 +5,16 @@ import { Input } from "./ui/Input";
 import { Button } from "./ui/Button";
 import { Badge } from "./ui/Badge";
 import { CalendarIcon, DownloadIcon, EyeIcon, XIcon } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import Cookies from 'js-cookie';
 import { useQuery } from '@apollo/client';
-import { DELIVERIES } from '../../../graphql/query'
-import { decryptToken,capitalize,formatDate } from '../../../utils/decryptToken';
+import { DELIVERIES } from '../../../graphql/query';
+import { decryptToken, capitalize, formatDate } from '../../../utils/decryptToken';
 
-export default function SenderShipmentHistory() {
+export default function SenderShipmentHistory({status}:any) {
   const [useID, setID] = useState();
   const [search, setSearch] = useState("");
+  const [useStatus,setStatus] = useState(status);
   const [selectedShipment, setSelectedShipment] = useState<any>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
 
@@ -34,38 +35,38 @@ export default function SenderShipmentHistory() {
     getRole();
   }, []);
 
-  const { data, loading, error } = useQuery(DELIVERIES, {
+  const { data, loading } = useQuery(DELIVERIES, {
     variables: { id: useID }
   });
 
   if (loading || !data) return null;
 
-  const mockShipment = data.getRidersDelivery.map((delivery: any) => {
-    const status = capitalize(delivery.deliveryStatus);
-    return {
+const mockShipment = useMemo(() => {
+  return data.getRidersDelivery
+    .map((delivery: any) => ({
       id: delivery.trackingNumber,
       receiver: delivery.recipientName,
       dropoff: delivery.dropoffAddress,
-      status: status,
+      status: capitalize(delivery.deliveryStatus),
       date: formatDate(delivery.createdAt),
-    };
-  });
-
+    }));
+}, [data.getRidersDelivery, useStatus]);
+console.log(mockShipment);
   const filtered = mockShipment.filter((s) =>
     s.id.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
     <>
-      <div className="relative p-6 space-y-4">
+      <div className="relative p-1 space-y-4">
         <div className="flex items-center justify-between flex-wrap gap-2">
           <Input
             placeholder="Search by Delivery ID"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="max-w-sm"
+            className="max-w-sm border border-gray-300 focus:ring-2 focus:ring-blue-500"
           />
-          <Button variant="outline" className="flex items-center gap-2">
+          <Button className="flex items-center gap-2 bg-blue-600 text-white hover:bg-blue-700">
             <CalendarIcon className="w-4 h-4" />
             Filter by Date
           </Button>
@@ -73,35 +74,36 @@ export default function SenderShipmentHistory() {
 
         <div className="grid gap-4">
           {filtered.map((shipment) => (
-            <Card key={shipment.id}>
+            <Card key={shipment.id} className="bg-white border border-gray-200 shadow-sm">
               <CardContent className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 p-4">
                 <div>
-                  <div className="text-sm text-muted-foreground">
+                  <div className="text-sm text-gray-800">
                     {shipment.date}
                   </div>
-                  <div className="font-semibold">{shipment.id}</div>
-                  <div className="text-sm">To: {shipment.receiver} ({shipment.dropoff})</div>
+                  <div className="font-semibold text-gray-900">{shipment.id}</div>
+                  <div className="text-sm text-gray-800">
+                    To: {shipment.receiver} ({shipment.dropoff})
+                  </div>
                 </div>
                 <div className="flex items-center gap-2 flex-wrap">
                   <Badge
-  variant={
-    shipment.status === "Delivered"
-      ? "success"        // ✅ green
-      : shipment.status === "In Transit"
-      ? "secondary"      // ✅ gray-blue
-      : shipment.status === "Pending"
-      ? "outline"        // ✅ neutral outline
-      : shipment.status === "Canceled"
-      ? "destructive"    // ✅ red
-      : "default"
-  }
->
-  {shipment.status}
-</Badge>
+                    variant={
+                      shipment.status === "Delivered"
+                        ? "success"
+                        : shipment.status === "In Transit"
+                        ? "secondary"
+                        : shipment.status === "Pending"
+                        ? "outline"
+                        : shipment.status === "Canceled"
+                        ? "destructive"
+                        : "default"
+                    }
+                  >
+                    {shipment.status}
+                  </Badge>
                   <Button
-                    variant="outline"
+                    className="flex items-center gap-1 bg-blue-600 text-white hover:bg-blue-700"
                     size="sm"
-                    className="flex items-center gap-1"
                     onClick={() => {
                       setSelectedShipment(shipment);
                       setDrawerOpen(true);
@@ -109,7 +111,7 @@ export default function SenderShipmentHistory() {
                   >
                     <EyeIcon className="w-4 h-4" /> View
                   </Button>
-                  <Button variant="ghost" size="sm" className="flex items-center gap-1">
+                  <Button variant="ghost" size="sm" className="flex items-center gap-1 text-gray-700 hover:text-gray-900">
                     <DownloadIcon className="w-4 h-4" /> Receipt
                   </Button>
                 </div>
@@ -126,7 +128,7 @@ export default function SenderShipmentHistory() {
           `}
         >
           <div className="flex justify-between items-center p-4 border-b">
-            <h2 className="text-lg font-semibold">Shipment Details</h2>
+            <h2 className="text-lg font-semibold text-gray-900">Shipment Details</h2>
             <Button
               variant="ghost"
               size="sm"
@@ -136,7 +138,7 @@ export default function SenderShipmentHistory() {
             </Button>
           </div>
           {selectedShipment && (
-            <div className="p-4 space-y-3 text-sm overflow-y-auto">
+            <div className="p-4 space-y-3 text-sm text-gray-900 overflow-y-auto">
               <div><strong>Tracking ID:</strong> {selectedShipment.id}</div>
               <div><strong>Receiver:</strong> {selectedShipment.receiver}</div>
               <div><strong>Drop-off Address:</strong> {selectedShipment.dropoff}</div>

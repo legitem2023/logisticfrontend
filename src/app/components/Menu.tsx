@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
 import Image from 'next/image';
 import { useMutation, useSubscription } from '@apollo/client';
@@ -15,7 +15,7 @@ import DriverDashboard from './Rider/DriverDashboard';
 import SenderDashboard from './Sender/SenderDashboard';
 import ReceiverView from './Receiver/ReceiverView';
 import RiderView from './Rider/RiderView';
-import RiderList from './Rider/RiderList';
+// import RiderList from './Rider/RiderList';
 import SenderShipmentHistory from './SenderShipmentHistory';
 import LogisticsForm from './Sender/LogisticsForm';
 import Rider from './Rider/Rider';
@@ -26,6 +26,11 @@ import SignupCard from './SignupCard';
 import SwiperTabs from './SwiperTabs';
 import { startWatchingLocation } from './ObtainLocation';
 import { mockItems } from './json/mockItems';
+import dynamic from 'next/dynamic';
+
+const RiderList = dynamic(() => import('./Rider/RiderList'), {
+  ssr: false
+});
 import {
   Home,
   Package,
@@ -48,7 +53,7 @@ export default function Menu() {
 
   const [LocationTracker] = useMutation(LOCATIONTRACKING, {
     onCompleted: (data) => {
-      console.log("Mutation Success:", data);
+      // console.log("Mutation Success:", data);
     },
     onError: (err) => {
       console.error("Mutation Error:", err.message);
@@ -75,7 +80,6 @@ export default function Menu() {
         setRole('');
       }
     };
-
     getRole();
   });
 
@@ -104,7 +108,7 @@ export default function Menu() {
   });
 
 
-console.log(subscriptionData)
+// console.log(subscriptionData)
   const isUserActive = (): boolean => {
     const token = Cookies.get('token');
     return !!token;
@@ -113,10 +117,10 @@ console.log(subscriptionData)
 
 
   const progressitem = [
-    { label: 'In Progress', content: <SenderShipmentHistory /> },
-    { label: 'Completed', content: <SenderShipmentHistory /> },
-    { label: 'Pending', content: <SenderShipmentHistory /> },
-    { label: 'Cancelled', content: <SenderShipmentHistory /> },
+    { label: 'In Progress', content: <SenderShipmentHistory status={"in_transit"}/> },
+    { label: 'Completed', content: <SenderShipmentHistory status={"Completed"}/> },
+    { label: 'Pending', content: <SenderShipmentHistory status={"Pending"}/> },
+    { label: 'Cancelled', content: <SenderShipmentHistory status={"Canceled"}/> },
   ];
 
   const tabItems = [
@@ -283,7 +287,7 @@ console.log(subscriptionData)
         />
         
        </div>
-     <NotificationDropdown/>
+     <NotificationDropdown userId={useID}/>
       {/* Sidebar with tab content */}
       <Sidebar tabs={tabItems.filter((tab) => tab.role === capitalize(useRole) || tab.role === '')} />
     </div>

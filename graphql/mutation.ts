@@ -33,19 +33,24 @@ mutation CreateDelivery($input: CreateDeliveryInput) {
 
 // {
 //   "input": {
-//     "dropoffAddress": "Olongapo City",
-//     "dropoffLatitude": 120.294113,
-//     "dropoffLongitude": 14.83662,
-//     "estimatedDeliveryTime": "2025-07-10T07:22:00Z",
-//     "pickupAddress": "Angono, Rizal",
-//     "pickupLatitude": 14.523375,
-//     "pickupLongitude": 121.153625,
-//     "recipientName": "Tintin",
-//     "recipientPhone": "0956789789",
-//     "senderId": "686ffdf59a1ad0a2e9c79f0b",
-//     "assignedRiderId": "686d427603399308ff9a237a"
+//     "assignedRiderId": "686d427603399308ff9a237a",
+//     "deliveryFee": 120.50,
+//     "deliveryType": "standard",
+//     "dropoffAddress": "123 Mabini St, Manila",
+//     "dropoffLatitude": 14.5995,
+//     "dropoffLongitude": 120.9842,
+//     "estimatedDeliveryTime": "2025-07-14T18:00:00.000Z",
+//     "paymentMethod": "cash",
+//     "paymentStatus": "unpaid",
+//     "pickupAddress": "456 Katipunan Ave, QC",
+//     "pickupLatitude": 14.6372,
+//     "pickupLongitude": 121.0771,
+//     "recipientName": "Juan Dela Cruz",
+//     "recipientPhone": "+639171234567",
+//     "senderId": "686d427603399308ff9a237a"
 //   }
 // }
+
 
 
 
@@ -56,7 +61,6 @@ mutation CreateRider($input: CreateRiderInput) {
   }
 }
 `
-
 // {
 //   "input": {
 //     "email": "robertsancomarquez1988@gmail.com",
@@ -71,6 +75,7 @@ mutation CreateRider($input: CreateRiderInput) {
 export const LOCATIONTRACKING = gql`
 mutation LocationTracking($input: LocationTrackingInput) {
   locationTracking(input: $input) {
+    userID
     latitude
     longitude
     speed
@@ -78,7 +83,6 @@ mutation LocationTracking($input: LocationTrackingInput) {
     accuracy
     batteryLevel
     timestamp
-    userID
   }
 }
 `
@@ -93,4 +97,51 @@ mutation LocationTracking($input: LocationTrackingInput) {
 //     "timestamp": "1",
 //     "userID": "2"
 //   }
+// }
+
+export const SENDNOTIFICATION = gql`
+mutation SendNotification($userId: String!, $title: String!, $message: String!, $type: String!) {
+  sendNotification(userID: $userId, title: $title, message: $message, type: $type) {
+    id
+    title
+    message
+    type
+    isRead
+    createdAt
+  }
+}
+`
+
+// {
+//   "userId": "686d427603399308ff9a237a",
+//   "title": "Delivered",
+//   "message": "Your Parcel Has Delivered",
+//   "type": "YEAH"
+// }
+
+export const ACCEPTDELIVERY = gql`
+mutation AcceptDelivery($deliveryId: String!, $riderId: String!) {
+  acceptDelivery(deliveryId: $deliveryId, riderId: $riderId) {
+    statusText
+  }
+}
+`
+export const FINISHDELIVERY = gql`
+mutation FinishDelivery($deliveryId: String!, $riderId: String!) {
+  finishDelivery(deliveryId: $deliveryId, riderId: $riderId) {
+    statusText
+  }
+}
+`
+export const CANCELEDDELIVERY = gql`
+mutation CancelDelivery($deliveryId: String!, $riderId: String!) {
+  cancelDelivery(deliveryId: $deliveryId, riderId: $riderId) {
+    statusText
+  }
+}
+`
+
+// {
+//   "deliveryId": "68700a7a55394f1f6527b0c6",
+//   "riderId": "686d427603399308ff9a237a"
 // }

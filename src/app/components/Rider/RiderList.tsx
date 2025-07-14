@@ -1,15 +1,5 @@
 import React, { useState } from "react";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import { MapPin, Phone, MessageSquare, X } from "lucide-react";
-import L from "leaflet";
-
-// Optional: fix missing default marker icon
-delete L.Icon.Default.prototype._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
-  iconRetinaUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
-  shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
-});
 
 type Rider = {
   id: string;
@@ -91,7 +81,8 @@ const RiderList: React.FC<RiderListProps> = ({ riders }) => {
                   <img
                     src={selectedRider.avatarUrl}
                     className="w-14 h-14 rounded-full object-cover"
-                    alt={selectedRider.name}/>
+                    alt={selectedRider.name}
+                  />
                 ) : (
                   <div className="w-14 h-14 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 font-bold text-xl">
                     {selectedRider.name.charAt(0)}
@@ -113,32 +104,6 @@ const RiderList: React.FC<RiderListProps> = ({ riders }) => {
                   <MapPin className="w-4 h-4 mr-2 text-blue-500" />
                   Longitude: {selectedRider.location.longitude.toFixed(5)}
                 </p>
-              </div>
-
-              {/* Mini Map */}
-              <div className="h-52 w-full rounded-xl overflow-hidden border">
-                <MapContainer
-                  center={[
-                    selectedRider.location.latitude,
-                    selectedRider.location.longitude,
-                  ]}
-                  zoom={16}
-                  scrollWheelZoom={false}
-                  style={{ height: "100%", width: "100%" }}
-                >
-                  <TileLayer
-                    attribution='&copy; OpenStreetMap'
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                  />
-                  <Marker
-                    position={[
-                      selectedRider.location.latitude,
-                      selectedRider.location.longitude,
-                    ]}
-                  >
-                    <Popup>{selectedRider.name}</Popup>
-                  </Marker>
-                </MapContainer>
               </div>
 
               {/* Contact Buttons */}

@@ -1,18 +1,19 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
+import { useQuery, gql } from '@apollo/client'
 import { Bell } from 'lucide-react'
+import { GETNOTIFICATION } from '../../../graphql/query'
 
-const notifications = [
-  { id: 1, message: 'New order received!', time: '2 mins ago' },
-  { id: 2, message: 'Package delivered successfully.', time: '10 mins ago' },
-  { id: 3, message: 'Driver is en route.', time: '30 mins ago' },
-]
 
-export default function NotificationDropdown() {
+
+export default function NotificationDropdown({ userId }: { userId: string }) {
   const [open, setOpen] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
-
+  const { data, loading, error } = useQuery(GETNOTIFICATION, {
+    variables: { getNotificationsId: userId },
+  })
+// console.log(userId,"userId");
   // Close dropdown on outside click
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -28,6 +29,8 @@ export default function NotificationDropdown() {
       document.removeEventListener('mousedown', handleClickOutside)
     }
   }, [])
+
+  const notifications = data?.getNotifications || []
 
   return (
     <div className="absolute top-4 right-4 z-90" ref={dropdownRef}>
@@ -45,11 +48,19 @@ export default function NotificationDropdown() {
               Notifications
             </div>
             <ul className="max-h-64 overflow-y-auto divide-y">
-              {notifications.length > 0 ? (
-                notifications.map((notif) => (
+              {loading ? (
+                <li className="px-4 py-3 text-sm text-gray-500">Loading...</li>
+              ) : error ? (
+                <li className="px-4 py-3 text-sm text-red-500">
+                  Error loading notifications
+                </li>
+              ) : notifications.length > 0 ? (
+                notifications.map((notif: any) => (
                   <li key={notif.id} className="px-4 py-3 hover:bg-gray-50">
                     <p className="text-sm text-gray-800">{notif.message}</p>
-                    <span className="text-xs text-gray-500">{notif.time}</span>
+                    <span className="text-xs text-gray-500">
+                      {new Date(notif.createdAt).toLocaleString()}
+                    </span>
                   </li>
                 ))
               ) : (

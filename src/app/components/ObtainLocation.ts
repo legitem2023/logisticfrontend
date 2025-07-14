@@ -42,6 +42,6 @@ export const startWatchingLocation = (onLocationUpdate: (location: any) => void)
 
   return () => {
     navigator.geolocation.clearWatch(watchId);
-    console.log('Stopped watching location.');
+    // console.log('Stopped watching location.');
   };
 };

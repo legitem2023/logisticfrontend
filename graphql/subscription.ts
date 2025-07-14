@@ -14,3 +14,17 @@ subscription Subscription($userId: String) {
   }
 }
 `
+
+export const NOTIFICATION = gql`
+subscription NotificationReceived($userId: String!) {
+  notificationReceived(userID: $userId) {
+    id
+    userId
+    title
+    message
+    type
+    isRead
+    createdAt
+  }
+}
+`

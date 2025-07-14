@@ -94,3 +94,21 @@ query GetRidersDelivery($getRidersDeliveryId: String) {
     }
   }
 }`
+
+export const GETNOTIFICATION = gql`
+query GetNotifications($getNotificationsId: String) {
+  getNotifications(id: $getNotificationsId) {
+    id
+    user {
+      name
+      phoneNumber
+    }
+    userId
+    title
+    message
+    type
+    isRead
+    createdAt
+  }
+}
+`

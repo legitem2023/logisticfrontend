@@ -2,19 +2,22 @@
 import { useState,useEffect } from "react";
 import { Button } from "../ui/Button";
 import { Card, CardContent } from "../ui/Card";
-import { useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { DELIVERIES } from "../../../../graphql/query";
 import { MapPin, Clock, CheckCircle, PackageCheck } from "lucide-react";
 import Loading from "../ui/Loading";
 import Cookies from 'js-cookie';
 import { decryptToken,capitalize,formatDate } from '../../../../utils/decryptToken';
-
+import { ACCEPTDELIVERY } from "../../../../graphql/mutation";
 
 export default function DriverDashboard() {
+  const [AcceptDelivery] = useMutation(ACCEPTDELIVERY,{
+    onCompleted: () => {
+      console.log("Delivery accepted successfully");
+    },
+  });
   const [useID, setID] = useState();
-  const [search, setSearch] = useState("");
   const [delivery, setDelivery] = useState<any>(null);
-  const [drawerOpen, setDrawerOpen] = useState(false);
 
   useEffect(() => {
     const getRole = async () => {
@@ -23,7 +26,7 @@ export default function DriverDashboard() {
         const secret = process.env.NEXT_PUBLIC_JWT_SECRET as string;
         if (token && secret) {
           const payload = await decryptToken(token, secret);
-          setID(payload.userID);
+          setID(payload.userId);
         }
       } catch (err) {
         console.error('Error getting role:', err);
@@ -43,7 +46,7 @@ export default function DriverDashboard() {
     const status = capitalize(delivery.deliveryStatus);
     return {
       id: delivery.trackingNumber,
-      sender: delivery.senderId,
+      sender: delivery.id,
       pickup: delivery.pickupAddress,
       dropoff: delivery.dropoffAddress,
       status: status,
@@ -51,12 +54,12 @@ export default function DriverDashboard() {
     };
   });
 
-  const handleAccept = (id: string) => {
-    setDelivery((prev) =>
-      prev.map((d) =>
-        d.id === id ? { ...d, status: "accepted" } : d
-      )
-    );
+  const handleAccept = (id: string,riderId: string) => {
+    console.log(id,riderId,AcceptDelivery);
+    AcceptDelivery({ variables: { 
+      deliveryId: id,
+      riderId: riderId
+     } });
   };
 
   return (
@@ -77,7 +80,7 @@ export default function DriverDashboard() {
       <main className="flex-1 p-4">
         <h1 className="text-2xl font-bold mb-4">Assigned Deliveries</h1>
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-          {mockShipment.map((d) => (
+          {loading ? <Loading lines={4}/> : mockShipment.map((d) => (
             <Card key={d.id}>
               <CardContent className="p-4 space-y-2">
                 <div className="flex items-center gap-2 text-sm text-gray-600">
@@ -96,7 +99,10 @@ export default function DriverDashboard() {
                   <Clock className="w-4 h-4" />
                   <span>ETA: {d.eta}</span>
                 </div>
-                {d.status === "assigned" ? (
+                <Button className="w-full" onClick={() => handleAccept(d.id,useID)}>
+                  Accept Delivery
+                </Button>
+                {/* {d.status === "assigned" ? (
                   <Button
                     className="w-full"
                     onClick={() => handleAccept(d.id)}
@@ -108,7 +114,7 @@ export default function DriverDashboard() {
                     <CheckCircle className="w-4 h-4" />
                     Accepted
                   </div>
-                )}
+                )} */}
               </CardContent>
             </Card>
           ))}
