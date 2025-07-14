@@ -67,14 +67,15 @@ useEffect(() => {
 const [search, setSearch] = useState("");
 if(loading) return
 
- const mockShipment = data.getRidersDeliver.map((delivery:any) => {
-        id: delivery.trackingNumber,
-        receiver: delivery.recipientName,
-        dropoff: delivery.dropoffAddress,
-        status: delivery.deliveryStatus,
-        date: delivery.createdAt, 
-   })
-
+ const mockShipment = data.getRidersDeliver.map((delivery: any) => {
+  return {
+    id: delivery.trackingNumber,
+    receiver: delivery.recipientName,
+    dropoff: delivery.dropoffAddress,
+    status: delivery.deliveryStatus,
+    date: delivery.createdAt,
+  };
+});
   const filtered = mockShipment.filter((s) =>
     s.id.toLowerCase().includes(search.toLowerCase())
   );
