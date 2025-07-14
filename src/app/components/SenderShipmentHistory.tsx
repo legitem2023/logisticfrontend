@@ -44,7 +44,7 @@ useEffect(() => {
       try {
         const token = Cookies.get('token');
         const secret = process.env.NEXT_PUBLIC_JWT_SECRET as string; // expose in env as NEXT_PUBLIC_*
-        console.log(token)
+        console.log(token,"&&&");
         if (token && secret) {
           const payload = await decryptToken(token, secret);
           setID(payload.id);
@@ -57,7 +57,7 @@ useEffect(() => {
     };
 
     getRole();
-  }, []);
+  });
 
   const { data, loading, error } = useQuery(DELIVERIES, {
   variables: {
