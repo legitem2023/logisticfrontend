@@ -7,7 +7,9 @@ import { Button } from "./ui/Button";
 import { Badge } from "./ui/Badge";
 import { CalendarIcon, DownloadIcon, EyeIcon } from "lucide-react";
 import { useState } from "react";
-
+import Cookies from 'js-cookie';
+import { useMutation, useSubscription, useQuery } from '@apollo/client';
+import { DELIVERIES } from '../../../graphql/query'
 const mockShipments = [
   {
     id: "DEL-0001",
@@ -33,6 +35,32 @@ const mockShipments = [
 ];
 
 export default function SenderShipmentHistory() {
+  const [useID,setID] = useState();
+  
+useEffect(() => {
+    const getRole = async () => {
+      try {
+        const token = Cookies.get('token');
+        const secret = process.env.NEXT_PUBLIC_JWT_SECRET as string; // expose in env as NEXT_PUBLIC_*
+        if (token && secret) {
+          const payload = await decryptToken(token, secret);
+          setID(payload.id);
+        }
+      } catch (err) {
+        console.error('Error getting role:', err);
+        setRole(null); // fallback
+      }
+    };
+
+    getRole();
+  }, []);
+
+  const { data, loading, error } = useQuery(DELIVERIES, {
+  variables: {
+    id: useID
+  }
+});
+console.log(useID,"<<<<");
   const [search, setSearch] = useState("");
 
   const filtered = mockShipments.filter((s) =>
