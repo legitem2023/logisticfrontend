@@ -44,6 +44,7 @@ export default function DriverDashboard() {
     return {
       id: delivery.trackingNumber,
       receiver: delivery.recipientName,
+      pickup: delivery.pickupAddress,
       dropoff: delivery.dropoffAddress,
       status: status,
       date: formatDate(delivery.createdAt),
