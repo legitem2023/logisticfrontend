@@ -16,7 +16,7 @@ import DriverDashboard from './Rider/DriverDashboard';
 import SenderDashboard from './Sender/SenderDashboard';
 import ReceiverView from './Receiver/ReceiverView';
 import RiderView from './Rider/RiderView';
-import SenderShipmentHistory from './Sender/SenderShipmentHistory';
+import SenderShipmentHistory from './SenderShipmentHistory';
 import LogisticsForm from './Sender/LogisticsForm';
 import Rider from './Rider/Rider';
 import SettingsPage from './SettingsPage';
