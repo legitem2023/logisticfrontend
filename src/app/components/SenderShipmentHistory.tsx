@@ -41,20 +41,22 @@ export default function SenderShipmentHistory({status}:any) {
 
   if (loading || !data) return null;
 
-const mockShipment = (() => {
-  return data.getRidersDelivery
-    .map((delivery: any) => ({
-      id: delivery.trackingNumber,
-      receiver: delivery.recipientName,
-      dropoff: delivery.dropoffAddress,
-      status: capitalize(delivery.deliveryStatus),
-      date: formatDate(delivery.createdAt),
-    }));
-});
-console.log(mockShipment);
-  const filtered = mockShipment.filter((s) =>
-    s.id.toLowerCase().includes(search.toLowerCase())
-  );
+const mockShipment = () => {
+  return data.getRidersDelivery.map((delivery: any) => ({
+    id: delivery.trackingNumber,
+    receiver: delivery.recipientName,
+    dropoff: delivery.dropoffAddress,
+    status: capitalize(delivery.deliveryStatus),
+    date: formatDate(delivery.createdAt),
+  }));
+};
+
+console.log(mockShipment());
+
+const filtered = mockShipment().filter((s) =>
+  s.id.toLowerCase().includes(search.toLowerCase())
+);
+
 
   return (
     <>
