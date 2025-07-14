@@ -12,30 +12,6 @@ import { useMutation, useSubscription, useQuery } from '@apollo/client';
 import { DELIVERIES } from '../../../graphql/query'
 import { capitalize, decryptToken } from '../../../utils/decryptToken';
 
-const mockShipments = [
-  {
-    id: "DEL-0001",
-    receiver: "Maria Santos",
-    dropoff: "Quezon City",
-    status: "Delivered",
-    date: "2025-07-10",
-  },
-  {
-    id: "DEL-0002",
-    receiver: "Juan Dela Cruz",
-    dropoff: "Makati City",
-    status: "In Transit",
-    date: "2025-07-13",
-  },
-  {
-    id: "DEL-0003",
-    receiver: "Ana Reyes",
-    dropoff: "Taguig City",
-    status: "Canceled",
-    date: "2025-07-11",
-  },
-];
-
 export default function SenderShipmentHistory() {
   const [useID,setID] = useState();
   
