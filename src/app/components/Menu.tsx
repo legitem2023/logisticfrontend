@@ -88,7 +88,7 @@ useEffect(() => {
   }
 }, [useID]);
 
-
+console.log("Current Loc.",data);
 
   const isUserActive = (): boolean => {
     const token = Cookies.get("token");
