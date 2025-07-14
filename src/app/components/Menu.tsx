@@ -8,6 +8,7 @@ import SwiperTabs from "./SwiperTabs";
 import DeliveryCard from "./DeliveryCard";
 import dynamic from 'next/dynamic';
 import HomeDataCarousel from './HomeDataCarousel';
+import SenderShipmentHistory from './SenderShipmentHistory';
 import LoginCard from "./LoginCard";
 import SignupCard from "./SignupCard";
 import DriverDashboard from "./Rider/DriverDashboard";
@@ -280,6 +281,18 @@ console.log(useID,"<<");
         <div className="px-1 sm:px-1 md:px-1 lg:px-1 py-1 space-y-1">
           <div className="bg-white rounded-2xl shadow-md p-4 sm:p-6 md:p-8">
             <SwiperTabs tabs={progressitem} />
+          </div>
+        </div>
+      ),
+    },
+    {
+      label: 'Shipment History',
+      role: 'Sender',
+      icon: <Package color="green" />,
+      content: (
+        <div className="px-1 sm:px-1 md:px-1 lg:px-1 py-1 space-y-1">
+          <div className="bg-white rounded-2xl shadow-md p-4 sm:p-6 md:p-8">
+            <SenderShipmentHistory/>
           </div>
         </div>
       ),
