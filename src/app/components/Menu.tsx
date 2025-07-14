@@ -160,50 +160,25 @@ console.log(useID,"<<");
     {
       label: 'In Progress',
       content: (
-        <DeliveryCard
-          pickup="SM North EDSA, Quezon City"
-          dropoff="Bonifacio Global City, Taguig"
-          status="in_progress"
-          assignedDriver={<Rider />}
-        >
-          <SenderShipmentHistory/>
-        </DeliveryCard>
+        <SenderShipmentHistory/>
       ),
     },
     {
       label: 'Completed',
       content: (
-        <DeliveryCard
-          pickup="SM North EDSA, Quezon City"
-          dropoff="Bonifacio Global City, Taguig"
-          status="completed"
-        >
-          <SenderShipmentHistory/>
-        </DeliveryCard>
+       <SenderShipmentHistory/>
       ),
     },
     {
       label: 'Pending',
       content: (
-        <DeliveryCard
-          pickup="SM North EDSA, Quezon City"
-          dropoff="Bonifacio Global City, Taguig"
-          status="pending"
-        >
           <SenderShipmentHistory/>
-        </DeliveryCard>
       ),
     },
     {
       label: 'Cancelled',
       content: (
-        <DeliveryCard
-          pickup="SM North EDSA, Quezon City"
-          dropoff="Bonifacio Global City, Taguig"
-          status="cancelled"
-        >
-          <SenderShipmentHistory/>
-        </DeliveryCard>
+        <SenderShipmentHistory/>
       ),
     },
   ];
