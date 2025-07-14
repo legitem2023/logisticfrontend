@@ -30,7 +30,7 @@ export default function NotificationDropdown() {
   }, [])
 
   return (
-    <div className="fixed top-4 right-4 z-90" ref={dropdownRef}>
+    <div className="absolute top-4 right-4 z-90" ref={dropdownRef}>
       <div className="relative">
         <button
           onClick={() => setOpen(!open)}
