@@ -44,11 +44,10 @@ useEffect(() => {
       try {
         const token = Cookies.get('token');
         const secret = process.env.NEXT_PUBLIC_JWT_SECRET as string; // expose in env as NEXT_PUBLIC_*
-        console.log(token,"&&&");
+        
         if (token && secret) {
           const payload = await decryptToken(token, secret);
           setID(payload.userID);
-          console.log(payload);
         }
       } catch (err) {
         console.error('Error getting role:', err);
@@ -64,9 +63,11 @@ useEffect(() => {
     id: useID
   }
 });
-console.log(useID,"<<<<");
-  const [search, setSearch] = useState("");
-
+  
+const [search, setSearch] = useState("");
+if(loading) return
+console.log(data);
+  
   const filtered = mockShipments.filter((s) =>
     s.id.toLowerCase().includes(search.toLowerCase())
   );
