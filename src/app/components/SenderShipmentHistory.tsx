@@ -224,40 +224,41 @@ export default function SenderShipmentHistory() {
         ))}
       </div>
 
-      {/* Sliding Drawer */}
-      <div
-        className={`fixed top-0 right-0 h-full w-full sm:w-[400px] bg-white shadow-lg transform transition-transform duration-300 ease-in-out z-50 ${
-          drawerOpen ? "translate-x-0" : "translate-x-full"
-        }`}
-      >
-        <div className="flex justify-between items-center p-4 border-b">
-          <h2 className="text-lg font-semibold">Shipment Details</h2>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setDrawerOpen(false)}
-          >
-            <XIcon className="w-5 h-5" />
-          </Button>
-        </div>
-        {selectedShipment && (
-          <div className="p-4 space-y-3 text-sm">
-            <div><strong>Tracking ID:</strong> {selectedShipment.id}</div>
-            <div><strong>Receiver:</strong> {selectedShipment.receiver}</div>
-            <div><strong>Drop-off Address:</strong> {selectedShipment.dropoff}</div>
-            <div><strong>Status:</strong> {selectedShipment.status}</div>
-            <div><strong>Date:</strong> {selectedShipment.date}</div>
-          </div>
-        )}
-      </div>
+{/* Sliding Drawer (Bottom) */}
+<div
+  className={`fixed bottom-0 left-0 w-full bg-white shadow-t-lg transform transition-transform duration-300 ease-in-out z-50
+    ${drawerOpen ? "translate-y-0" : "translate-y-full"}
+    h-1/2 sm:h-[300px] rounded-t-2xl border-t
+  `}
+>
+  <div className="flex justify-between items-center p-4 border-b">
+    <h2 className="text-lg font-semibold">Shipment Details</h2>
+    <Button
+      variant="ghost"
+      size="icon"
+      onClick={() => setDrawerOpen(false)}
+    >
+      <XIcon className="w-5 h-5" />
+    </Button>
+  </div>
+  {selectedShipment && (
+    <div className="p-4 space-y-3 text-sm overflow-y-auto">
+      <div><strong>Tracking ID:</strong> {selectedShipment.id}</div>
+      <div><strong>Receiver:</strong> {selectedShipment.receiver}</div>
+      <div><strong>Drop-off Address:</strong> {selectedShipment.dropoff}</div>
+      <div><strong>Status:</strong> {selectedShipment.status}</div>
+      <div><strong>Date:</strong> {selectedShipment.date}</div>
+    </div>
+  )}
+</div>
 
-      {/* Overlay when drawer is open */}
-      {drawerOpen && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-30 z-40"
-          onClick={() => setDrawerOpen(false)}
-        />
-      )}
+{/* Overlay */}
+{drawerOpen && (
+  <div
+    className="fixed inset-0 bg-black bg-opacity-30 z-40"
+    onClick={() => setDrawerOpen(false)}
+  />
+)}
     </div>
   );
 }
