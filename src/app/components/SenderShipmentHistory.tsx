@@ -2,9 +2,9 @@
 "use client";
 
 import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { Input } from "./ui/Input";
+import { Button } from "./ui/Button";
+import { Badge } from "./ui/Badge";
 import { CalendarIcon, DownloadIcon, EyeIcon } from "lucide-react";
 import { useState } from "react";
 
