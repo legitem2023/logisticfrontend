@@ -1,0 +1,114 @@
+import React, { useState } from "react";
+import { MapPin, X } from "lucide-react";
+
+type Rider = {
+  id: string;
+  name: string;
+  avatarUrl?: string;
+  location: {
+    latitude: number;
+    longitude: number;
+  };
+};
+
+type RiderListProps = {
+  riders: Rider[];
+};
+
+const RiderList: React.FC<RiderListProps> = ({ riders }) => {
+  const [selectedRider, setSelectedRider] = useState<Rider | null>(null);
+
+  return (
+    <>
+      <div className="w-full max-w-5xl mx-auto p-4">
+        <h2 className="text-2xl font-semibold mb-4">Active Riders</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {riders.map((rider) => (
+            <div
+              key={rider.id}
+              className="bg-white rounded-2xl shadow-md p-4 flex items-center space-x-4 transition hover:shadow-lg cursor-pointer"
+              onClick={() => setSelectedRider(rider)}
+            >
+              {rider.avatarUrl ? (
+                <img
+                  src={rider.avatarUrl}
+                  alt={rider.name}
+                  className="w-12 h-12 rounded-full object-cover"
+                />
+              ) : (
+                <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 font-bold">
+                  {rider.name.charAt(0)}
+                </div>
+              )}
+              <div className="flex-1">
+                <h3 className="text-lg font-medium">{rider.name}</h3>
+                <p className="text-sm text-gray-500 flex items-center">
+                  <MapPin className="w-4 h-4 mr-1 text-rose-500" />
+                  {rider.location.latitude.toFixed(4)},{" "}
+                  {rider.location.longitude.toFixed(4)}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Slide-Up Drawer */}
+      <div
+        className={`fixed inset-0 z-50 transition-all duration-300 ${
+          selectedRider ? "visible bg-black/50" : "invisible"
+        }`}
+        onClick={() => setSelectedRider(null)}
+      >
+        <div
+          className={`absolute bottom-0 left-0 w-full bg-white rounded-t-2xl p-6 transform transition-transform duration-300 ${
+            selectedRider ? "translate-y-0" : "translate-y-full"
+          }`}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-xl font-semibold">Rider Details</h3>
+            <button onClick={() => setSelectedRider(null)}>
+              <X className="w-5 h-5 text-gray-600" />
+            </button>
+          </div>
+
+          {selectedRider && (
+            <div className="space-y-4">
+              <div className="flex items-center space-x-4">
+                {selectedRider.avatarUrl ? (
+                  <img
+                    src={selectedRider.avatarUrl}
+                    className="w-14 h-14 rounded-full object-cover"
+                    alt={selectedRider.name}
+                  />
+                ) : (
+                  <div className="w-14 h-14 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 font-bold text-xl">
+                    {selectedRider.name.charAt(0)}
+                  </div>
+                )}
+                <div>
+                  <h3 className="text-lg font-medium">{selectedRider.name}</h3>
+                  <p className="text-sm text-gray-500">ID: {selectedRider.id}</p>
+                </div>
+              </div>
+
+              <div className="text-sm text-gray-700">
+                <p className="flex items-center">
+                  <MapPin className="w-4 h-4 mr-2 text-rose-500" />
+                  Latitude: {selectedRider.location.latitude.toFixed(5)}
+                </p>
+                <p className="flex items-center">
+                  <MapPin className="w-4 h-4 mr-2 text-blue-500" />
+                  Longitude: {selectedRider.location.longitude.toFixed(5)}
+                </p>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default RiderList;
