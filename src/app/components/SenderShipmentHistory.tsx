@@ -47,7 +47,7 @@ export default function SenderShipmentHistory() {
       receiver: delivery.recipientName,
       dropoff: delivery.dropoffAddress,
       status: status,
-      date: delivery.createdAt,
+      date: formatDate(delivery.createdAt),
     };
   });
 
