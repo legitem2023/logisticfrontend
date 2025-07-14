@@ -166,7 +166,7 @@ console.log(useID,"<<");
           status="in_progress"
           assignedDriver={<Rider />}
         >
-          <DeliveryMap />
+          <SenderShipmentHistory/>
         </DeliveryCard>
       ),
     },
@@ -178,7 +178,7 @@ console.log(useID,"<<");
           dropoff="Bonifacio Global City, Taguig"
           status="completed"
         >
-          <DeliveryMap />
+          <SenderShipmentHistory/>
         </DeliveryCard>
       ),
     },
@@ -190,7 +190,7 @@ console.log(useID,"<<");
           dropoff="Bonifacio Global City, Taguig"
           status="pending"
         >
-          <DeliveryMap />
+          <SenderShipmentHistory/>
         </DeliveryCard>
       ),
     },
@@ -202,7 +202,7 @@ console.log(useID,"<<");
           dropoff="Bonifacio Global City, Taguig"
           status="cancelled"
         >
-          <DeliveryMap />
+          <SenderShipmentHistory/>
         </DeliveryCard>
       ),
     },
