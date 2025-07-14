@@ -255,7 +255,7 @@ export default function SenderShipmentHistory() {
 {/* Overlay */}
 {drawerOpen && (
   <div
-    className="fixed top-0 left-0  inset-0 bg-[rgba(0,0,0,0.5)] z-40"
+    className="fixed top-0 bottom-0 left-0 h-[100vh] inset-0 bg-[rgba(0,0,0,0.5)] z-40"
     onClick={() => setDrawerOpen(false)}
   />
 )}
