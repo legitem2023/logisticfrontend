@@ -6,45 +6,48 @@ import { useQuery } from "@apollo/client";
 import { DELIVERIES } from "../../../../graphql/query";
 import { MapPin, Clock, CheckCircle, PackageCheck } from "lucide-react";
 import Loading from "../ui/Loading";
+import Cookies from 'js-cookie';
 
-const mockDeliveries = [
-  {
-    id: "del-001",
-    pickup: "Warehouse A, Quezon City",
-    dropoff: "123 Makati Ave, Makati",
-    eta: "25 mins",
-    customer: "Juan Dela Cruz",
-    status: "assigned",
-  },
-  {
-    id: "del-002",
-    pickup: "Hub B, Mandaluyong",
-    dropoff: "456 Ortigas Center, Pasig",
-    eta: "40 mins",
-    customer: "Maria Santos",
-    status: "assigned",
-  },
-];
 
 export default function DriverDashboard() {
-  const { data, loading, error } = useQuery(DELIVERIES,{
-    variables: {
-      "getRidersDeliveryId": "686d427603399308ff9a237a"
-    },
-});
+  const [useID, setID] = useState();
+  const [search, setSearch] = useState("");
+  const [delivery, setDelivery] = useState<any>(null);
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
-// if(loading) return <Loading lines={4} />
-// if(error) return <div>Error: {error.message}</div>
-// const mockDeliveriess = data.getRidersDelivery.map((delivery: any) => ({
-//   id: delivery.id,
-//   pickup: delivery.pickupAddress,
-//   dropoff: delivery.dropoffAddress,
-//   eta: delivery.estimatedDeliveryTime,
-//   customer: delivery.recipientName,
-//   status: delivery.deliveryStatus,
-// }))
+  useEffect(() => {
+    const getRole = async () => {
+      try {
+        const token = Cookies.get('token');
+        const secret = process.env.NEXT_PUBLIC_JWT_SECRET as string;
+        if (token && secret) {
+          const payload = await decryptToken(token, secret);
+          setID(payload.userID);
+        }
+      } catch (err) {
+        console.error('Error getting role:', err);
+        setID(null);
+      }
+    };
+    getRole();
+  }, []);
 
-const [deliveries, setDeliveries] = useState(mockDeliveries);
+  const { data, loading, error } = useQuery(DELIVERIES, {
+    variables: { id: useID }
+  });
+
+  if (loading || !data) return null;
+
+  const mockShipment = data.getRidersDelivery.map((delivery: any) => {
+    const status = capitalize(delivery.deliveryStatus);
+    return {
+      id: delivery.trackingNumber,
+      receiver: delivery.recipientName,
+      dropoff: delivery.dropoffAddress,
+      status: status,
+      date: formatDate(delivery.createdAt),
+    };
+  });
 
   const handleAccept = (id: string) => {
     setDeliveries((prev) =>
@@ -72,7 +75,7 @@ const [deliveries, setDeliveries] = useState(mockDeliveries);
       <main className="flex-1 p-4">
         <h1 className="text-2xl font-bold mb-4">Assigned Deliveries</h1>
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-          {deliveries.map((d) => (
+          {mockShipment.map((d) => (
             <Card key={d.id}>
               <CardContent className="p-4 space-y-2">
                 <div className="flex items-center gap-2 text-sm text-gray-600">
