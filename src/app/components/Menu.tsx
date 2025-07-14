@@ -314,9 +314,9 @@ export default function Menu() {
           height={100}
           priority
         />
-        <NotificationDropdown/>
-      </div>
-
+        
+       </div>
+     <NotificationDropdown/>
       {/* Sidebar with tab content */}
       <Sidebar tabs={tabItems.filter((tab) => tab.role === capitalize(useRole) || tab.role === '')} />
     </div>
