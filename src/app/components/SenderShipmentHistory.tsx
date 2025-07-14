@@ -50,7 +50,7 @@ useEffect(() => {
         }
       } catch (err) {
         console.error('Error getting role:', err);
-        setRole(null); // fallback
+        setID(null);
       }
     };
 
