@@ -51,7 +51,7 @@ export default function DriverDashboard() {
   });
 
   const handleAccept = (id: string) => {
-    setDeliveries((prev) =>
+    setDelivery((prev) =>
       prev.map((d) =>
         d.id === id ? { ...d, status: "accepted" } : d
       )
