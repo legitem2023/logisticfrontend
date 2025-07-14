@@ -6,7 +6,7 @@ import { Input } from "./ui/Input";
 import { Button } from "./ui/Button";
 import { Badge } from "./ui/Badge";
 import { CalendarIcon, DownloadIcon, EyeIcon } from "lucide-react";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import Cookies from 'js-cookie';
 import { useMutation, useSubscription, useQuery } from '@apollo/client';
 import { DELIVERIES } from '../../../graphql/query'
