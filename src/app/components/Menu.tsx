@@ -15,6 +15,7 @@ import DriverDashboard from './Rider/DriverDashboard';
 import SenderDashboard from './Sender/SenderDashboard';
 import ReceiverView from './Receiver/ReceiverView';
 import RiderView from './Rider/RiderView';
+import RiderList from './Rider/RiderList';
 import SenderShipmentHistory from './SenderShipmentHistory';
 import LogisticsForm from './Sender/LogisticsForm';
 import Rider from './Rider/Rider';
@@ -192,11 +193,27 @@ console.log(subscriptionData)
     },
     {
       label: 'Rider',
-      role: 'Sender',
+      role: '',
       icon: <Bike color="green" />,
       content: (
         <div className="px-1 py-1 space-y-1">
-          <Rider />
+          <RiderList
+  riders={[
+    {
+      id: "1",
+      name: "Juan Dela Cruz",
+      phone: "09171234567",
+      avatarUrl: "https://i.pravatar.cc/150?img=3",
+      location: { latitude: 14.5995, longitude: 120.9842 },
+    },
+    {
+      id: "2",
+      name: "Maria Santos",
+      phone: "09181112222",
+      location: { latitude: 14.676, longitude: 121.0437 },
+    },
+  ]}
+/>
         </div>
       ),
     },
