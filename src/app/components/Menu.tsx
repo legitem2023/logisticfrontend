@@ -98,7 +98,7 @@ export default function Menu() {
 
       return () => stopWatching && stopWatching(); // Cleanup
     }
-  }, [useID]);
+  });
 
   useEffect(() => {
     const getRole = async () => {
