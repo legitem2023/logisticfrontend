@@ -1,5 +1,6 @@
 // components/ui/badge.tsx
-import { cn } from "@/lib/utils"; // Utility for merging class names (optional)
+//import { cn } from "@/lib/utils"; // Utility for merging class names (optional)
+import { cn } from "@/app/lib/utils"
 
 interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
   variant?: "default" | "success" | "secondary" | "destructive" | "outline";
