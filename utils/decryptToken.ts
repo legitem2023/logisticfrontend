@@ -34,10 +34,13 @@ export const capitalize = (str: string): string => {
   return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 }
 
-export const formatDate = (dateString: string) => {
-  const date = new Date(dateString);
+export const formatDate = (timestamp: string | number) => {
+  const date = new Date(Number(timestamp)); // convert string or number to Date
+  if (isNaN(date.getTime())) return "Invalid date";
+
   const day = String(date.getDate()).padStart(2, '0');
-  const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+  const month = String(date.getMonth() + 1).padStart(2, '0'); // zero-based
   const year = date.getFullYear();
+
   return `${day}-${month}-${year}`;
 };
