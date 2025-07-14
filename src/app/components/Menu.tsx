@@ -54,7 +54,9 @@ export default function Menu() {
     },
   });
 
-  const { data: subscriptionData, error: subscriptionError } = useSubscription(LocationTracking);
+  const { data: subscriptionData, error: subscriptionError } = useSubscription(LocationTracking,{
+      variables: { userID: useID },// optional filter
+    });
 
 
   useEffect(() => {
@@ -79,9 +81,7 @@ export default function Menu() {
 
   useEffect(() => {
     if (useID) {
-      console.log("Starting location watch with ID:", useID);
       const stopWatching = startWatchingLocation((location) => {
-        console.log("Got location:", location);
         LocationTracker({
           variables: {
             input: {

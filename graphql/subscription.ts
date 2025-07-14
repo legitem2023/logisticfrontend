@@ -1,8 +1,9 @@
 import { gql } from "@apollo/client";
 
 export const LocationTracking = gql`
-subscription Subscription {
-  LocationTracking {
+subscription Subscription($userId: String) {
+  LocationTracking(userID: $userId) {
+    userID
     latitude
     longitude
     speed
@@ -10,7 +11,6 @@ subscription Subscription {
     accuracy
     batteryLevel
     timestamp
-    userID
   }
 }
 `
