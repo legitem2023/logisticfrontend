@@ -1,7 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
-import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import { useMutation, useSubscription } from '@apollo/client';
 import { LOCATIONTRACKING } from '../../../graphql/mutation';
@@ -25,7 +24,7 @@ import LoginCard from './LoginCard';
 import SignupCard from './SignupCard';
 import SwiperTabs from './SwiperTabs';
 import { startWatchingLocation } from './ObtainLocation';
-
+import { mockItems } from './json/mockItems';
 import {
   Home,
   Package,
@@ -41,15 +40,6 @@ import {
   Navigation
 } from "lucide-react";
 
-const DeliveryMap = dynamic(() => import('./DeliveryMap'), { ssr: false });
-
-type CarouselItem = {
-  id: string;
-  title: string;
-  subtitle?: string;
-  imageUrl?: string;
-  actionLabel?: string;
-};
 
 export default function Menu() {
   const [useRole, setRole] = useState('');
@@ -66,14 +56,26 @@ export default function Menu() {
 
   const { data: subscriptionData, error: subscriptionError } = useSubscription(LocationTracking);
 
+
   useEffect(() => {
-    if (subscriptionData) {
-      console.log("Subscription Data:", subscriptionData);
-    }
-    if (subscriptionError) {
-      console.error("Subscription Error:", subscriptionError.message);
-    }
-  }, [subscriptionData, subscriptionError]);
+    const getRole = async () => {
+      try {
+        const token = Cookies.get('token');
+        const secret = process.env.NEXT_PUBLIC_JWT_SECRET as string;
+        if (token && secret) {
+          const payload = await decryptToken(token, secret);
+          setRole(payload.role);
+          setID(payload.userId);
+        }
+      } catch (err) {
+        console.error('Error getting role:', err);
+        setRole('');
+      }
+    };
+
+    getRole();
+  });
+
 
   useEffect(() => {
     if (useID) {
@@ -100,66 +102,14 @@ export default function Menu() {
     }
   });
 
-  useEffect(() => {
-    const getRole = async () => {
-      try {
-        const token = Cookies.get('token');
-        const secret = process.env.NEXT_PUBLIC_JWT_SECRET as string;
-        if (token && secret) {
-          const payload = await decryptToken(token, secret);
-          setRole(payload.role);
-          setID(payload.userID);
-        }
-      } catch (err) {
-        console.error('Error getting role:', err);
-        setRole('');
-      }
-    };
 
-    getRole();
-  }, []);
-
+console.log(subscriptionData)
   const isUserActive = (): boolean => {
     const token = Cookies.get('token');
     return !!token;
   };
 
-  const mockItems: CarouselItem[] = [
-    {
-      id: 'promo1',
-      title: 'We Move What Matters!',
-      subtitle: 'Fast, reliable logistics solutions for businesses of all sizes.',
-      imageUrl: '/BannerA.jpg',
-      actionLabel: 'Use Now',
-    },
-    {
-      id: 'rec1',
-      title: 'From Point A to Anywhere.',
-      subtitle: 'Local and nationwide delivery you can count on—on time, every time.',
-      imageUrl: '/BannerB.jpg',
-    },
-    {
-      id: 'service1',
-      title: 'Smart Deliveries. Seamless Tracking.',
-      subtitle: 'Real-time updates, flexible scheduling, and secure transport.',
-      imageUrl: '/BannerC.jpg',
-      actionLabel: 'Order Now',
-    },
-    {
-      id: 'service2',
-      title: 'Your Cargo, Our Priority.',
-      subtitle: 'Dedicated logistics support from pickup to drop-off.',
-      imageUrl: '/BannerD.jpg',
-      actionLabel: 'Order Now',
-    },
-    {
-      id: 'service3',
-      title: 'Delivering More Than Just Packages.',
-      subtitle: 'We deliver trust, speed, and peace of mind.',
-      imageUrl: '/BannerE.jpg',
-      actionLabel: 'Order Now',
-    },
-  ];
+
 
   const progressitem = [
     { label: 'In Progress', content: <SenderShipmentHistory /> },
@@ -305,7 +255,7 @@ export default function Menu() {
       <InstallPWAButton />
 
       {/* Logo Header */}
-      <div className="h-[80px] w-full flex items-center justify-center customgrad border-b-4 border-green-500 px-4">
+      <div className="h-[75px] w-full flex items-center justify-center customgrad border-b-4 border-green-500 px-4">
         <Image
           src="/Logo.svg"
           className="h-[60%] md:h-[80%] w-auto"
