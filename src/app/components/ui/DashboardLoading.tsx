@@ -56,7 +56,7 @@ export default function DashboardLoading() {
               <Card key={i}>
                 <CardContent className="p-4 space-y-4">
                   <div className="flex items-center gap-2">
-                    <Shimmer width="16px" height="16px" rounded="full" />
+                    <Shimmer width="16px" height="16px" rounded />
                     <Shimmer width="70%" height="16px" />
                   </div>
                   <div className="flex items-center gap-2">
