@@ -114,7 +114,6 @@ export default function DriverDashboard() {
       <main className="flex-1 p-0">
         {activeTab === "Deliveries" && (
           <>
-            <h1 className="text-2xl font-bold mb-4 p-2">Assigned Deliveries</h1>
             <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3 p-1">
               {mockShipment.map((d) => (
                 <Card key={d.id}>
