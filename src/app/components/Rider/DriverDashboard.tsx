@@ -112,7 +112,7 @@ export default function DriverDashboard() {
       </aside>
 
       {/* Main content */}
-      <main className="flex-1 p-4">
+      <main className="flex-1 p-0">
         {activeTab === "Deliveries" && (
           <>
             <h1 className="text-2xl font-bold mb-4">Assigned Deliveries</h1>
