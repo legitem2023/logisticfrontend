@@ -47,12 +47,12 @@ export default function DriverDashboard() {
   });
 
   if (loading || !data) return null;
-console.log(data.getRidersDelivery);
+
   const mockShipment = data.getRidersDelivery.map((delivery: any) => {
     const status = capitalize(delivery.deliveryStatus);
     return {
       id: delivery.trackingNumber,
-      sender: delivery.id,
+      sender: delivery.recipientName,
       pickup: delivery.pickupAddress,
       dropoff: delivery.dropoffAddress,
       status: status,
