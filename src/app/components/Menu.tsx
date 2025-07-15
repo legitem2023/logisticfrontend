@@ -91,7 +91,7 @@ export default function Menu() {
           variables: {
             input: {
               accuracy: location.accuracy,
-              batteryLevel: "",
+              batteryLevel: null,
               heading: location.heading,
               latitude: location.latitude,
               longitude: location.longitude,
