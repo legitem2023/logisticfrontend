@@ -26,7 +26,7 @@ export default function LogisticFormLoading() {
               {[...Array(2)].map((_, i) => (
                 <div key={i} className="flex items-center">
                   <Shimmer height="72px" rounded className="flex-1" />
-                  <Shimmer width="40px" height="40px" rounded="full" className="ml-2" />
+                  <Shimmer width="40px" height="40px" rounded className="ml-2" />
                 </div>
               ))}
             </div>
