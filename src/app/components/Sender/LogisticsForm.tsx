@@ -5,7 +5,7 @@ import { useMutation, useQuery } from '@apollo/client';
 import { VEHICLEQUERY } from '../../../../graphql/query';
 import { CREATEDELIVERY } from '../../../../graphql/mutation';
 
-import Loading from '../ui/Loading';
+import LogisticFormLoading from '../ui/LogisticFormLoading';
 import { useSelector, useDispatch } from "react-redux";
 import { 
   setPickupDetails, 
@@ -339,7 +339,7 @@ dropoffs.forEach(async (dropoff) => {
     { id: 'Polling', name: 'Polling', icon: Move, time: 'Multi-day', price: '5' }
   ];
 
-  if (loading) return <Loading lines={4} />;
+  if (loading) return <LogisticFormLoading/>;
   if (error) return <p>Error: {error.message}</p>;
  
   return (
