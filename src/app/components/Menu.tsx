@@ -113,16 +113,7 @@ export default function Menu() {
     const token = Cookies.get('token');
     return !!token;
   };
-
-
-
-  const progressitem = [
-    { label: 'In Progress', content: <SenderShipmentHistory status={"in_transit"}/> },
-    { label: 'Completed', content: <SenderShipmentHistory status={"Completed"}/> },
-    { label: 'Pending', content: <SenderShipmentHistory status={"Pending"}/> },
-    { label: 'Cancelled', content: <SenderShipmentHistory status={"Canceled"}/> },
-  ];
-
+  
   const tabItems = [
     {
       label: 'Home',
@@ -182,16 +173,6 @@ export default function Menu() {
       content: (
         <div className="px-1 py-1 space-y-1">
           <LogisticsForm />
-        </div>
-      ),
-    },
-    {
-      label: 'Shipment',
-      role: '',
-      icon: <Package color="green" />,
-      content: (
-        <div className="px-1 py-1 space-y-1">
-          <SwiperTabs tabs={progressitem} />
         </div>
       ),
     },
