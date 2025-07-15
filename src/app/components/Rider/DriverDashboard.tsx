@@ -10,7 +10,7 @@ import DashboardLoading from "../ui/DashboardLoading";
 import Cookies from "js-cookie";
 import { decryptToken, capitalize, formatDate } from "../../../../utils/decryptToken";
 import { ACCEPTDELIVERY } from "../../../../graphql/mutation";
-
+import DeliveryDetailCard from "./DeliveryDetailCard";
 export default function DriverDashboard() {
   const [acceptDelivery] = useMutation(ACCEPTDELIVERY, {
     onCompleted: () => {
@@ -215,12 +215,27 @@ export default function DriverDashboard() {
               </button>
             </div>
             <div className="space-y-2 text-sm text-gray-700">
-              <p><strong>Tracking #:</strong> {selectedDelivery.id}</p>
-              <p><strong>Sender:</strong> {selectedDelivery.sender}</p>
-              <p><strong>Pickup Address:</strong> {selectedDelivery.pickup}</p>
-              <p><strong>Dropoff Address:</strong> {selectedDelivery.dropoff}</p>
-              <p><strong>Status:</strong> {selectedDelivery.status}</p>
-              <p><strong>Date:</strong> {selectedDelivery.date}</p>
+              <DeliveryDetailCard
+  sender={{
+    name: "Juan Dela Cruz",
+    address: "123 Kalye St., Manila",
+    contact: "09171234567",
+  }}
+  recipient={{
+    name: "Maria Santos",
+    address: "456 Mabini Ave., Makati",
+    contact: "09181234567",
+  }}
+  billing={{
+    distanceKm: null,
+    baseRate: 50,
+    perKmRate: 10,
+    total: null,
+  }}
+  onTrackClick={() => {
+    // call distance calculation function here
+  }}
+/>
             </div>
           </div>
         </div>
