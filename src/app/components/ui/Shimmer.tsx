@@ -4,7 +4,7 @@ import { useEffect, useRef } from 'react';
 interface ShimmerProps {
   width?: string;
   height?: string;
-  rounded?: boolean;
+  rounded?: string;
   className?: string;
 }
 
