@@ -43,7 +43,7 @@ export default function Sidebar({ tabs }: SidebarTabsProps) {
         <button
           aria-label="Toggle Sidebar"
           onClick={() => setIsMobileOpen(!isMobileOpen)}
-          className="p-2 rounded-md bg-white/70 border border-gray-300 shadow-md hover:bg-white"
+          className="p-2 rounded-md bg-white/50 border border-gray-300 shadow-md hover:bg-white"
         >
           <Menu size={20} />
         </button>
