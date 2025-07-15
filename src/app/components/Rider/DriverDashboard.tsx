@@ -121,7 +121,7 @@ export default function DriverDashboard() {
                   <CardContent className="p-4 space-y-2">
                     <div className="flex items-center gap-2 text-sm text-gray-600">
                       <PackageCheck className="w-4 h-4" />
-                      <span>{d.customer}</span>
+                      <span>{d.sender}</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <MapPin className="w-4 h-4 text-green-600" />
