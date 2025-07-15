@@ -10,15 +10,11 @@ import HistoryContainer from "../History/HistoryContainer";
 import { MapPin, Clock, CheckCircle, PackageCheck } from "lucide-react";
 import Loading from "../ui/Loading";
 import Cookies from "js-cookie";
-import {
-  decryptToken,
-  capitalize,
-  formatDate,
-} from "../../../../utils/decryptToken";
+import { decryptToken, capitalize, formatDate } from "../../../../utils/decryptToken";
 import { ACCEPTDELIVERY } from "../../../../graphql/mutation";
 
 export default function DriverDashboard() {
-  const [AcceptDelivery] = useMutation(ACCEPTDELIVERY, {
+  const [acceptDelivery] = useMutation(ACCEPTDELIVERY, {
     onCompleted: () => {
       console.log("Delivery accepted successfully");
     },
@@ -65,7 +61,7 @@ console.log(data.getRidersDelivery);
   });
 
   const handleAccept = async (id: string, riderId: string) => {
-    await AcceptDelivery({
+    await acceptDelivery({
       variables: {
         deliveryId: id,
         riderId: riderId,
