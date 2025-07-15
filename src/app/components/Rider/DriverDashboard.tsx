@@ -63,8 +63,8 @@ console.log(data.getRidersDelivery);
   const handleAccept = async (id: string, riderId: string) => {
     await acceptDelivery({
       variables: {
-        deliveryId: id,
-        riderId: riderId,
+        deliveryId: id.toString(),
+        riderId: riderId.toString(),
       },
     });
   };
