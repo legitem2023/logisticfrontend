@@ -1,3 +1,4 @@
+import Shimmer from './Shimmer';
 export default function LogisticFormLoading() => {
 
 return (
