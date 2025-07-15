@@ -64,8 +64,8 @@ export default function DriverDashboard() {
     };
   });
 
-  const handleAccept = (id: string, riderId: string) => {
-    AcceptDelivery({
+  const handleAccept = async (id: string, riderId: string) => {
+    await AcceptDelivery({
       variables: {
         deliveryId: id,
         riderId: riderId,
