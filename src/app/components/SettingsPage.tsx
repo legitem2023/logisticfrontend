@@ -20,68 +20,85 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="max-w-3xl mx-auto space-y-4">
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-xl">🧑 Account Information</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div>
-            <Label htmlFor="name">Name</Label>
-            <Input id="name" value={name} onChange={(e) => setName(e.target.value)} />
-          </div>
+    <div className="max-w-3xl mx-auto px-4 py-6 space-y-6">
+  {/* Account Info */}
+  <Card className="bg-white/80 backdrop-blur border border-gray-200 shadow-md rounded-2xl">
+    <CardHeader>
+      <CardTitle className="text-xl font-semibold text-gray-800">🧑 Account Information</CardTitle>
+    </CardHeader>
+    <CardContent className="space-y-5">
+      <div>
+        <Label htmlFor="name" className="text-gray-700">Name</Label>
+        <Input
+          id="name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          className="mt-1"
+        />
+      </div>
+      <div>
+        <Label htmlFor="email" className="text-gray-700">Email</Label>
+        <Input
+          id="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className="mt-1"
+        />
+      </div>
+    </CardContent>
+  </Card>
 
-          <div>
-            <Label htmlFor="email">Email</Label>
-            <Input id="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-          </div>
-        </CardContent>
-      </Card>
+  {/* Vehicle Type */}
+  <Card className="bg-white/80 backdrop-blur border border-gray-200 shadow-md rounded-2xl">
+    <CardHeader>
+      <CardTitle className="text-xl font-semibold text-gray-800">🚚 Vehicle Preference</CardTitle>
+    </CardHeader>
+    <CardContent>
+      <select
+        value={vehicleType}
+        onChange={(e) => setVehicleType(e.target.value)}
+        className="w-full p-3 border border-gray-300 rounded-lg text-gray-800 bg-white focus:ring-2 focus:ring-blue-500"
+      >
+        <option value="motorcycle">🏍️ Motorcycle</option>
+        <option value="car">🚗 Car</option>
+        <option value="van">🚐 Van</option>
+      </select>
+    </CardContent>
+  </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-xl">🚚 Vehicle Preference</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <select
-            value={vehicleType}
-            onChange={(e) => setVehicleType(e.target.value)}
-            className="w-full p-2 border rounded-md"
-          >
-            <option value="motorcycle">🏍️ Motorcycle</option>
-            <option value="car">🚗 Car</option>
-            <option value="van">🚐 Van</option>
-          </select>
-        </CardContent>
-      </Card>
+  {/* Notifications */}
+  <Card className="bg-white/80 backdrop-blur border border-gray-200 shadow-md rounded-2xl">
+    <CardHeader>
+      <CardTitle className="text-xl font-semibold text-gray-800">🔔 Notifications</CardTitle>
+    </CardHeader>
+    <CardContent className="flex items-center justify-between">
+      <Label className="text-gray-700">Enable push notifications</Label>
+      <Switch
+        checked={notificationsEnabled}
+        onCheckedChange={setNotificationsEnabled}
+      />
+    </CardContent>
+  </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-xl">🔔 Notifications</CardTitle>
-        </CardHeader>
-        <CardContent className="flex items-center justify-between">
-          <Label>Enable push notifications</Label>
-          <Switch
-            checked={notificationsEnabled}
-            onCheckedChange={setNotificationsEnabled}
-          />
-        </CardContent>
-      </Card>
+  {/* Actions */}
+  <Card className="bg-white/80 backdrop-blur border border-gray-200 shadow-md rounded-2xl">
+    <CardHeader>
+      <CardTitle className="text-xl font-semibold text-gray-800">⚙️ Actions</CardTitle>
+    </CardHeader>
+    <CardContent className="space-y-3">
+      <Button
+        className="w-full bg-blue-600 hover:bg-blue-700 transition text-white font-semibold"
+        onClick={handleSave}
+      >
+        Save Changes
+      </Button>
+      <Separator />
+      <Button className="w-full bg-red-500 hover:bg-red-600 transition text-white font-semibold">
+        Logout
+      </Button>
+    </CardContent>
+  </Card>
+</div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-xl">⚙️ Actions</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-2">
-          <Button className="w-full" onClick={handleSave}>
-            Save Changes
-          </Button>
-          <Separator />
-          <Button className="w-full">
-            Logout
-          </Button>
-        </CardContent>
-      </Card>
-    </div>
   )
 }

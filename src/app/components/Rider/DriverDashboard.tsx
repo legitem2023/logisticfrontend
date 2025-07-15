@@ -12,7 +12,8 @@ import { decryptToken, capitalize, formatDate } from "../../../../utils/decryptT
 import { ACCEPTDELIVERY } from "../../../../graphql/mutation";
 import DeliveryDetailCard from "./DeliveryDetailCard";
 export default function DriverDashboard() {
-  const [acceptDelivery] = useMutation(ACCEPTDELIVERY, {
+
+  const [acceptDelivery] = useMutation(ACCEPTDELIVERY,{
     onCompleted: () => {
       console.log("Delivery accepted successfully");
     },
@@ -20,6 +21,10 @@ export default function DriverDashboard() {
       console.log('Acceptance Error', e);
     }
   });
+
+
+
+
   const [useID, setID] = useState();
   const [activeTab, setActiveTab] = useState("Deliveries");
 
@@ -29,6 +34,7 @@ export default function DriverDashboard() {
   const openDetails = (delivery: any) => {
     setSelectedDelivery(delivery);
     setShowDetails(true);
+    
   };
 
   const closeDetails = () => {
@@ -62,12 +68,20 @@ export default function DriverDashboard() {
   const mockShipment = data.getRidersDelivery.map((delivery: any) => {
     const status = capitalize(delivery.deliveryStatus);
     return {
-      id: delivery.trackingNumber,
-      sender: delivery.recipientName,
-      pickup: delivery.pickupAddress,
-      dropoff: delivery.dropoffAddress,
-      status: status,
-      date: formatDate(delivery.createdAt),
+      id: delivery.id,
+      sender: delivery.sender.name,
+      phoneNumber:delivery.sender.phoneNumber,
+      pickupAddress: delivery.pickupAddress,
+      pickupLatitude:delivery.pickupLatitude,
+      pickupLongitude:delivery.pickupLongitude,
+      
+      recipientName:delivery.recipientName,
+      recipientPhone:delivery.recipientPhone,
+      dropoffAddress: delivery.dropoffAddress,
+      dropoffLatitude:delivery.dropoffLatitude,
+      dropoffLongitude:delivery.dropoffLongitude,
+      deliveryStatus: status,
+      estimatedDeliveryTime: formatDate(delivery.estimatedDeliveryTime),
     };
   });
 
@@ -79,44 +93,30 @@ export default function DriverDashboard() {
       },
     });
   };
-
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col md:flex-row">
       {/* Sidebar for desktop/tablet */}
-      <aside className="hidden md:block md:w-64 bg-white shadow p-4">
-        <h2 className="text-xl font-semibold mb-6">Driver Panel</h2>
-        <nav>
-          <ul className="space-y-4">
-            <li
-              onClick={() => setActiveTab("Deliveries")}
-              className={`cursor-pointer ${activeTab === "Deliveries"
-                ? "font-medium text-blue-600"
-                : "text-gray-600"
-                }`}
-            >
-              My Deliveries
-            </li>
-            <li
-              onClick={() => setActiveTab("History")}
-              className={`cursor-pointer ${activeTab === "History"
-                ? "font-medium text-blue-600"
-                : "text-gray-600"
-                }`}
-            >
-              History
-            </li>
-            <li
-              onClick={() => setActiveTab("Settings")}
-              className={`cursor-pointer ${activeTab === "Settings"
-                ? "font-medium text-blue-600"
-                : "text-gray-600"
-                }`}
-            >
-              Settings
-            </li>
-          </ul>
-        </nav>
-      </aside>
+<aside className="hidden md:block md:w-64 bg-white/80 backdrop-blur-md border-r border-gray-200 shadow-inner p-6">
+  <h2 className="text-2xl font-bold text-gray-800 mb-8">Driver Panel</h2>
+  <nav>
+    <ul className="space-y-6 text-base">
+      {["Deliveries", "History", "Settings"].map(tab => (
+        <li
+          key={tab}
+          onClick={() => setActiveTab(tab)}
+          className={`cursor-pointer transition-all duration-150 ${
+            activeTab === tab
+              ? "text-blue-600 font-semibold border-l-4 border-blue-600 pl-2"
+              : "text-gray-500 hover:text-gray-800"
+          }`}
+        >
+          {tab}
+        </li>
+      ))}
+    </ul>
+  </nav>
+</aside>
+
 
       {/* Main content */}
       <main className="flex-1 p-0">
@@ -124,39 +124,34 @@ export default function DriverDashboard() {
           <>
             <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3 p-1">
               {mockShipment.map((d) => (
-                <Card key={d.id}>
-                  <CardContent className="p-4 space-y-2">
-                    <div className="flex items-center gap-2 text-sm text-gray-600">
-                      <PackageCheck className="w-4 h-4" />
-                      <span>{d.sender}</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <MapPin className="w-4 h-4 text-green-600" />
-                      <p className="text-sm">{d.pickup}</p>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <MapPin className="w-4 h-4 text-red-600" />
-                      <p className="text-sm">{d.dropoff}</p>
-                    </div>
-                    <div className="flex items-center gap-2 text-sm text-gray-500">
-                      <Clock className="w-4 h-4" />
-                      <span>ETA: {d.eta || "N/A"}</span>
-                    </div>
-                    <Button
-                      className="w-full"
-                      onClick={() => handleAccept(`${d.id}`, `${useID}`)}
-                    >
-                      Accept Delivery
-                    </Button>
-                    <Button
-                      variant="outline"
-                      className="w-full"
-                      onClick={() => openDetails(d)}
-                    >
-                      Show Details
-                    </Button>
-                  </CardContent>
-                </Card>
+                  <Card key={d.id} className="bg-white/80 backdrop-blur-lg border border-gray-200 shadow-md hover:shadow-xl transition-all duration-300 ">
+                    <CardContent className="p-5 space-y-3">
+                      <div className="flex items-center gap-2 text-sm text-gray-700 font-medium">
+                        <PackageCheck className="w-4 h-4 text-blue-600" />
+                        <span>{d.sender}</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-gray-600">
+                        <MapPin className="w-4 h-4 text-green-500" />
+                        <p className="text-sm">{d.pickupAddress}</p>
+                      </div>
+                      <div className="flex items-center gap-2 text-gray-600">
+                        <MapPin className="w-4 h-4 text-red-500" />
+                        <p className="text-sm">{d.dropoffAddress}</p>
+                      </div>
+                      <div className="flex items-center gap-2 text-sm text-gray-500">
+                        <Clock className="w-4 h-4" />
+                        <span>ETA: {d.estimatedDeliveryTime || "N/A"}</span>
+                      </div>
+                      <Button
+                        variant="outline"
+                        className="w-full transition-all duration-200 hover:scale-[1.02] hover:shadow"
+                        onClick={() => openDetails(d)}
+                      >
+                        Show Details
+                      </Button>
+                    </CardContent>
+                  </Card>
+
               ))}
             </div>
           </>
@@ -177,68 +172,56 @@ export default function DriverDashboard() {
       </main>
 
       {/* Bottom nav for mobile */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white shadow border-t flex justify-around p-2">
-        <button
-          className={activeTab === "Deliveries"
-            ? "text-blue-600 font-semibold"
-            : "text-gray-600"}
-          onClick={() => setActiveTab("Deliveries")}
-        >
-          Deliveries
-        </button>
-        <button
-          className={activeTab === "History"
-            ? "text-blue-600 font-semibold"
-            : "text-gray-600"}
-          onClick={() => setActiveTab("History")}
-        >
-          History
-        </button>
-        <button
-          className={activeTab === "Settings"
-            ? "text-blue-600 font-semibold"
-            : "text-gray-600"}
-          onClick={() => setActiveTab("Settings")}
-        >
-          Settings
-        </button>
-      </nav>
+<nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-md border-t border-gray-300 shadow-inner flex justify-around p-2 z-50">
+  {["Deliveries", "History", "Settings"].map(tab => (
+    <button
+      key={tab}
+      className={`transition-colors duration-150 ${
+        activeTab === tab ? "text-blue-600 font-semibold" : "text-gray-500"
+      }`}
+      onClick={() => setActiveTab(tab)}
+    >
+      {tab}
+    </button>
+  ))}
+</nav>
 
       {/* Slide-up modal for delivery details */}
       {showDetails && selectedDelivery && (
-        <div className="fixed inset-0 z-50 flex items-end justify-center bg-black bg-opacity-50">
-          <div className="w-full sm:max-w-md bg-white rounded-t-2xl p-4 shadow-lg animate-slide-up">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-lg font-semibold">Delivery Details</h2>
-              <button onClick={closeDetails}>
-                <X className="w-5 h-5 text-gray-600" />
-              </button>
-            </div>
-            <div className="space-y-2 text-sm text-gray-700">
-              <DeliveryDetailCard
-  sender={{
-    name: "Juan Dela Cruz",
-    address: "123 Kalye St., Manila",
-    contact: "09171234567",
-  }}
-  recipient={{
-    name: "Maria Santos",
-    address: "456 Mabini Ave., Makati",
-    contact: "09181234567",
-  }}
-  billing={{
-    distanceKm: null,
-    baseRate: 50,
-    perKmRate: 10,
-    total: null,
-  }}
-  onTrackClick={() => {
-    // call distance calculation function here
-  }}
-/>
-            </div>
-          </div>
-        </div>
+<div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/50 ">
+  <div className="w-full max-h-[90vh] sm:max-w-md bg-white rounded-t-2xl sm:rounded-2xl p-4 shadow-lg animate-slide-up overflow-y-auto">
+    <div className="flex justify-between items-center mb-4">
+      <h2 className="text-lg sm:text-xl font-semibold">Delivery Details</h2>
+      <button onClick={closeDetails} className="p-1 rounded hover:bg-gray-100 transition">
+        <X className="w-5 h-5 text-gray-600" />
+      </button>
+    </div>
+    <div className="space-y-2 text-sm sm:text-base text-gray-700">
+      <DeliveryDetailCard
+        sender={{
+          name: selectedDelivery.sender,
+          address: selectedDelivery.pickupAddress,
+          contact: selectedDelivery.phoneNumber,
+        }}
+        recipient={{
+          name: selectedDelivery.recipientName,
+          address: selectedDelivery.dropoffAddress,
+          contact: selectedDelivery.recipientPhone,
+        }}
+        billing={{
+          distanceKm: null,
+          baseRate: 50,
+          perKmRate: 10,
+          total: null,
+        }}
+        onTrackClick={() => {
+          // call distance calculation function here
+        }}
+      />
+    </div>
+  </div>
+</div>
+
       )}
     </div>
   );

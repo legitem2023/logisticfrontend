@@ -4,7 +4,7 @@ import { useState, useEffect, useRef, use } from 'react';
 import { useMutation, useQuery } from '@apollo/client';
 import { VEHICLEQUERY } from '../../../../graphql/query';
 import { CREATEDELIVERY } from '../../../../graphql/mutation';
-
+import Cookies from "js-cookie";
 import LogisticFormLoading from '../ui/LogisticFormLoading';
 import { useSelector, useDispatch } from "react-redux";
 import { 
@@ -30,6 +30,9 @@ import {
   LocateFixed,
   Route
 } from 'lucide-react';
+import { decryptToken } from '../../../../utils/decryptToken';
+import ConfirmOrderForm from './ClassicConfirmForm';
+import ClassicConfirmForm from './ClassicConfirmForm';
 
 const LogisticsForm = () => {
 
@@ -45,6 +48,7 @@ const LogisticsForm = () => {
   });
 
   const [selected, setSelected] = useState<string>('bike');
+    const [useID, setID] = useState();
   const [expandedDetails, setExpandedDetails] = useState<string | null>(null);
   const dispatch = useDispatch();
   const deliveryDetails = useSelector((state:any) => state.delivery);
@@ -52,7 +56,22 @@ const LogisticsForm = () => {
   const toggleDetails = (vehicleId: string) => {
     setExpandedDetails(prev => (prev === vehicleId ? null : vehicleId));
   };
-  
+    useEffect(() => {
+    const getRole = async () => {
+      try {
+        const token = Cookies.get("token");
+        const secret = process.env.NEXT_PUBLIC_JWT_SECRET as string;
+        if (token && secret) {
+          const payload = await decryptToken(token, secret);
+          setID(payload.userId);
+        }
+      } catch (err) {
+        console.error("Error getting role:", err);
+        setID(null);
+      }
+    };
+    getRole();
+  }, []);
   // State management
   const [pickup, setPickup] = useState({
     address: '',
@@ -81,7 +100,10 @@ const LogisticsForm = () => {
   const [mapPreview, setMapPreview] = useState(null);
   const inputRef = useRef(null);
   const timeoutRef = useRef(null);
-
+  const [showDetails, setShowDetails] = useState(false);
+ const closeDetails = () =>{
+  setShowDetails(false);
+ }
   // Handle input changes
   const handlePickupChange = (e) => {
     setPickup({...pickup, [e.target.name]: e.target.value});
@@ -259,32 +281,6 @@ const LogisticsForm = () => {
       alert('Please select a vehicle type');
       return;
     }
-    // dispatch(clearDeliveryDetails());
-    // // Dispatch to Redux
-    // dispatch(setPickupDetails({
-    //   address: pickup.address,
-    //   latitude: pickup.lat,
-    //   longitude: pickup.lng,
-    //   contact: pickup.contact,
-    //   houseNumber: pickup.houseNumber,
-    //   name: pickup.name,
-    //   vehicle: selectedVehicle,
-    //   deliveryOption: selectedService
-    // }));
-    
-    // //Clear existing dropoffs in Redux 
-    // // Add all dropoffs to Redux
-    // dropoffs.forEach(dropoff => {
-    //   dispatch(addDropoffDetails({
-    //     address: dropoff.address,
-    //     latitude: dropoff.lat,
-    //     longitude: dropoff.lng,
-    //     contact: dropoff.contact,
-    //     houseNumber: dropoff.houseNumber,
-    //     name: dropoff.name
-    //   }));
-    // });
-
 
 
 // Submit one delivery per dropoff
@@ -297,28 +293,28 @@ const isoDateString = new Date(
 
 dropoffs.forEach(async (dropoff) => {
   const input = {
+    assignedRiderId: '686d427603399308ff9a237a',
+    deliveryFee: selected,
+    deliveryType: selectedService,
     dropoffAddress: dropoff.address,
     dropoffLatitude: dropoff.lat,
     dropoffLongitude: dropoff.lng,
     estimatedDeliveryTime: isoDateString,
+    paymentMethod: "Cash",
+    paymentStatus: "Unpaid",
     pickupAddress: pickup.address,
     pickupLatitude: pickup.lat,
     pickupLongitude: pickup.lng,
     recipientName: dropoff.name,
     recipientPhone: dropoff.contact,
-    senderId: '686ffdf59a1ad0a2e9c79f0b',//pickup.name,
-    assignedRiderId: '686d427603399308ff9a237a',
+    senderId: useID,//pickup.name,
   };
-    console.log(input);
-  await createDelivery({ variables: { input } });
+  localStorage.setItem("Order", JSON.stringify(input));
+  //await createDelivery({ variables: { input } });
 
 })
 
-
-
-
-
-
+setShowDetails(true)
     ///console.log('Form submitted!');
     setShowSuccess(true);
     setTimeout(() => setShowSuccess(false), 3000);
@@ -440,7 +436,7 @@ dropoffs.forEach(async (dropoff) => {
                 : 'border-gray-200'
             }`}>
               <div
-                onClick={() => setSelected(vehicle.id)}
+                onClick={() => setSelected(vehicle.cost)}
                 className={`relative w-full text-left p-4 flex items-center gap-4 cursor-pointer transition ${
                   isSelected
                     ? 'border-green-800 bg-green-50'
@@ -709,6 +705,42 @@ dropoffs.forEach(async (dropoff) => {
           <CheckCircle2 className="h-6 w-6 mr-2" />
           Delivery scheduled successfully!
         </div>
+      )}
+            {showDetails && (
+<div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/50 ">
+  <div className="w-full max-h-[90vh] sm:max-w-md bg-white rounded-t-2xl sm:rounded-2xl p-4 shadow-lg animate-slide-up overflow-y-auto">
+    <div className="flex justify-between items-center mb-4">
+      <h2 className="text-lg sm:text-xl font-semibold">Delivery Details</h2>
+      <button onClick={closeDetails} className="p-1 rounded hover:bg-gray-100 transition">
+        <X className="w-5 h-5 text-gray-600" />
+      </button>
+    </div>
+    <div className="space-y-2 text-sm sm:text-base text-gray-700">
+<ClassicConfirmForm
+order = {{
+  sender: { name: pickup.name, address: pickup.address },
+    recipients: dropoffs.map(r => ({
+    name: r.name,
+    address: r.address,
+    contact: r.contact,
+    distanceKm: 0
+  })),
+  billing: {
+    baseRate: 50,
+    perKmRate: 10,
+    total: null, // optional; will auto-compute if null
+  },
+}}
+
+  onConfirm={(driverId) => {
+    console.log("Confirmed with driver:", driverId);
+  }}
+/>
+
+    </div>
+  </div>
+</div>
+
       )}
 
     </div>

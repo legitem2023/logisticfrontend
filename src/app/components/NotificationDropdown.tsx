@@ -13,8 +13,7 @@ export default function NotificationDropdown({ userId }: { userId: string }) {
   const { data, loading, error } = useQuery(GETNOTIFICATION, {
     variables: { getNotificationsId: userId },
   })
-// console.log(userId,"userId");
-  // Close dropdown on outside click
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (

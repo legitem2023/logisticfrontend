@@ -51,6 +51,14 @@ query GetRidersDelivery($getRidersDeliveryId: String) {
   getRidersDelivery(id: $getRidersDeliveryId) {
     id
     trackingNumber
+    sender {
+      email
+      currentLongitude
+      currentLatitude
+      name
+      image
+      phoneNumber
+    }
     recipientName
     recipientPhone
     pickupAddress
@@ -59,39 +67,31 @@ query GetRidersDelivery($getRidersDeliveryId: String) {
     dropoffAddress
     dropoffLatitude
     dropoffLongitude
+    assignedRider {
+      currentLatitude
+      currentLongitude
+      email
+      id
+      name
+      image
+      phoneNumber
+    }
     deliveryStatus
     estimatedDeliveryTime
     actualDeliveryTime
     createdAt
     updatedAt
+    deliveryType
+    paymentStatus
+    paymentMethod
+    deliveryFee
+    isCancelled
+    cancellationReason
+    failedAttemptReason
+    currentLatitude
+    currentLongitude
     senderId
     assignedRiderId
-    assignedRider {
-      id
-      image
-      name
-      email
-      phoneNumber
-      vehicleType {
-        id
-        name
-        maxCapacityKg
-        maxVolumeM3
-        description
-        createdAt
-        updatedAt
-        icon
-        cost
-      }
-      licensePlate
-      status
-      currentLatitude
-      currentLongitude
-      lastUpdatedAt
-      createdAt
-      updatedAt
-      role
-    }
   }
 }`
 

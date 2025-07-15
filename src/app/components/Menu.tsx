@@ -132,37 +132,7 @@ export default function Menu() {
       icon: <ClipboardCheck color="green" />,
       content: (
         <div className="px-1 py-1 space-y-1">
-          <DriverDashboard />
-        </div>
-      ),
-    },
-    {
-      label: 'Live Map',
-      role: '',
-      icon: <PackageCheck color="green" />,
-      content: (
-        <div className="px-1 py-1 space-y-1">
-          <ReceiverView />
-        </div>
-      ),
-    },
-    {
-      label: 'Live Map',
-      role: '',
-      icon: <Navigation color="green" />,
-      content: (
-        <div className="px-1 py-1 space-y-1">
-          <RiderView />
-        </div>
-      ),
-    },
-    {
-      label: 'SenderDashboard',
-      role: '',
-      icon: <LayoutDashboard color="green" />,
-      content: (
-        <div className="px-1 py-1 space-y-1">
-          <SenderDashboard />
+          {useRole==='Rider' || useRole==='RIDER'?(<DriverDashboard />):(<SenderDashboard />)}
         </div>
       ),
     },
