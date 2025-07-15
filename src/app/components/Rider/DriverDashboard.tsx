@@ -137,7 +137,7 @@ export default function DriverDashboard() {
                     </div>
                     <Button
                       className="w-full"
-                      onClick={() => handleAccept(d.id, useID)}
+                      onClick={() => handleAccept(`${d.id}`, `${useID}`)}
                     >
                       Accept Delivery
                     </Button>
