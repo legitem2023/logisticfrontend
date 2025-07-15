@@ -46,7 +46,7 @@ export default function DriverDashboard() {
     variables: { id: useID },
   });
 
-  if (loading || !data) return null;
+  if (loading || !data) return <Loading lines={4}/>;
 
   const mockShipment = data.getRidersDelivery.map((delivery: any) => {
     const status = capitalize(delivery.deliveryStatus);
