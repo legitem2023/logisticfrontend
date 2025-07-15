@@ -137,7 +137,7 @@ export default function Menu() {
     },
     {
       label: 'Assigned Deliveries',
-      role: 'Rider',
+      role: '',
       icon: <ClipboardCheck color="green" />,
       content: (
         <div className="px-1 py-1 space-y-1">
@@ -147,7 +147,7 @@ export default function Menu() {
     },
     {
       label: 'Live Map',
-      role: 'Receiver',
+      role: '',
       icon: <PackageCheck color="green" />,
       content: (
         <div className="px-1 py-1 space-y-1">
@@ -157,7 +157,7 @@ export default function Menu() {
     },
     {
       label: 'Live Map',
-      role: 'Rider',
+      role: '',
       icon: <Navigation color="green" />,
       content: (
         <div className="px-1 py-1 space-y-1">
@@ -167,7 +167,7 @@ export default function Menu() {
     },
     {
       label: 'SenderDashboard',
-      role: 'Sender',
+      role: '',
       icon: <LayoutDashboard color="green" />,
       content: (
         <div className="px-1 py-1 space-y-1">
@@ -177,7 +177,7 @@ export default function Menu() {
     },
     {
       label: 'Create Delivery',
-      role: 'Sender',
+      role: '',
       icon: <Truck color="green" />,
       content: (
         <div className="px-1 py-1 space-y-1">
