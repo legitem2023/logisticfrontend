@@ -151,7 +151,6 @@ export default function DriverDashboard() {
 
         {activeTab === "History" && (
           <div>
-            <h1 className="text-2xl font-bold mb-4">Delivery History</h1>
             <HistoryContainer/>
           </div>
         )}
