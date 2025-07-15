@@ -63,8 +63,8 @@ export default function DriverDashboard() {
   const handleAccept = async (id: string, riderId: string) => {
     await acceptDelivery({
       variables: {
-        deliveryId: id.toString(),
-        riderId: riderId.toString(),
+        deliveryId: id,
+        riderId: riderId,
       },
     });
   };
