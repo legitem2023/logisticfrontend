@@ -23,7 +23,7 @@ export default function DriverDashboard() {
       console.log("Delivery accepted successfully");
     },
     onError:(e:any) => {
-      consols.log('Acceptance Error',e);
+      console.log('Acceptance Error',e);
     }
   });
   const [useID, setID] = useState();
