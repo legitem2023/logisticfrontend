@@ -6,6 +6,7 @@ import { Button } from "../ui/Button";
 import { Card, CardContent } from "../ui/Card";
 import { useMutation, useQuery } from "@apollo/client";
 import { DELIVERIES } from "../../../../graphql/query";
+import HistoryContainer from "../History/HistoryContainer";
 import { MapPin, Clock, CheckCircle, PackageCheck } from "lucide-react";
 import Loading from "../ui/Loading";
 import Cookies from "js-cookie";
@@ -151,7 +152,7 @@ export default function DriverDashboard() {
         {activeTab === "History" && (
           <div>
             <h1 className="text-2xl font-bold mb-4">Delivery History</h1>
-            <p className="text-gray-600">Coming soon...</p>
+            <HistoryContainer/>
           </div>
         )}
 
