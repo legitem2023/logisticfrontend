@@ -8,7 +8,7 @@ import { useMutation, useQuery } from "@apollo/client";
 import { DELIVERIES } from "../../../../graphql/query";
 import HistoryContainer from "../History/HistoryContainer";
 import { MapPin, Clock, CheckCircle, PackageCheck } from "lucide-react";
-import Loading from "../ui/Loading";
+import DashboardLoading from "../ui/Loading";
 import Cookies from "js-cookie";
 import { decryptToken, capitalize, formatDate } from "../../../../utils/decryptToken";
 import { ACCEPTDELIVERY } from "../../../../graphql/mutation";
@@ -46,7 +46,7 @@ export default function DriverDashboard() {
     variables: { id: useID },
   });
 
-  if (loading || !data) return <Loading lines={4}/>;
+  if (loading || !data) return <DashboardLoading/>;
 
   const mockShipment = data.getRidersDelivery.map((delivery: any) => {
     const status = capitalize(delivery.deliveryStatus);
