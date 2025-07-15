@@ -22,6 +22,9 @@ export default function DriverDashboard() {
     onCompleted: () => {
       console.log("Delivery accepted successfully");
     },
+    onError:(e:any) => {
+      consols.log('Acceptance Error',e);
+    }
   });
   const [useID, setID] = useState();
   const [activeTab, setActiveTab] = useState("Deliveries");
