@@ -20,32 +20,39 @@ export default function RouteDistance({ from, to }: RouteDistanceProps) {
   useEffect(() => {
     if (!from || !to) return;
 
-    // Create routing service
-    const router = L.Routing.osrmv1({
-      serviceUrl: 'https://router.project-osrm.org/route/v1'
+    const dummyMap = L.map(document.createElement('div')); // invisible map
+
+    const control = L.Routing.control({
+      waypoints: [
+        L.latLng(from.lat, from.lng),
+        L.latLng(to.lat, to.lng)
+      ],
+      router: L.Routing.osrmv1({
+        serviceUrl: 'https://router.project-osrm.org/route/v1'
+      }),
+      createMarker: () => null,
+      routeWhileDragging: false,
+      addWaypoints: false,
+      show: false,
+    }).addTo(dummyMap);
+
+    control.on('routesfound', function (e: any) {
+      const route = e.routes[0];
+      const summary = route.summary;
+      setDistance(summary.totalDistance / 1000); // in km
+      setTime(summary.totalTime / 60); // in minutes
+      setError(null);
     });
 
-    // Create Waypoints instead of LatLng
-    const waypoints = [
-      L.Routing.waypoint(L.latLng(from.lat, from.lng)), // FIXED: Use Waypoint
-      L.Routing.waypoint(L.latLng(to.lat, to.lng))      // FIXED: Use Waypoint
-    ];
-
-    router.route(waypoints, (err, routes) => {
-      if (err) {
-        setError('Failed to calculate route');
-        setDistance(null);
-        setTime(null);
-        return;
-      }
-
-      if (routes && routes.length > 0) {
-        const summary = routes[0].summary;
-        setDistance(summary.totalDistance / 1000); // Convert to km
-        setTime(summary.totalTime / 60); // Convert to minutes
-        setError(null);
-      }
+    control.on('routingerror', function () {
+      setError('Failed to calculate route');
+      setDistance(null);
+      setTime(null);
     });
+
+    return () => {
+      dummyMap.remove();
+    };
   }, [from, to]);
 
   return (
