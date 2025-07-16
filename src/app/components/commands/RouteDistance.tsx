@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import L from 'leaflet';
 import 'leaflet-routing-machine';
+import 'leaflet/dist/leaflet.css';
 
 type Coordinate = {
   lat: number;
@@ -17,32 +18,25 @@ export default function RouteDistance({ from, to }: RouteDistanceProps) {
   const [time, setTime] = useState<number | null>(null);
 
   useEffect(() => {
-    if (!from || !to) return;
+    if (!from || !to || !L.Routing) return;
 
-    const router = L.Routing.control({
-      waypoints: [L.latLng(from.lat, from.lng), L.latLng(to.lat, to.lng)],
-      routeWhileDragging: false,
-      addWaypoints: false,
-      show: false
-    });
+    const router = L.Routing.osrmv1(); // Use the routing engine directly
 
-    router.on('routesfound', function (e: any) {
-      const summary = e.routes[0].summary;
-      setDistance(summary.totalDistance / 1000); // in km
-      setTime(summary.totalTime / 60); // in minutes
-    });
-
-    // Trigger routing without map
-    (router as any)._router.route([
-      L.latLng(from.lat, from.lng),
-      L.latLng(to.lat, to.lng)
-    ], (err: any, routes: any) => {
-      if (!err && routes && routes.length > 0) {
-        const summary = routes[0].summary;
-        setDistance(summary.totalDistance / 1000); // km
-        setTime(summary.totalTime / 60); // minutes
+    router.route(
+      [
+        L.latLng(from.lat, from.lng),
+        L.latLng(to.lat, to.lng)
+      ],
+      (err: any, routes: any) => {
+        if (!err && routes && routes.length > 0) {
+          const summary = routes[0].summary;
+          setDistance(summary.totalDistance / 1000); // km
+          setTime(summary.totalTime / 60); // minutes
+        } else {
+          console.error("Routing error:", err);
+        }
       }
-    });
+    );
   }, [from, to]);
 
   return (
