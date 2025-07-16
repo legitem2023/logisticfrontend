@@ -30,7 +30,6 @@ export default function RouteDistance({ from, to }: RouteDistanceProps) {
       router: L.Routing.osrmv1({
         serviceUrl: 'https://router.project-osrm.org/route/v1'
       }),
-      createMarker: () => null,
       routeWhileDragging: false,
       addWaypoints: false,
       show: false,
