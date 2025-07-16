@@ -2,7 +2,7 @@ import Shimmer from './Shimmer';
 
 export default function LogisticFormLoading() {
   return (
-    <div className="max-w-4xl mx-auto pt-2">
+    <div className="max-w-4xl mx-auto">
       <div className="bg-white shadow-xl overflow-hidden">
         <div className="bg-green-600 customgrad p-6 text-white">
           <Shimmer width="250px" height="32px" />
