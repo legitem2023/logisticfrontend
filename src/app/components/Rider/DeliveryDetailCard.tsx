@@ -2,6 +2,8 @@ import React from "react";
 import { Button } from "../ui/Button";
 import { Card, CardContent } from "../ui/Card";
 import RouteDistance from "../commands/RouteDistance";
+import dynamic from 'next/dynamic';
+const RouteDistance = dynamic(() => import('../commands/RouteDistance'), { ssr: false });
 import {
   User,
   MapPin,
