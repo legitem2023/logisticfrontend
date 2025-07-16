@@ -38,7 +38,7 @@ export default function RouteDistance({ from, to }: RouteDistanceProps) {
       routeWhileDragging: false,
       addWaypoints: false,
       show: false,
-      createMarker: () => null, // hide markers
+      createMarker: () => undefined,
     })
       .on('routesfound', function (e: any) {
         const summary = e.routes[0].summary;
