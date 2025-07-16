@@ -531,7 +531,7 @@ setShowDetails(true)
       {/* Location Details Slide-up Panel */}
       {activeLocation && (
         <div className="fixed inset-0 bg-[rgba(0,0,0,0.5)] z-50 flex items-end md:items-center justify-end md:justify-center">
-          <div className="bg-white w-full max-w-md rounded-t-2xl md:rounded-2xl shadow-lg animate-slide-up md:animate-scale-in max-h-[90vh] flex flex-col">
+          <div className="bg-white w-full max-w-md rounded-t-2xl md:rounded-2xl shadow-lg animate-slide-up md:animate-scale-in top-0 h-[100vh] fixed flex flex-col">
             <div className="p-3 border-b border-gray-200">
               <div className="flex justify-between items-center">
                 <h2 className="text-xl font-bold flex items-center">
