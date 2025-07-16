@@ -81,7 +81,7 @@ export default function Sidebar({ tabs }: SidebarTabsProps) {
 
       {/* Main Content */}
       <main
-        className={`flex-1 overflow-y-auto transition-all duration-300 p-4 md:p-6 ${
+        className={`flex-1 overflow-y-auto transition-all duration-300 p-1 ${
           isMobileOpen ? 'opacity-60 pointer-events-none' : ''
         }`}
       >
