@@ -16,7 +16,7 @@ export default function HelpPage() {
         </CardHeader>
         <CardContent className="space-y-4 text-base text-gray-700 leading-relaxed">
           <p>
-            Welcome to the Logistics App! This system helps you manage and track deliveries in real time. Whether you're a sender, receiver, or rider, here’s how everything works.
+            Welcome to the Logistics App! This system helps you manage and track deliveries in real time. Whether youre a sender, receiver, or rider, heres how everything works.
           </p>
         </CardContent>
       </Card>
