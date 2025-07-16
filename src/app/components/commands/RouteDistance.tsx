@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import L from 'leaflet';
 import 'leaflet-routing-machine';
-import 'leaflet/dist/leaflet.css';
 
 type Coordinate = {
   lat: number;
@@ -13,83 +12,49 @@ type RouteDistanceProps = {
   to: Coordinate;
 };
 
-// Helper function to validate coordinates
-const RouteDistance = (coord: Coordinate): boolean => {
-  return (
-    coord &&
-    typeof coord.lat === 'number' &&
-    typeof coord.lng === 'number' &&
-    !isNaN(coord.lat) &&
-    !isNaN(coord.lng) &&
-    Math.abs(coord.lat) <= 90 &&
-    Math.abs(coord.lng) <= 180
-  );
-};
-
 export default function RouteDistance({ from, to }: RouteDistanceProps) {
   const [distance, setDistance] = useState<number | null>(null);
   const [time, setTime] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Reset state when inputs change
-    setDistance(null);
-    setTime(null);
-    setError(null);
+    if (!from || !to) return;
 
-    // Validate inputs
-    if (!isValidCoordinate(from) || !isValidCoordinate(to)) {
-      setError('Invalid coordinates');
-      return;
-    }
+    // Create routing service directly (no UI control needed)
+    const router = L.Routing.osrmv1({
+      serviceUrl: 'https://router.project-osrm.org/route/v1'
+    });
 
-    // Check if routing library is loaded
-    if (!L.Routing?.osrmv1) {
-      setError('Routing engine not available');
-      return;
-    }
+    const waypoints = [
+      L.latLng(from.lat, from.lng),
+      L.latLng(to.lat, to.lng)
+    ];
 
-    const router = L.Routing.osrmv1();
-    let isMounted = true;
+    router.route(waypoints, (err, routes) => {
+      if (err) {
+        setError('Failed to calculate route');
+        setDistance(null);
+        setTime(null);
+        return;
+      }
 
-    router.route(
-      [
-        L.latLng(from.lat, from.lng),
-        L.latLng(to.lat, to.lng)
-      ],
-      (err: any, routes: any) => {
-        if (!isMounted) return;
-        
-        if (err) {
-          setError('Routing error: ' + err.message);
-          return;
-        }
-
-        if (!routes || routes.length === 0) {
-          setError('No route found');
-          return;
-        }
-
+      if (routes && routes.length > 0) {
         const summary = routes[0].summary;
         setDistance(summary.totalDistance / 1000); // Convert to km
         setTime(summary.totalTime / 60); // Convert to minutes
+        setError(null);
       }
-    );
-
-    // Cleanup function
-    return () => {
-      isMounted = false;
-    };
+    });
   }, [from, to]);
 
   return (
-    <div>
+    <div className="route-calculator">
       {error ? (
         <p className="error">Error: {error}</p>
       ) : distance !== null && time !== null ? (
         <div>
           <p><strong>Distance:</strong> {distance.toFixed(2)} km</p>
-          <p><strong>Estimated Time:</strong> {time.toFixed(1)} minutes</p>
+          <p><strong>Travel Time:</strong> {time.toFixed(1)} minutes</p>
         </div>
       ) : (
         <p>Calculating route...</p>
