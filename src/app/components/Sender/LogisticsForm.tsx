@@ -529,68 +529,7 @@ setShowDetails(true)
       </div>
 
       {/* Location Details Slide-up Panel */}
-      {activeLocation && (
-        <div className="fixed inset-0 bg-[rgba(0,0,0,0.5)] z-50 flex items-end md:items-center justify-end md:justify-center">
-          <div className="bg-white w-full max-w-md rounded-t-2xl md:rounded-2xl shadow-lg animate-slide-up md:animate-scale-in top-0 h-[100vh] fixed flex flex-col">
-            <div className="p-3 border-b border-gray-200">
-              <div className="flex justify-between items-center">
-                <h2 className="text-xl font-bold flex items-center">
-                  {activeLocation.type === 'pickup' 
-                    ? <><Home className="h-5 w-5 mr-2 text-green-500" /> Pickup Details</> 
-                    : <><MapPin className="h-5 w-5 mr-2 text-orange-500" /> Drop-off #{activeLocation.index + 1} Details</>}
-                </h2>
-                <button 
-                  onClick={closeLocationDetails} 
-                  className="text-gray-500 hover:text-gray-700 p-1 rounded-full hover:bg-gray-100"
-                >
-                  <X className="h-6 w-6" />
-                </button>
-              </div>
-            </div>
-            
-            <div className="p-2 overflow-y-auto flex-grow">
-              <div className="space-y-5">
-                <div>
-                  <label className="block text-sm font-medium mb-2 flex items-center">
-                    <MapPin className="h-4 w-4 mr-1 text-gray-500" />
-                    Full Address
-                  </label>
-                  <div className="relative">
-                    <input
-                      ref={inputRef}
-                      type="text"
-                      name="address"
-                      value={
-                        activeLocation.type === 'pickup' 
-                          ? pickup.address 
-                          : dropoffs[activeLocation.index].address
-                      }
-                      onChange={handleAddressSearch}
-                      className="w-full p-3 border border-gray-300 rounded-lg pl-10"
-                      placeholder="Search address..."
-                    />
-                    <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
-                      <MapPin className="h-5 w-5" />
-                    </div>
-                  </div>
-                  
-                  {isLoading && (
-                    <div className="absolute bg-white-100 mt-2 text-sm text-gray-500 flex items-center">
-                      <Loader2 className="animate-spin h-4 w-4 mr-2 text-blue-500" />
-                      Searching...
-                    </div>
-                  )}
-                  
-                  {suggestions.length > 0 && (
-                    <div className="absolute left-0 right-0 mx-2 mt-2 border border-gray-200 rounded-lg overflow-hidden z-50 box-border">
-                      {suggestions.map((suggestion, index) => (
-                        <div 
-                          key={index}
-                          onClick={() => selectSuggestion(suggestion)}
-                          className="p-3 bg-white hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-b-0 flex items-start"
-                        >
-                          <MapPin className="h-4 w-4 text-blue-500 mr-2 mt-0.5 flex-shrink-0" />
-
+      
 {/* Location Details Slide-up Panel */}
 {activeLocation && (
   <div className="fixed inset-0 z-50 flex items-end md:items-center justify-end md:justify-center bg-black/40 backdrop-blur-sm transition-opacity duration-300">
