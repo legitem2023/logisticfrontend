@@ -39,7 +39,7 @@ export default function Sidebar({ tabs }: SidebarTabsProps) {
   return (
     <div className="relative flex h-screen w-full overflow-hidden bg-gradient-to-br from-gray-50 via-white to-gray-100">
       {/* Mobile Toggle Button */}
-      <div className="md:hidden fixed top-4 left-4 z-50">
+      <div className="md:hidden fixed top-4 left-4 z-10">
         <button
           aria-label="Toggle Sidebar"
           onClick={() => setIsMobileOpen(!isMobileOpen)}
