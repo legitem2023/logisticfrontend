@@ -427,7 +427,7 @@ setShowDetails(true)
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {data.getVehicleTypes.map((vehicle: any) => {
-          const isSelected = selected === vehicle.id;
+          const isSelected = selected === vehicle.cost;
           const showDetails = expandedDetails === vehicle.id;
           return (
             <div key={vehicle.id} className={`border-2 rounded-xl overflow-hidden ${
