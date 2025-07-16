@@ -1,7 +1,7 @@
 import React from "react";
 import { Button } from "../ui/Button";
 import { Card, CardContent } from "../ui/Card";
-
+import RouteDistance from "../commands/RouteDistance";
 import {
   User,
   MapPin,
@@ -156,6 +156,10 @@ const DeliveryDetailCard: React.FC<Props> = ({
           ) : (
             <p className="italic text-gray-400 pl-1">
               Distance and billing not yet calculated.
+              <RouteDistance
+                from={{ lat: 14.5995, lng: 120.9842 }} // Manila
+                to={{ lat: 14.6760, lng: 121.0437 }}   // Quezon City
+               />
             </p>
           )}
         </div>
