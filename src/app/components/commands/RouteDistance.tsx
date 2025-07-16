@@ -20,14 +20,15 @@ export default function RouteDistance({ from, to }: RouteDistanceProps) {
   useEffect(() => {
     if (!from || !to) return;
 
-    // Create routing service directly (no UI control needed)
+    // Create routing service
     const router = L.Routing.osrmv1({
       serviceUrl: 'https://router.project-osrm.org/route/v1'
     });
 
+    // Create Waypoints instead of LatLng
     const waypoints = [
-      L.latLng(from.lat, from.lng),
-      L.latLng(to.lat, to.lng)
+      L.Routing.waypoint(L.latLng(from.lat, from.lng)), // FIXED: Use Waypoint
+      L.Routing.waypoint(L.latLng(to.lat, to.lng))      // FIXED: Use Waypoint
     ];
 
     router.route(waypoints, (err, routes) => {
