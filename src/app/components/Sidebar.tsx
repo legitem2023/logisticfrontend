@@ -67,7 +67,7 @@ export default function Sidebar({ tabs }: SidebarTabsProps) {
               className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200
                 ${
                   activeIndex === i
-                    ? 'bg-gradient-to-tr from-blue-500 to-violet-500 text-white shadow-md'
+                    ? 'customgrad text-white shadow-md'
                     : 'text-gray-700 hover:bg-gray-100'
                 }
               `}
