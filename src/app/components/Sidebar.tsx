@@ -58,8 +58,7 @@ export default function Sidebar({ tabs }: SidebarTabsProps) {
         `}
       >
         <div className="h-full w-full bg-white/70 backdrop-blur-md shadow-xl border-r border-gray-200 p-4 rounded-tr-2xl rounded-br-2xl overflow-y-auto flex flex-col gap-2">
-          <div className="text-xl font-bold text-gray-800 mb-4 px-2">Dashboard</div>
-
+          
           {tabs.map((tab, i) => (
             <button
               key={i}
@@ -81,7 +80,7 @@ export default function Sidebar({ tabs }: SidebarTabsProps) {
 
       {/* Main Content */}
       <main
-        className={`flex-1 overflow-y-auto transition-all duration-300 p-1 ${
+        className={`flex-1 overflow-y-auto transition-all duration-300 p-0 ${
           isMobileOpen ? 'opacity-60 pointer-events-none' : ''
         }`}
       >
