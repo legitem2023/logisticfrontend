@@ -1,6 +1,4 @@
 import { useEffect, useState } from 'react';
-import L from 'leaflet';
-import 'leaflet-routing-machine';
 
 type Coordinate = {
   lat: number;
@@ -18,50 +16,39 @@ export default function RouteDistance({ from, to }: RouteDistanceProps) {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!from || !to) return;
+    const fetchRoute = async () => {
+      const url = `https://router.project-osrm.org/route/v1/driving/${from.lng},${from.lat};${to.lng},${to.lat}?overview=false`;
 
-    const dummyMap = L.map(document.createElement('div')); // invisible map
+      try {
+        const response = await fetch(url);
+        const data = await response.json();
 
-    const control = L.Routing.control({
-      waypoints: [
-        L.latLng(from.lat, from.lng),
-        L.latLng(to.lat, to.lng)
-      ],
-      router: L.Routing.osrmv1({
-        serviceUrl: 'https://router.project-osrm.org/route/v1'
-      }),
-      routeWhileDragging: false,
-      addWaypoints: false,
-      show: false,
-    }).addTo(dummyMap);
+        if (data.code !== 'Ok') {
+          throw new Error('Route not found');
+        }
 
-    control.on('routesfound', function (e: any) {
-      const route = e.routes[0];
-      const summary = route.summary;
-      setDistance(summary.totalDistance / 1000); // in km
-      setTime(summary.totalTime / 60); // in minutes
-      setError(null);
-    });
-
-    control.on('routingerror', function () {
-      setError('Failed to calculate route');
-      setDistance(null);
-      setTime(null);
-    });
-
-    return () => {
-      dummyMap.remove();
+        const route = data.routes[0];
+        setDistance(route.distance / 1000); // in km
+        setTime(route.duration / 60);       // in minutes
+      } catch (err: any) {
+        console.error(err);
+        setError('Failed to calculate route');
+      }
     };
+
+    if (from && to) {
+      fetchRoute();
+    }
   }, [from, to]);
 
   return (
-    <div className="route-calculator">
+    <div>
       {error ? (
-        <p className="error">Error: {error}</p>
+        <p style={{ color: 'red' }}>{error}</p>
       ) : distance !== null && time !== null ? (
         <div>
           <p><strong>Distance:</strong> {distance.toFixed(2)} km</p>
-          <p><strong>Travel Time:</strong> {time.toFixed(1)} minutes</p>
+          <p><strong>Estimated Time:</strong> {time.toFixed(1)} minutes</p>
         </div>
       ) : (
         <p>Calculating route...</p>
