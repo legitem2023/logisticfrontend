@@ -36,7 +36,7 @@ export default function NotificationDropdown({ userId }: { userId: string }) {
       <div className="relative">
         <button
           onClick={() => setOpen(!open)}
-          className="bg-white p-2 rounded-full shadow-md hover:bg-gray-100 transition"
+          className="bg-white p-2 rounded-full backdrop-blur bg-white/40 border border-gray-200 shadow-lg hover:bg-white/60 transition"
         >
           <Bell className="w-5 h-5 text-gray-700" />
         </button>
