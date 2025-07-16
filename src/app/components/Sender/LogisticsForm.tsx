@@ -339,7 +339,7 @@ setShowDetails(true)
   if (error) return <p>Error: {error.message}</p>;
  
   return (
-    <div className="max-w-4xl mx-auto pt-2">
+    <div className="max-w-4xl mx-auto">
             <div className="bg-white shadow-xl overflow-hidden">
          <div className="bg-green-600 customgrad p-6 text-white">
            <h1 className="text-2xl md:text-3xl font-bold flex items-center">
