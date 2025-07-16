@@ -21,7 +21,6 @@ export default function RouteDistance({ from, to }: RouteDistanceProps) {
 
     const router = L.Routing.control({
       waypoints: [L.latLng(from.lat, from.lng), L.latLng(to.lat, to.lng)],
-      createMarker: () => null, // no markers
       routeWhileDragging: false,
       addWaypoints: false,
       show: false
