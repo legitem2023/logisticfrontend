@@ -1,9 +1,7 @@
 'use client'
-
 import React from 'react'
 import { Card, CardHeader, CardTitle, CardContent } from './ui/Card'
 import Separator from './ui/Separator'
-
 export default function HelpPage() {
   return (
     <div className="max-w-3xl mx-auto px-4 py-10 space-y-6 bg-gradient-to-b from-white via-slate-50 to-gray-100 rounded-xl">
