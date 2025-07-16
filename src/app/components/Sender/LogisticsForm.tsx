@@ -674,30 +674,178 @@ setShowDetails(true)
                           ? handlePickupChange(e)
                           : handleDropoffChange(activeLocation.index, e)
                       }
-                      className="w-full p-3 border border-gray-300 rounded-lg pl-10"
-                      placeholder="Full name"
-                    />
-                    <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
-                      <User className="h-5 w-5" />
-                    </div>
-                  </div>
+{/* Location Details Slide-up Panel */}
+{activeLocation && (
+  <div className="fixed inset-0 z-50 flex items-end md:items-center justify-end md:justify-center bg-black/40 backdrop-blur-sm transition-opacity duration-300">
+    <div className="bg-white/90 backdrop-blur-lg w-full max-w-md rounded-t-3xl md:rounded-3xl shadow-2xl animate-slide-up md:animate-scale-in fixed top-0 h-full flex flex-col overflow-hidden border border-gray-200">
+      <div className="p-5 border-b border-gray-200 bg-white/80 backdrop-blur-lg">
+        <div className="flex justify-between items-center">
+          <h2 className="text-xl font-semibold flex items-center text-gray-800">
+            {activeLocation.type === 'pickup' 
+              ? <><Home className="h-5 w-5 mr-2 text-green-500" /> Pickup Details</> 
+              : <><MapPin className="h-5 w-5 mr-2 text-orange-500" /> Drop-off #{activeLocation.index + 1} Details</>}
+          </h2>
+          <button 
+            onClick={closeLocationDetails} 
+            className="text-gray-500 hover:text-gray-700 p-2 rounded-full hover:bg-gray-200 transition"
+          >
+            <X className="h-5 w-5" />
+          </button>
+        </div>
+      </div>
+
+      <div className="p-5 overflow-y-auto flex-grow space-y-6 bg-white/70 backdrop-blur-md">
+        {/* Full Address */}
+        <div>
+          <label className="block text-sm font-medium mb-2 flex items-center text-gray-700">
+            <MapPin className="h-4 w-4 mr-1 text-gray-500" />
+            Full Address
+          </label>
+          <div className="relative">
+            <input
+              ref={inputRef}
+              type="text"
+              name="address"
+              value={
+                activeLocation.type === 'pickup' 
+                  ? pickup.address 
+                  : dropoffs[activeLocation.index].address
+              }
+              onChange={handleAddressSearch}
+              className="w-full p-3 border border-gray-300 rounded-xl pl-10 shadow-sm focus:ring-2 focus:ring-blue-400 transition"
+              placeholder="Search address..."
+            />
+            <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+              <MapPin className="h-5 w-5" />
+            </div>
+          </div>
+
+          {isLoading && (
+            <div className="mt-2 text-sm text-gray-500 flex items-center">
+              <Loader2 className="animate-spin h-4 w-4 mr-2 text-blue-500" />
+              Searching...
+            </div>
+          )}
+
+          {suggestions.length > 0 && (
+            <div className="absolute left-0 right-0 mx-2 mt-2 border border-gray-200 rounded-xl overflow-hidden z-50 shadow-lg bg-white">
+              {suggestions.map((suggestion, index) => (
+                <div 
+                  key={index}
+                  onClick={() => selectSuggestion(suggestion)}
+                  className="p-3 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-none flex items-start"
+                >
+                  <MapPin className="h-4 w-4 text-blue-500 mr-2 mt-0.5 flex-shrink-0" />
+                  <span className="truncate text-gray-800">{suggestion.formatted_address}</span>
                 </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* House Number & Contact */}
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium mb-2 flex items-center text-gray-700">
+              <Home className="h-4 w-4 mr-1 text-gray-500" />
+              House Number
+            </label>
+            <div className="relative">
+              <input
+                type="text"
+                name="houseNumber"
+                value={
+                  activeLocation.type === 'pickup' 
+                    ? pickup.houseNumber 
+                    : dropoffs[activeLocation.index].houseNumber
+                }
+                onChange={(e) => 
+                  activeLocation.type === 'pickup'
+                    ? handlePickupChange(e)
+                    : handleDropoffChange(activeLocation.index, e)
+                }
+                className="w-full p-3 border border-gray-300 rounded-xl pl-10 shadow-sm focus:ring-2 focus:ring-blue-400 transition"
+                placeholder="No."
+              />
+              <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                <Home className="h-5 w-5" />
               </div>
             </div>
-            
-            <div className="p-5 border-t border-gray-200">
-              <button
-                type="button"
-                onClick={closeLocationDetails}
-                className="w-full customgrad text-white py-3 px-4 rounded-lg hover:bg-blue-700 flex items-center justify-center font-medium"
-              >
-                <CheckCircle2 className="h-5 w-5 mr-2" />
-                Save Details
-              </button>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium mb-2 flex items-center text-gray-700">
+              <Phone className="h-4 w-4 mr-1 text-gray-500" />
+              Contact Number
+            </label>
+            <div className="relative">
+              <input
+                type="tel"
+                name="contact"
+                value={
+                  activeLocation.type === 'pickup' 
+                    ? pickup.contact 
+                    : dropoffs[activeLocation.index].contact
+                }
+                onChange={(e) => 
+                  activeLocation.type === 'pickup'
+                    ? handlePickupChange(e)
+                    : handleDropoffChange(activeLocation.index, e)
+                }
+                className="w-full p-3 border border-gray-300 rounded-xl pl-10 shadow-sm focus:ring-2 focus:ring-blue-400 transition"
+                placeholder="Phone number"
+              />
+              <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                <Phone className="h-5 w-5" />
+              </div>
             </div>
           </div>
         </div>
-      )}
+
+        {/* Recipient Name */}
+        <div>
+          <label className="block text-sm font-medium mb-2 flex items-center text-gray-700">
+            <User className="h-4 w-4 mr-1 text-gray-500" />
+            Recipient Name
+          </label>
+          <div className="relative">
+            <input
+              type="text"
+              name="name"
+              value={
+                activeLocation.type === 'pickup' 
+                  ? pickup.name 
+                  : dropoffs[activeLocation.index].name
+              }
+              onChange={(e) => 
+                activeLocation.type === 'pickup'
+                  ? handlePickupChange(e)
+                  : handleDropoffChange(activeLocation.index, e)
+              }
+              className="w-full p-3 border border-gray-300 rounded-xl pl-10 shadow-sm focus:ring-2 focus:ring-blue-400 transition"
+              placeholder="Full name"
+            />
+            <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+              <User className="h-5 w-5" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Footer Save Button */}
+      <div className="p-5 border-t border-gray-200 bg-white/80 backdrop-blur-lg">
+        <button
+          type="button"
+          onClick={closeLocationDetails}
+          className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 px-4 rounded-xl shadow-md hover:shadow-lg hover:from-blue-700 hover:to-indigo-700 transition font-semibold flex items-center justify-center"
+        >
+          <CheckCircle2 className="h-5 w-5 mr-2" />
+          Save Details
+        </button>
+      </div>
+    </div>
+  </div>
+)}
       
       {/* Success Message */}
       {showSuccess && (
