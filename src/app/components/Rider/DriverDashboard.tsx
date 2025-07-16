@@ -214,6 +214,12 @@ export default function DriverDashboard() {
           perKmRate: 10,
           total: null,
         }}
+        coordinates={{
+          pickLat:selectedDelivery.pickupLatitude,
+          pickLng:selectedDelivery.pickupLongitude,
+          dropLat:selectedDelivery.dropoffLatitude,
+          dropLng:selectedDelivery.dropoffLongitude,
+        }}
         onTrackClick={() => {
           // call distance calculation function here
         }}
