@@ -1,13 +1,14 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
-import { useQuery, gql } from '@apollo/client'
+import { useQuery } from '@apollo/client'
 import { Bell } from 'lucide-react'
 import { GETNOTIFICATION } from '../../../graphql/query'
 
 export default function NotificationDropdown({ userId }: { userId: string }) {
   const [open, setOpen] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
+
   const { data, loading, error } = useQuery(GETNOTIFICATION, {
     variables: { getNotificationsId: userId },
   })
@@ -29,76 +30,72 @@ export default function NotificationDropdown({ userId }: { userId: string }) {
 
   const notifications = data?.getNotifications || []
 
-  // Extract dropdown content to avoid duplication
   const dropdownContent = (
     <>
-      <div className="px-4 py-2 font-semibold text-gray-700 border-b">  
-        Notifications  
-      </div>  
-      <ul className="max-h-64 overflow-y-auto divide-y sm:max-h-64">  
-        {loading ? (  
-          <li className="px-4 py-3 text-sm text-gray-500">Loading...</li>  
-        ) : error ? (  
-          <li className="px-4 py-3 text-sm text-red-500">  
-            Error loading notifications  
-          </li>  
-        ) : notifications.length > 0 ? (  
-          notifications.map((notif: any) => (  
-            <li key={notif.id} className="px-4 py-3 hover:bg-gray-50">  
-              <p className="text-sm text-gray-800">{notif.message}</p>  
-              <span className="text-xs text-gray-500">  
-                {new Date(notif.createdAt).toLocaleString()}  
-              </span>  
-            </li>  
-          ))  
-        ) : (  
-          <li className="px-4 py-3 text-sm text-center text-gray-500">  
-            No new notifications  
-          </li>  
-        )}  
+      <div className="px-4 py-3 font-bold text-gray-800 border-b border-gray-200 bg-white/70 backdrop-blur-md sticky top-0 z-10">
+        Notifications
+      </div>
+      <ul className="max-h-64 overflow-y-auto divide-y divide-gray-100">
+        {loading ? (
+          <li className="px-4 py-3 text-sm text-gray-500">Loading...</li>
+        ) : error ? (
+          <li className="px-4 py-3 text-sm text-red-500">Error loading notifications</li>
+        ) : notifications.length > 0 ? (
+          notifications.map((notif: any) => (
+            <li
+              key={notif.id}
+              className="px-4 py-3 hover:bg-gray-100 transition"
+            >
+              <p className="text-sm font-medium text-gray-800">{notif.message}</p>
+              <span className="text-xs text-gray-500 block mt-1">
+                {new Date(notif.createdAt).toLocaleString()}
+              </span>
+            </li>
+          ))
+        ) : (
+          <li className="px-4 py-3 text-sm text-center text-gray-500">No new notifications</li>
+        )}
       </ul>
     </>
   )
 
   return (
-    <div className="absolute top-4 right-4 z-90" ref={dropdownRef}>
+    <div className="absolute top-4 right-4 z-50" ref={dropdownRef}>
       <div className="relative">
         <button
           onClick={() => setOpen(!open)}
-          className="bg-white p-2 rounded-full backdrop-blur bg-white/40 border border-gray-200 shadow-lg hover:bg-white/60 transition"
+          className="p-2 rounded-full border border-gray-200 shadow-xl bg-white/30 backdrop-blur hover:bg-white/50 transition"
         >
-          <Bell className="w-5 h-5 text-gray-700" />
+          <Bell className="w-5 h-5 text-gray-800" />
         </button>
 
         {open && (
           <>
-            {/* Desktop version - remains unchanged */}
-            <div className="absolute right-0 mt-2 w-72 bg-white border rounded-xl shadow-lg overflow-hidden hidden sm:block">  
+            {/* Desktop */}
+            <div className="absolute right-0 mt-2 w-80 bg-white/60 backdrop-blur border border-gray-200 rounded-2xl shadow-2xl overflow-hidden hidden sm:block">
               {dropdownContent}
             </div>
 
-            {/* Mobile version - slide up from bottom */}
-            <div className="fixed inset-0 z-50 sm:hidden">
-              {/* Backdrop overlay */}
-              <div 
-                className="fixed inset-0 bg-black bg-opacity-50"
+            {/* Mobile */}
+            <div className="fixed inset-0 z-50 sm:hidden flex flex-col justify-end">
+              {/* Backdrop */}
+              <div
+                className="absolute inset-0 bg-black bg-opacity-50"
                 onClick={() => setOpen(false)}
-              />
-              
+              ></div>
+
               {/* Slide-up panel */}
-              <div className="fixed inset-x-0 bottom-0 bg-white border-t rounded-t-xl max-h-[70vh] overflow-y-auto animate-slide-up">
-                <div className="sticky top-0 bg-white flex justify-between items-center px-4 py-2 border-b">
-                  <div className="font-semibold text-gray-700">Notifications</div>
-                  <button 
+              <div className={`relative bg-white/70 backdrop-blur-xl border-t border-gray-200 rounded-t-2xl shadow-2xl max-h-[75vh] w-full overflow-y-auto transform transition-transform duration-300 ${open ? 'translate-y-0' : 'translate-y-full'}`}>
+                <div className="flex justify-between items-center px-4 py-3 border-b border-gray-200">
+                  <div className="text-lg font-semibold text-gray-800">Notifications</div>
+                  <button
                     onClick={() => setOpen(false)}
-                    className="text-gray-500 hover:text-gray-700"
+                    className="text-gray-600 hover:text-gray-800 text-xl"
                   >
-                    ✕
+                    &times;
                   </button>
                 </div>
-                <div>
-                  {dropdownContent}
-                </div>
+                {dropdownContent}
               </div>
             </div>
           </>
