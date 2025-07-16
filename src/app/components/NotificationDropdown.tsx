@@ -80,12 +80,12 @@ export default function NotificationDropdown({ userId }: { userId: string }) {
             <div className="fixed inset-0 z-50 sm:hidden flex flex-col justify-end">
               {/* Backdrop */}
               <div
-                className="absolute inset-0 bg-black bg-opacity-50"
+                className="absolute inset-0 bg-[rgba(0,0,0,0.5)]"
                 onClick={() => setOpen(false)}
               ></div>
 
               {/* Slide-up panel */}
-              <div className={`relative bg-white/70 backdrop-blur-xl border-t border-gray-200 rounded-t-2xl shadow-2xl max-h-[75vh] w-full overflow-y-auto transform transition-transform duration-300 ${open ? 'translate-y-0' : 'translate-y-full'}`}>
+              <div className={`relative bg-white/70 backdrop-blur-xl border-t border-gray-200 rounded-t-2xl shadow-2xl max-h-[76vh] min-h-[75vh]  w-full overflow-y-auto transform transition-transform duration-300 ${open ? 'translate-y-0' : 'translate-y-full'}`}>
                 <div className="flex justify-between items-center px-4 py-3 border-b border-gray-200">
                   <div className="text-lg font-semibold text-gray-800">Notifications</div>
                   <button
