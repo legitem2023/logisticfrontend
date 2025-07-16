@@ -24,10 +24,18 @@ type BillingDetails = {
   total: number | null;
 };
 
+type Coordinates = {
+  pickLat:number;
+  pickLng:number;
+  dropLat:number;
+  dropLng:number;
+}
+
 type Props = {
   sender: PartyDetails;
   recipient: PartyDetails;
   billing: BillingDetails;
+  coordinates:Coordinates;
   onTrackClick: () => void;
 };
 
@@ -53,8 +61,10 @@ const DeliveryDetailCard: React.FC<Props> = ({
   sender,
   recipient,
   billing,
+  coordinates,
   onTrackClick,
 }) => {
+  console.log(coordinates,"<-");
   return (
     <Card className="w-full max-w-2xl p-6 rounded-2xl bg-gradient-to-br from-white via-gray-50 to-white shadow-xl border border-gray-200">
       <CardContent className="space-y-6">
