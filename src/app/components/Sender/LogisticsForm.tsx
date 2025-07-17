@@ -103,6 +103,7 @@ const LogisticsForm = () => {
   const inputRef = useRef(null);
   const timeoutRef = useRef(null);
   const [showDetails, setShowDetails] = useState(false);
+  const [useBaseCost,setBaseCost] = useState([]);
  const closeDetails = () =>{
   setShowDetails(false);
  }
@@ -214,10 +215,12 @@ const LogisticsForm = () => {
     }, 500);
   };
 
-const vehicleDetails = async (id:any) =>{
- const filter = await data.getVehicleTypes.filter((vhc:any)=>vhc.id===id).map((vehicle:any)=>{
-   console.log(vehicle,"cost");
-   return vehicle.cost;
+  
+const vehicleDetails = (data,id) =>{
+   toggleDetails(id);
+   setBaseCost(data);
+   console.log(data);
+   //return data;
  })
 }
   
@@ -327,8 +330,8 @@ dropoffs.forEach(async (dropoff) => {
 })
 setShowDetails(true);
 //  showToast('Please select a vehicle type','warning');
-  };
-vehicleDetails(selected);
+};
+
   // Focus input when panel opens
   useEffect(() => {
     if (activeLocation && inputRef.current) {
@@ -471,7 +474,7 @@ vehicleDetails(selected);
 
               {/* Toggle Additional Services Button */}
               <button
-                onClick={() => toggleDetails(vehicle.id)}
+                onClick={() => {vehicleDetails(vehicle.id,vehicle)}}
                 type="button"
                 className="w-full px-4 py-2 text-sm text-left bg-gray-50 hover:bg-gray-100 border-t border-gray-200 text-green-700 font-medium"
               >
@@ -740,7 +743,7 @@ order = {{
     distanceKm: 0
   })),
   billing: {
-    baseRate: 50,
+    baseRate:parseInt(useBaseCost.map((base:any)=>{return base.cost})),
     perKmRate: 10,
     total: null, // optional; will auto-compute if null
   },
