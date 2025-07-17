@@ -40,6 +40,7 @@ type Props = {
   billing: BillingDetails;
   coordinates:Coordinates;
   onTrackClick: () => void;
+  onAcceptClick: () => void;
 };
 
 const LabelRow = ({
@@ -66,6 +67,7 @@ const DeliveryDetailCard: React.FC<Props> = ({
   billing,
   coordinates,
   onTrackClick,
+  onAcceptClick,
 }) => {
   console.log(coordinates,"<-");
   return (
@@ -167,7 +169,7 @@ const DeliveryDetailCard: React.FC<Props> = ({
           )}
                   <div className="text-center">
           <Button
-            onClick={onTrackClick}
+            onClick={onAcceptClick}
             className="flex items-center gap-2 px-5 py-2 rounded-full bg-gradient-to-r from-green-500 to-purple-500 text-white shadow-lg hover:brightness-110 transition"
           >
             <CheckSquare className="w-4 h-4" /> Accept Delivery
