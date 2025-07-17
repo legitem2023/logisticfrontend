@@ -741,7 +741,7 @@ order = {{
     distanceKm: 0
   })),
   billing: {
-    baseRate:parseInt(useBaseCost.map((base:any)=>{return base.cost})),
+    baseRate:useBaseCost.map((base:any)=>{return base.cost}),
     perKmRate: 10,
     total: null, // optional; will auto-compute if null
   },
