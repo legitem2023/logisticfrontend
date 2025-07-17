@@ -1,6 +1,8 @@
 'use client';
 import { useState, useEffect } from "react";
 import { Button } from "../ui/Button";
+import { showToast } from '../../../../utils/toastify';
+
 import { Card, CardContent } from "../ui/Card";
 import { useMutation, useQuery } from "@apollo/client";
 import { DELIVERIES } from "../../../../graphql/query";
@@ -15,7 +17,7 @@ export default function DriverDashboard() {
 
   const [acceptDelivery] = useMutation(ACCEPTDELIVERY,{
     onCompleted: () => {
-      console.log("Delivery accepted successfully");
+      showToast("Delivery accepted successfully","success");
     },
     onError: (e: any) => {
       console.log('Acceptance Error', e);
