@@ -109,6 +109,7 @@ const LogisticsForm = () => {
  }
   // Handle input changes
   const handlePickupChange = (e) => {
+    
     setPickup({...pickup, [e.target.name]: e.target.value});
   };
 
@@ -147,7 +148,7 @@ const LogisticsForm = () => {
   };
 
   const closeLocationDetails = () => {
-    console.log(suggestions,"coord");
+    console.log(pickup,"coord");
     setActiveLocation(null);
     setSuggestions([]);
   };
