@@ -223,7 +223,7 @@ export default function DriverDashboard() {
           // call distance calculation function here
         }}
         onAcceptClick={() => {
-          handleAccept(selectDelivery.id,useID);
+          handleAccept(selectedDelivery.id,useID);
         }}
       />
     </div>
