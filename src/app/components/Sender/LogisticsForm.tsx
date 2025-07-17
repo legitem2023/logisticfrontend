@@ -741,7 +741,7 @@ order = {{
     distanceKm: 0
   })),
   billing: {
-    baseRate:50,
+    baseRate:parseFloat(useBaseCost),
     perKmRate: 10,
     total: null, // optional; will auto-compute if null
   },
