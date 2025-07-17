@@ -214,6 +214,13 @@ const LogisticsForm = () => {
     }, 500);
   };
 
+const vehicleDetails = async (id:any) =>{
+ const filter = await data.getVehicleTypes.filter((vhc:any)=>vhc.id===id).map((vehicle:any)=>{
+   console.log(vhc,"cost");
+   return vhc.cost;
+ })
+}
+  
   // Select a suggestion
   const selectSuggestion = (suggestion) => {
     const address = suggestion.formatted_address;
@@ -321,7 +328,7 @@ dropoffs.forEach(async (dropoff) => {
 setShowDetails(true);
 //  showToast('Please select a vehicle type','warning');
   };
-
+vehicleDetails(selected);
   // Focus input when panel opens
   useEffect(() => {
     if (activeLocation && inputRef.current) {
@@ -429,7 +436,7 @@ setShowDetails(true);
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {data.getVehicleTypes.map((vehicle: any) => {
-          const isSelected = selected === vehicle.cost;
+          const isSelected = selected === vehicle.id;
           const showDetailss = expandedDetails === vehicle.id;
           return (
             <div key={vehicle.id} className={`border-2 rounded-xl overflow-hidden ${
@@ -438,7 +445,7 @@ setShowDetails(true);
                 : 'border-gray-200'
             }`}>
               <div
-                onClick={() => setSelected(vehicle.cost)}
+                onClick={() => setSelected(vehicle.id)}
                 className={`relative w-full text-left p-4 flex items-center gap-4 cursor-pointer transition ${
                   isSelected
                     ? 'border-green-800 bg-green-50'
