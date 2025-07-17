@@ -7,7 +7,7 @@ import { LOCATIONTRACKING } from '../../../graphql/mutation';
 import { LocationTracking } from '../../../graphql/subscription';
 import { decryptToken, capitalize } from '../../../utils/decryptToken';
 import NotificationDropdown from './NotificationDropdown';
-import InstallPWAButton from './InstallPWAButton';
+
 import Sidebar from './Sidebar';
 import HomeDataCarousel from './HomeDataCarousel';
 import LogisticsHomePage from './LogisticsHomePage';
@@ -224,8 +224,6 @@ export default function Menu() {
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
-      <InstallPWAButton />
-
       {/* Logo Header */}
       <div className="h-[75px] w-full flex items-center justify-center customgrad border-b-4 border-green-500 px-4">
         <Image
