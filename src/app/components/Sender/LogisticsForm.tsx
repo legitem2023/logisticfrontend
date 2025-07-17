@@ -217,7 +217,7 @@ const LogisticsForm = () => {
 
   
 const vehicleDetails = (id,data) => {
-   toggleDetails(id);
+   setSelected(id);
    setBaseCost(data);
    console.log(useBaseCost);
 }
@@ -446,7 +446,7 @@ setShowDetails(true);
                 : 'border-gray-200'
             }`}>
               <div
-                onClick={() => setSelected(vehicle.id)}
+                onClick={() => vehicleDetails(vehicle.id,vehicle)}
                 className={`relative w-full text-left p-4 flex items-center gap-4 cursor-pointer transition ${
                   isSelected
                     ? 'border-green-800 bg-green-50'
@@ -472,7 +472,7 @@ setShowDetails(true);
 
               {/* Toggle Additional Services Button */}
               <button
-                onClick={() => {vehicleDetails(vehicle.id,vehicle)}}
+                onClick={() => {toggleDetails(vehicle.id)}}
                 type="button"
                 className="w-full px-4 py-2 text-sm text-left bg-gray-50 hover:bg-gray-100 border-t border-gray-200 text-green-700 font-medium"
               >
