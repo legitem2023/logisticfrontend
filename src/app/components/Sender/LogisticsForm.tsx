@@ -37,7 +37,7 @@ import ConfirmOrderForm from './ClassicConfirmForm';
 import ClassicConfirmForm from './ClassicConfirmForm';
 
 const LogisticsForm = () => {
- showToast('trial','success')
+ 
   const { loading, error, data } = useQuery(VEHICLEQUERY);
 
   const [createDelivery] = useMutation(CREATEDELIVERY, {
@@ -268,19 +268,22 @@ const LogisticsForm = () => {
 
     // Basic validation
     if (!pickup.address) {
-      alert('Please enter a pickup address');
+     // alert('');
+      showToast('Please enter a pickup address','warning');
       return;
     }
     
     for (const [index, dropoff] of dropoffs.entries()) {
       if (!dropoff.address) {
-        alert(`Please enter a dropoff address for location #${index + 1}`);
+        //alert();
+        showToast(`Please enter a dropoff address for location #${index + 1}`,'warning');
         return;
       }
     }
     
     if (!selectedVehicle) {
-      alert('Please select a vehicle type');
+      alert('');
+      showToast('Please select a vehicle type','warning');
       return;
     }
 
@@ -316,10 +319,7 @@ dropoffs.forEach(async (dropoff) => {
 
 })
 
-setShowDetails(true)
-    ///console.log('Form submitted!');
-    setShowSuccess(true);
-    setTimeout(() => setShowSuccess(false), 3000);
+//  showToast('Please select a vehicle type','warning');
   };
 
   // Focus input when panel opens
