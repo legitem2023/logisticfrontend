@@ -318,7 +318,7 @@ dropoffs.forEach(async (dropoff) => {
   //await createDelivery({ variables: { input } });
 
 })
-
+setShowDetails(true);
 //  showToast('Please select a vehicle type','warning');
   };
 
