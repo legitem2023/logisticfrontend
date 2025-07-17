@@ -467,11 +467,11 @@ setShowDetails(true);
                 onClick={() => toggleDetails(vehicle.id)}
                 className="w-full px-4 py-2 text-sm text-left bg-gray-50 hover:bg-gray-100 border-t border-gray-200 text-green-700 font-medium"
               >
-                {showDetails ? 'Hide Additional Services' : 'Show Additional Services'}
+                {expandedDetails ? 'Hide Additional Services' : 'Show Additional Services'}
               </button>
 
               {/* Collapsible Section */}
-              {showDetails && (
+              {expandedDetails && (
                 <div className="p-4 bg-green-50 text-sm text-gray-700 space-y-2">
                   <p><strong>Additional Services:</strong></p>
                   <ul className="list-disc list-inside space-y-1">
