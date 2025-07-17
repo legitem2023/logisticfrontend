@@ -227,7 +227,7 @@ export default function Menu() {
       {/* Logo Header */}
       <div className="h-[75px] w-full flex items-center justify-center customgrad border-b-4 border-green-500 px-4">
         <Image
-          src="/Logo.svg"
+          src="/Motogo.svg"
           className="h-[60%] md:h-[80%] w-auto"
           alt="Logo"
           width={100}
