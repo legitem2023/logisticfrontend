@@ -74,7 +74,6 @@ export default function DriverDashboard() {
       pickupAddress: delivery.pickupAddress,
       pickupLatitude:delivery.pickupLatitude,
       pickupLongitude:delivery.pickupLongitude,
-      
       recipientName:delivery.recipientName,
       recipientPhone:delivery.recipientPhone,
       dropoffAddress: delivery.dropoffAddress,
@@ -222,6 +221,9 @@ export default function DriverDashboard() {
         }}
         onTrackClick={() => {
           // call distance calculation function here
+        }}
+        onAcceptClick={() => {
+          handleAccept(selectDelivery.id,useID);
         }}
       />
     </div>
