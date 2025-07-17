@@ -103,7 +103,7 @@ const LogisticsForm = () => {
   const inputRef = useRef(null);
   const timeoutRef = useRef(null);
   const [showDetails, setShowDetails] = useState(false);
-  const [useBaseCost,setBaseCost] = useState([]);
+  const [useBaseCost,setBaseCost] = useState(null);
  const closeDetails = () =>{
   setShowDetails(false);
  }
