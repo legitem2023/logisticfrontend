@@ -38,8 +38,8 @@ export default function DashboardLoading() {
         </aside>
 
         {/* Main content shimmer */}
-        <main className="flex-1 p-4">
-          <Shimmer width="250px" height="32px" className="mb-6" />
+        <main className="flex-1 p-0">
+          
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
             {[...Array(3)].map((_, i) => (
               <Card key={i}>
