@@ -147,6 +147,7 @@ const LogisticsForm = () => {
   };
 
   const closeLocationDetails = () => {
+    console.log(suggestions,"coord");
     setActiveLocation(null);
     setSuggestions([]);
   };
