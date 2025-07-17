@@ -5,7 +5,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination, Autoplay } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/pagination';
-
+import InstallPWAButton from './InstallPWAButton';
 type CarouselItem = {
   id: string;
   title: string;
@@ -21,6 +21,7 @@ type Props = {
 const HomeDataCarousel: FC<Props> = ({ items }) => {
   return (
     <div className="w-full">
+      <InstallPWAButton/>
       <Swiper
         spaceBetween={12}
         slidesPerView="auto"
