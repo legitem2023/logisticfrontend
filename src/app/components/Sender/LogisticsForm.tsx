@@ -220,7 +220,7 @@ const vehicleDetails = (id,data) => {
    setSelected(id);
    setBaseCost(data.filter((filter:any)=>filter.id===id).map((vehicle:any)=>{
     return vehicle.cost;
-   });
+   }));
    console.log(useBaseCost);
 }
   
