@@ -216,12 +216,10 @@ const LogisticsForm = () => {
   };
 
   
-const vehicleDetails = (data,id) =>{
+const vehicleDetails = (data,id) => {
    toggleDetails(id);
    setBaseCost(data);
    console.log(data);
-   //return data;
- })
 }
   
   // Select a suggestion
