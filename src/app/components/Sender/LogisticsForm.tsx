@@ -465,6 +465,7 @@ setShowDetails(true);
               {/* Toggle Additional Services Button */}
               <button
                 onClick={() => toggleDetails(vehicle.id)}
+                type="button"
                 className="w-full px-4 py-2 text-sm text-left bg-gray-50 hover:bg-gray-100 border-t border-gray-200 text-green-700 font-medium"
               >
                 {showDetailss ? 'Hide Additional Services' : 'Show Additional Services'}
