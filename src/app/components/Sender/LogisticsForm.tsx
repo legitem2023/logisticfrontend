@@ -218,9 +218,7 @@ const LogisticsForm = () => {
   
 const vehicleDetails = (id,data) => {
    setSelected(id);
-   setBaseCost(data?.map((vehicle:any)=>{
-    return vehicle.cost;
-   }));
+   setBaseCost(data.cost);
    console.log(useBaseCost);
 }
   
