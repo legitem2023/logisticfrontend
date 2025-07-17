@@ -148,10 +148,25 @@ const LogisticsForm = () => {
   };
 
   const closeLocationDetails = () => {
-    console.log(pickup,"coord");
+  if (
+    pickup &&
+    typeof pickup === 'object' &&
+    pickup.address &&
+    pickup.houseNumber &&
+    pickup.contact &&
+    pickup.name &&
+    typeof pickup.lat === 'number' &&
+    typeof pickup.lng === 'number'
+  ) {
+    //console.log("Valid pickup:", pickup);
     setActiveLocation(null);
     setSuggestions([]);
-  };
+  } else {
+    //console.warn("Invalid pickup data:", pickup);
+    showToast("Invalid pickup data:",'warning');
+    // Optionally show a toast or alert to the user
+  }
+};
 
   // Geocoding function using OpenStreetMap Nominatim
   const geocodeAddress = async (query) => {
