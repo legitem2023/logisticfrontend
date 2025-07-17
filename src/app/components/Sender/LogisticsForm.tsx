@@ -216,8 +216,8 @@ const LogisticsForm = () => {
 
 const vehicleDetails = async (id:any) =>{
  const filter = await data.getVehicleTypes.filter((vhc:any)=>vhc.id===id).map((vehicle:any)=>{
-   console.log(vhc,"cost");
-   return vhc.cost;
+   console.log(vehicle,"cost");
+   return vehicle.cost;
  })
 }
   
