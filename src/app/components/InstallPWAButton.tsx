@@ -41,7 +41,7 @@ const InstallPWAButton: React.FC = () => {
 
       <style jsx>{`
         .install_button {
-          position: absolute;
+          position:relative;
           display: inline-flex;
           gap: 8px;
           margin:5px;
