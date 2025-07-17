@@ -1,5 +1,7 @@
 'use client';
 import { Icon } from '@iconify/react';
+import { showToast } from '../../../../utils/toastify';
+
 import { useState, useEffect, useRef, use } from 'react';
 import { useMutation, useQuery } from '@apollo/client';
 import { VEHICLEQUERY } from '../../../../graphql/query';
@@ -35,7 +37,7 @@ import ConfirmOrderForm from './ClassicConfirmForm';
 import ClassicConfirmForm from './ClassicConfirmForm';
 
 const LogisticsForm = () => {
-
+ showToast('trial','success')
   const { loading, error, data } = useQuery(VEHICLEQUERY);
 
   const [createDelivery] = useMutation(CREATEDELIVERY, {
