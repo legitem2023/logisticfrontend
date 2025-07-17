@@ -12,6 +12,10 @@ import ReduxWrapper from "./components/ApolloProvider/ReduxWrapper";
 import AuthProvider from "./components/Auth/AuthProvider";
 import TokenSyncer from "./components/TokenSyncer";
 
+// ✅ Toastify import
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -30,11 +34,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <LoadEruda/>
+        <LoadEruda />
         <AuthProvider>
-          <TokenSyncer/>
+          <TokenSyncer />
           <ReduxWrapper>{children}</ReduxWrapper>
         </AuthProvider>
+        
+        {/* ✅ Toast container here */}
+        <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} newestOnTop />
       </body>
     </html>
   );
