@@ -11,6 +11,7 @@ import {
   Truck,
   Calculator,
   Receipt,
+  CheckSquare
 } from "lucide-react";
 
 type PartyDetails = {
@@ -164,6 +165,14 @@ const DeliveryDetailCard: React.FC<Props> = ({
                />
             </p>
           )}
+                  <div className="text-center">
+          <Button
+            onClick={onTrackClick}
+            className="flex items-center gap-2 px-5 py-2 rounded-full bg-gradient-to-r from-green-500 to-purple-500 text-white shadow-lg hover:brightness-110 transition"
+          >
+            <CheckSquare className="w-4 h-4" /> Accept Delivery
+          </Button>
+        </div>
         </div>
       </CardContent>
     </Card>
