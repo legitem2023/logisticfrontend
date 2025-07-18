@@ -71,12 +71,12 @@ const DeliveryDetailCard: React.FC<Props> = ({
 }) => {
   console.log(coordinates,"<-");
   return (
-    <Card className="w-full max-w-2xl p-6 rounded-2xl bg-gradient-to-br from-white via-gray-50 to-white shadow-xl border border-gray-200">
-      <CardContent className="space-y-6">
+    <Card className="w-full max-w-2xl p-4 rounded-2xl bg-gradient-to-br from-white via-gray-50 to-white shadow-xl border border-gray-200">
+      <CardContent className="space-y-4">
         {/* Sender and Recipient Info */}
-        <div className="grid gap-6 sm:grid-cols-2">
+        <div className="grid gap-4 sm:grid-cols-2">
           {/* Sender */}
-          <div className="bg-white rounded-xl border border-gray-100 p-4 shadow-sm hover:shadow-md transition">
+          <div className="bg-white rounded-xl border border-gray-100 p-2 shadow-sm hover:shadow-md transition">
             <h3 className="text-lg font-bold flex items-center gap-2 mb-3 text-indigo-600">
               <User className="w-5 h-5" /> Sender
             </h3>
@@ -100,7 +100,7 @@ const DeliveryDetailCard: React.FC<Props> = ({
           </div>
 
           {/* Recipient */}
-          <div className="bg-white rounded-xl border border-gray-100 p-4 shadow-sm hover:shadow-md transition">
+          <div className="bg-white rounded-xl border border-gray-100 p-2 shadow-sm hover:shadow-md transition">
             <h3 className="text-lg font-bold flex items-center gap-2 mb-3 text-green-600">
               <Truck className="w-5 h-5" /> Recipient
             </h3>
@@ -167,12 +167,18 @@ const DeliveryDetailCard: React.FC<Props> = ({
                />
             </p>
           )}
-                  <div className="text-center">
+                  <div className="text-center flex flex-row">
           <Button
             onClick={onAcceptClick}
             className="flex items-center gap-2 px-5 py-2 rounded-full bg-gradient-to-r from-green-500 to-purple-500 text-white shadow-lg hover:brightness-110 transition"
           >
             <CheckSquare className="w-4 h-4" /> Accept Delivery
+          </Button>
+          <Button
+            onClick={onAcceptClick}
+            className="flex items-center gap-2 px-5 py-2 rounded-full bg-gradient-to-r from-red-500 to-purple-500 text-white shadow-lg hover:brightness-110 transition"
+          >
+            <CheckSquare className="w-4 h-4" /> Skip
           </Button>
         </div>
         </div>
