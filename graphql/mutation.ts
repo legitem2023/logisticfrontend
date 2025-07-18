@@ -145,3 +145,32 @@ mutation CancelDelivery($deliveryId: String!, $riderId: String!) {
 //   "deliveryId": "68700a7a55394f1f6527b0c6",
 //   "riderId": "686d427603399308ff9a237a"
 // }
+
+export const CREATEROUTE = gql`
+mutation CreateRouteHistory($deliveryId: String!, $riderId: String!, $latitude: Float, $longitude: Float) {
+  createRouteHistory(deliveryId: $deliveryId, riderId: $riderId, latitude: $latitude, longitude: $longitude) {
+    statusText
+    token
+  }
+}
+`
+// {
+//   "deliveryId": null,
+//   "riderId": null,
+//   "latitude": null,
+//   "longitude": null
+// }
+export const CREATEPACKAGE = gql`
+mutation CreatePackage($deliveryId: String!, $packageType: String, $weight: Float, $dimensions: String, $specialInstructions: String) {
+  createPackage(deliveryId: $deliveryId, packageType: $packageType, weight: $weight, dimensions: $dimensions, specialInstructions: $specialInstructions) {
+    statusText
+  }
+}
+`
+// {
+//   "deliveryId": null,
+//   "packageType": null,
+//   "weight": null,
+//   "dimensions": null,
+//   "specialInstructions": null
+// }

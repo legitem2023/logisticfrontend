@@ -72,9 +72,9 @@ const DeliveryDetailCard: React.FC<Props> = ({
   console.log(coordinates,"<-");
   return (
     <Card className="w-full max-w-2xl p-[2px] sm:p-2 rounded-2xl bg-gradient-to-br from-white via-gray-50 to-white shadow-xl border border-gray-200">
-  <CardContent className="space-y-2">
+  <CardContent className="space-y-2 p-0">
     {/* Sender and Recipient Info */}
-    <div className="grid gap-2 sm:grid-cols-2">
+    <div className="grid gap-2">
       {/* Sender */}
       <div className="bg-white rounded-xl border border-gray-100 p-4 sm:p-4 shadow-sm hover:shadow-md transition w-[100%]">
         <h3 className="text-lg font-bold flex items-center gap-2 mb-3 text-indigo-600">
@@ -171,13 +171,13 @@ const DeliveryDetailCard: React.FC<Props> = ({
       <div className="text-center flex flex-row gap-2 mt-3">
         <Button
           onClick={onAcceptClick}
-          className="flex items-center gap-2 px-2 py-2 rounded-full bg-gradient-to-r from-green-500 to-purple-500 text-white shadow-lg hover:brightness-110 transition"
+          className="flex-1 flex items-center gap-2 px-2 py-2 rounded-full bg-gradient-to-r from-green-800 to-green-500 text-white shadow-lg hover:brightness-110 transition"
         >
           <CheckSquare className="w-4 h-4" /> Accept Delivery
         </Button>
         <Button
           onClick={onAcceptClick}
-          className="flex items-center gap-2 px-2 py-2 rounded-full bg-gradient-to-r from-red-500 to-purple-500 text-white shadow-lg hover:brightness-110 transition"
+          className="flex-1 flex items-center gap-2 px-2 py-2 rounded-full bg-gradient-to-r from-red-800 to-red-500 text-white shadow-lg hover:brightness-110 transition"
         >
           <CheckSquare className="w-4 h-4" /> Skip
         </Button>

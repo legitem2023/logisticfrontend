@@ -1,5 +1,9 @@
+"use client";
+import { useQuery } from "@apollo/client";
+import { RIDERS } from "../../../../graphql/query";
 import { useState } from "react";
 import { UserCheck } from "lucide-react";
+import ConfirmationLoading from "../ui/ConfirmationLoading";
 
 const availableDrivers = [
   { id: "d1", name: "Driver A", vehicle: "Motorbike" },
@@ -7,8 +11,9 @@ const availableDrivers = [
 ];
 
 export default function ClassicConfirmForm({ order, onConfirm }) {
+  const { data,loading,error} = useQuery(RIDERS);
   const [selectedDriver, setSelectedDriver] = useState("");
-
+  if (loading) return <ConfirmationLoading/>
   return (
     <div className="max-w-2xl mx-auto p-6 bg-gradient-to-b from-white to-gray-50 border border-gray-300 rounded-xl shadow-md space-y-6">
       <h1 className="text-2xl font-semibold text-gray-800 tracking-tight border-b pb-2">
@@ -16,7 +21,7 @@ export default function ClassicConfirmForm({ order, onConfirm }) {
       </h1>
 
       {/* Order Info Section */}
-      <div className="grid sm:grid-cols-2 gap-4 text-sm text-gray-700">
+      <div className="grid gap-4 text-sm text-gray-700">
         <div className="space-y-1">
           <h2 className="font-semibold text-gray-800 text-base mb-1">Sender</h2>
           <p><strong>Name:</strong> {order.sender.name}</p>
@@ -103,11 +108,15 @@ export default function ClassicConfirmForm({ order, onConfirm }) {
           className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
         >
           <option value="">Select a driver</option>
-          {availableDrivers.map((driver) => (
-            <option key={driver.id} value={driver.id}>
-              {driver.name} – {driver.vehicle}
-            </option>
-          ))}
+          {loading ? (
+            <option disabled>Loading...</option>
+          ) : (
+            data?.getRiders?.map((driver) => (
+              <option key={driver.id} value={driver.id}>
+                {driver.name}-{driver.vehicleType.name}
+              </option>
+            ))
+          )}
         </select>
       </div>
 

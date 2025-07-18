@@ -9,11 +9,7 @@ import { CREATEDELIVERY } from '../../../../graphql/mutation';
 import Cookies from "js-cookie";
 import LogisticFormLoading from '../ui/LogisticFormLoading';
 import { useSelector, useDispatch } from "react-redux";
-import { 
-  setPickupDetails, 
-  addDropoffDetails, 
-  clearDeliveryDetails 
-} from '../../../../Redux/deliverySlice';
+
 
 import { 
   Home, 
@@ -358,7 +354,6 @@ const handleSubmit = (e) => {
       senderId: useID,
     };
 
-    localStorage.setItem("Order", JSON.stringify(input));
     // await createDelivery({ variables: { input } });
   });
 
