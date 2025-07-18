@@ -1,12 +1,12 @@
-// lib/seoConfig.ts
+// lib/seo.ts
 import type { Metadata, Viewport } from 'next'; // Import Viewport type
 
 export const metadata: Metadata = {
-  title: 'Adiviso Logistic - We move what matters',
-  description: 'Adiviso Logistic is a modern logistics platform connecting senders, couriers, and recipients with real-time delivery tracking, seamless route management, and smart geolocation services.',
+  title: 'Motogo - We move what matters',
+  description: 'Motogo is a modern logistics platform connecting senders, couriers, and recipients with real-time delivery tracking, seamless route management, and smart geolocation services.',
   manifest: '/manifest.json',
   keywords: [
-    'Adiviso',
+    'motogo',
     'Logistics',
     'Delivery',
     'Courier Service',
@@ -37,26 +37,26 @@ export const metadata: Metadata = {
 
   openGraph: {
     type: 'website',
-    title: 'Adiviso Logistic - We move what matters',
-    description: 'Adiviso connects deliveries with precision and speed. Monitor real-time routes, schedule pickups, and streamline logistics with ease.',
+    title: 'Motogo - We move what matters',
+    description: 'Motogo connects deliveries with precision and speed. Monitor real-time routes, schedule pickups, and streamline logistics with ease.',
     url: 'https://logisticfrontend.vercel.app',
-    siteName: 'Adiviso',
+    siteName: 'Motogo',
     images: [
       {
         url: '/og-image.jpg',
         width: 1200,
         height: 630,
-        alt: 'Adiviso - Real-time Delivery and Logistics Platform',
+        alt: 'Motogo - Real-time Delivery and Logistics Platform',
       },
     ],
   },
 
   twitter: {
     card: 'summary_large_image',
-    title: 'Adiviso Logistic - We move what matters',
+    title: 'Motogo - We move what matters',
     description: 'Real-time delivery management and logistics made simple and reliable with Adiviso.',
     images: ['/og-image.jpg'],
-    creator: '@advisologistics',
+    creator: 'robertsancomarquez1988@gmail.com',
   },
 };
 
