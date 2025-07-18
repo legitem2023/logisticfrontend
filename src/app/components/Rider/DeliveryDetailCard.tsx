@@ -71,10 +71,10 @@ const DeliveryDetailCard: React.FC<Props> = ({
 }) => {
   console.log(coordinates,"<-");
   return (
-    <Card className="w-full max-w-2xl p-4 rounded-2xl bg-gradient-to-br from-white via-gray-50 to-white shadow-xl border border-gray-200">
-      <CardContent className="space-y-4">
+    <Card className="w-full max-w-2xl p-2 rounded-2xl bg-gradient-to-br from-white via-gray-50 to-white shadow-xl border border-gray-200">
+      <CardContent className="space-y-2">
         {/* Sender and Recipient Info */}
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="grid gap-2 sm:grid-cols-2">
           {/* Sender */}
           <div className="bg-white rounded-xl border border-gray-100 p-2 shadow-sm hover:shadow-md transition">
             <h3 className="text-lg font-bold flex items-center gap-2 mb-3 text-indigo-600">
@@ -128,14 +128,14 @@ const DeliveryDetailCard: React.FC<Props> = ({
         <div className="text-center">
           <Button
             onClick={onTrackClick}
-            className="flex items-center gap-2 px-5 py-2 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 text-white shadow-lg hover:brightness-110 transition"
+            className="flex items-center gap-2 px-2 py-2 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 text-white shadow-lg hover:brightness-110 transition"
           >
             <Calculator className="w-4 h-4" /> Calculate Distance & Billing
           </Button>
         </div>
 
         {/* Billing */}
-        <div className="border-t pt-5">
+        <div className="border-t pt-2">
           <h3 className="text-lg font-bold flex items-center gap-2 mb-3 text-rose-600">
             <Receipt className="w-5 h-5" /> Billing Summary
           </h3>
@@ -170,13 +170,13 @@ const DeliveryDetailCard: React.FC<Props> = ({
                   <div className="text-center flex flex-row">
           <Button
             onClick={onAcceptClick}
-            className="flex items-center gap-2 px-5 py-2 rounded-full bg-gradient-to-r from-green-500 to-purple-500 text-white shadow-lg hover:brightness-110 transition"
+            className="flex items-center gap-2 px-2 py-2 rounded-full bg-gradient-to-r from-green-500 to-purple-500 text-white shadow-lg hover:brightness-110 transition"
           >
             <CheckSquare className="w-4 h-4" /> Accept Delivery
           </Button>
           <Button
             onClick={onAcceptClick}
-            className="flex items-center gap-2 px-5 py-2 rounded-full bg-gradient-to-r from-red-500 to-purple-500 text-white shadow-lg hover:brightness-110 transition"
+            className="flex items-center gap-2 px-2 py-2 rounded-full bg-gradient-to-r from-red-500 to-purple-500 text-white shadow-lg hover:brightness-110 transition"
           >
             <CheckSquare className="w-4 h-4" /> Skip
           </Button>
