@@ -76,7 +76,7 @@ const DeliveryDetailCard: React.FC<Props> = ({
     {/* Sender and Recipient Info */}
     <div className="grid gap-2 sm:grid-cols-2">
       {/* Sender */}
-      <div className="bg-white rounded-xl border border-gray-100 p-[3px] sm:p-2 shadow-sm hover:shadow-md transition">
+      <div className="bg-white rounded-xl border border-gray-100 p-[3px] sm:p-2 shadow-sm hover:shadow-md transition w-[100%]">
         <h3 className="text-lg font-bold flex items-center gap-2 mb-3 text-indigo-600">
           <User className="w-5 h-5" /> Sender
         </h3>
@@ -100,8 +100,8 @@ const DeliveryDetailCard: React.FC<Props> = ({
       </div>
 
       {/* Recipient */}
-      <div className="bg-white rounded-xl border border-gray-100 p-[3px] sm:p-2 shadow-sm hover:shadow-md transition">
-        <h3 className="text-lg font-bold flex items-center gap-2 mb-3 text-green-600">
+      <div className="bg-white rounded-xl border border-gray-100 p-[3px] sm:p-2 shadow-sm hover:shadow-md transition w-[100%]">
+        <h3 className="text-lg font-bold flex items-center gap-2 mb-3 text-green-600 ">
           <Truck className="w-5 h-5" /> Recipient
         </h3>
         <div className="space-y-2">
