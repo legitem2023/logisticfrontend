@@ -148,24 +148,8 @@ const LogisticsForm = () => {
   };
 
   const closeLocationDetails = () => {
-  if (
-    pickup &&
-    typeof pickup === 'object' &&
-    pickup.address &&
-    pickup.houseNumber &&
-    pickup.contact &&
-    pickup.name &&
-    typeof pickup.lat === 'number' &&
-    typeof pickup.lng === 'number'
-  ) {
-    //console.log("Valid pickup:", pickup);
     setActiveLocation(null);
-    setSuggestions([]);
-  } else {
-    //console.warn("Invalid pickup data:", pickup);
-    showToast("Invalid pickup data:",'warning');
-    // Optionally show a toast or alert to the user
-  }
+    setSuggestions([]); 
 };
 
   // Geocoding function using OpenStreetMap Nominatim
@@ -286,65 +270,99 @@ const vehicleDetails = (id,data) => {
     }
   }, [pickup, dropoffs]);
 
-  // Submit handler with Redux integration
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    
+const validatePickup = (pickup) => {
+  if (!pickup || typeof pickup !== 'object') {
+    showToast("Pickup data is missing or invalid", 'warning');
+    return false;
+  }
 
-    // Basic validation
-    if (!pickup.address) {
-     // alert('');
-      showToast('Please enter a pickup address','warning');
-      return;
+  if (!pickup.address) {
+    showToast("Please enter a pickup address", 'warning');
+    return false;
+  }
+
+  if (!pickup.houseNumber) {
+    showToast("Please enter a house number", 'warning');
+    return false;
+  }
+
+  if (!pickup.contact) {
+    showToast("Please enter a contact number", 'warning');
+    return false;
+  }
+
+  if (!pickup.name) {
+    showToast("Please enter the sender's name", 'warning');
+    return false;
+  }
+
+  if (typeof pickup.lat !== 'number') {
+    showToast("Pickup latitude is missing or invalid", 'warning');
+    return false;
+  }
+
+  if (typeof pickup.lng !== 'number') {
+    showToast("Pickup longitude is missing or invalid", 'warning');
+    return false;
+  }
+
+  return true;
+};
+
+const validateDropoffs = (dropoffs) => {
+  for (const [index, dropoff] of dropoffs.entries()) {
+    if (!dropoff.address) {
+      showToast(`Please enter a dropoff address for location #${index + 1}`, 'warning');
+      return false;
     }
-    
-    for (const [index, dropoff] of dropoffs.entries()) {
-      if (!dropoff.address) {
-        //alert();
-        showToast(`Please enter a dropoff address for location #${index + 1}`,'warning');
-        return;
-      }
-    }
-    
-    if (!selectedVehicle) {
-      alert('');
-      showToast('Please select a vehicle type','warning');
-      return;
-    }
+  }
+  return true;
+};
 
+const validateVehicle = (selectedVehicle) => {
+  if (!selectedVehicle) {
+    showToast('Please select a vehicle type', 'warning');
+    return false;
+  }
+  return true;
+};
 
-// Submit one delivery per dropoff
-const today = new Date();
-const isoDateString = new Date(
-  Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate())
-).toISOString(); // "2025-07-12T00:00:00.000Z"
+const handleSubmit = (e) => {
+  e.preventDefault();
 
+  if (!validatePickup(pickup)) return;
+  if (!validateDropoffs(dropoffs)) return;
+  if (!validateVehicle(selectedVehicle)) return;
 
+  const today = new Date();
+  const isoDateString = new Date(
+    Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate())
+  ).toISOString();
 
-dropoffs.forEach(async (dropoff) => {
-  const input = {
-    assignedRiderId: '686d427603399308ff9a237a',
-    deliveryFee: selected,
-    deliveryType: selectedService,
-    dropoffAddress: dropoff.address,
-    dropoffLatitude: dropoff.lat,
-    dropoffLongitude: dropoff.lng,
-    estimatedDeliveryTime: isoDateString,
-    paymentMethod: "Cash",
-    paymentStatus: "Unpaid",
-    pickupAddress: pickup.address,
-    pickupLatitude: pickup.lat,
-    pickupLongitude: pickup.lng,
-    recipientName: dropoff.name,
-    recipientPhone: dropoff.contact,
-    senderId: useID,//pickup.name,
-  };
-  localStorage.setItem("Order", JSON.stringify(input));
-  //await createDelivery({ variables: { input } });
+  dropoffs.forEach(async (dropoff) => {
+    const input = {
+      assignedRiderId: '686d427603399308ff9a237a',
+      deliveryFee: selected,
+      deliveryType: selectedService,
+      dropoffAddress: dropoff.address,
+      dropoffLatitude: dropoff.lat,
+      dropoffLongitude: dropoff.lng,
+      estimatedDeliveryTime: isoDateString,
+      paymentMethod: "Cash",
+      paymentStatus: "Unpaid",
+      pickupAddress: pickup.address,
+      pickupLatitude: pickup.lat,
+      pickupLongitude: pickup.lng,
+      recipientName: dropoff.name,
+      recipientPhone: dropoff.contact,
+      senderId: useID,
+    };
 
-})
-setShowDetails(true);
-//  showToast('Please select a vehicle type','warning');
+    localStorage.setItem("Order", JSON.stringify(input));
+    // await createDelivery({ variables: { input } });
+  });
+
+  setShowDetails(true);
 };
 
   // Focus input when panel opens
