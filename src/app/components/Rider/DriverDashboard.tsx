@@ -29,7 +29,7 @@ export default function DriverDashboard() {
 
   const [useID, setID] = useState();
   const [activeTab, setActiveTab] = useState("Deliveries");
-
+  const [showMap,setMap] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
   const [selectedDelivery, setSelectedDelivery] = useState<any>(null);
 
@@ -243,6 +243,10 @@ export default function DriverDashboard() {
 </div>
 
       )}
+   {/* Slide-up modal for Navigation */} 
+      <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/50 ">
+      
+      </div>
     </div>
   );
 }
