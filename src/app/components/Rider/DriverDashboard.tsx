@@ -152,12 +152,12 @@ export default function DriverDashboard() {
                         Show Details
                       </Button>
                         <Button
-                        variant=""
-                        className="flex-1"
-                        onClick={} =>{
-                          console.log();
-                        }
-                        >Adamus at Tera</div>
+                        variant="outline"
+                        className="flex-1 w-full transition-all duration-200 hover:scale-[1.02] hover:shadow"
+                        onClick={() => {
+                          console.log("Navigate");
+                        }}
+                        >Navigate</div>
                       </div>
                       
                     </CardContent>
