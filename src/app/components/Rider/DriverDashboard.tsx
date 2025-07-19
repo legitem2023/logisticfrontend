@@ -31,7 +31,7 @@ export default function DriverDashboard() {
   const [showMap,setMap] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
   const [selectedDelivery, setSelectedDelivery] = useState<any>(null);
-  const [dropoffIP,setdropoffIP] = useState();
+  const [dropoffCoord,setdropoffCoord] = useState(null);
   const openDetails = (delivery: any) => {
     setSelectedDelivery(delivery);
     setShowDetails(true);    
@@ -82,7 +82,10 @@ export default function DriverDashboard() {
       estimatedDeliveryTime: formatDate(delivery.estimatedDeliveryTime),
     };
   });
-
+const handleGetIp = (delivery) =>{ 
+  setSelectedDelivery(delivery);
+  setMap(true);
+}
   const handleAccept = async (id: string, riderId: string) => {
     await acceptDelivery({
       variables: {
@@ -151,9 +154,8 @@ export default function DriverDashboard() {
                         <Button
                         variant="outline"
                         className="flex-1 w-full transition-all duration-200 hover:scale-[1.02] hover:shadow"
-                        onClick={() => {
-                          setMap(true);
-                          console.log("Navigate",d);
+                        onClick={() => {   
+                          handleGetIp(d);
                         }}
                         ><Compass className="w-4 h-4 text-black-800"/>Navigate</Button>
                       </div>
@@ -245,9 +247,9 @@ export default function DriverDashboard() {
       <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/50 ">
         <div className="w-full max-h-[100vh] sm:max-w-md bg-white rounded-t-2xl sm:rounded-2xl p-4 shadow-lg animate-slide-up overflow-y-auto">
           <RiderMap 
-           riderLocation={dropoffIP}
-           receiverLocation={dropoffIP} 
-          />
+  riderLocation={{ lat: selectedDelivery.pickupLatitude, lng: selectedDelivery.pickupLongitude }}
+  receiverLocation={{ lat: selectedDelivery.dropoffLatitude, lng: selectedDelivery.dropoffLongitude }} 
+/>
         </div>
       </div>)
       }
