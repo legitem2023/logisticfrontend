@@ -2,7 +2,6 @@
 import { useState, useEffect } from "react";
 import { Button } from "../ui/Button";
 import { showToast } from '../../../../utils/toastify';
-
 import { Card, CardContent } from "../ui/Card";
 import { useMutation, useQuery } from "@apollo/client";
 import { DELIVERIES } from "../../../../graphql/query";
@@ -14,7 +13,6 @@ import { decryptToken, capitalize, formatDate } from "../../../../utils/decryptT
 import { ACCEPTDELIVERY } from "../../../../graphql/mutation";
 import DeliveryDetailCard from "./DeliveryDetailCard";
 export default function DriverDashboard() {
-
   const [acceptDelivery] = useMutation(ACCEPTDELIVERY,{
     onCompleted: () => {
       showToast("Delivery accepted successfully","success");
@@ -24,9 +22,6 @@ export default function DriverDashboard() {
     }
   });
 
-
-
-
   const [useID, setID] = useState();
   const [activeTab, setActiveTab] = useState("Deliveries");
   const [showMap,setMap] = useState(false);
@@ -35,8 +30,7 @@ export default function DriverDashboard() {
 
   const openDetails = (delivery: any) => {
     setSelectedDelivery(delivery);
-    setShowDetails(true);
-    
+    setShowDetails(true);    
   };
 
   const closeDetails = () => {
@@ -66,7 +60,6 @@ export default function DriverDashboard() {
   });
 
   if (loading || !data) return <DashboardLoading />;
-
   const mockShipment = data.getRidersDelivery.map((delivery: any) => {
     const status = capitalize(delivery.deliveryStatus);
     return {
@@ -241,12 +234,14 @@ export default function DriverDashboard() {
     </div>
   </div>
 </div>
-
       )}
    {/* Slide-up modal for Navigation */} 
+      {showMap && (
       <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/50 ">
-      
-      </div>
+        <div className="w-full max-h-[100vh] sm:max-w-md bg-white rounded-t-2xl sm:rounded-2xl p-4 shadow-lg animate-slide-up overflow-y-auto">
+        </div>
+      </div>)
+      }
     </div>
   );
 }
