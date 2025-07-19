@@ -356,7 +356,7 @@ const today = new Date();
       senderId: useID,
     };
     console.log(input,"<<<");
-   // await createDelivery({ variables: { input } });
+    await createDelivery({ variables: { input } });
   });
   
 }) 
