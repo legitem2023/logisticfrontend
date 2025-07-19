@@ -325,19 +325,21 @@ const validateVehicle = (selectedVehicle) => {
 
 const handleSubmit = (e) => {
   e.preventDefault();
-
   if (!validatePickup(pickup)) return;
   if (!validateDropoffs(dropoffs)) return;
   if (!validateVehicle(selectedVehicle)) return;
-
-  const today = new Date();
+  setShowDetails(true);
+}
+  
+const confirmCommand = ((selectedDriver:string) => {
+const today = new Date();
   const isoDateString = new Date(
     Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate())
   ).toISOString();
 
   dropoffs.forEach(async (dropoff) => {
     const input = {
-      assignedRiderId: '686d427603399308ff9a237a',
+      assignedRiderId: selectedDriver,
       deliveryFee: selected,
       deliveryType: selectedService,
       dropoffAddress: dropoff.address,
@@ -353,13 +355,12 @@ const handleSubmit = (e) => {
       recipientPhone: dropoff.contact,
       senderId: useID,
     };
-
-    // await createDelivery({ variables: { input } });
+    await createDelivery({ variables: { input } });
   });
+  
+}) 
 
-  setShowDetails(true);
-};
-
+  
   // Focus input when panel opens
   useEffect(() => {
     if (activeLocation && inputRef.current) {
@@ -778,7 +779,7 @@ order = {{
 }}
 
   onConfirm={(driverId) => {
-    console.log("Confirmed with driver:", driverId);
+    confirmCommand(driverId);
   }}
 />
 
