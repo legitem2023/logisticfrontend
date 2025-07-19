@@ -331,7 +331,7 @@ const handleSubmit = (e) => {
   setShowDetails(true);
 }
   
-const confirmCommand = ((selectedDriver:string) => {
+const confirmCommand = ((selectedDriver:any) => {
 const today = new Date();
   const isoDateString = new Date(
     Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate())
