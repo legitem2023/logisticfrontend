@@ -143,7 +143,7 @@ export default function DriverDashboard() {
                         <Clock className="w-4 h-4" />
                         <span>ETA: {d.estimatedDeliveryTime || "N/A"}</span>
                       </div>
-                      <div className="flex flex-row">
+                      <div className="flex flex-row gap-2">
                         <Button
                         variant="outline"
                         className="flex-1 w-full transition-all duration-200 hover:scale-[1.02] hover:shadow"
