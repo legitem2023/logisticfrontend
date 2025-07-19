@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect } from "react";
 import { Button } from "../ui/Button";
+import RiderMap from "./RiderMap";
 import { showToast } from '../../../../utils/toastify';
 import { Card, CardContent } from "../ui/Card";
 import { useMutation, useQuery } from "@apollo/client";
@@ -240,6 +241,7 @@ export default function DriverDashboard() {
       {showMap && (
       <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/50 ">
         <div className="w-full max-h-[100vh] sm:max-w-md bg-white rounded-t-2xl sm:rounded-2xl p-4 shadow-lg animate-slide-up overflow-y-auto">
+          <RiderMap/>
         </div>
       </div>)
       }
