@@ -355,7 +355,8 @@ const today = new Date();
       recipientPhone: dropoff.contact,
       senderId: useID,
     };
-    await createDelivery({ variables: { input } });
+    console.log(input,"<<<");
+   // await createDelivery({ variables: { input } });
   });
   
 }) 
