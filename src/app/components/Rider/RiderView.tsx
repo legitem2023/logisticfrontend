@@ -29,10 +29,10 @@ export default function RiderView() {
 
   return (
     <div className="relative h-screen w-full">
-      <RiderMap
+      {/* <RiderMap
         riderLocation={delivery.riderLocation}
         receiverLocation={delivery.receiverLocation}
-      />
+      /> */}
 
       {/* Bottom Panel */}
       <div
