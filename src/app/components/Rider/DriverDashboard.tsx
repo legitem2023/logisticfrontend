@@ -1,7 +1,6 @@
 'use client';
 import { useState, useEffect } from "react";
 import { Button } from "../ui/Button";
-import RiderMap from "./RiderMap";
 import { showToast } from '../../../../utils/toastify';
 import { Card, CardContent } from "../ui/Card";
 import { useMutation, useQuery } from "@apollo/client";
@@ -13,6 +12,10 @@ import Cookies from "js-cookie";
 import { decryptToken, capitalize, formatDate } from "../../../../utils/decryptToken";
 import { ACCEPTDELIVERY } from "../../../../graphql/mutation";
 import DeliveryDetailCard from "./DeliveryDetailCard";
+import dynamic from "next/dynamic";
+const RiderMap = dynamic(() => import("./RiderMap"), { ssr: false });
+
+
 export default function DriverDashboard() {
   const [acceptDelivery] = useMutation(ACCEPTDELIVERY,{
     onCompleted: () => {
