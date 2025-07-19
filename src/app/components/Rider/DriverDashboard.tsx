@@ -7,7 +7,7 @@ import { Card, CardContent } from "../ui/Card";
 import { useMutation, useQuery } from "@apollo/client";
 import { DELIVERIES } from "../../../../graphql/query";
 import HistoryContainer from "../History/HistoryContainer";
-import { MapPin, Clock, CheckCircle, PackageCheck, X } from "lucide-react";
+import { MapPin, Clock, CheckCircle, PackageCheck, X, Compass } from "lucide-react";
 import DashboardLoading from "../ui/DashboardLoading";
 import Cookies from "js-cookie";
 import { decryptToken, capitalize, formatDate } from "../../../../utils/decryptToken";
@@ -157,7 +157,7 @@ export default function DriverDashboard() {
                         onClick={() => {
                           console.log("Navigate",d);
                         }}
-                        >Navigate</Button>
+                        ><Compass className="w-4 h-4 text-black-800"/>Navigate</Button>
                       </div>
                       
                     </CardContent>
