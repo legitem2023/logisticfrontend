@@ -148,6 +148,7 @@ export default function DriverDashboard() {
                         variant="outline"
                         className="flex-1 w-full transition-all duration-200 hover:scale-[1.02] hover:shadow"
                         onClick={() => {
+                          setMap(true);
                           console.log("Navigate",d);
                         }}
                         ><Compass className="w-4 h-4 text-black-800"/>Navigate</Button>
