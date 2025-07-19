@@ -13,6 +13,8 @@ import { decryptToken, capitalize, formatDate } from "../../../../utils/decryptT
 import { ACCEPTDELIVERY } from "../../../../graphql/mutation";
 import DeliveryDetailCard from "./DeliveryDetailCard";
 import dynamic from "next/dynamic";
+import DeliveryMap from "../DeliveryMap";
+import GoogleRiderMap from "./GoogleRiderMap";
 const RiderMap = dynamic(() => import("./RiderMap"), { ssr: false });
 
 
@@ -84,6 +86,7 @@ export default function DriverDashboard() {
   });
 const handleGetIp = (delivery) =>{ 
   setSelectedDelivery(delivery);
+  console.log(delivery)
   setMap(true);
 }
   const handleAccept = async (id: string, riderId: string) => {
@@ -240,16 +243,15 @@ const handleGetIp = (delivery) =>{
       />
     </div>
   </div>
+
 </div>
+
       )}
    {/* Slide-up modal for Navigation */} 
       {showMap && (
       <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/50 ">
-        <div className="w-full max-h-[100vh] sm:max-w-md bg-white rounded-t-2xl sm:rounded-2xl p-4 shadow-lg animate-slide-up overflow-y-auto">
-          <RiderMap 
-  riderLocation={[selectedDelivery.pickupLatitude,selectedDelivery.pickupLongitude]}
-  receiverLocation={[selectedDelivery.pickupLatitude,selectedDelivery.pickupLongitude]} 
-/>
+        <div className="w-full h-[100vh] sm:max-w-md bg-white p-0 shadow-lg animate-slide-up overflow-y-auto">
+          <RiderMap coordinates={{lat:selectedDelivery.dropoffLatitude,lng:selectedDelivery.dropoffLongitude}}/>
         </div>
       </div>)
       }

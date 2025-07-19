@@ -1,18 +1,41 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Card, CardHeader, CardTitle, CardContent } from './ui/Card'
 import { Label } from './ui/Label'
 import { Input } from './ui/Input'
 import { Switch } from './ui/Switch'
 import { Button } from './ui/Button'
 import Separator from './ui/Separator'
+import SubscriptionsToggle from './commands/SubscriptionsToggle'
+import { decryptToken } from '../../../utils/decryptToken'
+import Cookies from 'js-cookie';
 
 export default function SettingsPage() {
   const [name, setName] = useState('Juan Dela Cruz')
   const [email, setEmail] = useState('juan@example.com')
   const [vehicleType, setVehicleType] = useState('motorcycle')
   const [notificationsEnabled, setNotificationsEnabled] = useState(true)
+  const [useID, setID] = useState('');
+
+ useEffect(() => {
+    const getRole = async () => {
+      try {
+        const token = Cookies.get('token');
+        const secret = process.env.NEXT_PUBLIC_JWT_SECRET as string;
+        if (token && secret) {
+          const payload = await decryptToken(token, secret);
+          setID(payload.userId);
+        }
+      } catch (err) {
+        console.error('Error getting role:', err);
+        
+      }
+    };
+    getRole();
+  });
+
+
 
   const handleSave = () => {
     console.log({ name, email, vehicleType, notificationsEnabled })
@@ -73,10 +96,11 @@ export default function SettingsPage() {
         </CardHeader>
         <CardContent className="flex items-center justify-between">
           <Label className="text-gray-700">Enable push notifications</Label>
-          <Switch
+          {/* <Switch
             checked={notificationsEnabled}
             onCheckedChange={setNotificationsEnabled}
-          />
+          /> */}
+          <SubscriptionsToggle userId={useID}/>
         </CardContent>
       </Card>
 

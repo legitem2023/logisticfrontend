@@ -13,17 +13,12 @@ import HomeDataCarousel from './HomeDataCarousel';
 import LogisticsHomePage from './LogisticsHomePage';
 import DriverDashboard from './Rider/DriverDashboard';
 import SenderDashboard from './Sender/SenderDashboard';
-import ReceiverView from './Receiver/ReceiverView';
-import RiderView from './Rider/RiderView';
-// import RiderList from './Rider/RiderList';
-import SenderShipmentHistory from './SenderShipmentHistory';
+
 import LogisticsForm from './Sender/LogisticsForm';
-import Rider from './Rider/Rider';
 import SettingsPage from './SettingsPage';
 import HelpPage from './HelpPage';
 import LoginCard from './LoginCard';
 import SignupCard from './SignupCard';
-import SwiperTabs from './SwiperTabs';
 import { startWatchingLocation } from './ObtainLocation';
 import { mockItems } from './json/mockItems';
 import dynamic from 'next/dynamic';
@@ -45,12 +40,14 @@ import {
   Truck,
   Navigation
 } from "lucide-react";
+import { useDispatch } from 'react-redux';
+import { setCurrentLocation } from '../../../Redux/locationSlice';
 
 
 export default function Menu() {
   const [useRole, setRole] = useState('');
   const [useID, setID] = useState('');
-
+  const dispatch = useDispatch();
   const [LocationTracker] = useMutation(LOCATIONTRACKING, {
     onCompleted: (data) => {
       // console.log("Mutation Success:", data);
@@ -87,6 +84,10 @@ export default function Menu() {
   useEffect(() => {
     if (useID) {
       const stopWatching = startWatchingLocation((location) => {
+        dispatch(setCurrentLocation({
+        latitude: location.latitude,
+        longitude: location.longitude,
+      }));
         LocationTracker({
           variables: {
             input: {
