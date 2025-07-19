@@ -31,7 +31,7 @@ export default function DriverDashboard() {
   const [showMap,setMap] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
   const [selectedDelivery, setSelectedDelivery] = useState<any>(null);
-
+  const [dropoffIP,setdropoffIP] = useState();
   const openDetails = (delivery: any) => {
     setSelectedDelivery(delivery);
     setShowDetails(true);    
@@ -244,7 +244,10 @@ export default function DriverDashboard() {
       {showMap && (
       <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/50 ">
         <div className="w-full max-h-[100vh] sm:max-w-md bg-white rounded-t-2xl sm:rounded-2xl p-4 shadow-lg animate-slide-up overflow-y-auto">
-          <RiderMap/>
+          <RiderMap 
+           riderLocation={dropoffIP}
+           receiverLocation={dropoffIP} 
+          />
         </div>
       </div>)
       }
