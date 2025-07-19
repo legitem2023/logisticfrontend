@@ -155,9 +155,9 @@ export default function DriverDashboard() {
                         variant="outline"
                         className="flex-1 w-full transition-all duration-200 hover:scale-[1.02] hover:shadow"
                         onClick={() => {
-                          console.log("Navigate");
+                          console.log("Navigate",d);
                         }}
-                        >Navigate</div>
+                        >Navigate</Button>
                       </div>
                       
                     </CardContent>
