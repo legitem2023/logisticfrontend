@@ -84,7 +84,7 @@ return (
 <main className="flex-1">
     {activeTab === "Deliveries" && (
       <>
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-6 bg-white shadow-sm rounded-b-xl">
+        <div className="customgrad flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-6 shadow-sm ">
           <Input
             placeholder="🔍 Search Delivery ID"
             value={search}
