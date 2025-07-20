@@ -1,14 +1,51 @@
-'use client'; import { useState, useEffect } from "react"; import { Button } from "../ui/Button"; import { showToast } from '../../../../utils/toastify'; import { Card, CardContent } from "../ui/Card"; import { Input } from "../ui/Input"; import { Badge } from "../ui/Badge"; import { useMutation, useQuery } from "@apollo/client"; import { DELIVERIES } from "../../../../graphql/query"; import HistoryContainer from "../History/HistoryContainer"; import { MapPin, Clock, CheckCircle, PackageCheck, X, Compass, CalendarIcon } from "lucide-react"; import DashboardLoading from "../ui/DashboardLoading"; import Cookies from "js-cookie"; import { decryptToken, capitalize, formatDate } from "../../../../utils/decryptToken"; import { ACCEPTDELIVERY } from "../../../../graphql/mutation"; import DeliveryDetailCard from "./DeliveryDetailCard"; import dynamic from "next/dynamic"; const RiderMap = dynamic(() => import("./RiderMap"), { ssr: false });
+'use client'; 
+import { useState, useEffect } from "react"; 
+import { Button } from "../ui/Button"; 
+import { showToast } from '../../../../utils/toastify'; 
+import { Card, CardContent } from "../ui/Card"; 
+import { Input } from "../ui/Input"; 
+import { Badge } from "../ui/Badge"; 
+import { useMutation, useQuery } from "@apollo/client"; 
+import { DELIVERIES } from "../../../../graphql/query"; 
+import HistoryContainer from "../History/HistoryContainer"; 
+import { MapPin, Clock, CheckCircle, PackageCheck, X, Compass, CalendarIcon } from "lucide-react"; 
+import DashboardLoading from "../ui/DashboardLoading"; 
+import Cookies from "js-cookie"; 
+import { decryptToken, capitalize, formatDate } from "../../../../utils/decryptToken"; 
+import { ACCEPTDELIVERY } from "../../../../graphql/mutation"; 
+import DeliveryDetailCard from "./DeliveryDetailCard"; 
+import dynamic from "next/dynamic"; 
+const RiderMap = dynamic(() => import("./RiderMap"), { ssr: false });
 
 export default function DriverDashboard() { const [acceptDelivery] = useMutation(ACCEPTDELIVERY, { onCompleted: () => showToast("Delivery accepted successfully", "success"), onError: (e: any) => console.log('Acceptance Error', e) });
 
-const [useID, setID] = useState<any>(); const [activeTab, setActiveTab] = useState("Deliveries"); const [showMap, setMap] = useState(false); const [showDetails, setShowDetails] = useState(false); const [selectedDelivery, setSelectedDelivery] = useState<any>(null); const [search, setSearch] = useState("");
+const [useID, setID] = useState<any>(); 
+const [activeTab, setActiveTab] = useState("Deliveries"); 
+const [showMap, setMap] = useState(false); 
+const [showDetails, setShowDetails] = useState(false); 
+const [selectedDelivery, setSelectedDelivery] = useState(null); 
+const [search, setSearch] = useState("");
 
 const openDetails = (delivery: any) => { setSelectedDelivery(delivery); setShowDetails(true); };
 
 const closeDetails = () => { setShowDetails(false); setSelectedDelivery(null); };
 
-useEffect(() => { const getRole = async () => { try { const token = Cookies.get("token"); const secret = process.env.NEXT_PUBLIC_JWT_SECRET as string; if (token && secret) { const payload = await decryptToken(token, secret); setID(payload.userId); } } catch (err) { console.error("Error getting role:", err); setID(null); } }; getRole(); }, []);
+useEffect(() => { 
+    const getRole = async () => { 
+        try { const token = Cookies.get("token"); 
+              const secret = process.env.NEXT_PUBLIC_JWT_SECRET as string; 
+             if (token && secret) { 
+                 const payload = await decryptToken(token, secret); 
+                 setID(payload.userId); 
+             } 
+            } 
+        catch (err) { 
+            console.error("Error getting role:", err); 
+            setID(null); 
+        } 
+    }; 
+    getRole(); 
+}, []);
 
 const { data, loading } = useQuery(DELIVERIES, { variables: { id: useID }, skip: !useID, });
 
@@ -22,8 +59,15 @@ const handleGetIp = (delivery: any) => { setSelectedDelivery(delivery); setMap(t
 
 const handleAccept = async (id: string, riderId: string) => { await acceptDelivery({ variables: { deliveryId: id, riderId: riderId } }); };
 
-return ( <div className="min-h-screen bg-gray-50 flex flex-col md:flex-row"> <aside className="hidden md:block md:w-64 bg-white/70 backdrop-blur-lg border-r border-gray-200 shadow-md p-6 rounded-r-3xl"> <h2 className="text-2xl font-bold text-gray-800 mb-10 tracking-tight">🚚 Driver Panel</h2> <nav> <ul className="space-y-4 text-[15px] font-medium"> {['Deliveries', 'History', 'Settings'].map(tab => ( <li key={tab} onClick={() => setActiveTab(tab)} className={cursor-pointer rounded-lg px-3 py-2 transition-all duration-200 ${ activeTab === tab ? 'bg-blue-600 text-white shadow-md' : 'text-gray-600 hover:text-gray-800 hover:bg-gray-100' }} > {tab} </li> ))} </ul> </nav> </aside>
-
+return ( 
+    <div className="min-h-screen bg-gray-50 flex flex-col md:flex-row"> 
+        <aside className="hidden md:block md:w-64 bg-white/70 backdrop-blur-lg border-r border-gray-200 shadow-md p-6 rounded-r-3xl"> 
+            <h2 className="text-2xl font-bold text-gray-800 mb-10 tracking-tight">🚚 Driver Panel</h2> 
+            <nav> 
+                <ul className="space-y-4 text-[15px] font-medium"> {['Deliveries', 'History', 'Settings'].map(tab => ( <li key={tab} onClick={() => setActiveTab(tab)} className={cursor-pointer rounded-lg px-3 py-2 transition-all duration-200 ${ activeTab === tab ? 'bg-blue-600 text-white shadow-md' : 'text-gray-600 hover:text-gray-800 hover:bg-gray-100' }} > {tab} </li> ))} 
+                </ul> 
+            </nav> 
+        </aside>
 <main className="flex-1">
     {activeTab === "Deliveries" && (
       <>
