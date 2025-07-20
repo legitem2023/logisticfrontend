@@ -44,7 +44,7 @@ export const mockItems: CarouselItem[] = [
     id: 'service3',
     title: 'Delivering More Than Just Packages.',
     subtitle: 'We deliver trust, speed, and peace of mind.',
-    imageUrl: '/BannerE.jpg',
+    imageUrl: '/Banners/Banner5.png',
     actionLabel: 'Order Now',
   },
 ];
