@@ -183,26 +183,20 @@ export default function DriverDashboard() {
                     </div>
 
                     <div className="flex items-center gap-2 flex-wrap">
-                      <Badge
-                        variant={
-                          delivery.deliveryStatus === "Delivered"
-                            ? "success"
-                            : delivery.deliveryStatus === "Canceled"
-                            ? "destructive"
-                            : "secondary"
-                        }
-                      >
-                        {delivery.deliveryStatus}
-                      </Badge>
-                      <div className="text-sm text-green-600 flex items-center gap-1">
-                        <DollarSign className="w-4 h-4" />
-                        ₱{delivery.earnings}
-                      </div>
+          
                   <Button  
                     variant="outline"  
                     className="flex-1 w-full transition-all duration-200 hover:scale-[1.02] hover:shadow"  
                     onClick={() => openDetails(delivery)}>  Show Details  
                   </Button>
+                  <Button  
+                    variant="outline"  
+                    className="flex-1 w-full transition-all duration-200 hover:scale-[1.02] hover:shadow"  
+                    onClick={() => {     
+                      handleGetIp(delivery);  
+                    }}  
+                    ><Compass className="w-4 h-4 text-black-800"/>Navigate
+                  </Button>  
                     </div>
                   </CardContent>
                 </Card>
