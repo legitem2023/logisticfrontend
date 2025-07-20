@@ -122,7 +122,7 @@ return (
                   </Button>
                   <Button
                     variant="outline"
-                    className="w-full sm:w-auto transition-all duration-200 hover:bg-blue-50 hover:border-blue-500"
+                    className="w-full sm:w-auto transition-all duration-200 customgrad hover:bg-blue-50 hover:border-blue-500"
                     onClick={() => handleGetIp(delivery)}
                   >
                     <Compass className="w-4 h-4 mr-1" /> Navigate
