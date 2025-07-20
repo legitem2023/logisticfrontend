@@ -3,10 +3,11 @@ import { useState, useEffect } from "react";
 import { Button } from "../ui/Button";
 import { showToast } from '../../../../utils/toastify';
 import { Card, CardContent } from "../ui/Card";
+import { Badge } from "../ui/Badge";
 import { useMutation, useQuery } from "@apollo/client";
 import { DELIVERIES } from "../../../../graphql/query";
 import HistoryContainer from "../History/HistoryContainer";
-import { MapPin, Clock, CheckCircle, PackageCheck, X, Compass } from "lucide-react";
+import { MapPin, Clock, CheckCircle, PackageCheck, X, Compass, CalendarIcon, EyeIcon, DollarSign  } from "lucide-react";
 import DashboardLoading from "../ui/DashboardLoading";
 import Cookies from "js-cookie";
 import { decryptToken, capitalize, formatDate } from "../../../../utils/decryptToken";
@@ -127,8 +128,40 @@ const handleGetIp = (delivery) =>{
         {activeTab === "Deliveries" && (
           <>
             <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3 p-1">
-              {mockShipment.map((d) => (
-                  <Card key={d.id} className="bg-white/80 backdrop-blur-lg border border-gray-200 shadow-md hover:shadow-xl transition-all duration-300 ">
+              {mockShipment.map((delivery) => (
+            <Card key={delivery.id}>
+            <CardContent className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 p-4">
+              <div>
+                <div className="text-sm text-muted-foreground">{delivery.date}</div>
+                <div className="font-semibold">{delivery.id}</div>
+                <div className="text-sm">
+                  From: {delivery.pickup} → To: {delivery.dropoff}
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2 flex-wrap">
+                <Badge
+                  variant={
+                    delivery.status === "Delivered"
+                      ? "success"
+                      : delivery.status === "Canceled"
+                      ? "destructive"
+                      : "secondary"
+                  }
+                >
+                  {delivery.status}
+                </Badge>
+                <div className="text-sm text-green-600 flex items-center gap-1">
+                  <DollarSign className="w-4 h-4" />
+                  ₱{delivery.earnings}
+                </div>
+                <Button onClick={()=>{openDetails(delivery)   }} variant="outline" size="sm" className="flex items-center gap-1">
+                  <EyeIcon className="w-4 h-4" /> View
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+            {/*   <Card key={d.id} className="bg-white/80 backdrop-blur-lg border border-gray-200 shadow-md hover:shadow-xl transition-all duration-300 ">
                     <CardContent className="p-5 space-y-3">
                       <div className="flex items-center gap-2 text-sm text-gray-700 font-medium">
                         <PackageCheck className="w-4 h-4 text-blue-600" />
@@ -164,7 +197,7 @@ const handleGetIp = (delivery) =>{
                       </div>
                       
                     </CardContent>
-                  </Card>
+                  </Card>*/}
 
               ))}
             </div>
