@@ -72,6 +72,7 @@ export default function DriverDashboard() {
   const mockShipment = data.getRidersDelivery.map((delivery: any) => {
     const status = capitalize(delivery.deliveryStatus);
     return {
+      trackingNumber:delivery.trackingNumber,
       id: delivery.id,
       sender: delivery.sender.name,
       phoneNumber: delivery.sender.phoneNumber,
@@ -176,7 +177,7 @@ export default function DriverDashboard() {
                   <CardContent className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 p-4">
                     <div>
                       <div className="text-sm text-muted-foreground">{delivery.estimatedDeliveryTime}</div>
-                      <div className="font-semibold">{delivery.id}</div>
+                      <div className="font-semibold">{delivery.trackingNumber}</div>
                       <div className="text-sm">
                         From: {delivery.pickupAddress} → To: {delivery.dropoffAddress}
                       </div>
