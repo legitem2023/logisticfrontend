@@ -176,11 +176,15 @@ export default function DriverDashboard() {
                 <Card key={delivery.id}>
                   <CardContent className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 p-4">
                     <div>
-                      <div className="text-sm text-muted-foreground">{delivery.estimatedDeliveryTime}</div>
+                    
                       <div className="font-semibold">{delivery.trackingNumber}</div>
-                      <div className="text-sm">
+                      <div className="flex items-center gap-2 text-sm text-gray-500">
                         From: {delivery.pickupAddress} → To: {delivery.dropoffAddress}
                       </div>
+                      <div className="flex items-center gap-2 text-sm text-gray-500">  
+                        <Clock className="w-4 h-4" />  
+                        <span>ETA: {d.estimatedDeliveryTime || "N/A"}</span>  
+                      </div>  
                     </div>
 
                     <div className="flex items-center gap-2 flex-wrap">
