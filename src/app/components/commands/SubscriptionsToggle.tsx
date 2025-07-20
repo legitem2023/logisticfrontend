@@ -2,8 +2,23 @@ import { useState, useEffect } from 'react';
 import { useSubscription } from '@apollo/client';
 import { LocationTracking, NOTIFICATION } from '../../../../graphql/subscription';
 
+const STORAGE_KEY = 'subscription_enabled';
+
 const SubscriptionsToggle = ({ userId }: { userId: string }) => {
   const [enabled, setEnabled] = useState(false);
+
+  // Load from localStorage on mount
+  useEffect(() => {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored === 'true') {
+      setEnabled(true);
+    }
+  }, []);
+
+  // Save to localStorage when changed
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, String(enabled));
+  }, [enabled]);
 
   const { data: locationData } = useSubscription(LocationTracking, {
     variables: { userId },
@@ -29,7 +44,6 @@ const SubscriptionsToggle = ({ userId }: { userId: string }) => {
 
   return (
     <div className="p-4 border rounded shadow w-fit space-y-2">
-      {/* Toggle Switch Only */}
       <button
         onClick={() => setEnabled(prev => !prev)}
         className={`w-12 h-6 flex items-center bg-gray-300 rounded-full p-1 transition-colors duration-300 ${
@@ -42,7 +56,6 @@ const SubscriptionsToggle = ({ userId }: { userId: string }) => {
           }`}
         />
       </button>
-
     </div>
   );
 };
