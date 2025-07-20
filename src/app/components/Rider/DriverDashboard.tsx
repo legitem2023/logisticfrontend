@@ -253,7 +253,7 @@ const handleGetIp = (delivery) =>{
         <button onClick={()=>{setMap(false)}} className="p-1 rounded hover:bg-gray-100 transition  t-5 r-5 relative z-90">
         <X className="w-5 h-5 text-gray-600" />
         </button>
-        <div className="w-full h-[100%] sm:max-w-md bg-white p-0 shadow-lg animate-slide-up overflow-y-auto">
+        <div className="w-full h-[100vh] sm:max-w-md bg-white p-0 shadow-lg animate-slide-up overflow-y-auto">
           <RiderMap coordinates={{lat:selectedDelivery.dropoffLatitude,lng:selectedDelivery.dropoffLongitude}}/>
         </div>
       </div>)
