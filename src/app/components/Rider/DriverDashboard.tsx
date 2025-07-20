@@ -250,7 +250,7 @@ const handleGetIp = (delivery) =>{
    {/* Slide-up modal for Navigation */} 
       {showMap && (
       <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/50 ">
-        <button onClick={()=>{setMap(false)}} className="p-1 rounded hover:bg-gray-100 transition  t-5 r-5 absolute z-90">
+        <button onClick={()=>{setMap(false)}} className="p-1 rounded hover:bg-gray-100 transition  t-5 r-5 fixed z-90">
         <X className="w-5 h-5 text-gray-600" />
         </button>
         <div className="w-full h-[100vh] sm:max-w-md bg-white p-0 shadow-lg animate-slide-up overflow-y-auto">
