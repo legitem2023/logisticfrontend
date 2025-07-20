@@ -1,5 +1,5 @@
 import React from 'react'
-import Shimmer from './Shimmer';
+import Shimmer from '../ui/Shimmer';
 
 const ConfirmationLoading = () => {
 

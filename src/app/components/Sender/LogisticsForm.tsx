@@ -7,7 +7,7 @@ import { useMutation, useQuery } from '@apollo/client';
 import { VEHICLEQUERY } from '../../../../graphql/query';
 import { CREATEDELIVERY } from '../../../../graphql/mutation';
 import Cookies from "js-cookie";
-import LogisticFormLoading from '../ui/LogisticFormLoading';
+import LogisticFormLoading from '../Loadings/LogisticFormLoading';
 import { useSelector, useDispatch } from "react-redux";
 
 
@@ -340,7 +340,7 @@ const today = new Date();
   dropoffs.forEach(async (dropoff) => {
     const input = {
       assignedRiderId: selectedDriver,
-      deliveryFee: selected,
+      deliveryFee: selectedDriver.cost,
       deliveryType: selectedService,
       dropoffAddress: dropoff.address,
       dropoffLatitude: dropoff.lat,
@@ -356,7 +356,7 @@ const today = new Date();
       senderId: useID,
     };
     console.log(input,"<<<");
-    await createDelivery({ variables: input });
+    await createDelivery({ variables:{input} });
   });
   
 }) 
@@ -381,7 +381,7 @@ const today = new Date();
   if (error) return <p>Error: {error.message}</p>;
  
   return (
-    <div className="max-w-4xl mx-auto">
+    <div className="w-[100%] mx-auto">
             <div className="bg-white shadow-xl overflow-hidden">
          <div className="bg-green-600 customgrad p-6 text-white">
            <h1 className="text-2xl md:text-3xl font-bold flex items-center">

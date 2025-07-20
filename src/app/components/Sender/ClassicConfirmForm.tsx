@@ -3,7 +3,7 @@ import { useQuery } from "@apollo/client";
 import { RIDERS } from "../../../../graphql/query";
 import { useState } from "react";
 import { UserCheck } from "lucide-react";
-import ConfirmationLoading from "../ui/ConfirmationLoading";
+import ConfirmationLoading from "../Loadings/ConfirmationLoading";
 
 const availableDrivers = [
   { id: "d1", name: "Driver A", vehicle: "Motorbike" },

@@ -1,4 +1,4 @@
-import Shimmer from './Shimmer';
+import Shimmer from '../ui/Shimmer';
 
 export default function LogisticFormLoading() {
   return (
