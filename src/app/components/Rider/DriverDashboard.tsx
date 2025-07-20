@@ -34,6 +34,7 @@ export default function DriverDashboard() {
   const [showMap, setMap] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
   const [selectedDelivery, setSelectedDelivery] = useState<any>(null);
+  const [search, setSearch] = useState("");
 
   const openDetails = (delivery: any) => {
     setSelectedDelivery(delivery);
@@ -91,6 +92,13 @@ export default function DriverDashboard() {
     };
   });
 
+  
+  const filtered = mockShipment.filter((d) =>
+    d.id.toLowerCase().includes(search.toLowerCase())
+  );
+
+
+  
   const handleGetIp = (delivery: any) => {
     setSelectedDelivery(delivery);
     setMap(true);
@@ -131,9 +139,21 @@ export default function DriverDashboard() {
 
       {/* Main content */}
       <main className="flex-1 p-0">
+       <div className="flex items-center justify-between flex-wrap gap-2">
+        <Input
+          placeholder="Search Delivery ID"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="max-w-sm"
+        />
+        <Button variant="outline" className="flex items-center gap-2">
+          <CalendarIcon className="w-4 h-4" />
+          Filter by Date
+        </Button>
+      </div>
         {activeTab === "Deliveries" && (
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3 p-1">
-            {mockShipment.map((delivery) => (
+            {filtered.map((delivery) => (
               <>
                 {/*   <Card key={d.id} className="bg-white/80 backdrop-blur-lg border border-gray-200 shadow-md hover:shadow-xl transition-all duration-300 ">  
                 <CardContent className="p-5 space-y-3">  
