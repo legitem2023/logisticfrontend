@@ -1,183 +1,96 @@
 'use client';
+
 import { useState, useEffect } from "react";
 import { Button } from "../ui/Button";
-import { showToast } from '../../../../utils/toastify';
+import { showToast } from "../../../../utils/toastify";
 import { Card, CardContent } from "../ui/Card";
-import { Input } from "../ui/Input";
 import { Badge } from "../ui/Badge";
 import { useMutation, useQuery } from "@apollo/client";
 import { DELIVERIES } from "../../../../graphql/query";
 import HistoryContainer from "../History/HistoryContainer";
-import {
-  MapPin, Clock, CheckCircle, PackageCheck, X, Compass, CalendarIcon,
-  EyeIcon, DollarSign
-} from "lucide-react";
-import DashboardLoading from "../ui/DashboardLoading";
-import Cookies from "js-cookie";
-import { decryptToken, capitalize, formatDate } from "../../../../utils/decryptToken";
-import { ACCEPTDELIVERY } from "../../../../graphql/mutation";
-import DeliveryDetailCard from "./DeliveryDetailCard";
-import dynamic from "next/dynamic";
-const RiderMap = dynamic(() => import("./RiderMap"), { ssr: false });
+import { MapPin, Clock, CheckCircle, PackageCheck, X, Compass } from 'lucide-react';
 
-export default function DriverDashboard() {
-  const [acceptDelivery] = useMutation(ACCEPTDELIVERY, {
-    onCompleted: () => {
-      showToast("Delivery accepted successfully", "success");
-    },
-    onError: (e: any) => {
-      console.log('Acceptance Error', e);
+const DriverDashboard = () => {
+  const { data, loading, error } = useQuery(DELIVERIES);
+  const [activeTab, setActiveTab] = useState("Active Deliveries");
+  const [map, setMap] = useState(false);
+  const [details, setDetails] = useState(false);
+  const [selectedDelivery, setSelectedDelivery] = useState(null);
+
+  useEffect(() => {
+    if (error) {
+      showToast("Error fetching deliveries", "error");
     }
-  });
-
-  const [useID, setID] = useState<any>();
-  const [activeTab, setActiveTab] = useState("Deliveries");
-  const [showMap, setMap] = useState(false);
-  const [showDetails, setShowDetails] = useState(false);
-  const [selectedDelivery, setSelectedDelivery] = useState<any>(null);
-  const [search, setSearch] = useState("");
+  }, [error]);
 
   const openDetails = (delivery: any) => {
     setSelectedDelivery(delivery);
-    setShowDetails(true);
+    setDetails(true);
   };
-
-  const closeDetails = () => {
-    setShowDetails(false);
-    setSelectedDelivery(null);
-  };
-
-  useEffect(() => {
-    const getRole = async () => {
-      try {
-        const token = Cookies.get("token");
-        const secret = process.env.NEXT_PUBLIC_JWT_SECRET as string;
-        if (token && secret) {
-          const payload = await decryptToken(token, secret);
-          setID(payload.userId);
-        }
-      } catch (err) {
-        console.error("Error getting role:", err);
-        setID(null);
-      }
-    };
-    getRole();
-  }, []);
-
-  const { data, loading } = useQuery(DELIVERIES, {
-    variables: { id: useID },
-    skip: !useID,
-  });
-
-  if (loading || !data) return <DashboardLoading />;
-
-  const mockShipment = data.getRidersDelivery.map((delivery: any) => {
-    const status = capitalize(delivery.deliveryStatus);
-    return {
-      trackingNumber: delivery.trackingNumber,
-      id: delivery.id,
-      sender: delivery.sender.name,
-      phoneNumber: delivery.sender.phoneNumber,
-      pickupAddress: delivery.pickupAddress,
-      pickupLatitude: delivery.pickupLatitude,
-      pickupLongitude: delivery.pickupLongitude,
-      recipientName: delivery.recipientName,
-      recipientPhone: delivery.recipientPhone,
-      dropoffAddress: delivery.dropoffAddress,
-      dropoffLatitude: delivery.dropoffLatitude,
-      dropoffLongitude: delivery.dropoffLongitude,
-      deliveryStatus: status,
-      estimatedDeliveryTime: formatDate(delivery.estimatedDeliveryTime),
-      earnings: "120.00",
-    };
-  });
-
-  const filtered = mockShipment.filter((d) =>
-    d.trackingNumber.toLowerCase().includes(search.toLowerCase())
-  );
 
   const handleGetIp = (delivery: any) => {
     setSelectedDelivery(delivery);
     setMap(true);
   };
 
-  const handleAccept = async (id: string, riderId: string) => {
-    await acceptDelivery({
-      variables: {
-        deliveryId: id,
-        riderId: riderId,
-      },
-    });
-  };
+  const filteredDeliveries = data?.deliveries || [];
 
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col md:flex-row">
+    <div className="flex min-h-screen bg-gray-100">
       {/* Sidebar */}
-      <aside className="hidden md:block md:w-64 bg-white/80 backdrop-blur-md border-r border-gray-200 shadow-inner p-6">
-        <h2 className="text-2xl font-bold text-gray-800 mb-8">Driver Panel</h2>
-        <nav>
-          <ul className="space-y-6 text-base">
-            {["Deliveries", "History", "Settings"].map(tab => (
-              <li
-                key={tab}
-                onClick={() => setActiveTab(tab)}
-                className={`cursor-pointer transition-all duration-150 ${
-                  activeTab === tab
-                    ? "text-blue-600 font-semibold border-l-4 border-blue-600 pl-2"
-                    : "text-gray-500 hover:text-gray-800"
-                }`}
-              >
-                {tab}
-              </li>
-            ))}
-          </ul>
-        </nav>
+      <aside className="hidden md:block md:w-64 bg-white/40 backdrop-blur-lg border-r border-gray-200 shadow-xl p-6 rounded-tr-3xl">
+        <h2 className="text-xl font-bold mb-6 text-gray-800">Driver Panel</h2>
+        <ul className="space-y-2">
+          {["Active Deliveries", "History"].map((tab) => (
+            <li
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`cursor-pointer px-3 py-2 rounded-lg transition-all duration-150 ${
+                activeTab === tab
+                  ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md"
+                  : "text-gray-600 hover:bg-gray-100 hover:text-gray-800"
+              }`}
+            >
+              {tab}
+            </li>
+          ))}
+        </ul>
       </aside>
 
-      {/* Main content */}
-      <main className="flex-1 p-0">
-        {activeTab === "Deliveries" && (
+      {/* Main Content */}
+      <main className="flex-1 p-4 md:p-8">
+        {activeTab === "Active Deliveries" && (
           <>
-            <div className="flex items-center justify-between flex-wrap gap-2 p-4">
-              <Input
-                placeholder="Search Delivery ID"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="max-w-sm"
-              />
-              <Button variant="outline" className="flex items-center gap-2">
-                <CalendarIcon className="w-4 h-4" />
-                Filter by Date
-              </Button>
-            </div>
-            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3 p-1">
-              {filtered.map((delivery) => (
-                <Card key={delivery.id}>
-                  <CardContent className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 p-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+              {filteredDeliveries.map((delivery: any) => (
+                <Card
+                  key={delivery.id}
+                  className="bg-white/90 shadow-xl  border border-gray-200 hover:shadow-2xl transition-all duration-300"
+                >
+                  <CardContent className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 p-5">
                     <div>
-                      <div className="font-semibold">{delivery.trackingNumber}</div>
-                      <div className="flex items-center gap-2 text-sm text-gray-500">
-                        From: {delivery.pickupAddress} → To: {delivery.dropoffAddress}
+                      <div className="text-lg font-semibold text-gray-800">{delivery.trackingNumber}</div>
+                      <div className="text-sm text-gray-600 mt-1">
+                        From: <span className="font-medium">{delivery.pickupAddress}</span>
+                        <br />
+                        To: <span className="font-medium">{delivery.dropoffAddress}</span>
                       </div>
-                      <div className="flex items-center gap-2 text-sm text-gray-500">
-                        <Clock className="w-4 h-4" />
-                        <span>ETA: {delivery.estimatedDeliveryTime || "N/A"}</span>
-                      </div>
+                      <Badge variant="outline" className="mt-2">{delivery.status}</Badge>
                     </div>
-                    <div className="flex items-center gap-2 flex-wrap">
+                    <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
                       <Button
                         variant="outline"
-                        className="flex-1 w-full transition-all duration-200 hover:scale-[1.02] hover:shadow"
+                        className="flex-1 w-full bg-gradient-to-r from-indigo-500 to-blue-500 text-white font-medium shadow hover:scale-105 transition duration-200 rounded-xl"
                         onClick={() => openDetails(delivery)}
                       >
                         Show Details
                       </Button>
                       <Button
                         variant="outline"
-                        className="flex-1 w-full transition-all duration-200 hover:scale-[1.02] hover:shadow"
+                        className="flex-1 w-full border-indigo-500 text-indigo-700 hover:bg-indigo-100 transition duration-200 rounded-xl"
                         onClick={() => handleGetIp(delivery)}
                       >
-                        <Compass className="w-4 h-4 text-black-800" />
+                        <Compass className="w-4 h-4 mr-2" />
                         Navigate
                       </Button>
                     </div>
@@ -188,92 +101,53 @@ export default function DriverDashboard() {
           </>
         )}
 
-        {activeTab === "History" && <HistoryContainer />}
-
-        {activeTab === "Settings" && (
-          <div className="p-4">
-            <h1 className="text-2xl font-bold mb-4">Settings</h1>
-            <p className="text-gray-600">Settings panel coming soon...</p>
+        {activeTab === "History" && (
+          <div className="mt-6">
+            <HistoryContainer />
           </div>
         )}
       </main>
 
-      {/* Mobile bottom nav */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-md border-t border-gray-300 shadow-inner flex justify-around p-2 z-50">
-        {["Deliveries", "History", "Settings"].map(tab => (
-          <button
-            key={tab}
-            className={`transition-colors duration-150 ${
-              activeTab === tab ? "text-blue-600 font-semibold" : "text-gray-500"
-            }`}
-            onClick={() => setActiveTab(tab)}
-          >
-            {tab}
-          </button>
-        ))}
-      </nav>
-
-      {/* Slide-up modal for delivery details */}
-      {showDetails && selectedDelivery && (
-        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/50">
-          <div className="w-full max-h-[90vh] sm:max-w-md bg-white rounded-t-2xl sm:rounded-2xl p-4 shadow-lg animate-slide-up overflow-y-auto">
+      {/* Details Modal */}
+      {details && selectedDelivery && (
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-sm">
+          <div className="w-full max-h-[90vh] sm:max-w-md bg-white rounded-t-3xl sm:rounded-3xl p-6 shadow-2xl animate-slide-up overflow-y-auto">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-lg sm:text-xl font-semibold">Delivery Details</h2>
-              <button onClick={closeDetails} className="p-1 rounded hover:bg-gray-100 transition">
-                <X className="w-5 h-5 text-gray-600" />
+              <h2 className="text-xl font-bold text-gray-800">Delivery Details</h2>
+              <button onClick={() => setDetails(false)}>
+                <X className="w-6 h-6 text-gray-600" />
               </button>
             </div>
-            <div className="space-y-2 text-sm sm:text-base text-gray-700">
-              <DeliveryDetailCard
-                sender={{
-                  name: selectedDelivery.sender,
-                  address: selectedDelivery.pickupAddress,
-                  contact: selectedDelivery.phoneNumber,
-                }}
-                recipient={{
-                  name: selectedDelivery.recipientName,
-                  address: selectedDelivery.dropoffAddress,
-                  contact: selectedDelivery.recipientPhone,
-                }}
-                billing={{
-                  distanceKm: null,
-                  baseRate: 50,
-                  perKmRate: 10,
-                  total: null,
-                }}
-                coordinates={{
-                  pickLat: selectedDelivery.pickupLatitude,
-                  pickLng: selectedDelivery.pickupLongitude,
-                  dropLat: selectedDelivery.dropoffLatitude,
-                  dropLng: selectedDelivery.dropoffLongitude,
-                }}
-                onTrackClick={() => {}}
-                onAcceptClick={() => handleAccept(selectedDelivery.id, useID)}
-              />
+            <div className="space-y-2">
+              <p><strong>Tracking Number:</strong> {selectedDelivery.trackingNumber}</p>
+              <p><strong>Pickup:</strong> {selectedDelivery.pickupAddress}</p>
+              <p><strong>Dropoff:</strong> {selectedDelivery.dropoffAddress}</p>
+              <p><strong>Status:</strong> {selectedDelivery.status}</p>
+              <p><strong>Notes:</strong> {selectedDelivery.notes || "N/A"}</p>
             </div>
           </div>
         </div>
       )}
 
-      {/* Slide-up modal for navigation */}
-      {showMap && selectedDelivery && (
-        <div className="fixed h-[100vh] inset-0 z-50 flex items-end sm:items-center justify-center bg-black/50 flex flex-col">
-          <button
-            onClick={() => setMap(false)}
-            className="fixed top-5 right-5 z-50 p-1 rounded hover:bg-gray-100 transition"
-          >
-            <X className="w-5 h-5 text-gray-600" />
-          </button>
-          <div className="w-full h-[100vh] sm:max-w-md bg-white p-0 shadow-lg animate-slide-up overflow-y-auto">
-            <RiderMap
-              coordinates={{
-                lat: selectedDelivery.dropoffLatitude,
-                lng: selectedDelivery.dropoffLongitude,
-              }}
-            />
+      {/* Map Modal */}
+      {map && selectedDelivery && (
+        <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4">
+          <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-4xl h-[80vh] overflow-hidden">
+            <button
+              onClick={() => setMap(false)}
+              className="absolute top-4 right-4 p-2 rounded-full hover:bg-gray-200 transition"
+            >
+              <X className="w-5 h-5 text-gray-600" />
+            </button>
+            {/* Embed your map iframe or map component here */}
+            <div className="w-full h-full bg-gray-100 flex items-center justify-center text-gray-500">
+              Map Preview Here
+            </div>
           </div>
         </div>
       )}
     </div>
   );
-}
+};
+
+export default DriverDashboard;
