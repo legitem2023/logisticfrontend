@@ -204,7 +204,7 @@ export default function DriverDashboard() {
                       </div>
                       <div className="flex items-center gap-2 text-sm text-gray-500">  
                         <Clock className="w-4 h-4" />  
-                        <span>ETA: {d.estimatedDeliveryTime || "N/A"}</span>  
+                        <span>ETA: {delivery.estimatedDeliveryTime || "N/A"}</span>  
                       </div>  
                     </div>
 
