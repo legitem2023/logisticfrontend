@@ -64,8 +64,21 @@ return (
         <aside className="hidden md:block md:w-64 bg-white/70 backdrop-blur-lg border-r border-gray-200 shadow-md p-6 rounded-r-3xl"> 
             <h2 className="text-2xl font-bold text-gray-800 mb-10 tracking-tight">🚚 Driver Panel</h2> 
             <nav> 
-                <ul className="space-y-4 text-[15px] font-medium"> {['Deliveries', 'History', 'Settings'].map(tab => ( <li key={tab} onClick={() => setActiveTab(tab)} className={cursor-pointer rounded-lg px-3 py-2 transition-all duration-200 ${ activeTab === tab ? 'bg-blue-600 text-white shadow-md' : 'text-gray-600 hover:text-gray-800 hover:bg-gray-100' }} > {tab} </li> ))} 
-                </ul> 
+                <ul className="space-y-4 text-[15px] font-medium">
+  {['Deliveries', 'History', 'Settings'].map(tab => (
+    <li
+      key={tab}
+      onClick={() => setActiveTab(tab)}
+      className={`cursor-pointer rounded-lg px-3 py-2 transition-all duration-200 ${
+        activeTab === tab
+          ? 'bg-blue-600 text-white shadow-md'
+          : 'text-gray-600 hover:text-gray-800 hover:bg-gray-100'
+      }`}
+    >
+      {tab}
+    </li>
+  ))}
+</ul> 
             </nav> 
         </aside>
 <main className="flex-1">
