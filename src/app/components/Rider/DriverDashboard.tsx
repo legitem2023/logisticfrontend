@@ -74,7 +74,7 @@ export default function DriverDashboard() {
   const mockShipment = data.getRidersDelivery.map((delivery: any) => {
     const status = capitalize(delivery.deliveryStatus);
     return {
-      trackingNumber:delivery.trackingNumber,
+      trackingNumber: delivery.trackingNumber,
       id: delivery.id,
       sender: delivery.sender.name,
       phoneNumber: delivery.sender.phoneNumber,
@@ -88,18 +88,14 @@ export default function DriverDashboard() {
       dropoffLongitude: delivery.dropoffLongitude,
       deliveryStatus: status,
       estimatedDeliveryTime: formatDate(delivery.estimatedDeliveryTime),
-      // Optional mock fields
       earnings: "120.00",
     };
   });
 
-  
   const filtered = mockShipment.filter((d) =>
-    d.id.toLowerCase().includes(search.toLowerCase())
+    d.trackingNumber.toLowerCase().includes(search.toLowerCase())
   );
 
-
-  
   const handleGetIp = (delivery: any) => {
     setSelectedDelivery(delivery);
     setMap(true);
@@ -140,98 +136,60 @@ export default function DriverDashboard() {
 
       {/* Main content */}
       <main className="flex-1 p-0">
-       <div className="flex items-center justify-between flex-wrap gap-2">
-        <Input
-          placeholder="Search Delivery ID"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="max-w-sm"
-        />
-        <Button variant="outline" className="flex items-center gap-2">
-          <CalendarIcon className="w-4 h-4" />
-          Filter by Date
-        </Button>
-      </div>
         {activeTab === "Deliveries" && (
-          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3 p-1">
-            {filtered.map((delivery) => (
-              <>
-                {/*   <Card key={d.id} className="bg-white/80 backdrop-blur-lg border border-gray-200 shadow-md hover:shadow-xl transition-all duration-300 ">  
-                <CardContent className="p-5 space-y-3">  
-                  <div className="flex items-center gap-2 text-sm text-gray-700 font-medium">  
-                    <PackageCheck className="w-4 h-4 text-blue-600" />  
-                    <span>{d.sender}</span>  
-                  </div>  
-                  <div className="flex items-center gap-2 text-gray-600">  
-                    <MapPin className="w-4 h-4 text-green-500" />  
-                    <p className="text-sm">{d.pickupAddress}</p>  
-                  </div>  
-                  <div className="flex items-center gap-2 text-gray-600">  
-                    <MapPin className="w-4 h-4 text-red-500" />  
-                    <p className="text-sm">{d.dropoffAddress}</p>  
-                  </div>  
-                  <div className="flex items-center gap-2 text-sm text-gray-500">  
-                    <Clock className="w-4 h-4" />  
-                    <span>ETA: {d.estimatedDeliveryTime || "N/A"}</span>  
-                  </div>  
-                  <div className="flex flex-row gap-2">  
-                    <Button  
-                    variant="outline"  
-                    className="flex-1 w-full transition-all duration-200 hover:scale-[1.02] hover:shadow"  
-                    onClick={() => openDetails(d)}  
-                  >  
-                    Show Details  
-                  </Button>  
-                    <Button  
-                    variant="outline"  
-                    className="flex-1 w-full transition-all duration-200 hover:scale-[1.02] hover:shadow"  
-                    onClick={() => {     
-                      handleGetIp(d);  
-                    }}  
-                    ><Compass className="w-4 h-4 text-black-800"/>Navigate</Button>  
-                  </div>  
-                    
-                </CardContent>  
-              </Card>*/}  
-
+          <>
+            <div className="flex items-center justify-between flex-wrap gap-2 p-4">
+              <Input
+                placeholder="Search Delivery ID"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="max-w-sm"
+              />
+              <Button variant="outline" className="flex items-center gap-2">
+                <CalendarIcon className="w-4 h-4" />
+                Filter by Date
+              </Button>
+            </div>
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3 p-1">
+              {filtered.map((delivery) => (
                 <Card key={delivery.id}>
                   <CardContent className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 p-4">
                     <div>
-                    
                       <div className="font-semibold">{delivery.trackingNumber}</div>
                       <div className="flex items-center gap-2 text-sm text-gray-500">
                         From: {delivery.pickupAddress} → To: {delivery.dropoffAddress}
                       </div>
-                      <div className="flex items-center gap-2 text-sm text-gray-500">  
-                        <Clock className="w-4 h-4" />  
-                        <span>ETA: {delivery.estimatedDeliveryTime || "N/A"}</span>  
-                      </div>  
+                      <div className="flex items-center gap-2 text-sm text-gray-500">
+                        <Clock className="w-4 h-4" />
+                        <span>ETA: {delivery.estimatedDeliveryTime || "N/A"}</span>
+                      </div>
                     </div>
-
                     <div className="flex items-center gap-2 flex-wrap">
-          
-                  <Button  
-                    variant="outline"  
-                    className="flex-1 w-full transition-all duration-200 hover:scale-[1.02] hover:shadow"  
-                    onClick={() => openDetails(delivery)}>  Show Details  
-                  </Button>
-                  <Button  
-                    variant="outline"  
-                    className="flex-1 w-full transition-all duration-200 hover:scale-[1.02] hover:shadow"  
-                    onClick={() => {     
-                      handleGetIp(delivery);  
-                    }}  
-                    ><Compass className="w-4 h-4 text-black-800"/>Navigate
-                  </Button>  
+                      <Button
+                        variant="outline"
+                        className="flex-1 w-full transition-all duration-200 hover:scale-[1.02] hover:shadow"
+                        onClick={() => openDetails(delivery)}
+                      >
+                        Show Details
+                      </Button>
+                      <Button
+                        variant="outline"
+                        className="flex-1 w-full transition-all duration-200 hover:scale-[1.02] hover:shadow"
+                        onClick={() => handleGetIp(delivery)}
+                      >
+                        <Compass className="w-4 h-4 text-black-800" />
+                        Navigate
+                      </Button>
                     </div>
                   </CardContent>
                 </Card>
-              </>
-            ))}
-          </div>
+              ))}
+            </div>
+          </>
         )}
 
         {activeTab === "History" && <HistoryContainer />}
+
         {activeTab === "Settings" && (
           <div className="p-4">
             <h1 className="text-2xl font-bold mb-4">Settings</h1>
