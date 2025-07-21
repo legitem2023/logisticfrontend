@@ -302,10 +302,6 @@ useEffect(() => {
      <NotificationDropdown userId={globalUserId}/>
       {/* Sidebar with tab content */}
       <Sidebar tabs={tabItems.filter((tab) => tab.role === capitalize(useRole) || tab.role === '')} />
-      {/* Footer */}
-  <footer className="py-10 bg-gray-900 text-white text-center">
-    <p className="text-sm">© {new Date().getFullYear()} Adiviso Logistics. All rights reserved.</p>
-  </footer>
     </div>
   );
 }
