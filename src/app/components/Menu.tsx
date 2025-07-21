@@ -50,20 +50,17 @@ export default function Menu() {
   
   const dispatch = useDispatch();
   const globalUserId = useSelector(selectTempUserId);
-  console.log(globalUserId,"global");
   const [LocationTracker] = useMutation(LOCATIONTRACKING, {
     onCompleted: (data) => {
-      // console.log("Mutation Success:", data);
+      console.log("Mutation Success:", data);
     },
     onError: (err) => {
       console.error("Mutation Error:", err.message);
     },
   });
-
   const { data: subscriptionData, error: subscriptionError } = useSubscription(LocationTracking,{
       variables: { userID: globalUserId },// optional filter
     });
-
 
   useEffect(() => {
     const getRole = async () => {
