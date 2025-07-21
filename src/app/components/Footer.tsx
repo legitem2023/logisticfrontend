@@ -6,11 +6,11 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-[#0f0f0f] text-gray-300 py-14 mt-20">
+    <footer className="customgrad text-gray-300 py-14 mt-20">
       <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10 border-b border-gray-700 pb-10">
           <div>
-            <h3 className="text-lg font-semibold text-[#f5c75f] tracking-wide mb-4">Company</h3>
+            <h3 className="text-lg font-semibold text-white tracking-wide mb-4">Company</h3>
             <ul className="space-y-3 text-sm">
               <li><a href="/policy" className="hover:text-white transition">Privacy Policy</a></li>
               <li><a href="/faq" className="hover:text-white transition">FAQs</a></li>
@@ -19,14 +19,14 @@ const Footer = () => {
           </div>
 
           <div>
-            <h3 className="text-lg font-semibold text-[#f5c75f] tracking-wide mb-4">Payments</h3>
+            <h3 className="text-lg font-semibold text-white tracking-wide mb-4">Payments</h3>
             <p className="text-sm text-gray-400 leading-relaxed">
               We support GCash, PayPal, and secure bank transfers. All transactions are encrypted and protected.
             </p>
           </div>
 
           <div>
-            <h3 className="text-lg font-semibold text-[#f5c75f] tracking-wide mb-4">Connect</h3>
+            <h3 className="text-lg font-semibold text-white tracking-wide mb-4">Connect</h3>
             <div className="space-y-2 text-sm">
               <p className="text-gray-400">123 Luxury Ave, Metro City</p>
               <p className="text-gray-400">+63 912 345 6789</p>
@@ -35,7 +35,7 @@ const Footer = () => {
           </div>
 
           <div>
-            <h3 className="text-lg font-semibold text-[#f5c75f] tracking-wide mb-4">Newsletter</h3>
+            <h3 className="text-lg font-semibold text-white tracking-wide mb-4">Newsletter</h3>
             <form className="flex flex-col sm:flex-row gap-3">
               <input
                 type="email"
@@ -44,7 +44,7 @@ const Footer = () => {
               />
               <button
                 type="submit"
-                className="bg-[#f5c75f] text-black px-5 py-2 rounded-md font-semibold hover:bg-[#e0b94f] transition"
+                className="bg-[#ffffff] text-black px-5 py-2 rounded-md font-semibold hover:bg-[#e0b94f] transition"
               >
                 Subscribe
               </button>
