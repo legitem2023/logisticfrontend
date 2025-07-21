@@ -21,7 +21,7 @@ export default function RiderMap({ coordinates }: { coordinates: Coordinates}) {
 
   const [status, setStatus] = useState<'pending' | 'cancelled' | 'finished' | null>(null);
   const [showPanel, setShowPanel] = useState(false);
-
+console.log(location);
   const sender = L.latLng(location?.latitude, location?.longitude);   // Manila
   const receiver = L.latLng(coordinates.lat, coordinates.lng); // Quezon City
 
