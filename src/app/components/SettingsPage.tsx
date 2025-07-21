@@ -27,6 +27,8 @@ export default function SettingsPage() {
         if (token && secret) {
           const payload = await decryptToken(token, secret);
           setID(payload.userId);
+          setName(payload.name);
+          setEmail(payload.email);
         }
       } catch (err) {
         console.error('Error getting role:', err);
