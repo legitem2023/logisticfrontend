@@ -240,7 +240,7 @@ export default function Menu() {
         />
         
        </div>
-     <NotificationDropdown userId={useID}/>
+     <NotificationDropdown userId={globalUserId}/>
       {/* Sidebar with tab content */}
       <Sidebar tabs={tabItems.filter((tab) => tab.role === capitalize(useRole) || tab.role === '')} />
     </div>
