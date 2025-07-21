@@ -35,9 +35,6 @@ export default function DriverDashboard() {
   });
 
   const globalUserId = useSelector(selectTempUserId);
-  const [useID, setID] = useState<any>(); 
-
-  console.log(globalUserId,"-",useID);
   const [activeTab, setActiveTab] = useState("Deliveries"); 
   const [showMap, setMap] = useState(false); 
   const [showDetails, setShowDetails] = useState(false); 
@@ -56,12 +53,10 @@ export default function DriverDashboard() {
     setSelectedDelivery(null); 
   };
 
-   
   const { data, loading ,refetch} = useQuery(DELIVERIES, { 
     variables: { id: globalUserId }, 
     skip: !globalUserId, 
   });
-
 
 useEffect(() => {
   if (data) {
