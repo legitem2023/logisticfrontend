@@ -4,6 +4,12 @@ import { useState, useEffect } from "react";
 import 'react-datepicker/dist/react-datepicker.css';
 import DatePicker from 'react-datepicker';
 
+
+import { useDispatch,useSelector } from 'react-redux';
+
+import { setTempUserId,selectTempUserId } from '../../../../Redux/tempUserSlice';
+
+
 import { Button } from "../ui/Button"; 
 import { showToast } from '../../../../utils/toastify'; 
 import { Card, CardContent } from "../ui/Card"; 
@@ -28,7 +34,10 @@ export default function DriverDashboard() {
     onError: (e: any) => console.log('Acceptance Error', e) 
   });
 
+  const globalUserId = useSelector(selectTempUserId);
   const [useID, setID] = useState<any>(); 
+
+  console.log(globalUserId,"-",useID);
   const [activeTab, setActiveTab] = useState("Deliveries"); 
   const [showMap, setMap] = useState(false); 
   const [showDetails, setShowDetails] = useState(false); 
