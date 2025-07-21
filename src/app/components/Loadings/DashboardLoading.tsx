@@ -45,10 +45,10 @@ export function DashboardLoading() {
                     <Shimmer className="h-4 w-1/2 rounded" />
                   </div>
                   <div className="flex flex-col sm:flex-row gap-2 pt-2">
-                    <div variant="outline" className="h-10 w-full" disabled>
+                    <div className="h-15 w-full" disabled>
                       <Shimmer className="w-full h-full" />
                     </div>
-                    <div variant="outline" className="h-10 w-full" disabled>
+                    <div className="h-15 w-full" disabled>
                       <Shimmer className="w-full h-full" />
                     </div>
                   </div>
