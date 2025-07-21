@@ -56,26 +56,10 @@ export default function DriverDashboard() {
     setSelectedDelivery(null); 
   };
 
-  useEffect(() => { 
-    const getRole = async () => { 
-      try { 
-        const token = Cookies.get("token"); 
-        const secret = process.env.NEXT_PUBLIC_JWT_SECRET as string; 
-        if (token && secret) { 
-          const payload = await decryptToken(token, secret); 
-          setID(payload.userId); 
-        } 
-      } catch (err) { 
-        console.error("Error getting role:", err); 
-        setID(null); 
-      } 
-    }; 
-    getRole(); 
-  }, []);
-
+   
   const { data, loading ,refetch} = useQuery(DELIVERIES, { 
-    variables: { id: useID }, 
-    skip: !useID, 
+    variables: { id: globalUserId }, 
+    skip: !globalUserId, 
   });
 
 
@@ -272,7 +256,7 @@ const handleFilter = ({ search, date }: { search: string; date: Date | null }) =
                   dropLng: selectedDelivery.dropoffLongitude,
                 }}
                 onTrackClick={() => {}}
-                onAcceptClick={() => {handleAccept(selectedDelivery.id, useID);refetch();}}
+                onAcceptClick={() => {handleAccept(selectedDelivery.id, globalUserId);refetch();}}
               />
             </div>
           </div>
