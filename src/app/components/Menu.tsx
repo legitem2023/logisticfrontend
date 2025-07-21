@@ -47,7 +47,7 @@ import { setTempUserId,selectTempUserId } from '../../../Redux/tempUserSlice';
 
 export default function Menu() {
   const [useRole, setRole] = useState('');
-  const [useID, setID] = useState('');
+  
   const dispatch = useDispatch();
   const globalUserId = useSelector(selectTempUserId);
   console.log(globalUserId,"global");
@@ -61,7 +61,7 @@ export default function Menu() {
   });
 
   const { data: subscriptionData, error: subscriptionError } = useSubscription(LocationTracking,{
-      variables: { userID: useID },// optional filter
+      variables: { userID: globalUserId },// optional filter
     });
 
 
@@ -73,7 +73,6 @@ export default function Menu() {
         if (token && secret) {
           const payload = await decryptToken(token, secret);
           setRole(payload.role);
-          setID(payload.userId);
           dispatch(setTempUserId(payload.userId));
         }
       } catch (err) {
@@ -86,7 +85,7 @@ export default function Menu() {
 
 
   useEffect(() => {
-    if (useID) {
+    if (globalUserId) {
       const stopWatching = startWatchingLocation((location) => {
         dispatch(setCurrentLocation({
         latitude: location.latitude,
@@ -102,7 +101,7 @@ export default function Menu() {
               longitude: location.longitude,
               speed: location.speed,
               timestamp: location.timestamp.toString(),
-              userID: useID,
+              userID: globalUserId,
             },
           },
         });
