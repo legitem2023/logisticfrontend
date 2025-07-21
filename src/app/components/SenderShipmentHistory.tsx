@@ -36,13 +36,13 @@ export default function SenderShipmentHistory({status}:any) {
   }, []);
 
   const { data, loading } = useQuery(DELIVERIES, {
-    variables: { id: useID }
+    variables: { getNotificationsId: useID }
   });
 
   if (loading || !data) return null;
 
 const mockShipment = () => {
-  return data.getRidersDelivery.map((delivery: any) => ({
+  return data.getRidersDelivery.filter((stat:any) => stat.deliveryStatus===status).map((delivery: any) => ({
     id: delivery.trackingNumber,
     receiver: delivery.recipientName,
     dropoff: delivery.dropoffAddress,
@@ -51,12 +51,9 @@ const mockShipment = () => {
   }));
 };
 
-console.log(mockShipment());
-
 const filtered = mockShipment().filter((s) =>
   s.id.toLowerCase().includes(search.toLowerCase())
 );
-
 
   return (
     <>
