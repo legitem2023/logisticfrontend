@@ -204,7 +204,7 @@ const handleFilter = ({ search, date }: { search: string; date: Date | null }) =
         {['Deliveries', 'History', 'Settings'].map(tab => (
           <button
             key={tab}
-            className={`flex flex-col items-center text-sm transition ${
+            className={`flex flex-col items-center transition ${
               activeTab === tab ? 'text-blue-600 font-semibold' : 'text-gray-500'
             }`}
             onClick={() => setActiveTab(tab)}
