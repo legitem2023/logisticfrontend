@@ -66,10 +66,6 @@ export default function LogisticsHomePage() {
     </div>
   </section>
 
-  {/* Footer */}
-  <footer className="py-10 bg-gray-900 text-white text-center">
-    <p className="text-sm">© {new Date().getFullYear()} Adiviso Logistics. All rights reserved.</p>
-  </footer>
 </main>
 
 ); }

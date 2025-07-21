@@ -61,6 +61,7 @@ mutation CreateRider($input: CreateRiderInput) {
   }
 }
 `
+
 // {
 //   "input": {
 //     "email": "robertsancomarquez1988@gmail.com",

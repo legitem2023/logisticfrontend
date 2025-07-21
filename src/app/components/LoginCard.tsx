@@ -1,6 +1,102 @@
+// 'use client'
+// import Cookies from 'js-cookie'
+
+// import React, { useState } from 'react'
+// import { useRouter } from 'next/navigation'
+// import { Card, CardContent, CardHeader, CardTitle } from './ui/Card'
+// import { Button } from './ui/Button'
+// import { Input } from './ui/Input'
+// import { useMutation } from '@apollo/client'
+// import FacebookLoginButton from './Auth/FacebookLoginButton'
+// // import GoogleLoginButton from './Auth/GoogleLoginButton'
+// //import { GoogleLoginButton } from './Auth/SocialLoginButtons'
+// //import { FacebookLoginButton } from './Auth/SocialLoginButtons'
+// import { LOGIN } from '../../../graphql/mutation'
+// import { showToast } from '../../../utils/toastify'
+
+// export default function LoginCard() {
+//   const router = useRouter()
+//   const [email, setEmail] = useState('')
+//   const [password, setPassword] = useState('')
+//   const [login, { loading, error }] = useMutation(LOGIN, {
+//     onCompleted: (data) => {
+//       const token = data?.login?.token
+//       if (token) {
+//         Cookies.set('token', token, {
+//           expires: 7,
+//           secure: true,
+//           sameSite: 'lax',
+//         })
+//         showToast('Login successful', 'success')
+//         window.location.reload();
+//       } else {
+//         console.error('No token returned')
+//       }
+//     },
+//     onError: (err) => {
+//       console.error('Login failed:', err.message)
+//     }
+//   })
+
+//   const handleLogin = () => {
+//     if (!email || !password) {
+//       alert('Please enter email and password.')
+//       return
+//     }
+
+//     login({
+//       variables: {
+//         input: {
+//           email,
+//           password
+//         }
+//       }
+//     })
+//   }
+
+//   return (
+//     <div className="flex justify-center items-center">
+//       <Card className="w-full max-w-md shadow-xl p-6">
+//         <CardHeader>
+//           <CardTitle className="text-center text-2xl font-semibold">Login</CardTitle>
+//         </CardHeader>
+
+//         <CardContent className="space-y-4">
+//           <Input
+//             type="email"
+//             placeholder="Email"
+//             value={email}
+//             onChange={(e) => setEmail(e.target.value)}
+//           />
+
+//           <Input
+//             type="password"
+//             placeholder="Password"
+//             value={password}
+//             onChange={(e) => setPassword(e.target.value)}
+//           />
+
+//           <Button className="w-full text-[#ffffff] shadow rounded-lg customgrad" onClick={handleLogin} disabled={loading}>
+//             {loading ? 'Logging in...' : 'Login'}
+//           </Button>
+
+//           {error && <p className="text-red-500 text-sm">{error.message}</p>}
+
+//           <div className="flex items-center gap-2">
+//             <hr className="flex-grow border-gray-300" />
+//             <span className="text-gray-500 text-sm">OR</span>
+//             <hr className="flex-grow border-gray-300" />
+//           </div>
+
+          
+//           <FacebookLoginButton />
+//         </CardContent>
+//       </Card>
+//     </div>
+//   )
+// }
 'use client'
 import Cookies from 'js-cookie'
-
 import React, { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Card, CardContent, CardHeader, CardTitle } from './ui/Card'
@@ -8,16 +104,16 @@ import { Button } from './ui/Button'
 import { Input } from './ui/Input'
 import { useMutation } from '@apollo/client'
 import FacebookLoginButton from './Auth/FacebookLoginButton'
-// import GoogleLoginButton from './Auth/GoogleLoginButton'
-//import { GoogleLoginButton } from './Auth/SocialLoginButtons'
-//import { FacebookLoginButton } from './Auth/SocialLoginButtons'
 import { LOGIN } from '../../../graphql/mutation'
 import { decryptToken } from '../../../utils/decryptToken'
+import { showToast } from '../../../utils/toastify'
+import { Eye, EyeOff } from 'lucide-react' // Import eye icons
 
 export default function LoginCard() {
   const router = useRouter()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false) // State for password visibility
   const [login, { loading, error }] = useMutation(LOGIN, {
     onCompleted: (data) => {
       const token = data?.login?.token
@@ -27,7 +123,8 @@ export default function LoginCard() {
           secure: true,
           sameSite: 'lax',
         })
-
+        showToast('Login successful', 'success')
+        window.location.reload();
       } else {
         console.error('No token returned')
       }
@@ -53,6 +150,11 @@ export default function LoginCard() {
     })
   }
 
+  // Toggle password visibility
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword)
+  }
+
   return (
     <div className="flex justify-center items-center">
       <Card className="w-full max-w-md shadow-xl p-6">
@@ -68,12 +170,22 @@ export default function LoginCard() {
             onChange={(e) => setEmail(e.target.value)}
           />
 
-          <Input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
+          <div className="relative">
+            <Input
+              type={showPassword ? "text" : "password"}
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <button
+              type="button"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+              onClick={togglePasswordVisibility}
+              aria-label={showPassword ? "Hide password" : "Show password"}
+            >
+              {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+            </button>
+          </div>
 
           <Button className="w-full text-[#ffffff] shadow rounded-lg customgrad" onClick={handleLogin} disabled={loading}>
             {loading ? 'Logging in...' : 'Login'}
@@ -87,7 +199,6 @@ export default function LoginCard() {
             <hr className="flex-grow border-gray-300" />
           </div>
 
-          
           <FacebookLoginButton />
         </CardContent>
       </Card>

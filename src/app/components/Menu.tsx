@@ -26,19 +26,53 @@ import dynamic from 'next/dynamic';
 const RiderList = dynamic(() => import('./Rider/RiderList'), {
   ssr: false
 });
+
+
+// Throttle function implementation
+function throttle<T extends (...args: any[]) => void>(
+  func: T,
+  limit: number
+): T & { cancel: () => void } {
+  let lastFunc: ReturnType<typeof setTimeout>;
+  let lastRan: number;
+  let timeoutId: number | null = null;
+
+  const throttled = function (this: any, ...args: Parameters<T>) {
+    if (!lastRan) {
+      func.apply(this, args);
+      lastRan = Date.now();
+    } else {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+      timeoutId = window.setTimeout(() => {
+        if (Date.now() - lastRan >= limit) {
+          func.apply(this, args);
+          lastRan = Date.now();
+        }
+      }, limit - (Date.now() - lastRan));
+    }
+  } as T;
+
+  (throttled as any).cancel = () => {
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
+  };
+
+  return throttled as T & { cancel: () => void };
+}
+
+
 import {
   Home,
-  Package,
   LogIn,
   UserPlus,
   Bike,
-  PackageCheck,
-  LayoutDashboard,
   Settings,
   ClipboardCheck,
   HelpCircle,
-  Truck,
-  Navigation
+  Truck
 } from "lucide-react";
 import { useDispatch,useSelector } from 'react-redux';
 import { setCurrentLocation } from '../../../Redux/locationSlice';
@@ -58,9 +92,6 @@ export default function Menu() {
       console.error("Mutation Error:", err.message);
     },
   });
-  const { data: subscriptionData, error: subscriptionError } = useSubscription(LocationTracking,{
-      variables: { userID: globalUserId },// optional filter
-    });
 
   useEffect(() => {
     const getRole = async () => {
@@ -78,43 +109,58 @@ export default function Menu() {
       }
     };
     getRole();
-  });
+  },[dispatch]);
 
 
-  useEffect(() => {
-    if (globalUserId) {
-      const stopWatching = startWatchingLocation((location) => {
-        dispatch(setCurrentLocation({
-        latitude: location.latitude,
-        longitude: location.longitude,
-      }));
-        LocationTracker({
-          variables: {
-            input: {
-              accuracy: location.accuracy,
-              batteryLevel: null,
-              heading: location.heading,
-              latitude: location.latitude,
-              longitude: location.longitude,
-              speed: location.speed,
-              timestamp: location.timestamp.toString(),
-              userID: globalUserId,
-            },
-          },
-        });
-      });
+useEffect(() => {
+  if (!globalUserId) return;
 
-      return () => stopWatching && stopWatching(); // Cleanup
+  // Throttle location updates to prevent excessive requests
+  const throttledUpdate = throttle((location) => {
+    dispatch(setCurrentLocation({
+      latitude: location.latitude,
+      longitude: location.longitude,
+    }));
+    
+    LocationTracker({
+      variables: {
+        input: {
+          accuracy: location.accuracy,
+          batteryLevel: null,
+          heading: location.heading,
+          latitude: location.latitude,
+          longitude: location.longitude,
+          speed: location.speed,
+          timestamp: location.timestamp.toString(),
+          userID: globalUserId,
+        },
+      },
+    }).catch((error) => {
+      console.error('Location tracking failed:', error);
+      // Optionally implement retry logic or error reporting
+    });
+  }, 5000); // Update every 5 seconds instead of continuously
+
+  const stopWatching = startWatchingLocation(throttledUpdate);
+
+  return () => {
+    if (typeof stopWatching === 'function') {
+      stopWatching();
     }
-  });
+    throttledUpdate.cancel(); // Cleanup the throttle
+  };
+}, [globalUserId]); // Only depend on globalUserId
 
 
-// console.log(subscriptionData)
+  const { data: subscriptionData, error: subscriptionError } = useSubscription(LocationTracking,{
+      variables: { userID: globalUserId },// optional filter
+    });
+
   const isUserActive = (): boolean => {
     const token = Cookies.get('token');
     return !!token;
   };
-  
+
   const tabItems = [
     {
       label: 'Home',
@@ -127,62 +173,78 @@ export default function Menu() {
         </div>
       ),
     },
-    {
-      label: 'Assigned Deliveries',
-      role: '',
-      icon: <ClipboardCheck color="green" />,
-      content: (
-        <div className="px-1 py-1 space-y-1">
-          {useRole==='Rider' || useRole==='RIDER'?(<DriverDashboard />):(<SenderDashboard />)}
-        </div>
-      ),
-    },
-    {
-      label: 'Create Delivery',
-      role: '',
-      icon: <Truck color="green" />,
-      content: (
-        <div className="px-1 py-1 space-y-1">
-          <LogisticsForm />
-        </div>
-      ),
-    },
-    {
-      label: 'Rider',
-      role: '',
-      icon: <Bike color="green" />,
-      content: (
-        <div className="px-1 py-1 space-y-1">
-          <RiderList
-  riders={[
-    {
-      id: "1",
-      name: "Juan Dela Cruz",
-      phone: "09171234567",
-      avatarUrl: "https://i.pravatar.cc/150?img=3",
-      location: { latitude: 14.5995, longitude: 120.9842 },
-    },
-    {
-      id: "2",
-      name: "Maria Santos",
-      phone: "09181112222",
-      location: { latitude: 14.676, longitude: 121.0437 },
-    },
-  ]}
-/>
-        </div>
-      ),
-    },
-    {
-      label: 'Settings',
-      role: '',
-      icon: <Settings color="green" />,
-      content: (
-        <div className="px-1 py-1 space-y-1">
-          <SettingsPage />
-        </div>
-      ),
-    },
+    ...(isUserActive()
+      ? [
+          {
+            label: 'Assigned Deliveries',
+            role: '',
+            icon: <ClipboardCheck color="green" />,
+            content: (
+              <div className="px-1 py-1 space-y-1">
+                {useRole==='Rider' || useRole==='RIDER'?(<DriverDashboard />):(<SenderDashboard />)}
+              </div>
+            ),
+          },
+        ]
+      : []),
+    ...(isUserActive()
+      ? [
+          {
+            label: 'Create Delivery',
+            role: '',
+            icon: <Truck color="green" />,
+            content: (
+              <div className="px-1 py-1 space-y-1">
+                <LogisticsForm />
+              </div>
+            ),
+          },
+        ]
+      : []),
+        ...(isUserActive()
+      ? [
+          {
+            label: 'Rider',
+            role: '',
+            icon: <Bike color="green" />,
+            content: (
+              <div className="px-1 py-1 space-y-1">
+                <RiderList
+                  riders={[
+                    {
+                      id: "1",
+                      name: "Juan Dela Cruz",
+                      phone: "09171234567",
+                      avatarUrl: "https://i.pravatar.cc/150?img=3",
+                      location: { latitude: 14.5995, longitude: 120.9842 },
+                    },
+                    {
+                      id: "2",
+                      name: "Maria Santos",
+                      phone: "09181112222",
+                      location: { latitude: 14.676, longitude: 121.0437 },
+                    },
+                  ]}
+                />
+              </div>
+            ),
+          },
+        ]
+      : []),
+      ...(isUserActive()
+      ? [
+          {
+            label: 'Settings',
+            role: '',
+            icon: <Settings color="green" />,
+            content: (
+              <div className="px-1 py-1 space-y-1">
+                <SettingsPage />
+              </div>
+            ),
+          },
+        ]
+      : []),
     {
       label: 'Help Center',
       role: '',
@@ -240,6 +302,10 @@ export default function Menu() {
      <NotificationDropdown userId={globalUserId}/>
       {/* Sidebar with tab content */}
       <Sidebar tabs={tabItems.filter((tab) => tab.role === capitalize(useRole) || tab.role === '')} />
+      {/* Footer */}
+  <footer className="py-10 bg-gray-900 text-white text-center">
+    <p className="text-sm">© {new Date().getFullYear()} Adiviso Logistics. All rights reserved.</p>
+  </footer>
     </div>
   );
 }

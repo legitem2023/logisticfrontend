@@ -2,26 +2,23 @@
 
 import { useState, useEffect } from "react"; 
 import 'react-datepicker/dist/react-datepicker.css';
-import DatePicker from 'react-datepicker';
 
 
-import { useDispatch,useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
-import { setTempUserId,selectTempUserId } from '../../../../Redux/tempUserSlice';
+import { selectTempUserId } from '../../../../Redux/tempUserSlice';
 
 
 import { Button } from "../ui/Button"; 
 import { showToast } from '../../../../utils/toastify'; 
 import { Card, CardContent } from "../ui/Card"; 
-import { Input } from "../ui/Input"; 
-import { Badge } from "../ui/Badge"; 
+
 import { useMutation, useQuery } from "@apollo/client"; 
 import { DELIVERIES } from "../../../../graphql/query"; 
 import HistoryContainer from "../History/HistoryContainer"; 
-import { MapPin, Clock, CheckCircle, PackageCheck, X, Compass, CalendarIcon,FileText } from "lucide-react"; 
+import { Clock, X, Compass,FileText } from "lucide-react"; 
 import {DashboardLoading} from "../Loadings/DashboardLoading"; 
-import Cookies from "js-cookie"; 
-import { decryptToken, capitalize, formatDate } from "../../../../utils/decryptToken"; 
+import {  capitalize, formatDate } from "../../../../utils/decryptToken"; 
 import { ACCEPTDELIVERY } from "../../../../graphql/mutation"; 
 import DeliveryDetailCard from "./DeliveryDetailCard"; 
 import dynamic from "next/dynamic"; 
@@ -54,13 +51,13 @@ export default function DriverDashboard() {
   };
 
   const { data, loading ,refetch} = useQuery(DELIVERIES, { 
-    variables: { id: globalUserId }, 
+    variables: { getRidersDeliveryId: globalUserId }, 
     skip: !globalUserId, 
   });
 
 useEffect(() => {
   if (data) {
-    const mockShipment = data.getRidersDelivery.filter((delivery: any) => delivery.deliveryStatus !== "DELIVERED").map((delivery: any) => ({
+    const mockShipment = data.getRidersDelivery.filter((delivery: any) => delivery.deliveryStatus !== "Delivered" && delivery.deliveryStatus !== "Cancelled").map((delivery: any) => ({
       trackingNumber: delivery.trackingNumber, 
       id: delivery.id, 
       sender: delivery.sender.name, 
@@ -138,7 +135,7 @@ const handleFilter = ({ search, date }: { search: string; date: Date | null }) =
                 onClick={() => setActiveTab(tab)}
                 className={`cursor-pointer rounded-lg px-3 py-2 transition-all duration-200 ${
                   activeTab === tab
-                    ? 'bg-blue-600 text-white shadow-md'
+                    ? 'customgrad text-white shadow-md'
                     : 'text-gray-600 hover:text-gray-800 hover:bg-gray-100'
                 }`}
               >
@@ -188,7 +185,7 @@ const handleFilter = ({ search, date }: { search: string; date: Date | null }) =
                     </div>
                   </CardContent>
                 </Card>
-              )):(<h1>No Deliveries...</h1>)}
+              )):(<h1 className="text-2xl font-bold text-gray-800 mb-4">No Deliveries...</h1>)}
             </div>
           </>
         )}
@@ -207,7 +204,7 @@ const handleFilter = ({ search, date }: { search: string; date: Date | null }) =
         {['Deliveries', 'History', 'Settings'].map(tab => (
           <button
             key={tab}
-            className={`flex flex-col items-center text-xs transition ${
+            className={`flex flex-col items-center text-sm transition ${
               activeTab === tab ? 'text-blue-600 font-semibold' : 'text-gray-500'
             }`}
             onClick={() => setActiveTab(tab)}

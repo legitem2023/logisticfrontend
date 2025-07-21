@@ -10,6 +10,7 @@ import Separator from './ui/Separator'
 import SubscriptionsToggle from './commands/SubscriptionsToggle'
 import { decryptToken } from '../../../utils/decryptToken'
 import Cookies from 'js-cookie';
+import LogoutButton from './LogoutButton'
 
 export default function SettingsPage() {
   const [name, setName] = useState('Juan Dela Cruz')
@@ -117,9 +118,7 @@ export default function SettingsPage() {
             💾 Save Changes
           </Button>
           <Separator />
-          <Button className="w-full bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white font-semibold rounded-xl shadow-md transition">
-            🚪 Logout
-          </Button>
+          <LogoutButton/>
         </CardContent>
       </Card>
     </div>

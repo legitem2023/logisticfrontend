@@ -5,12 +5,21 @@ import { Input } from "./ui/Input";
 import { Label } from "./ui/Label";
 import { Card, CardContent } from "./ui/Card";
 import { Select } from "./ui/Select"; // ✅ Added Select import
-import { useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { VEHICLEQUERY } from "../../../graphql/query";
+import { CREATERIDER } from "../../../graphql/mutation";
+import { showToast } from "../../../utils/toastify";
 
 const SignupCard = () => {
   const { loading, error, data } = useQuery(VEHICLEQUERY);
-
+  const [createRider] = useMutation(CREATERIDER, {
+    onCompleted: (data) => {
+      showToast("Driver created successfully", "success");
+    },
+    onError: (err) => {
+      console.log("Driver creation failed:", err.message);
+    },
+  });
   const [form, setForm] = useState({
     fullName: "",
     email: "",
@@ -33,9 +42,28 @@ const SignupCard = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: send form data to API
     console.log(form);
-    alert(form);
+
+
+    const input =  {
+        email: form.email,
+        licensePlate: form.plateNumber,
+        name: form.fullName,
+        password: form.password,
+        phoneNumber: form.phone,
+        vehicleTypeId: form.vehicleType,
+      };
+   console.log(input) 
+    // createRider({
+    //   variables: {
+    //     email: form.email,
+    //     licensePlate: form.plateNumber,
+    //     name: form.fullName,
+    //     password: form.password,
+    //     phoneNumber: form.phone,
+    //     vehicleTypeId: form.vehicleType,
+    //   },
+    // });
   };
 
   if (loading) return <p>Loading...</p>;
@@ -73,7 +101,7 @@ const SignupCard = () => {
             >
               <option value="">Select a vehicle type</option>
               {data.getVehicleTypes.map((vehicle: any, idx: number) => (
-                <option key={idx} value={vehicle.name}>
+                <option key={idx} value={vehicle.id}>
                   {vehicle.name}
                 </option>
               ))}

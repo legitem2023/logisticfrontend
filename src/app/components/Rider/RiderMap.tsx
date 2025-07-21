@@ -18,7 +18,7 @@ export default function RiderMap({ coordinates }: { coordinates: Coordinates}) {
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
 
   const location = useSelector((state: any) => state.location.current);
-
+  
   const [status, setStatus] = useState<'pending' | 'cancelled' | 'finished' | null>(null);
   const [showPanel, setShowPanel] = useState(false);
 console.log(location);
