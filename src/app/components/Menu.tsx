@@ -42,12 +42,15 @@ import {
 } from "lucide-react";
 import { useDispatch } from 'react-redux';
 import { setCurrentLocation } from '../../../Redux/locationSlice';
+import { setTempUserId,selectTempUserId } from '../../../Redux/tempUserSlice';
 
 
 export default function Menu() {
   const [useRole, setRole] = useState('');
   const [useID, setID] = useState('');
   const dispatch = useDispatch();
+  const globalUserId = useSelector(selectTempUserId);
+  console.log(globalUserId,"global");
   const [LocationTracker] = useMutation(LOCATIONTRACKING, {
     onCompleted: (data) => {
       // console.log("Mutation Success:", data);
@@ -71,6 +74,7 @@ export default function Menu() {
           const payload = await decryptToken(token, secret);
           setRole(payload.role);
           setID(payload.userId);
+          dispatch(setTempUserId(payload.userId));
         }
       } catch (err) {
         console.error('Error getting role:', err);
