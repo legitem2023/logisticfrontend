@@ -24,16 +24,6 @@ const Footer = () => {
               We support GCash, PayPal, and secure bank transfers. All transactions are encrypted and protected.
             </p>
           </div>
-
-          <div>
-            <h3 className="text-lg font-semibold text-white tracking-wide mb-4">Connect</h3>
-            <div className="space-y-2 text-sm">
-              <p className="text-gray-400">123 Luxury Ave, Metro City</p>
-              <p className="text-gray-400">+63 912 345 6789</p>
-              <p className="text-gray-400">support@logisticpro.com</p>
-            </div>
-          </div>
-
           <div>
             <h3 className="text-lg font-semibold text-white tracking-wide mb-4">Newsletter</h3>
             <form className="flex flex-col sm:flex-row gap-3">
@@ -53,7 +43,7 @@ const Footer = () => {
         </div>
 
         <div className="mt-8 text-center text-sm text-gray-500 tracking-wide">
-          © {currentYear} <span className="text-[#f5c75f] font-semibold">LogisticPro</span>. All rights reserved.
+          © {currentYear} <span className="text-[#ffffff] font-semibold">Motogo</span>. All rights reserved.
         </div>
       </div>
     </footer>
