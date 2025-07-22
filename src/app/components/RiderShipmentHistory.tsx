@@ -20,7 +20,7 @@ export default function RiderShipmentHistory() {
 
   const { data, loading, error } = useQuery(GETDISPATCH, {
     variables: { getDispatchId: globalUserId },
-    skip: !dispatchId,
+    skip: !globalUserId,
   });
 
   if (loading) return <div className="p-6">Loading...</div>;
