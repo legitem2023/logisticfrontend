@@ -72,7 +72,8 @@ import {
   Settings,
   ClipboardCheck,
   HelpCircle,
-  Truck
+  Truck,
+  BadgeCheck
 } from "lucide-react";
 import { useDispatch,useSelector } from 'react-redux';
 import { setCurrentLocation } from '../../../Redux/locationSlice';
@@ -237,7 +238,7 @@ console.log(useRole,"<-role");
           {
             label: 'Requested Deliveries',
             role: '',
-            icon: <Bike color="green" />,
+            icon: <BadgeCheck color="green" />,
             content: (
               <div className="px-1 py-1 space-y-1">
                 <AdminDeliveriesTable />
