@@ -1,44 +1,35 @@
-// app/components/RiderShipmentHistory.tsx
 "use client";
 
+import { useQuery } from "@apollo/client";
+import { gql } from "@apollo/client";
 import { Card, CardContent } from "./ui/Card";
 import { Input } from "./ui/Input";
 import { Button } from "./ui/Button";
 import { Badge } from "./ui/Badge";
 import { CalendarIcon, EyeIcon, DollarSign } from "lucide-react";
 import { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { selectTempUserId } from '../../../Redux/tempUserSlice';
+import { GETDISPATCH } from '../../../graphql/query';
 
-const mockDeliveries = [
-  {
-    id: "RID-DEL-2025-001",
-    pickup: "Binondo, Manila",
-    dropoff: "Pasig City",
-    status: "Delivered",
-    date: "2025-07-10",
-    earnings: 180,
-  },
-  {
-    id: "RID-DEL-2025-002",
-    pickup: "Makati City",
-    dropoff: "San Juan City",
-    status: "Canceled",
-    date: "2025-07-12",
-    earnings: 0,
-  },
-  {
-    id: "RID-DEL-2025-003",
-    pickup: "Taguig City",
-    dropoff: "Caloocan City",
-    status: "Delivered",
-    date: "2025-07-13",
-    earnings: 210,
-  },
-];
+
 
 export default function RiderShipmentHistory() {
   const [search, setSearch] = useState("");
+  const globalUserId = useSelector(selectTempUserId);
 
-  const filtered = mockDeliveries.filter((d) =>
+  const { data, loading, error } = useQuery(GETDISPATCH, {
+    variables: { getDispatchId: globalUserId },
+    skip: !dispatchId,
+  });
+
+  if (loading) return <div className="p-6">Loading...</div>;
+  if (error) return <div className="p-6 text-red-500">Error loading dispatch history</div>;
+  if (!data?.getDispatch) return <div className="p-6">No dispatch found.</div>;
+
+  const delivery = data.getDispatch;
+
+  const filtered = [delivery].filter((d) =>
     d.id.toLowerCase().includes(search.toLowerCase())
   );
 
@@ -58,32 +49,34 @@ export default function RiderShipmentHistory() {
       </div>
 
       <div className="grid gap-4">
-        {filtered.map((delivery) => (
-          <Card key={delivery.id}>
+        {filtered.map((d) => (
+          <Card key={d.id}>
             <CardContent className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 p-4">
               <div>
-                <div className="text-sm text-muted-foreground">{delivery.date}</div>
-                <div className="font-semibold">{delivery.id}</div>
+                <div className="text-sm text-muted-foreground">
+                  {new Date(d.createdAt).toLocaleDateString()}
+                </div>
+                <div className="font-semibold">{d.id}</div>
                 <div className="text-sm">
-                  From: {delivery.pickup} → To: {delivery.dropoff}
+                  From: {d.pickupAddress} → To: {d.dropoffAddress}
                 </div>
               </div>
 
               <div className="flex items-center gap-2 flex-wrap">
                 <Badge
                   variant={
-                    delivery.status === "Delivered"
+                    d.deliveryStatus === "Delivered"
                       ? "success"
-                      : delivery.status === "Canceled"
+                      : d.deliveryStatus === "Canceled"
                       ? "destructive"
                       : "secondary"
                   }
                 >
-                  {delivery.status}
+                  {d.deliveryStatus}
                 </Badge>
                 <div className="text-sm text-green-600 flex items-center gap-1">
                   <DollarSign className="w-4 h-4" />
-                  ₱{delivery.earnings}
+                  ₱{d.deliveryFee || 0}
                 </div>
                 <Button variant="outline" size="sm" className="flex items-center gap-1">
                   <EyeIcon className="w-4 h-4" /> View
