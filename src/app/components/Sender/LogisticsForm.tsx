@@ -9,6 +9,7 @@ import { CREATEDELIVERY } from '../../../../graphql/mutation';
 import Cookies from "js-cookie";
 import LogisticFormLoading from '../Loadings/LogisticFormLoading';
 import { useSelector, useDispatch } from "react-redux";
+import { selectTempUserId } from '../../../../Redux/tempUserSlice';
 
 
 import { 
@@ -46,7 +47,8 @@ const LogisticsForm = () => {
   });
 
   const [selected, setSelected] = useState<string>('bike');
-    const [useID, setID] = useState();
+  const [useID, setID] = useState();
+  const globalUserId = useSelector(selectTempUserId);
   const [expandedDetails, setExpandedDetails] = useState<string | null>(null);
   const dispatch = useDispatch();
   const deliveryDetails = useSelector((state:any) => state.delivery);
@@ -54,7 +56,7 @@ const LogisticsForm = () => {
   const toggleDetails = (vehicleId: string) => {
     setExpandedDetails(prev => (prev === vehicleId ? null : vehicleId));
   };
-    useEffect(() => {
+   /* useEffect(() => {
     const getRole = async () => {
       try {
         const token = Cookies.get("token");
@@ -69,7 +71,7 @@ const LogisticsForm = () => {
       }
     };
     getRole();
-  }, []);
+  }, []);*/
   // State management
   const [pickup, setPickup] = useState({
     address: '',
@@ -353,9 +355,9 @@ const today = new Date();
       pickupLongitude: pickup.lng,
       recipientName: dropoff.name,
       recipientPhone: dropoff.contact,
-      senderId: useID,
+      senderId: globalUserId,
     };
-    console.log(input,"<<<");
+   // console.log(input,"<<<");
     await createDelivery({ variables:{input} });
   });
   
