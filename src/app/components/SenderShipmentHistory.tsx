@@ -56,7 +56,7 @@ useEffect(() => {
     setOriginalDeliveries(mockShipment);
     setFilteredDeliveries(mockShipment);
   }
-}, [data]);
+}, [data,status]);
 
 
 
