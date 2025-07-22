@@ -7,6 +7,8 @@ import 'leaflet-routing-machine';
 import 'leaflet-routing-machine/dist/leaflet-routing-machine.css';
 import { showToast } from '../../../../utils/toastify'; 
 import { useSelector } from 'react-redux';
+import { selectTempUserId } from '../../../../Redux/tempUserSlice';
+
 import { CANCELEDDELIVERY,FINISHDELIVERY } from "../../../../graphql/mutation"; 
 import { useMutation, useQuery } from "@apollo/client"; 
 type Coordinates = {
@@ -19,11 +21,11 @@ export default function RiderMap({ coordinates,deliveryId }: { coordinates: Coor
   const routingRef = useRef<L.Routing.Control | null>(null);
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
   const [finishDelivery] = useMutation(FINISHDELIVERY,{
-   onCompleted: () => showToast("Delivery accepted successfully", "success"),
+   onCompleted: () => showToast("Delivery successfully completed", "success"),
    onError: (e: any) => console.log('Finished Error', e)
   })
   const location = useSelector((state: any) => state.location.current);
-  console.log(deliveryId,"delId");
+  const globalUserId = useSelector(selectTempUserId);
   const [status, setStatus] = useState<'pending' | 'cancelled' | 'finished' | null>(null);
   const [showPanel, setShowPanel] = useState(false);
   const sender = L.latLng(location?.latitude, location?.longitude);   // Manila
@@ -87,7 +89,13 @@ export default function RiderMap({ coordinates,deliveryId }: { coordinates: Coor
 
   const handleStatusChange = (newStatus: typeof status) => {
     setStatus(newStatus);
-    alert(`Delivery marked as: ${newStatus?.toUpperCase()}`);
+    if(newStatus==='finished'){
+       finishDelivery({
+           "deliveryId":deliveryId,
+           "riderId": globalUserId
+       })
+    }
+   // alert(`Delivery marked as: ${newStatus?.toUpperCase()}`);
   };
 
   return (
