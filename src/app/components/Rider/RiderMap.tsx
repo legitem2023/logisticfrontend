@@ -13,7 +13,7 @@ type Coordinates = {
   lng: number;
 }
 
-export default function RiderMap({ coordinates }: { coordinates: Coordinates}) {
+export default function RiderMap({ coordinates,deliveryId }: { coordinates: Coordinates,deliveryId:any }) {
   const mapRef = useRef<L.Map | null>(null);
   const routingRef = useRef<L.Routing.Control | null>(null);
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
@@ -22,7 +22,7 @@ export default function RiderMap({ coordinates }: { coordinates: Coordinates}) {
                                        console.log(e)
                                       })
   const location = useSelector((state: any) => state.location.current);
-  
+  console.log(deliveryId,"delId");
   const [status, setStatus] = useState<'pending' | 'cancelled' | 'finished' | null>(null);
   const [showPanel, setShowPanel] = useState(false);
   const sender = L.latLng(location?.latitude, location?.longitude);   // Manila
