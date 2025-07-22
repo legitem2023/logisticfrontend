@@ -160,7 +160,7 @@ useEffect(() => {
     const token = Cookies.get('token');
     return !!token;
   };
-
+console.log(useRole,"<-role");
   const tabItems = [
     {
       label: 'Home',
