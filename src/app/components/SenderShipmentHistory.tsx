@@ -26,13 +26,13 @@ export default function SenderShipmentHistory({status}:any) {
   const [filteredDeliveries, setFilteredDeliveries] = useState([]);
   const [originalDeliveries, setOriginalDeliveries] = useState([]);
 
-console.log(status);
+
 const globalUserId = useSelector(selectTempUserId);
   const { data, loading } = useQuery(DELIVERIES, {
     variables: { getNotificationsId: globalUserId }
   });
 
-
+console.log(status,data);
 
 useEffect(() => {
   if (data) {
