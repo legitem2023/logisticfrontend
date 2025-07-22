@@ -5,6 +5,7 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import 'leaflet-routing-machine';
 import 'leaflet-routing-machine/dist/leaflet-routing-machine.css';
+import { showToast } from '../../../../utils/toastify'; 
 import { useSelector } from 'react-redux';
 import { CANCELEDDELIVERY,FINISHDELIVERY } from "../../../../graphql/mutation"; 
 import { useMutation, useQuery } from "@apollo/client"; 
@@ -17,10 +18,10 @@ export default function RiderMap({ coordinates,deliveryId }: { coordinates: Coor
   const mapRef = useRef<L.Map | null>(null);
   const routingRef = useRef<L.Routing.Control | null>(null);
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
-  const [finishDelivery] = useMutation(FINISHDELIVERY,
-                                      onCompleted(e)=>{
-                                       console.log(e)
-                                      })
+  const [finishDelivery] = useMutation(FINISHDELIVERY,{
+   onCompleted: () => showToast("Delivery accepted successfully", "success"),
+   onError: (e: any) => console.log('Finished Error', e)
+  })
   const location = useSelector((state: any) => state.location.current);
   console.log(deliveryId,"delId");
   const [status, setStatus] = useState<'pending' | 'cancelled' | 'finished' | null>(null);
