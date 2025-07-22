@@ -19,7 +19,7 @@ export default function SenderDashboard() {
   });
 
   const acceptedDeliveries =
-    data?.getDispatchesBySender?.filter((d) =>
+    data?.getDispatch?.filter((d) =>
       ["Accepted", "In Transit"].includes(d.deliveryStatus)
     ) || [];
 
