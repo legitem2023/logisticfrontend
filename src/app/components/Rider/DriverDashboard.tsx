@@ -26,11 +26,7 @@ import FilterBar from "./Filterbar";
 const RiderMap = dynamic(() => import("./RiderMap"), { ssr: false });
 
 export default function DriverDashboard() { 
-  const [acceptDelivery] = useMutation(ACCEPTDELIVERY, { 
-    onCompleted: () => showToast("Delivery accepted successfully", "success"), 
-    onError: (e: any) => console.log('Acceptance Error', e) 
-  });
-
+  
   const globalUserId = useSelector(selectTempUserId);
   const [activeTab, setActiveTab] = useState("Deliveries"); 
   const [showMap, setMap] = useState(false); 
@@ -55,6 +51,14 @@ export default function DriverDashboard() {
     skip: !globalUserId, 
   });
 
+const [acceptDelivery] = useMutation(ACCEPTDELIVERY, { 
+    onCompleted: () => {
+      showToast("Delivery accepted successfully", "success");
+      refetch();
+    }, 
+    onError: (e: any) => console.log('Acceptance Error', e) 
+  });
+  
 useEffect(() => {
   if (data) {
     const mockShipment = data.getRidersDelivery.filter((delivery: any) => delivery.deliveryStatus !== "Delivered" && delivery.deliveryStatus !== "Cancelled").map((delivery: any) => ({
@@ -120,7 +124,7 @@ const handleFilter = ({ search, date }: { search: string; date: Date | null }) =
   const handleAccept = async (id: string, riderId: string) => { 
     await acceptDelivery({ 
       variables: { deliveryId: id, riderId: riderId } 
-    }); 
+    });
   };
 
   return ( 
@@ -248,7 +252,7 @@ const handleFilter = ({ search, date }: { search: string; date: Date | null }) =
                   dropLng: selectedDelivery.dropoffLongitude,
                 }}
                 onTrackClick={() => {}}
-                onAcceptClick={() => {handleAccept(selectedDelivery.id, globalUserId);refetch();}}
+                onAcceptClick={() => {handleAccept(selectedDelivery.id, globalUserId);}}
               />
             </div>
           </div>
