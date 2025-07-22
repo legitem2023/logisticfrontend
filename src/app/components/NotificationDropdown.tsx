@@ -32,9 +32,7 @@ export default function NotificationDropdown({ userId }: { userId: string }) {
 
   const dropdownContent = (
     <>
-      <div className="px-4 py-3 font-bold text-gray-800 border-b border-gray-200 bg-white/70 backdrop-blur-md sticky top-0 z-10">
-        Notifications
-      </div>
+      
       <ul className="max-h-64 overflow-y-auto divide-y divide-gray-100">
         {loading ? (
           <li className="px-4 py-3 text-sm text-gray-500">Loading...</li>
@@ -87,7 +85,7 @@ export default function NotificationDropdown({ userId }: { userId: string }) {
               {/* Slide-up panel */}
               <div className={`relative bg-white/70 backdrop-blur-xl border-t border-gray-200 rounded-t-2xl shadow-2xl max-h-[76vh] min-h-[75vh]  w-full overflow-y-auto transform transition-transform duration-1000 ${open ? 'translate-y-0' : 'translate-y-full'}`}>
                 <div className="flex justify-between items-center px-4 py-3 border-b border-gray-200">
-                  {/* <div className="text-lg font-semibold text-gray-800">Notifications</div>*/}
+                   <div className="text-lg font-semibold text-gray-800">Notifications</div>
                   <button
                     onClick={() => setOpen(false)}
                     className="text-gray-600 hover:text-gray-800 text-xl"
