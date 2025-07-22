@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from 'react'
 import { useQuery } from '@apollo/client'
 import { Bell } from 'lucide-react'
 import { GETNOTIFICATION } from '../../../graphql/query'
-
+import {  capitalize, formatDate } from "../../../utils/decryptToken"; 
 export default function NotificationDropdown({ userId }: { userId: string }) {
   const [open, setOpen] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
@@ -46,7 +46,7 @@ export default function NotificationDropdown({ userId }: { userId: string }) {
             >
               <p className="text-sm font-medium text-gray-800">{notif.message}</p>
               <span className="text-xs text-gray-500 block mt-1">
-                {new Date(notif.createdAt).toLocaleString()}
+                {formatDate(notif.createdAt)}
               </span>
             </li>
           ))
