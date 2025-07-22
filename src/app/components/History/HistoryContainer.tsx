@@ -6,7 +6,7 @@ export default function HistoryContainer() {
     { label: 'In Progress', content: <SenderShipmentHistory status={"in_transit"}/> },
     { label: 'Completed', content: <SenderShipmentHistory status={"Delivered"}/> },
     { label: 'Pending', content: <SenderShipmentHistory status={"Pending"}/> },
-    { label: 'Cancelled', content: <SenderShipmentHistory status={"Canceled"}/> },
+    { label: 'Cancelled', content: <SenderShipmentHistory status={"Cancelled"}/> },
   ];
   return (
     <>
