@@ -18,7 +18,7 @@ export default function RiderMap({ coordinates,deliveryId }: { coordinates: Coor
   const routingRef = useRef<L.Routing.Control | null>(null);
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
   const [finishDelivery] = useMutation(FINISHDELIVERY,
-                                      onCompleted:(e)=>{
+                                      onCompleted(e)=>{
                                        console.log(e)
                                       })
   const location = useSelector((state: any) => state.location.current);
