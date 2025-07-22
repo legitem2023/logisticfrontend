@@ -10,7 +10,7 @@ import Cookies from 'js-cookie';
 import { useQuery } from '@apollo/client';
 import { DELIVERIES } from '../../../graphql/query';
 import { decryptToken, capitalize, formatDate } from '../../../utils/decryptToken';
-import FilterBar from "./Roder/Filterbar";
+import FilterBar from "./Rider/Filterbar";
 export default function SenderShipmentHistory({status}:any) {
   const [useID, setID] = useState();
   const [search, setSearch] = useState("");
