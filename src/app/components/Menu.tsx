@@ -187,20 +187,20 @@ useEffect(() => {
           },
         ]
       : []),
-    ...(isUserActive()
-      ? [
-          {
-            label: 'Create Delivery',
-            role: '',
-            icon: <Truck color="green" />,
-            content: (
-              <div className="px-1 py-1 space-y-1">
-                <LogisticsForm />
-              </div>
-            ),
-          },
-        ]
-      : []),
+ ...(isUserActive() && (useRole === 'Sender' || useRole === 'SENDER')
+  ? [
+      {
+        label: 'Create Delivery',
+        role: 'Sender',
+        icon: <Truck color="green" />,
+        content: (
+          <div className="px-1 py-1 space-y-1">
+            <LogisticsForm />
+          </div>
+        ),
+      },
+    ]
+  : []),
         ...(isUserActive()
       ? [
           {
