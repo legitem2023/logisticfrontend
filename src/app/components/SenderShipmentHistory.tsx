@@ -113,18 +113,18 @@ const result = filteredDeliveries.filter((d) => {
                 <div className="flex items-center gap-2 flex-wrap">
                   <Badge
                     variant={
-                      shipment.DeliveryStatus === "Delivered"
+                      shipment.deliveryStatus === "Delivered"
                         ? "success"
-                        : shipment.DeliveryStatus === "in_transit"
+                        : shipment.deliveryStatus === "in_transit"
                         ? "secondary"
-                        : shipment.DeliveryStatus === "Pending"
+                        : shipment.deliveryStatus === "Pending"
                         ? "outline"
-                        : shipment.DeliveryStatus === "Canceled"
+                        : shipment.deliveryStatus === "Canceled"
                         ? "destructive"
                         : "default"
                     }
                   >
-                    {shipment.DeliveryStatus}
+                    {shipment.deliveryStatus}
                   </Badge>
                   <Button
                     className="flex items-center gap-1 bg-blue-600 text-white hover:bg-blue-700"
