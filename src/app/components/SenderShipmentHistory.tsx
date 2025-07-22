@@ -115,7 +115,7 @@ const result = filteredDeliveries.filter((d) => {
                     variant={
                       shipment.deliveryStatus === "Delivered"
                         ? "success"
-                        : shipment.deliveryStatus === "in_transit"
+                        : shipment.deliveryStatus === "In_transit"
                         ? "secondary"
                         : shipment.deliveryStatus === "Pending"
                         ? "outline"
