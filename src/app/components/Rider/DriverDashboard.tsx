@@ -205,7 +205,7 @@ const handleFilter = ({ search, date }: { search: string; date: Date | null }) =
           <button
             key={tab}
             className={`flex flex-col items-center transition ${
-              activeTab === tab ? 'text-blue-600 font-semibold' : 'text-gray-500'
+              activeTab === tab ? 'customgrad text-white-100 font-semibold' : 'text-gray-500'
             }`}
             onClick={() => setActiveTab(tab)}
           >
