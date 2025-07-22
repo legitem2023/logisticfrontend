@@ -176,7 +176,7 @@ useEffect(() => {
     ...(isUserActive()
       ? [
           {
-            label: 'Assigned Deliveries',
+            label: 'Logistics Panel',
             role: '',
             icon: <ClipboardCheck color="green" />,
             content: (
