@@ -32,7 +32,7 @@ const globalUserId = useSelector(selectTempUserId);
     variables: { getNotificationsId: globalUserId }
   });
 
-  if (loading || !data) return null;
+
 
 useEffect(() => {
   if (data) {
@@ -90,7 +90,7 @@ const result = filteredDeliveries.filter((d) => {
     // showToast("No deliveries match your filters", "info");
   }
 };
-
+  if (loading || !data) return null;
   
   return (
     <>
