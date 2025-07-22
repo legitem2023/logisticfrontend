@@ -119,7 +119,7 @@ const result = filteredDeliveries.filter((d) => {
                         ? "secondary"
                         : shipment.deliveryStatus === "Pending"
                         ? "outline"
-                        : shipment.deliveryStatus === "Canceled"
+                        : shipment.deliveryStatus === "Cancelled"
                         ? "destructive"
                         : "default"
                     }
