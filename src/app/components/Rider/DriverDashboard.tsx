@@ -200,11 +200,11 @@ const handleFilter = ({ search, date }: { search: string; date: Date | null }) =
         )}
       </main>
 
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-md border-t border-gray-300 shadow-inner flex justify-around p-2 z-50">
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-md border-t border-gray-300 shadow-inner flex justify-around z-50">
         {['Deliveries','Dispatch','History'].map(tab => (
           <button
             key={tab}
-            className={`flex flex-col items-center transition ${
+            className={`flex flex-col items-center transition p-2 ${
               activeTab === tab ? 'customgrad text-white-100 font-semibold' : 'text-gray-500'
             }`}
             onClick={() => setActiveTab(tab)}
