@@ -265,6 +265,7 @@ const handleFilter = ({ search, date }: { search: string; date: Date | null }) =
           </button>
           <div className="w-full h-[100vh] sm:max-w-md bg-white p-0 shadow-lg animate-slide-up overflow-y-auto">
             <RiderMap
+              deliveryId={selectedDelivery.id}
               coordinates={{
                 lat: selectedDelivery.dropoffLatitude,
                 lng: selectedDelivery.dropoffLongitude,
