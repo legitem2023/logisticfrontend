@@ -6,7 +6,8 @@ import 'leaflet/dist/leaflet.css';
 import 'leaflet-routing-machine';
 import 'leaflet-routing-machine/dist/leaflet-routing-machine.css';
 import { useSelector } from 'react-redux';
-
+import { CANCELEDDELIVERY,FINISHDELIVERY } from "../../../../graphql/mutation"; 
+import { useMutation, useQuery } from "@apollo/client"; 
 type Coordinates = {
   lat: number;
   lng: number;
@@ -16,12 +17,14 @@ export default function RiderMap({ coordinates }: { coordinates: Coordinates}) {
   const mapRef = useRef<L.Map | null>(null);
   const routingRef = useRef<L.Routing.Control | null>(null);
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
-
+  const [finishDelivery] = useMutation(FINISHDELIVERY,
+                                      onCompleted:(e)=>{
+                                       console.log(e)
+                                      })
   const location = useSelector((state: any) => state.location.current);
   
   const [status, setStatus] = useState<'pending' | 'cancelled' | 'finished' | null>(null);
   const [showPanel, setShowPanel] = useState(false);
-console.log(location);
   const sender = L.latLng(location?.latitude, location?.longitude);   // Manila
   const receiver = L.latLng(coordinates.lat, coordinates.lng); // Quezon City
 
