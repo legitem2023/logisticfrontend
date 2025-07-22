@@ -38,10 +38,12 @@ const HomeDataCarousel: FC<Props> = ({ items }) => {
               {item.imageUrl && (
                 <div className="relative w-full aspect-[16/9]">
                   <Image
-                    src={item.imageUrl}
-                    alt={item.title}
-                    className="w-full h-full object-cover"
-                    fill
+                   src={item.imageUrl}
+                   alt={item.title}
+                   width={600}
+                   height={337}
+                   className="object-cover w-full h-auto"
+                   priority // Optional: loads image early
                   />
                   <div className="absolute inset-0 bg-black/40 flex flex-col justify-end p-4 text-white">
                     <h2 className="text-2xl font-bold">{item.title}</h2>
