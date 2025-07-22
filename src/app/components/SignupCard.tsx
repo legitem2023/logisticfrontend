@@ -54,16 +54,16 @@ const SignupCard = () => {
         vehicleTypeId: form.vehicleType,
       };
    console.log(input) 
-    // createRider({
-    //   variables: {
-    //     email: form.email,
-    //     licensePlate: form.plateNumber,
-    //     name: form.fullName,
-    //     password: form.password,
-    //     phoneNumber: form.phone,
-    //     vehicleTypeId: form.vehicleType,
-    //   },
-    // });
+     createRider({
+       variables: {
+         email: form.email,
+         licensePlate: form.plateNumber,
+         name: form.fullName,
+         password: form.password,
+         phoneNumber: form.phone,
+         vehicleTypeId: form.vehicleType,
+       },
+     });
   };
 
   if (loading) return <p>Loading...</p>;
