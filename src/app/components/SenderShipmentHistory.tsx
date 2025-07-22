@@ -36,7 +36,7 @@ const globalUserId = useSelector(selectTempUserId);
 
 useEffect(() => {
   if (data) {
-    const mockShipment = data.getRidersDelivery.filter((delivery: any) => delivery.deliveryStatus !== "Delivered" && delivery.deliveryStatus !== "Cancelled").map((delivery: any) => ({
+    const mockShipment = data.getRidersDelivery.filter((delivery: any) => delivery.deliveryStatus === status).map((delivery: any) => ({
       trackingNumber: delivery.trackingNumber, 
       id: delivery.id, 
       sender: delivery.sender.name, 
