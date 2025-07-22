@@ -87,12 +87,13 @@ export default function RiderMap({ coordinates,deliveryId }: { coordinates: Coor
     };
   }, []);
 
-  const handleStatusChange = (newStatus: typeof status) => {
+  const handleStatusChange = async (newStatus: typeof status) => {
     setStatus(newStatus);
     if(newStatus==='finished'){
-       finishDelivery({
-           "deliveryId":deliveryId,
-           "riderId": globalUserId
+       await finishDelivery({
+         variables : {"deliveryId":deliveryId,
+                      "riderId": globalUserId 
+          }
        })
     }
    // alert(`Delivery marked as: ${newStatus?.toUpperCase()}`);
