@@ -112,3 +112,173 @@ query GetNotifications($getNotificationsId: String) {
   }
 }
 `
+
+export const GETDISPATCH = gql`
+query GetDispatch($getDispatchId: String) {
+  getDispatch(id: $getDispatchId) {
+    id
+    trackingNumber
+    sender {
+      id
+      image
+      name
+      email
+      phoneNumber
+      vehicleType {
+        id
+        name
+        maxCapacityKg
+        maxVolumeM3
+        description
+        createdAt
+        updatedAt
+        icon
+        cost
+      }
+      licensePlate
+      status
+      currentLatitude
+      currentLongitude
+      lastUpdatedAt
+      createdAt
+      updatedAt
+      role
+    }
+    recipientName
+    recipientPhone
+    pickupAddress
+    pickupLatitude
+    pickupLongitude
+    dropoffAddress
+    dropoffLatitude
+    dropoffLongitude
+    assignedRider {
+      id
+      image
+      name
+      email
+      phoneNumber
+      vehicleType {
+        id
+        name
+        maxCapacityKg
+        maxVolumeM3
+        description
+        createdAt
+        updatedAt
+        icon
+        cost
+      }
+      licensePlate
+      status
+      currentLatitude
+      currentLongitude
+      lastUpdatedAt
+      createdAt
+      updatedAt
+      role
+    }
+    deliveryStatus
+    estimatedDeliveryTime
+    actualDeliveryTime
+    createdAt
+    updatedAt
+    deliveryType
+    paymentStatus
+    paymentMethod
+    deliveryFee
+    isCancelled
+    cancellationReason
+    failedAttemptReason
+    currentLatitude
+    currentLongitude
+    senderId
+    assignedRiderId
+  }
+}
+`
+
+export const GETDELIVERIESADMIN = gql`
+query GetDeliveries {
+  getDeliveries {
+    id
+    trackingNumber
+    recipientName
+    recipientPhone
+    pickupAddress
+    pickupLatitude
+    pickupLongitude
+    dropoffAddress
+    dropoffLatitude
+    dropoffLongitude
+    deliveryStatus
+    estimatedDeliveryTime
+    actualDeliveryTime
+    createdAt
+    updatedAt
+    deliveryType
+    paymentStatus
+    paymentMethod
+    deliveryFee
+    isCancelled
+    cancellationReason
+    failedAttemptReason
+    currentLatitude
+    currentLongitude
+    senderId
+    assignedRiderId
+    assignedRider {
+      id
+      image
+      name
+      email
+      phoneNumber
+      licensePlate
+      status
+      currentLatitude
+      currentLongitude
+      lastUpdatedAt
+      createdAt
+      updatedAt
+      role
+      vehicleType {
+        id
+        name
+        maxCapacityKg
+        maxVolumeM3
+        description
+        createdAt
+        updatedAt
+        icon
+        cost
+      }
+    }
+    sender {
+      id
+      image
+      name
+      email
+      phoneNumber
+      vehicleType {
+        id
+        name
+        maxCapacityKg
+        maxVolumeM3
+        description
+        createdAt
+        updatedAt
+        icon
+        cost
+      }
+      licensePlate
+      status
+      currentLatitude
+      currentLongitude
+      lastUpdatedAt
+      createdAt
+      updatedAt
+      role
+    }
+  }
+}
+`

@@ -77,6 +77,7 @@ import {
 import { useDispatch,useSelector } from 'react-redux';
 import { setCurrentLocation } from '../../../Redux/locationSlice';
 import { setTempUserId,selectTempUserId } from '../../../Redux/tempUserSlice';
+import  AdminDeliveriesTable  from './Administrator/AdminDeliveriesTable';
 
 
 export default function Menu() {
@@ -201,7 +202,7 @@ console.log(useRole,"<-role");
       },
     ]
   : []),
-        ...(isUserActive()
+        ...(isUserActive() && (useRole === 'Administrator' || useRole === 'ADMINISTRATOR')
       ? [
           {
             label: 'Rider',
@@ -226,6 +227,20 @@ console.log(useRole,"<-role");
                     },
                   ]}
                 />
+              </div>
+            ),
+          },
+        ]
+      : []),
+              ...(isUserActive() && (useRole === 'Administrator' || useRole === 'ADMINISTRATOR')
+      ? [
+          {
+            label: 'Requested Deliveries',
+            role: '',
+            icon: <Bike color="green" />,
+            content: (
+              <div className="px-1 py-1 space-y-1">
+                <AdminDeliveriesTable />
               </div>
             ),
           },

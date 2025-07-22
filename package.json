@@ -13,6 +13,7 @@
     "@capacitor/cli": "^5.0.0",
     "@capacitor/core": "^5.0.0",
     "@capacitor/geolocation": "^5.0.0",
+    "@radix-ui/react-scroll-area": "^1.2.9",
     "@radix-ui/react-slot": "^1.2.3",
     "@react-google-maps/api": "^2.20.7",
     "@reduxjs/toolkit": "^2.8.2",

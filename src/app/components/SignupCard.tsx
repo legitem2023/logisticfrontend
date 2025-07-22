@@ -14,7 +14,8 @@ const SignupCard = () => {
   const { loading, error, data } = useQuery(VEHICLEQUERY);
   const [createRider] = useMutation(CREATERIDER, {
     onCompleted: (data) => {
-      showToast("Driver created successfully", "success");
+      showToast(data, "success");
+      console.log("Driver created:", data);
     },
     onError: (err) => {
       console.log("Driver creation failed:", err.message);
@@ -56,12 +57,7 @@ const SignupCard = () => {
    console.log(input) 
      createRider({
        variables: {
-         email: form.email,
-         licensePlate: form.plateNumber,
-         name: form.fullName,
-         password: form.password,
-         phoneNumber: form.phone,
-         vehicleTypeId: form.vehicleType,
+          input: input
        },
      });
   };
