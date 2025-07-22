@@ -10,13 +10,15 @@ import Cookies from 'js-cookie';
 import { useQuery } from '@apollo/client';
 import { DELIVERIES } from '../../../graphql/query';
 import { decryptToken, capitalize, formatDate } from '../../../utils/decryptToken';
-
+import FilterBar from "./Roder/Filterbar";
 export default function SenderShipmentHistory({status}:any) {
   const [useID, setID] = useState();
   const [search, setSearch] = useState("");
   const [useStatus,setStatus] = useState(status);
   const [selectedShipment, setSelectedShipment] = useState<any>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [filteredDeliveries, setFilteredDeliveries] = useState([]);
+  const [originalDeliveries, setOriginalDeliveries] = useState([]);
 
   useEffect(() => {
     const getRole = async () => {
@@ -41,64 +43,97 @@ export default function SenderShipmentHistory({status}:any) {
 
   if (loading || !data) return null;
 
-const mockShipment = () => {
-  return data.getRidersDelivery.filter((stat:any) => stat.deliveryStatus===status).map((delivery: any) => ({
-    id: delivery.trackingNumber,
-    receiver: delivery.recipientName,
-    dropoff: delivery.dropoffAddress,
-    status: capitalize(delivery.deliveryStatus),
-    date: formatDate(delivery.createdAt),
-  }));
+useEffect(() => {
+  if (data) {
+    const mockShipment = data.getRidersDelivery.filter((delivery: any) => delivery.deliveryStatus !== "Delivered" && delivery.deliveryStatus !== "Cancelled").map((delivery: any) => ({
+      trackingNumber: delivery.trackingNumber, 
+      id: delivery.id, 
+      sender: delivery.sender.name, 
+      phoneNumber: delivery.sender.phoneNumber, 
+      pickupAddress: delivery.pickupAddress, 
+      pickupLatitude: delivery.pickupLatitude, 
+      pickupLongitude: delivery.pickupLongitude, 
+      recipientName: delivery.recipientName, 
+      recipientPhone: delivery.recipientPhone, 
+      dropoffAddress: delivery.dropoffAddress, 
+      dropoffLatitude: delivery.dropoffLatitude, 
+      dropoffLongitude: delivery.dropoffLongitude, 
+      deliveryStatus: capitalize(delivery.deliveryStatus), 
+      estimatedDeliveryTime: formatDate(delivery.estimatedDeliveryTime), 
+      earnings: "120.00", 
+    }));
+    setOriginalDeliveries(mockShipment);
+    setFilteredDeliveries(mockShipment);
+  }
+}, [data]);
+
+
+
+const handleFilter = ({ search, date }: { search: string; date: Date | null }) => {
+  // Reset to original data if filters are empty
+  if (!search && !date) {
+    setFilteredDeliveries(originalDeliveries);
+    return;
+  }
+
+const result = filteredDeliveries.filter((d) => {
+    // Search filter (case insensitive)
+    const searchMatch = search 
+      ? d.trackingNumber.toLowerCase().includes(search.toLowerCase()) ||
+        d.recipientName.toLowerCase().includes(search.toLowerCase()) ||
+        d.sender.toLowerCase().includes(search.toLowerCase())
+      : true;
+
+    // Date filter
+    const dateMatch = date
+      ? new Date(d.estimatedDeliveryTime).toDateString() === date.toDateString()
+      : true;
+
+    return searchMatch && dateMatch;
+  });
+
+  setFilteredDeliveries(result);
+  
+  // Optional: Show message when no results found
+  if (result.length === 0) {
+    // showToast("No deliveries match your filters", "info");
+  }
 };
 
-const filtered = mockShipment().filter((s) =>
-  s.id.toLowerCase().includes(search.toLowerCase())
-);
-
+  
   return (
     <>
       <div className="relative p-1 space-y-4">
-        <div className="flex items-center justify-between flex-wrap gap-2">
-          <Input
-            placeholder="Search by Delivery ID"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="max-w-sm border border-gray-300 focus:ring-2 focus:ring-blue-500"
-          />
-          <Button className="flex items-center gap-2 bg-blue-600 text-white hover:bg-blue-700">
-            <CalendarIcon className="w-4 h-4" />
-            Filter by Date
-          </Button>
-        </div>
+        <FilterBar onFilter={handleFilter}/>
 
         <div className="grid gap-4">
-          {filtered.map((shipment) => (
+          {filteredDeliveries.map((shipment) => (
             <Card key={shipment.id} className="bg-white border border-gray-200 shadow-sm">
               <CardContent className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 p-4">
                 <div>
                   <div className="text-sm text-gray-800">
                     {shipment.date}
                   </div>
-                  <div className="font-semibold text-gray-900">{shipment.id}</div>
+                  <div className="font-semibold text-gray-900">{shipment.trackingNumber}</div>
                   <div className="text-sm text-gray-800">
-                    To: {shipment.receiver} ({shipment.dropoff})
+                    To: {shipment.recipientName} ({shipment.dropoffAddress})
                   </div>
                 </div>
                 <div className="flex items-center gap-2 flex-wrap">
                   <Badge
                     variant={
-                      shipment.status === "Delivered"
+                      shipment.DeliveryStatus === "Delivered"
                         ? "success"
-                        : shipment.status === "In Transit"
+                        : shipment.DeliveryStatus === "in_transit"
                         ? "secondary"
-                        : shipment.status === "Pending"
+                        : shipment.DeliveryStatus === "Pending"
                         ? "outline"
-                        : shipment.status === "Canceled"
+                        : shipment.DeliveryStatus === "Canceled"
                         ? "destructive"
                         : "default"
                     }
                   >
-                    {shipment.status}
+                    {shipment.DeliveryStatus}
                   </Badge>
                   <Button
                     className="flex items-center gap-1 bg-blue-600 text-white hover:bg-blue-700"
@@ -138,11 +173,11 @@ const filtered = mockShipment().filter((s) =>
           </div>
           {selectedShipment && (
             <div className="p-4 space-y-3 text-sm text-gray-900 overflow-y-auto">
-              <div><strong>Tracking ID:</strong> {selectedShipment.id}</div>
-              <div><strong>Receiver:</strong> {selectedShipment.receiver}</div>
-              <div><strong>Drop-off Address:</strong> {selectedShipment.dropoff}</div>
-              <div><strong>Status:</strong> {selectedShipment.status}</div>
-              <div><strong>Date:</strong> {selectedShipment.date}</div>
+              <div><strong>Tracking ID:</strong> {selectedShipment.trackingNumber}</div>
+              <div><strong>Receiver:</strong> {selectedShipment.recipientName}</div>
+              <div><strong>Drop-off Address:</strong> {selectedShipment.dropoffAddress}</div>
+              <div><strong>Status:</strong> {selectedShipment.DeliveryStatus}</div>
+              <div><strong>Date:</strong> {selectedShipment.estimatedDeliveryTime}</div>
             </div>
           )}
         </div>
