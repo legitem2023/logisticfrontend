@@ -4,6 +4,12 @@ import { Card, CardContent } from "./ui/Card";
 import { Input } from "./ui/Input";
 import { Button } from "./ui/Button";
 import { Badge } from "./ui/Badge";
+
+import { useSelector } from 'react-redux';
+
+import { selectTempUserId } from '../../../Redux/tempUserSlice';
+
+
 import { CalendarIcon, DownloadIcon, EyeIcon, XIcon } from "lucide-react";
 import { useState, useEffect, useMemo } from "react";
 import Cookies from 'js-cookie';
@@ -20,25 +26,10 @@ export default function SenderShipmentHistory({status}:any) {
   const [filteredDeliveries, setFilteredDeliveries] = useState([]);
   const [originalDeliveries, setOriginalDeliveries] = useState([]);
 
-  useEffect(() => {
-    const getRole = async () => {
-      try {
-        const token = Cookies.get('token');
-        const secret = process.env.NEXT_PUBLIC_JWT_SECRET as string;
-        if (token && secret) {
-          const payload = await decryptToken(token, secret);
-          setID(payload.userID);
-        }
-      } catch (err) {
-        console.error('Error getting role:', err);
-        setID(null);
-      }
-    };
-    getRole();
-  }, []);
 
+const globalUserId = useSelector(selectTempUserId);
   const { data, loading } = useQuery(DELIVERIES, {
-    variables: { getNotificationsId: useID }
+    variables: { getNotificationsId: globalUserId }
   });
 
   if (loading || !data) return null;
