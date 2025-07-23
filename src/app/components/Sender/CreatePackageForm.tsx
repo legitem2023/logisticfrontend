@@ -109,11 +109,11 @@ const CreatePackageForm = ({ deliveryId, Package }: { deliveryId: string; Packag
       <button
         type="submit"
         disabled={loading}
-        className={`w-full py-3 rounded-xl font-semibold text-white bg-blue-600 hover:bg-blue-700 transition-all shadow-lg ${
+        className={`w-full py-3 rounded-xl font-semibold text-white customgrad hover:bg-blue-700 transition-all shadow-lg ${
           loading ? 'opacity-60 cursor-not-allowed' : ''
         }`}
       >
-        {loading ? 'Submitting...' : 'Create Package'}
+        {loading ? 'Submitting...' : 'Save Package'}
       </button>
     </form>
   );
