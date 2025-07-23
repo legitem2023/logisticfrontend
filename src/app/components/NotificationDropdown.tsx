@@ -1,10 +1,12 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
-import { useQuery } from '@apollo/client'
+import { useMutation, useQuery } from '@apollo/client'
 import { Bell } from 'lucide-react'
 import { GETNOTIFICATION } from '../../../graphql/query'
 import {  capitalize, formatDate } from "../../../utils/decryptToken"; 
+import { Badge } from './ui/Badge'
+import { READNOTIFICATION } from '../../../graphql/mutation'
 export default function NotificationDropdown({ userId }: { userId: string }) {
   const [open, setOpen] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
@@ -12,6 +14,16 @@ export default function NotificationDropdown({ userId }: { userId: string }) {
   const { data, loading, error } = useQuery(GETNOTIFICATION, {
     variables: { getNotificationsId: userId },
   })
+
+  const [readNotification] = useMutation(READNOTIFICATION, {
+    refetchQueries: [
+      {
+        query: GETNOTIFICATION,
+        variables: { getNotificationsId: userId },
+      },
+    ],
+  })
+
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -30,6 +42,20 @@ export default function NotificationDropdown({ userId }: { userId: string }) {
 
   const notifications = data?.getNotifications || []
 
+
+  const read = data?.getNotifications.filter((notif: any) => notif.isRead === false) || [];
+
+  console.log(read.length,"read");
+
+  const handleClick = (id: string) => {
+    readNotification({
+      variables: {
+        notificationId: id,
+      },
+    })
+  }
+
+
   const dropdownContent = (
     <>
       
@@ -43,11 +69,24 @@ export default function NotificationDropdown({ userId }: { userId: string }) {
             <li
               key={notif.id}
               className="px-4 py-3 hover:bg-gray-100 transition"
+              onClick={() => handleClick(notif.id)}
             >
-              <p className="text-sm font-medium text-gray-800">{notif.message}</p>
-              <span className="text-xs text-gray-500 block mt-1">
-                {formatDate(notif.createdAt)}
-              </span>
+              {notif.isRead ? (
+                <>
+                 <p className="text-sm font-medium text-gray-800">{notif.message}</p>
+                 <span className="text-xs text-gray-500 block mt-1">
+                  {formatDate(notif.createdAt)}
+                 </span>                  
+                </>
+              ):(
+                <>
+                <p className="text-sm font-medium text-gray-800 font-bold">{notif.message}</p>
+                <span className="text-xs text-gray-500 block mt-1 font-bold">
+                  {formatDate(notif.createdAt)}
+                </span>
+                </>
+              )}
+              
             </li>
           ))
         ) : (
@@ -64,7 +103,15 @@ export default function NotificationDropdown({ userId }: { userId: string }) {
           onClick={() => setOpen(!open)}
           className="p-2 rounded-full border border-gray-200 shadow-xl bg-white/30 backdrop-blur hover:bg-white/50 transition"
         >
-          <Bell className="w-5 h-5 text-gray-800" />
+          {read.length > 0?(
+          <>
+          <Bell className="w-5 h-5 text-red-500" />
+          <Badge className="absolute top-[-5px] right-[-15px] bg-red-500 text-white">{read.length}</Badge>
+          </>  
+          ):(
+            <Bell className="w-5 h-5 text-gray-200" />
+          )}
+          
         </button>
 
         {open && (

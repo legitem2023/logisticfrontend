@@ -181,6 +181,24 @@ mutation CreatePackage($deliveryId: String!, $packageType: String, $weight: Floa
   }
 }
 `
+
+
+export const DELETENOTIFICATION = gql`
+mutation DeleteNotification($notificationId: String!) {
+  deleteNotification(notificationId: $notificationId) {
+    statusText
+  }
+}
+`
+
+
+export const READNOTIFICATION =gql`
+mutation ReadNotification($notificationId: String!) {
+  readNotification(notificationId: $notificationId) {
+    statusText
+  }
+}
+`
 // {
 //   "deliveryId": null,
 //   "packageType": null,
@@ -188,3 +206,4 @@ mutation CreatePackage($deliveryId: String!, $packageType: String, $weight: Floa
 //   "dimensions": null,
 //   "specialInstructions": null
 // }
+

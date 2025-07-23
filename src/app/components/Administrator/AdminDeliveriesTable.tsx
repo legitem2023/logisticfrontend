@@ -4,7 +4,6 @@ import { useQuery, useMutation } from '@apollo/client';
 import { GETDELIVERIESADMIN, RIDERS } from '../../../../graphql/query';
 import { ASSIGNRIDER } from '../../../../graphql/mutation';
 import AdminDeliveriesLoading from "./AdminDeliveriesLoading";
-import { Loader2 } from 'lucide-react';
 import { Card, CardContent } from '../ui/Card';
 import { Badge } from '../ui/Badge';
 import { useState } from 'react';
@@ -12,29 +11,27 @@ import { useState } from 'react';
 const AdminDeliveriesTable = () => {
   const { data, loading, error } = useQuery(GETDELIVERIESADMIN);
   const { data: ridersData } = useQuery(RIDERS);
-  const [assignRider] = useMutation(ASSIGNRIDER,{
-    onCompleted:(e)=>{ console.log(e)}
+  const [assignRider] = useMutation(ASSIGNRIDER, {
+    onCompleted: (e) => {
+      console.log(e);
+    },
   });
 
   const handleAssignRider = async (deliveryId: string, riderId: string) => {
     try {
-       await assignRider({
-         variables: {
-           deliveryId,
-           riderId,
-         },
-         refetchQueries: [GETDELIVERIESADMIN],
-       });
+      await assignRider({
+        variables: {
+          deliveryId,
+          riderId,
+        },
+        refetchQueries: [GETDELIVERIESADMIN],
+      });
     } catch (err) {
       console.error('Failed to assign rider:', err);
     }
   };
 
-  if (loading) {
-    return (
-      <AdminDeliveriesLoading/>
-    );
-  }
+  if (loading) return <AdminDeliveriesLoading />;
 
   if (error) {
     return (
@@ -43,41 +40,43 @@ const AdminDeliveriesTable = () => {
       </div>
     );
   }
-console.log(data);
+
   const deliveries = data?.getDeliveries ?? [];
   const riders = ridersData?.getRiders ?? [];
 
   return (
-    <div className="w-full p-2">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div className="w-full p-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
         {deliveries.map((delivery: any) => (
-          <Card key={delivery.id} className="shadow-md border border-gray-200 rounded-xl">
-            <CardContent className="p-4 space-y-2">
-              {/* Delivery Info */}
-              <div className="flex justify-between items-center text-sm font-mono text-gray-700">
+          <Card
+            key={delivery.id}
+            className="rounded-2xl border border-zinc-200 bg-gradient-to-br from-white to-zinc-50 shadow-lg hover:shadow-xl transition-shadow duration-300"
+          >
+            <CardContent className="p-6 space-y-4 text-sm text-zinc-800">
+              <div className="flex justify-between items-center font-mono text-xs text-zinc-500">
                 <span className="font-semibold">Tracking:</span>
                 <span>{delivery.trackingNumber}</span>
               </div>
 
               <div>
-                <p className="text-sm font-medium">Recipient:</p>
-                <p className="text-sm text-gray-800">{delivery.recipientName}</p>
-                <p className="text-xs text-gray-500">{delivery.recipientPhone}</p>
+                <p className="text-[13px] font-semibold text-zinc-700">Recipient</p>
+                <p>{delivery.recipientName}</p>
+                <p className="text-xs text-zinc-400">{delivery.recipientPhone}</p>
               </div>
 
               <div>
-                <p className="text-sm font-medium">Pickup:</p>
-                <p className="text-xs text-gray-600">{delivery.pickupAddress}</p>
+                <p className="text-[13px] font-semibold text-zinc-700">Pickup</p>
+                <p className="text-xs text-zinc-500">{delivery.pickupAddress}</p>
               </div>
 
               <div>
-                <p className="text-sm font-medium">Dropoff:</p>
-                <p className="text-xs text-gray-600">{delivery.dropoffAddress}</p>
+                <p className="text-[13px] font-semibold text-zinc-700">Dropoff</p>
+                <p className="text-xs text-zinc-500">{delivery.dropoffAddress}</p>
               </div>
 
               <div>
-                <p className="text-sm font-medium">Status:</p>
-                <div className="flex flex-wrap gap-1">
+                <p className="text-[13px] font-semibold text-zinc-700">Status</p>
+                <div className="flex flex-wrap gap-2">
                   <Badge variant="outline">{delivery.deliveryStatus}</Badge>
                   {delivery.isCancelled && (
                     <Badge variant="destructive">Cancelled</Badge>
@@ -86,18 +85,18 @@ console.log(data);
               </div>
 
               <div>
-                <p className="text-sm font-medium">Rider:</p>
+                <p className="text-[13px] font-semibold text-zinc-700">Rider</p>
                 {delivery.assignedRider ? (
-                  <div className="text-xs text-gray-700">
+                  <div className="text-sm text-zinc-700">
                     {delivery.assignedRider.name}
                     <br />
-                    <span className="text-muted-foreground">
+                    <span className="text-xs text-zinc-400">
                       {delivery.assignedRider.phoneNumber}
                     </span>
                   </div>
                 ) : (
                   <select
-                    className="w-full mt-1 text-sm border rounded px-2 py-1"
+                    className="w-full mt-1 text-sm border border-zinc-300 rounded-lg px-3 py-2 bg-white focus:ring-2 focus:ring-indigo-400 focus:outline-none"
                     defaultValue=""
                     onChange={(e) => {
                       if (e.target.value) {
@@ -118,20 +117,20 @@ console.log(data);
               </div>
 
               <div>
-                <p className="text-sm font-medium">Sender:</p>
-                <p className="text-xs text-gray-700">{delivery.sender?.name}</p>
-                <p className="text-xs text-muted-foreground">{delivery.sender?.phoneNumber}</p>
+                <p className="text-[13px] font-semibold text-zinc-700">Sender</p>
+                <p className="text-sm text-zinc-700">{delivery.sender?.name}</p>
+                <p className="text-xs text-zinc-400">{delivery.sender?.phoneNumber}</p>
               </div>
 
-              <div className="flex justify-between text-sm font-medium">
-                <span>Fee:</span>
+              <div className="flex justify-between text-sm font-medium text-zinc-700">
+                <span>Fee</span>
                 <span className="text-right">₱{delivery.deliveryFee?.toFixed(2) ?? '0.00'}</span>
               </div>
 
               <div>
-                <p className="text-sm font-medium">Payment:</p>
+                <p className="text-[13px] font-semibold text-zinc-700">Payment</p>
                 <div className="flex items-center gap-2">
-                  <span className="text-xs text-gray-700">{delivery.paymentMethod}</span>
+                  <span className="text-xs text-zinc-600">{delivery.paymentMethod}</span>
                   <Badge
                     variant={delivery.paymentStatus === 'PAID' ? 'default' : 'secondary'}
                   >
