@@ -7,20 +7,31 @@ import CreatePackageForm from "./CreatePackageForm";
 import { useSelector, useDispatch } from "react-redux";
 import { selectTempUserId } from '../../../../Redux/tempUserSlice';
 import { decryptToken, capitalize ,getMinutesFromNow } from '../../../../utils/decryptToken';
-
+import FilterBar from "../Rider/Filterbar";
 
 export default function SenderDashboard() {
   const globalUserId = useSelector(selectTempUserId);
 
-  
+   const [search, setSearch] = useState("");
+  const [filteredDeliveries, setFilteredDeliveries] = useState([]);
+  const [originalDeliveries, setOriginalDeliveries] = useState([]); 
   
   const { data, loading, error } = useQuery(GETDISPATCH, {
     variables: { id:globalUserId },
     skip: !globalUserId,
   });
 
-  const acceptedDeliveries = data?.getDispatch;
- console.log(acceptedDeliveries); 
+const acceptedDeliveries = data?.getDispatch;
+ 
+
+const handleFilter = ({ search, date }: { search: string; date: Date | null }) => {
+  // Reset to original data if filters are empty
+  if (!search && !date) {
+    setFilteredDeliveries(acceptedDeliveries);
+    return;
+  }
+
+  
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col md:flex-row">
       {/* Sidebar */}
@@ -35,18 +46,17 @@ export default function SenderDashboard() {
 
       {/* Main Content */}
       <main className="flex-1 p-4">
-        <h1 className="text-2xl font-bold mb-4">Accepted Deliveries</h1>
-
+        <FilterBar onFilter={handleFilter} />
         {loading ? (
           <div>Loading...</div>
         ) : error ? (
           <div className="text-red-500">Error loading deliveries</div>
         ) : (
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-            {acceptedDeliveries.map((delivery) => (
+            {filteredDeliveries.map((delivery) => (
               <Card
                 key={delivery.id}
-                className="bg-white/80 backdrop-blur-lg border border-gray-200 shadow-md hover:shadow-xl transition-all duration-300 rounded-2xl"
+                className="bg-white/80 backdrop-blur-lg border border-gray-200 shadow-md hover:shadow-xl transition-all duration-300"
               >
                 <CardContent className="p-5 space-y-4">
                   <div className="text-lg font-semibold text-gray-800">{delivery.trackingNumber}</div>
