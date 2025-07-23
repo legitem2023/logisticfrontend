@@ -5,12 +5,19 @@ import { useMutation } from '@apollo/client';
 import { CREATEPACKAGE } from "../../../../graphql/mutation";
 import { showToast } from '../../../../utils/toastify';
 
-const CreatePackageForm = ({ deliveryId }: { deliveryId: string }) => {
+type Packages = {
+  packageType: string;
+  weight: string;
+  dimensions: string;
+  specialInstructions: string;
+}
+
+const CreatePackageForm = ({ deliveryId,Package }: { deliveryId: string, Package:Packages }) => {
   const [form, setForm] = useState({
-    packageType: '',
-    weight: '',
-    dimensions: '',
-    specialInstructions: '',
+    packageType: Package.packageType || '',
+    weight: Package.weight || '',
+    dimensions: Package.dimensions || '',
+    specialInstructions: Package.specialInstructions || '',
   });
 
   const [createPackage, { loading }] = useMutation(CREATEPACKAGE, {
