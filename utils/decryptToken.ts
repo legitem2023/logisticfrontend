@@ -66,3 +66,21 @@ export function getMinutesAgo(timestamp) {
     return `${diffInMinutes} minute(s) ago`;
   }
 }
+
+// utils/minutesFromNow.js
+
+/**
+ * Calculates how many minutes from now the given timestamp is.
+ * If the timestamp is in the past, returns 0.
+ * @param {number} timestamp - Future timestamp in milliseconds (Unix time).
+ * @returns {number} - Minutes from now.
+ */
+export function getMinutesFromNow(timestamp) {
+  const now = Date.now();
+  const diffInMs = timestamp - now;
+
+  if (diffInMs <= 0) return 0;
+
+  const diffInMinutes = Math.ceil(diffInMs / (1000 * 60));
+  return diffInMinutes;
+}
