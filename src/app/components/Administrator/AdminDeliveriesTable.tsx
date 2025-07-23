@@ -2,37 +2,29 @@
 
 import { useQuery, useMutation } from '@apollo/client';
 import { GETDELIVERIESADMIN, RIDERS } from '../../../../graphql/query';
+import { ASSIGNRIDER } from '../../../../graphql/mutation';
+
 import { Loader2 } from 'lucide-react';
 import { Card, CardContent } from '../ui/Card';
 import { Badge } from '../ui/Badge';
 import { useState } from 'react';
 
-// Optional: replace this with your actual mutation
-// const ASSIGN_RIDER = gql`
-//   mutation AssignRider($deliveryId: ID!, $riderId: ID!) {
-//     assignRider(deliveryId: $deliveryId, riderId: $riderId) {
-//       id
-//       assignedRider {
-//         id
-//         name
-//       }
-//     }
-//   }
-// `;
 const AdminDeliveriesTable = () => {
   const { data, loading, error } = useQuery(GETDELIVERIESADMIN);
   const { data: ridersData } = useQuery(RIDERS);
-  // const [assignRider] = useMutation(ASSIGN_RIDER);
+  const [assignRider] = useMutation(ASSIGNRIDER,{
+    onCompleted:(e)=>{ console.log(e)}
+  });
 
   const handleAssignRider = async (deliveryId: string, riderId: string) => {
     try {
-      // await assignRider({
-      //   variables: {
-      //     deliveryId,
-      //     riderId,
-      //   },
-      //   refetchQueries: [GETDELIVERIESADMIN],
-      // });
+       await assignRider({
+         variables: {
+           deliveryId,
+           riderId,
+         },
+         refetchQueries: [GETDELIVERIESADMIN],
+       });
     } catch (err) {
       console.error('Failed to assign rider:', err);
     }
