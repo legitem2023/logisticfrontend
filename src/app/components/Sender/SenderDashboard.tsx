@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"; 
 import { Card, CardContent } from "../ui/Card";
-import { Clock, MapPin, Bike, ChevronDown, ChevronUp } from "lucide-react";
+import { Clock, MapPin, Bike } from "lucide-react";
 import { useQuery } from "@apollo/client";
 import { GETDISPATCH } from '../../../../graphql/query';
 import CreatePackageForm from "./CreatePackageForm";
@@ -10,29 +10,6 @@ import { useSelector } from "react-redux";
 import { selectTempUserId } from '../../../../Redux/tempUserSlice';
 import { getMinutesFromNow } from '../../../../utils/decryptToken';
 import FilterBar from "../Rider/Filterbar";
-
-// Collapsible Component
-const CollapsibleCreatePackage = ({ deliveryId,Package }: { deliveryId: string,Package:any }) => {
-  const [open, setOpen] = useState(false);
-
-  return (
-    <div className="border border-gray-300 rounded-md p-2">
-      <button
-        onClick={() => setOpen(!open)}
-        className="flex items-center justify-between w-full text-sm font-medium text-blue-600 hover:text-blue-800 transition"
-      >
-        <span>Create Package</span>
-        {open ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-      </button>
-
-      {open && (
-        <div className="mt-3">
-          <CreatePackageForm deliveryId={deliveryId} Package={Package} />
-        </div>
-      )}
-    </div>
-  );
-};
 
 export default function SenderDashboard() {
   const globalUserId = useSelector(selectTempUserId);
@@ -48,6 +25,7 @@ export default function SenderDashboard() {
 
   const acceptedDeliveries = data?.getDispatch || [];
 
+  // Set deliveries when fetched
   useEffect(() => {
     if (acceptedDeliveries.length) {
       setOriginalDeliveries(acceptedDeliveries);
@@ -104,7 +82,7 @@ export default function SenderDashboard() {
               >
                 <CardContent className="p-5 space-y-4">
                   <div className="text-lg font-semibold text-gray-800">{delivery.trackingNumber}</div>
-
+                  
                   <div className="flex items-center gap-2 text-sm text-gray-700 font-medium">
                     <Bike className="w-4 h-4 text-blue-600" />
                     <span>Rider: {delivery.assignedRider?.name || "Unassigned"}</span>
@@ -131,11 +109,10 @@ export default function SenderDashboard() {
                   </div>
 
                   <div>
-                    {(!delivery.package || delivery.package.length === 0) ? (
-                      <CollapsibleCreatePackage deliveryId={delivery.id} Package={delivery.package}/>
-                    ) : (
-                      <div className="text-sm text-gray-500 italic">Package already created</div>
-                    )}
+                    <CreatePackageForm
+                      deliveryId={delivery.id}
+                      Package={delivery.packages}
+                    />
                   </div>
 
                   <div className="inline-block text-xs font-semibold text-white px-3 py-1 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 shadow">
