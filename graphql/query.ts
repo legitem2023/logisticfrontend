@@ -118,14 +118,6 @@ query GetDispatch($getDispatchId: String) {
   getDispatch(id: $getDispatchId) {
     id
     trackingNumber
-    packages {
-      id
-      delivery
-      packageType
-      weight
-      dimensions
-      specialInstructions
-    }
     sender {
       id
       image
