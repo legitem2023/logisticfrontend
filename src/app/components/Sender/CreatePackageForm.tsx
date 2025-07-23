@@ -5,7 +5,7 @@ import { useMutation } from '@apollo/client';
 import { CREATEPACKAGE } from "../../../../graphql/mutation";
 import { showToast } from '../../../../utils/toastify';
 
-export const CreatePackageForm = ({ deliveryId }: { deliveryId: string }) => {
+const CreatePackageForm = ({ deliveryId }: { deliveryId: string }) => {
   const [form, setForm] = useState({
     packageType: '',
     weight: '',
@@ -92,3 +92,5 @@ export const CreatePackageForm = ({ deliveryId }: { deliveryId: string }) => {
     </form>
   );
 };
+
+export default CreatePackageForm;
