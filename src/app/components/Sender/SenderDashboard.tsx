@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"; 
 import { Card, CardContent } from "../ui/Card";
+import Collapsible from "../ui/Collapsible";
 import { Clock, MapPin, Bike } from "lucide-react";
 import { useQuery } from "@apollo/client";
 import { GETDISPATCH } from '../../../../graphql/query';
@@ -109,10 +110,13 @@ export default function SenderDashboard() {
                   </div>
 
                   <div>
-                    <CreatePackageForm
+                    <Collapsible title="Package" defaultOpen={false}>
+                     <CreatePackageForm
                       deliveryId={delivery.id}
                       Package={delivery.packages}
                     />
+                    </Collapsible>
+                    
                   </div>
 
                   <div className="inline-block text-xs font-semibold text-white px-3 py-1 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 shadow">
