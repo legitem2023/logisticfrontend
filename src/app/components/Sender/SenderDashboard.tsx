@@ -72,7 +72,7 @@ export default function SenderDashboard() {
                     </span>
                   </div>
                   <div>
-                    <CreatePackageForm deliveryId={delivery.id}/>
+                    <CreatePackageForm deliveryId={delivery.id} Package={delivery.packages}  />
                   </div>
                   <div className="inline-block text-xs font-semibold text-white px-3 py-1 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 shadow">
                     {delivery.deliveryStatus}
