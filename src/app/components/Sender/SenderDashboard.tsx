@@ -30,7 +30,7 @@ const handleFilter = ({ search, date }: { search: string; date: Date | null }) =
     setFilteredDeliveries(acceptedDeliveries);
     return;
   }
-
+}
   
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col md:flex-row">
