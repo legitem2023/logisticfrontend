@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useMutation } from '@apollo/client';
-import { CREATEPACKAGE } from "../../../../graphql/mutations";
+import { CREATEPACKAGE } from "../../../../graphql/mutation";
 import { showToast } from '../../../../utils/toastify';
 
 export const CreatePackageForm = ({ deliveryId }: { deliveryId: string }) => {
