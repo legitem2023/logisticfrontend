@@ -42,8 +42,8 @@ export default function RootLayout({
         
         {/* ✅ Toast container here */}
         <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} newestOnTop />
-      </body>
       <Footer/>
+      </body>
     </html>
   );
 }

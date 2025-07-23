@@ -207,10 +207,68 @@ query GetDispatch($getDispatchId: String) {
 `
 
 export const GETDELIVERIESADMIN = gql`
-query GetDispatch($getDispatchId: String) {
-  getDispatch(id: $getDispatchId) {
+query GetDeliveries {
+  getDeliveries {
     id
     trackingNumber
+    packages {
+      id
+      packageType
+      weight
+      dimensions
+      specialInstructions
+    }
+    packageId
+    recipientName
+    recipientPhone
+    pickupAddress
+    pickupLatitude
+    pickupLongitude
+    dropoffAddress
+    dropoffLatitude
+    dropoffLongitude
+    deliveryStatus
+    estimatedDeliveryTime
+    actualDeliveryTime
+    createdAt
+    updatedAt
+    deliveryType
+    paymentStatus
+    paymentMethod
+    deliveryFee
+    isCancelled
+    cancellationReason
+    failedAttemptReason
+    currentLatitude
+    currentLongitude
+    senderId
+    assignedRiderId
+    assignedRider {
+      id
+      image
+      name
+      email
+      phoneNumber
+      licensePlate
+      status
+      currentLatitude
+      currentLongitude
+      lastUpdatedAt
+      createdAt
+      updatedAt
+      role
+      vehicleType {
+        id
+        name
+        maxCapacityKg
+        maxVolumeM3
+        description
+        createdAt
+        updatedAt
+        icon
+        cost
+      }
+    }
     sender {
       id
       image
@@ -237,64 +295,6 @@ query GetDispatch($getDispatchId: String) {
       updatedAt
       role
     }
-    recipientName
-    recipientPhone
-    pickupAddress
-    pickupLatitude
-    pickupLongitude
-    dropoffAddress
-    dropoffLatitude
-    dropoffLongitude
-    assignedRider {
-      id
-      image
-      name
-      email
-      phoneNumber
-      vehicleType {
-        id
-        name
-        maxCapacityKg
-        maxVolumeM3
-        description
-        createdAt
-        updatedAt
-        icon
-        cost
-      }
-      licensePlate
-      status
-      currentLatitude
-      currentLongitude
-      lastUpdatedAt
-      createdAt
-      updatedAt
-      role
-    }
-    deliveryStatus
-    estimatedDeliveryTime
-    actualDeliveryTime
-    createdAt
-    updatedAt
-    deliveryType
-    paymentStatus
-    paymentMethod
-    deliveryFee
-    isCancelled
-    cancellationReason
-    failedAttemptReason
-    currentLatitude
-    currentLongitude
-    senderId
-    assignedRiderId
-    packages {
-      id
-      packageType
-      weight
-      dimensions
-      specialInstructions
-    }
-    packageId
   }
 }
 `
