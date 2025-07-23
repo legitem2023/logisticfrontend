@@ -14,7 +14,7 @@ export default function SenderDashboard() {
   
   
   const { data, loading, error } = useQuery(GETDISPATCH, {
-    variables: { globalUserId },
+    variables: { id:globalUserId },
     skip: !globalUserId,
   });
 
