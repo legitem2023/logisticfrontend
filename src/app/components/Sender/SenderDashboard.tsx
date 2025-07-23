@@ -1,4 +1,5 @@
 'use client';
+import { useState, useEffect } from "react"; 
 import { Card, CardContent } from "../ui/Card";
 import { Clock, MapPin, Bike } from "lucide-react";
 import { gql, useQuery } from "@apollo/client";
