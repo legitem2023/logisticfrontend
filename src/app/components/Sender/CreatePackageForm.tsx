@@ -51,13 +51,8 @@ const CreatePackageForm = ({ deliveryId, Package }: { deliveryId: string; Packag
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-gradient-to-br from-white to-gray-50 p-8 rounded-2xl shadow-xl max-w-xl mx-auto space-y-6 border border-gray-200"
+      className="bg-gradient-to-br from-white to-gray-50 p-4 max-w-xl mx-auto space-y-6 border border-gray-200"
     >
-      <div className="flex items-center gap-2">
-        <PackagePlus className="text-blue-600 w-6 h-6" />
-        <h2 className="text-2xl font-semibold text-gray-800">Create New Package</h2>
-      </div>
-
       <div className="space-y-4">
         <div>
           <label className="text-sm font-medium text-gray-700">Package Type</label>
