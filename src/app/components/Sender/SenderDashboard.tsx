@@ -3,7 +3,7 @@ import { Card, CardContent } from "../ui/Card";
 import { Clock, MapPin, Bike } from "lucide-react";
 import { gql, useQuery } from "@apollo/client";
 import { GETDISPATCH } from '../../../../graphql/query';
-
+import CreatePackageForm from "./CreatePackageForm";
 import { useSelector, useDispatch } from "react-redux";
 import { selectTempUserId } from '../../../../Redux/tempUserSlice';
 import { decryptToken, capitalize ,getMinutesFromNow } from '../../../../utils/decryptToken';
@@ -69,6 +69,9 @@ export default function SenderDashboard() {
                         ? getMinutesFromNow(delivery.estimatedDeliveryTime)
                         : "Unknown"}
                     </span>
+                  </div>
+                  <div>
+                    <CreatePackageForm deliveryId={delivery.id}/>
                   </div>
                   <div className="inline-block text-xs font-semibold text-white px-3 py-1 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 shadow">
                     {delivery.deliveryStatus}
