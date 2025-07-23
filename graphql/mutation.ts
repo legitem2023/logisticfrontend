@@ -161,6 +161,19 @@ mutation CreateRouteHistory($deliveryId: String!, $riderId: String!, $latitude: 
 //   "latitude": null,
 //   "longitude": null
 // }
+
+export const ASSIGNRIDER = gql`
+mutation AssignRider($deliveryId: String!, $riderId: String!) {
+  assignRider(deliveryId: $deliveryId, riderId: $riderId) {
+    statusText
+  }
+}
+`
+// {
+//   "deliveryId": "688071e732b94850b85213f7",
+//   "riderId": "687e18da1002bedc6aa71a39"
+// }
+
 export const CREATEPACKAGE = gql`
 mutation CreatePackage($deliveryId: String!, $packageType: String, $weight: Float, $dimensions: String, $specialInstructions: String) {
   createPackage(deliveryId: $deliveryId, packageType: $packageType, weight: $weight, dimensions: $dimensions, specialInstructions: $specialInstructions) {
