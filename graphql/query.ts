@@ -119,8 +119,7 @@ query GetDispatch($getDispatchId: String) {
     id
     trackingNumber
     packages {
-      id           
-      deliveryId
+      id
       delivery
       packageType
       weight
