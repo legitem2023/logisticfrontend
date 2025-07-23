@@ -43,7 +43,7 @@ const AdminDeliveriesTable = () => {
       </div>
     );
   }
-
+console.log(data);
   const deliveries = data?.getDeliveries ?? [];
   const riders = ridersData?.getRiders ?? [];
 
