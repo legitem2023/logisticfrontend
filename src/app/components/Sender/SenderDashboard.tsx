@@ -12,7 +12,7 @@ import { getMinutesFromNow } from '../../../../utils/decryptToken';
 import FilterBar from "../Rider/Filterbar";
 
 // Collapsible Component
-const CollapsibleCreatePackage = ({ deliveryId }: { deliveryId: string }) => {
+const CollapsibleCreatePackage = ({ deliveryId,Package }: { deliveryId: string,Package:any }) => {
   const [open, setOpen] = useState(false);
 
   return (
@@ -27,7 +27,7 @@ const CollapsibleCreatePackage = ({ deliveryId }: { deliveryId: string }) => {
 
       {open && (
         <div className="mt-3">
-          <CreatePackageForm deliveryId={deliveryId} Package={{}} />
+          <CreatePackageForm deliveryId={deliveryId} Package={Package} />
         </div>
       )}
     </div>
@@ -131,8 +131,8 @@ export default function SenderDashboard() {
                   </div>
 
                   <div>
-                    {(!delivery.packages || delivery.packages.length === 0) ? (
-                      <CollapsibleCreatePackage deliveryId={delivery.id} />
+                    {(!delivery.package || delivery.package.length === 0) ? (
+                      <CollapsibleCreatePackage deliveryId={delivery.id} Package={delivery.package}/>
                     ) : (
                       <div className="text-sm text-gray-500 italic">Package already created</div>
                     )}
