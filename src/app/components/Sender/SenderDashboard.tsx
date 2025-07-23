@@ -20,7 +20,7 @@ export default function SenderDashboard() {
   });
 
   const acceptedDeliveries = data?.getDispatch;
- console.log(acceptedDeliveries);
+ console.log(acceptedDeliveries); 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col md:flex-row">
       {/* Sidebar */}
