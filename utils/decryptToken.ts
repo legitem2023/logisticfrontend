@@ -44,3 +44,25 @@ export const formatDate = (timestamp: string | number) => {
 
   return `${day}-${month}-${year}`;
 };
+
+
+// utils/timeAgo.js
+
+/**
+ * Calculates how many minutes ago or from now the given timestamp is.
+ * @param {number} timestamp - The timestamp in milliseconds (Unix time).
+ * @returns {string} - A human-readable string like "10 minutes ago" or "5 minutes from now".
+ */
+export function getMinutesAgo(timestamp) {
+  const now = Date.now();
+  const diffInMs = now - timestamp;
+  const diffInMinutes = Math.floor(diffInMs / (1000 * 60));
+
+  if (diffInMinutes < 0) {
+    return `${Math.abs(diffInMinutes)} minute(s) from now`;
+  } else if (diffInMinutes === 0) {
+    return "Just now";
+  } else {
+    return `${diffInMinutes} minute(s) ago`;
+  }
+}
