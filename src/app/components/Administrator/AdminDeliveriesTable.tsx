@@ -3,7 +3,7 @@
 import { useQuery, useMutation } from '@apollo/client';
 import { GETDELIVERIESADMIN, RIDERS } from '../../../../graphql/query';
 import { ASSIGNRIDER } from '../../../../graphql/mutation';
-
+import AdminDeliveriesLoading from "./AdminDeliveriesLoading";
 import { Loader2 } from 'lucide-react';
 import { Card, CardContent } from '../ui/Card';
 import { Badge } from '../ui/Badge';
@@ -32,9 +32,7 @@ const AdminDeliveriesTable = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-48">
-        <Loader2 className="animate-spin w-6 h-6 text-muted-foreground" />
-      </div>
+      <AdminDeliveriesLoading/>
     );
   }
 
