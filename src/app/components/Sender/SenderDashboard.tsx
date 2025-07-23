@@ -6,7 +6,7 @@ import { GETDISPATCH } from '../../../../graphql/query';
 
 import { useSelector, useDispatch } from "react-redux";
 import { selectTempUserId } from '../../../../Redux/tempUserSlice';
-import { decryptToken, capitalize ,getMinutesAgo } from '../../../../utils/decryptToken';
+import { decryptToken, capitalize ,getMinutesFromNow } from '../../../../utils/decryptToken';
 
 
 export default function SenderDashboard() {
@@ -66,7 +66,7 @@ export default function SenderDashboard() {
                     <span>
                       ETA:{" "}
                       {delivery.estimatedDeliveryTime
-                        ? getMinutesAgo(delivery.createdAt)
+                        ? getMinutesFromNow(delivery.estimatedDeliveryTime)
                         : "Unknown"}
                     </span>
                   </div>
