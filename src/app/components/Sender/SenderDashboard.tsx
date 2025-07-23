@@ -49,6 +49,7 @@ export default function SenderDashboard() {
                 className="bg-white/80 backdrop-blur-lg border border-gray-200 shadow-md hover:shadow-xl transition-all duration-300 rounded-2xl"
               >
                 <CardContent className="p-5 space-y-4">
+                  <div className="text-lg font-semibold text-gray-800">{delivery.trackingNumber}</div>
                   <div className="flex items-center gap-2 text-sm text-gray-700 font-medium">
                     <Bike className="w-4 h-4 text-blue-600" />
                     <span>Rider: {delivery.assignedRider?.name || "Unassigned"}</span>
