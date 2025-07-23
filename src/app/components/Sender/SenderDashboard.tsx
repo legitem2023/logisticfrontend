@@ -22,7 +22,7 @@ export default function SenderDashboard() {
     data?.getDispatch?.filter((d) =>
       ["Accepted", "In Transit"].includes(d.deliveryStatus)
     ) || [];
-console.log(data);
+console.log(acceptedDeliveries);
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col md:flex-row">
       {/* Sidebar */}
