@@ -341,7 +341,7 @@ const today = new Date();
 
   dropoffs.forEach(async (dropoff) => {
     const input = {
-      assignedRiderId: selectedDriver,
+      assignedRiderId: null,
       deliveryFee: selectedDriver.cost,
       deliveryType: selectedService,
       dropoffAddress: dropoff.address,
