@@ -4,15 +4,16 @@ import { useState } from 'react';
 import { useMutation } from '@apollo/client';
 import { CREATEPACKAGE } from "../../../../graphql/mutation";
 import { showToast } from '../../../../utils/toastify';
+import { PackagePlus } from "lucide-react";
 
 type Packages = {
   packageType: string;
   weight: string;
   dimensions: string;
   specialInstructions: string;
-}
+};
 
-const CreatePackageForm = ({ deliveryId,Package }: { deliveryId: string, Package:Packages }) => {
+const CreatePackageForm = ({ deliveryId, Package }: { deliveryId: string; Package: Packages }) => {
   const [form, setForm] = useState({
     packageType: Package.packageType || '',
     weight: Package.weight || '',
@@ -22,10 +23,10 @@ const CreatePackageForm = ({ deliveryId,Package }: { deliveryId: string, Package
 
   const [createPackage, { loading }] = useMutation(CREATEPACKAGE, {
     onCompleted: (data) => {
-      showToast(`Success: ${data.createPackage.statusText}`, 'success');
+      showToast(`✅ ${data.createPackage.statusText}`, 'success');
     },
     onError: (error) => {
-      showToast(`Error: ${error.message}`, 'error');
+      showToast(`❌ ${error.message}`, 'error');
     },
   });
 
@@ -48,51 +49,74 @@ const CreatePackageForm = ({ deliveryId,Package }: { deliveryId: string, Package
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 bg-white p-6 rounded shadow max-w-md">
-      <h2 className="text-lg font-bold">Create Package</h2>
+    <form
+      onSubmit={handleSubmit}
+      className="bg-gradient-to-br from-white to-gray-50 p-8 rounded-2xl shadow-xl max-w-xl mx-auto space-y-6 border border-gray-200"
+    >
+      <div className="flex items-center gap-2">
+        <PackagePlus className="text-blue-600 w-6 h-6" />
+        <h2 className="text-2xl font-semibold text-gray-800">Create New Package</h2>
+      </div>
 
-      <input
-        name="packageType"
-        type="text"
-        placeholder="Package Type"
-        value={form.packageType}
-        onChange={handleChange}
-        className="w-full p-2 border rounded"
-        required
-      />
+      <div className="space-y-4">
+        <div>
+          <label className="text-sm font-medium text-gray-700">Package Type</label>
+          <input
+            name="packageType"
+            type="text"
+            placeholder="e.g. Fragile, Express"
+            value={form.packageType}
+            onChange={handleChange}
+            className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+            required
+          />
+        </div>
 
-      <input
-        name="weight"
-        type="number"
-        step="0.01"
-        placeholder="Weight (kg)"
-        value={form.weight}
-        onChange={handleChange}
-        className="w-full p-2 border rounded"
-        required
-      />
+        <div>
+          <label className="text-sm font-medium text-gray-700">Weight (kg)</label>
+          <input
+            name="weight"
+            type="number"
+            step="0.01"
+            placeholder="e.g. 2.5"
+            value={form.weight}
+            onChange={handleChange}
+            className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+            required
+          />
+        </div>
 
-      <input
-        name="dimensions"
-        type="text"
-        placeholder="Dimensions (e.g. 10x20x30cm)"
-        value={form.dimensions}
-        onChange={handleChange}
-        className="w-full p-2 border rounded"
-      />
+        <div>
+          <label className="text-sm font-medium text-gray-700">Dimensions</label>
+          <input
+            name="dimensions"
+            type="text"
+            placeholder="e.g. 10x20x30 cm"
+            value={form.dimensions}
+            onChange={handleChange}
+            className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+          />
+        </div>
 
-      <textarea
-        name="specialInstructions"
-        placeholder="Special Instructions"
-        value={form.specialInstructions}
-        onChange={handleChange}
-        className="w-full p-2 border rounded"
-      />
+        <div>
+          <label className="text-sm font-medium text-gray-700">Special Instructions</label>
+          <textarea
+            name="specialInstructions"
+            placeholder="Write any handling notes here..."
+            value={form.specialInstructions}
+            onChange={handleChange}
+            className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition resize-none"
+            rows={3}
+          />
+        </div>
+      </div>
 
       <button
         type="submit"
-        className="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700 transition"
         disabled={loading}
+        className={`w-full py-3 rounded-xl font-semibold text-white bg-blue-600 hover:bg-blue-700 transition-all shadow-lg ${
+          loading ? 'opacity-60 cursor-not-allowed' : ''
+        }`}
       >
         {loading ? 'Submitting...' : 'Create Package'}
       </button>
