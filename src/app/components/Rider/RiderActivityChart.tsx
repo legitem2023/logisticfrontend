@@ -31,7 +31,7 @@ const barColors = ['#4ade80', '#60a5fa', '#fbbf24', '#f472b6', '#a78bfa', '#34d3
 
 const RiderActivityChart = () => {
   return (
-    <div className="w-full max-w-4xl mx-auto p-4 bg-white rounded-2xl shadow-md">
+    <div className="w-full mx-auto p-2 bg-white shadow-md">
       <h2 className="text-xl font-semibold mb-4 text-center text-gray-700">Rider Daily Activity</h2>
       <ResponsiveContainer width="100%" height={300}>
         <BarChart data={data}>
