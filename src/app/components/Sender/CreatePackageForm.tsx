@@ -42,7 +42,7 @@ const CreatePackageForm = ({ deliveryId, Package }: { deliveryId: string; Packag
       variables: {
         deliveryId,
         packageType: form.packageType,
-        weight: parseFloat(form.weight),
+        weight: form.weight,
         dimensions: form.dimensions,
         specialInstructions: form.specialInstructions,
       },
