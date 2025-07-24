@@ -122,6 +122,7 @@ export default function ClassicConfirmForm({ order, onConfirm ,onLoading }) {
 
       {/* Confirm Button */}
       <button
+        disabled={onLoading}
         onClick={() => {
           if (selectedDriver) {
             onConfirm(selectedDriver);
