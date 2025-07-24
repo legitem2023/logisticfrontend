@@ -16,6 +16,7 @@ export default function NotificationDropdown({ userId }: { userId: string | null
   const { data, loading, error } = useQuery(GETNOTIFICATION, {
     variables: { getNotificationsId: userId },
     skip: !userId,
+    fetchPolicy: 'cache-and-network' // Add this to ensure fresh data
   })
 
   const [readNotification] = useMutation(READNOTIFICATION, {
@@ -54,7 +55,12 @@ export default function NotificationDropdown({ userId }: { userId: string | null
       readNotification({ variables: { notificationId: id } })
     }
   }
-console.log(notifications);
+
+  // Sort notifications by date (newest first)
+  const sortedNotifications = [...notifications].sort((a, b) => 
+    new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+  )
+
   const dropdownContent = (
     <ul className="max-h-64 overflow-y-auto divide-y divide-gray-100">  
       {!userId ? (
@@ -68,7 +74,7 @@ console.log(notifications);
           Error loading notifications
         </li>  
       ) : hasNotifications ? (  
-        notifications.map((notif: any) => (  
+        sortedNotifications.map((notif: any) => (  
           <li  
             key={notif.id}  
             className="px-4 py-3 hover:bg-gray-100 transition cursor-pointer"  
