@@ -43,8 +43,9 @@ export default function RouteDistance({ from, to, baseRate, perKmRate }: RouteDi
     }
   }, [from, to]);
 
-  // Calculate total fare
   const totalFare = distance ? baseRate + (distance * perKmRate) : null;
+
+  const formatPeso = (amount: number) => `₱${amount.toFixed(2)}`;
 
   return (
     <div>
@@ -52,11 +53,11 @@ export default function RouteDistance({ from, to, baseRate, perKmRate }: RouteDi
         <p style={{ color: 'red' }}>{error}</p>
       ) : distance !== null && time !== null ? (
         <div>
-          <p><strong>Base Rate:</strong> ${baseRate.toFixed(2)}</p>
-          <p><strong>Per km Rate:</strong> ${perKmRate.toFixed(2)}</p>
           <p><strong>Distance:</strong> {distance.toFixed(2)} km</p>
           <p><strong>Estimated Time:</strong> {time.toFixed(1)} minutes</p>
-          <p><strong>Total Fare:</strong> ${totalFare?.toFixed(2)}</p>
+          <p><strong>Base Rate:</strong> {formatPeso(baseRate)}</p>
+          <p><strong>Per km Rate:</strong> {formatPeso(perKmRate)}</p>
+          <p><strong>Total Fare:</strong> {formatPeso(totalFare!)}</p>
         </div>
       ) : (
         <p>Calculating route...</p>
