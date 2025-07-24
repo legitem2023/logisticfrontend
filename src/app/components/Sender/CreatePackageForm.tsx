@@ -8,7 +8,7 @@ import { PackagePlus } from "lucide-react";
 
 type Packages = {
   packageType: string;
-  weight: string;
+  weight: number;
   dimensions: string;
   specialInstructions: string;
 };
