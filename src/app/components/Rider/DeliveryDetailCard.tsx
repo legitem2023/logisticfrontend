@@ -195,10 +195,13 @@ const DeliveryDetailCard: React.FC<Props> = ({
       ) : (
         <p className="italic text-gray-400 pl-1">
           Distance and billing not yet calculated.
-          <RouteDistance
-            from={{ lat: coordinates.pickLat, lng: coordinates.pickLng }}
-            to={{ lat: coordinates.dropLat, lng: coordinates.dropLng }}
-          />
+          
+          <RouteDistance 
+              from={{ lat: coordinates.pickLat, lng: coordinates.pickLng }}
+              to={{ lat: coordinates.dropLat, lng: coordinates.dropLng }}
+              baseRate={billing.baseRate}
+              perKmRate={billing.perKmRate}
+           />
         </p>
       )}
 
