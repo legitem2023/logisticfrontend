@@ -47,7 +47,7 @@ type Props = {
   recipient: PartyDetails;
   billing: BillingDetails;
   coordinates:Coordinates;
-  Package: Packages[];
+  packages: Packages[];
   onTrackClick: () => void;
   onAcceptClick: () => void;
 };
