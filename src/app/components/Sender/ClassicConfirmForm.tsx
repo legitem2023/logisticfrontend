@@ -129,10 +129,10 @@ export default function ClassicConfirmForm({ order, onConfirm }) {
             alert("Please select a driver first.");
           }
         }}
-        className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md flex items-center justify-center gap-2 transition"
+        className="w-full customgrad hover:bg-blue-700 text-white py-2 px-4 rounded-sm flex items-center justify-center gap-2 transition"
       >
         <UserCheck className="w-5 h-5" />
-        Confirm & Assign Driver
+        Confirm
       </button>
     </div>
   );
