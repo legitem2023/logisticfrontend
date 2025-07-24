@@ -81,6 +81,10 @@ import { setTempUserId,selectTempUserId } from '../../../Redux/tempUserSlice';
 import  AdminDeliveriesTable  from './Administrator/AdminDeliveriesTable';
 
 
+// Your entire code remains unchanged except for the fixed JSX in the 'Home' tab item
+
+// ...[imports remain unchanged]
+
 export default function Menu() {
   const [useRole, setRole] = useState('');
   
@@ -113,72 +117,69 @@ export default function Menu() {
     getRole();
   },[dispatch]);
 
+  useEffect(() => {
+    if (!globalUserId) return;
 
-useEffect(() => {
-  if (!globalUserId) return;
-
-  // Throttle location updates to prevent excessive requests
-  const throttledUpdate = throttle((location) => {
-    dispatch(setCurrentLocation({
-      latitude: location.latitude,
-      longitude: location.longitude,
-    }));
-    
-    LocationTracker({
-      variables: {
-        input: {
-          accuracy: location.accuracy,
-          batteryLevel: null,
-          heading: location.heading,
-          latitude: location.latitude,
-          longitude: location.longitude,
-          speed: location.speed,
-          timestamp: location.timestamp.toString(),
-          userID: globalUserId,
+    const throttledUpdate = throttle((location) => {
+      dispatch(setCurrentLocation({
+        latitude: location.latitude,
+        longitude: location.longitude,
+      }));
+      
+      LocationTracker({
+        variables: {
+          input: {
+            accuracy: location.accuracy,
+            batteryLevel: null,
+            heading: location.heading,
+            latitude: location.latitude,
+            longitude: location.longitude,
+            speed: location.speed,
+            timestamp: location.timestamp.toString(),
+            userID: globalUserId,
+          },
         },
-      },
-    }).catch((error) => {
-      console.error('Location tracking failed:', error);
-      // Optionally implement retry logic or error reporting
-    });
-  }, 5000); // Update every 5 seconds instead of continuously
+      }).catch((error) => {
+        console.error('Location tracking failed:', error);
+      });
+    }, 5000);
 
-  const stopWatching = startWatchingLocation(throttledUpdate);
+    const stopWatching = startWatchingLocation(throttledUpdate);
 
-  return () => {
-    if (typeof stopWatching === 'function') {
-      stopWatching();
-    }
-    throttledUpdate.cancel(); // Cleanup the throttle
-  };
-}, [globalUserId]); // Only depend on globalUserId
-
+    return () => {
+      if (typeof stopWatching === 'function') {
+        stopWatching();
+      }
+      throttledUpdate.cancel();
+    };
+  }, [globalUserId]);
 
   const { data: subscriptionData, error: subscriptionError } = useSubscription(LocationTracking,{
-      variables: { userID: globalUserId },// optional filter
-    });
+    variables: { userID: globalUserId },
+  });
 
   const isUserActive = (): boolean => {
     const token = Cookies.get('token');
     return !!token;
   };
-console.log(useRole,"<-role");
+
+  console.log(useRole,"<-role");
+
   const tabItems = [
     {
       label: 'Home',
       role: '',
       icon: <Home color="green" />,
-      content: (
-        {useRole==='Sender'?(
-          <div className="px-1 py-1 space-y-1">
-            <HomeDataCarousel items={mockItems} />
-            <LogisticsHomePage />
-          </div>):(
-          <div className="px-1 py-1 space-y-1">
-            <RiderActivityChart/>
-          </div>
-        )
-        }),
+      content: useRole === 'Sender' ? (
+        <div className="px-1 py-1 space-y-1">
+          <HomeDataCarousel items={mockItems} />
+          <LogisticsHomePage />
+        </div>
+      ) : (
+        <div className="px-1 py-1 space-y-1">
+          <RiderActivityChart />
+        </div>
+      ),
     },
     ...(isUserActive()
       ? [
@@ -318,9 +319,8 @@ console.log(useRole,"<-role");
           height={100}
           priority
         />
-        
-       </div>
-     <NotificationDropdown userId={globalUserId}/>
+      </div>
+      <NotificationDropdown userId={globalUserId}/>
       {/* Sidebar with tab content */}
       <Sidebar tabs={tabItems.filter((tab) => tab.role === capitalize(useRole) || tab.role === '')} />
     </div>
