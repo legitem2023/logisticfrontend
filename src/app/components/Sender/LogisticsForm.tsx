@@ -40,6 +40,7 @@ const LogisticsForm = () => {
   const [createDelivery] = useMutation(CREATEDELIVERY, {
     onCompleted: (data) => {
       console.log('Delivery created:', data);
+      setsendLoading(false);
     },
     onError: (error) => {
       console.error('Delivery creation error:', error);
@@ -53,6 +54,9 @@ const LogisticsForm = () => {
   const dispatch = useDispatch();
   const deliveryDetails = useSelector((state:any) => state.delivery);
 
+  const [sendLoading,setsendLoading] = useState(false);
+
+  
   const toggleDetails = (vehicleId: string) => {
     setExpandedDetails(prev => (prev === vehicleId ? null : vehicleId));
   };
@@ -358,6 +362,7 @@ const today = new Date();
       senderId: globalUserId,
     };
    // console.log(input,"<<<");
+    setsendLoading(true);
     await createDelivery({ variables:{input} });
   });
   
@@ -784,6 +789,7 @@ order = {{
   onConfirm={(driverId) => {
     confirmCommand(driverId);
   }}
+  onLoading={sendLoading}
 />
 
     </div>
