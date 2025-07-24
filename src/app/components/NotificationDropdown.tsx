@@ -60,7 +60,7 @@ export default function NotificationDropdown({ userId }: { userId: string | null
   const sortedNotifications = [...notifications].sort((a, b) => 
     new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
   )
-
+console.log(sortedNotifications,notifications);
   const dropdownContent = (
     <ul className="max-h-64 overflow-y-auto divide-y divide-gray-100">  
       {!userId ? (
