@@ -80,7 +80,7 @@ console.log(sortedNotifications,notifications);
             className="px-4 py-3 hover:bg-gray-100 transition cursor-pointer"  
             onClick={() => handleNotificationClick(notif.id)}  
           >  
-            <p className={`text-sm font-medium ${notif.isRead ? 'text-gray-500' : 'text-gray-800  font-bold'}`}>
+            <p className={`text-sm font-medium ${notif.isRead ? 'text-gray-500' : 'text-gray-900  font-bold'}`}>
               {notif.message}
             </p>  
             <span className={`text-xs text-gray-500 block mt-1 ${notif.isRead ? '' : 'font-bold'}`}>
