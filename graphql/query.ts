@@ -51,6 +51,13 @@ query GetRidersDelivery($getRidersDeliveryId: String) {
   getRidersDelivery(id: $getRidersDeliveryId) {
     id
     trackingNumber
+    packages {
+      id
+      packageType
+      weight
+      dimensions
+      specialInstructions
+    }
     sender {
       email
       currentLongitude
