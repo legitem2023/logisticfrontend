@@ -76,6 +76,7 @@ useEffect(() => {
       dropoffLongitude: delivery.dropoffLongitude, 
       deliveryStatus: capitalize(delivery.deliveryStatus), 
       estimatedDeliveryTime: formatDate(delivery.estimatedDeliveryTime), 
+      deliveryFee:delivery.deliveryFee,
       earnings: "120.00", 
       packages: delivery.packages
     }));
@@ -242,7 +243,7 @@ console.log(filteredDeliveries);
                 }}
                 billing={{
                   distanceKm: null,
-                  baseRate: 50,
+                  baseRate: selectedDelivery.deliveryFee,
                   perKmRate: 10,
                   total: null,
                 }}
