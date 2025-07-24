@@ -11,7 +11,7 @@ import { useSelector } from "react-redux";
 import { selectTempUserId } from '../../../../Redux/tempUserSlice';
 import { getMinutesFromNow } from '../../../../utils/decryptToken';
 import FilterBar from "../Rider/Filterbar";
-
+import SenderDashboardLoading from "./SenderDashboardLoading";
 export default function SenderDashboard() {
   const globalUserId = useSelector(selectTempUserId);
 
@@ -71,7 +71,7 @@ export default function SenderDashboard() {
       <main className="flex-1 p-0">
         <FilterBar onFilter={handleFilter} />
         {loading ? (
-          <div className="text-center mt-8 text-gray-500">Loading...</div>
+          <SenderDashboardLoading/>
         ) : error ? (
           <div className="text-center mt-8 text-red-500">Error loading deliveries</div>
         ) : (
