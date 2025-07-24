@@ -77,6 +77,7 @@ useEffect(() => {
       deliveryStatus: capitalize(delivery.deliveryStatus), 
       estimatedDeliveryTime: formatDate(delivery.estimatedDeliveryTime), 
       earnings: "120.00", 
+      packages: delivery.packages
     }));
     setOriginalDeliveries(mockShipment);
     setFilteredDeliveries(mockShipment);
@@ -126,7 +127,7 @@ const handleFilter = ({ search, date }: { search: string; date: Date | null }) =
       variables: { deliveryId: id, riderId: riderId } 
     });
   };
-
+console.log(filteredDeliveries);
   return ( 
     <div className="min-h-screen bg-gray-50 flex flex-col md:flex-row"> 
       <aside className="hidden md:block md:w-64 bg-white/70 backdrop-blur-lg border-r border-gray-200 shadow-md p-6 rounded-r-3xl"> 
