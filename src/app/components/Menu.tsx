@@ -13,7 +13,7 @@ import HomeDataCarousel from './HomeDataCarousel';
 import LogisticsHomePage from './LogisticsHomePage';
 import DriverDashboard from './Rider/DriverDashboard';
 import SenderDashboard from './Sender/SenderDashboard';
-
+import RiderActivityChart from './Rider/RiderActivityChart';
 import LogisticsForm from './Sender/LogisticsForm';
 import SettingsPage from './SettingsPage';
 import HelpPage from './HelpPage';
@@ -169,10 +169,15 @@ console.log(useRole,"<-role");
       role: '',
       icon: <Home color="green" />,
       content: (
-        <div className="px-1 py-1 space-y-1">
-          <HomeDataCarousel items={mockItems} />
-          <LogisticsHomePage />
-        </div>
+        {useRole==='Sender'(
+          <div className="px-1 py-1 space-y-1">
+            <HomeDataCarousel items={mockItems} />
+            <LogisticsHomePage />
+          </div>):(
+          <div className="px-1 py-1 space-y-1">
+            <RiderActivityChart/>
+          </div>
+        )
       ),
     },
     ...(isUserActive()
