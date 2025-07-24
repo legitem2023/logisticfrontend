@@ -114,7 +114,7 @@ export default function SenderDashboard() {
                      <CreatePackageForm
                       deliveryId={delivery.id}
                       Package={delivery.packages}
-                       Refresh={refresh}
+                      refresh={refresh}
                     />
                     </Collapsible>
                     
