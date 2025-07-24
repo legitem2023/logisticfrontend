@@ -12,7 +12,11 @@ import {
   Calculator,
   Receipt,
   CheckSquare,
-  Package
+  Package,
+  Scale,
+  Ruler,
+  Layers,
+  BookOpen
 } from "lucide-react";
 
 type PartyDetails = {
@@ -141,22 +145,22 @@ const DeliveryDetailCard: React.FC<Props> = ({
   {packages.map((pkg, index) => (
     <div key={index} className="space-y-2 mb-4">
       <LabelRow
-        icon={<Package className="w-4 h-4 text-green-400" />}
+        icon={<Layers className="w-4 h-4 text-green-400" />}
         label="Type"
         value={pkg.packageType}
       />
       <LabelRow
-        icon={<Package className="w-4 h-4 text-green-400" />}
+        icon={<Scale className="w-4 h-4 text-green-400" />}
         label="Weight"
         value={`${pkg.weight} kg`}
       />
       <LabelRow
-        icon={<Package className="w-4 h-4 text-green-400" />}
+        icon={<Ruler className="w-4 h-4 text-green-400" />}
         label="Dimensions"
         value={pkg.dimensions}
       />
       <LabelRow
-        icon={<Package className="w-4 h-4 text-green-400" />}
+        icon={<BookOpen className="w-4 h-4 text-green-400" />}
         label="Instructions"
         value={pkg.specialInstructions}
       />
