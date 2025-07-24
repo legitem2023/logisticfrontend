@@ -10,7 +10,7 @@ const availableDrivers = [
   { id: "d2", name: "Driver B", vehicle: "Van" },
 ];
 
-export default function ClassicConfirmForm({ order, onConfirm }) {
+export default function ClassicConfirmForm({ order, onConfirm ,onLoading }) {
   const { data,loading,error} = useQuery(RIDERS);
   const [selectedDriver, setSelectedDriver] = useState("");
   if (loading) return <ConfirmationLoading/>
