@@ -170,7 +170,7 @@ export default function Menu() {
       label: 'Home',
       role: '',
       icon: <Home color="green" />,
-      content: useRole === 'Sender' ? (
+      content: !useRole || useRole === 'Sender' ? (
         <div className="px-1 py-1 space-y-1">
           <HomeDataCarousel items={mockItems} />
           <LogisticsHomePage />
