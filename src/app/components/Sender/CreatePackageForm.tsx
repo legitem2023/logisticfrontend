@@ -48,7 +48,7 @@ const CreatePackageForm = ({ deliveryId, Package }: { deliveryId: string; Packag
       },
     });
   };
-
+console.log(Package.packageType,Package[0].packageType)
   return (
     <form
       onSubmit={handleSubmit}
