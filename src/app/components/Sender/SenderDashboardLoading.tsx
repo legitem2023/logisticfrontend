@@ -1,7 +1,7 @@
 'use client';
 
 import { Card, CardContent } from "../ui/Card";
-
+import Shimmer from "../ui/Shimmer";
 export function SenderDashboardLoading() {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col md:flex-row">
@@ -111,9 +111,4 @@ export function SenderDashboardLoading() {
   );
 }
 
-// Assuming you have a Shimmer component like this:
-function Shimmer() {
-  return (
-    <div className="animate-pulse bg-gray-200 rounded-full w-full h-full"></div>
-  );
-}
+
