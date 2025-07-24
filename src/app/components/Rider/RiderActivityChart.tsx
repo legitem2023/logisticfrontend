@@ -1,4 +1,4 @@
-{/*'use client';
+'use client';
 
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 
@@ -36,4 +36,3 @@ const RiderActivityChart = () => {
 };
 
 export default RiderActivityChart;
-*/}
