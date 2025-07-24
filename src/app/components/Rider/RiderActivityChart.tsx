@@ -86,37 +86,35 @@ const allMonthlyData: Record<string, Activity[]> = {
 };
 
 const barColors = ['#4ade80', '#60a5fa', '#fbbf24', '#f472b6', '#a78bfa', '#34d399', '#f87171'];
-
 const months = Object.keys(allMonthlyData);
 
 const RiderActivityChart = () => {
   const [selectedMonth, setSelectedMonth] = useState<string>('July');
-
-  const handleTabClick = (month: string) => {
-    setSelectedMonth(month);
-  };
-
   const data = allMonthlyData[selectedMonth];
 
   return (
-    <div className="w-full mx-auto p-4 bg-white shadow-md rounded-2xl">
-      <h2 className="text-md font-semibold mb-4 text-center text-gray-700">Rider Daily Activity</h2>
+    <div className="w-full max-w-4xl mx-auto p-4 bg-white shadow-md rounded-2xl">
+      <h2 className="text-lg font-semibold mb-4 text-center text-gray-800">
+        Rider Daily Activity
+      </h2>
 
       {/* Month Tabs */}
-      <div className="flex flex-wrap justify-center gap-2 mb-6">
-        {months.map((month) => (
-          <button
-            key={month}
-            onClick={() => handleTabClick(month)}
-            className={`px-3 py-1 rounded-full text-sm font-medium transition ${
-              selectedMonth === month
-                ? 'bg-blue-500 text-white shadow'
-                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-            }`}
-          >
-            {month}
-          </button>
-        ))}
+      <div className="overflow-x-auto border-b border-gray-200 mb-6">
+        <div className="flex space-x-4 whitespace-nowrap px-1">
+          {months.map((month) => (
+            <button
+              key={month}
+              onClick={() => setSelectedMonth(month)}
+              className={`py-2 px-4 border-b-2 font-medium text-sm transition-all duration-200 ${
+                selectedMonth === month
+                  ? 'border-blue-500 text-blue-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              }`}
+            >
+              {month}
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* Chart */}
