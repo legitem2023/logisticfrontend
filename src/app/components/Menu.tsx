@@ -178,7 +178,7 @@ console.log(useRole,"<-role");
             <RiderActivityChart/>
           </div>
         )
-      ),
+        }),
     },
     ...(isUserActive()
       ? [
