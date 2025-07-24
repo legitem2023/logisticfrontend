@@ -16,10 +16,10 @@ type Packages = {
 const CreatePackageForm = ({ deliveryId, Package }: { deliveryId: string; Package: Packages }) => {
  console.log(Package,"<<<");
   const [form, setForm] = useState({
-    packageType: Package[0].packageType || '',
-    weight: Package[0].weight || '',
-    dimensions: Package[0].dimensions || '',
-    specialInstructions: Package[0].specialInstructions || '',
+    packageType: Package.packageType || '',
+    weight: Package.weight || '',
+    dimensions: Package.dimensions || '',
+    specialInstructions: Package.specialInstructions || '',
   });
 
   const [createPackage, { loading }] = useMutation(CREATEPACKAGE, {
