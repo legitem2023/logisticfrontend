@@ -14,6 +14,7 @@ type Packages = {
 };
 
 const CreatePackageForm = ({ deliveryId, Package }: { deliveryId: string; Package: Packages }) => {
+ console.log(Package,"<<<");
   const [form, setForm] = useState({
     packageType: Package.packageType || '',
     weight: Package.weight || '',
