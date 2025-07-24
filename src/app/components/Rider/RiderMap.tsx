@@ -64,9 +64,9 @@ export default function RiderMap({ coordinates,deliveryId }: { coordinates: Coor
       const routingControl = L.Routing.control({
         waypoints: [sender, receiver],
         createMarker: () => null,
-        addWaypoints: false,
-        routeWhileDragging: false,
-        show: false,
+        addWaypoints: true,
+        routeWhileDragging: true,
+        show: true,
       } as any).addTo(mapRef.current!);
 
       routingRef.current = routingControl;
