@@ -39,7 +39,8 @@ const LogisticsForm = () => {
 
   const [createDelivery] = useMutation(CREATEDELIVERY, {
     onCompleted: (data) => {
-      console.log('Delivery created:', data);
+      //console.log('Delivery created:', data);
+      showToast("Delivery created", 'success');
       setsendLoading(false);
     },
     onError: (error) => {
