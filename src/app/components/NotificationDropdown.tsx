@@ -58,7 +58,7 @@ export default function NotificationDropdown({ userId }: { userId: string | null
 
   // Sort notifications by date (newest first)
   const sortedNotifications = [...notifications].sort((a, b) => 
-    new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
   )
 console.log(sortedNotifications,notifications);
   const dropdownContent = (
