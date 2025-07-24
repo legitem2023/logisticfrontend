@@ -13,13 +13,20 @@ type Packages = {
   specialInstructions: string;
 };
 
-const CreatePackageForm = ({ deliveryId, Package }: { deliveryId: string; Package: Packages }) => {
- 
+const CreatePackageForm = ({
+  deliveryId,
+  Package,
+}: {
+  deliveryId: string;
+  Package: Packages[]; // ✅ updated to array
+}) => {
+  const firstPackage = Package?.[0];
+
   const [form, setForm] = useState({
-    packageType: Package[0]?.packageType || '',
-    weight: Package[0]?.weight || '',
-    dimensions: Package[0]?.dimensions || '',
-    specialInstructions: Package[0]?.specialInstructions || '',
+    packageType: firstPackage?.packageType || '',
+    weight: firstPackage?.weight || '',
+    dimensions: firstPackage?.dimensions || '',
+    specialInstructions: firstPackage?.specialInstructions || '',
   });
 
   const [createPackage, { loading }] = useMutation(CREATEPACKAGE, {
@@ -42,13 +49,13 @@ const CreatePackageForm = ({ deliveryId, Package }: { deliveryId: string; Packag
       variables: {
         deliveryId,
         packageType: form.packageType,
-        weight: form.weight,
+        weight: parseFloat(form.weight.toString()), // Ensures weight is sent as number
         dimensions: form.dimensions,
         specialInstructions: form.specialInstructions,
       },
     });
   };
-console.log(Package.packageType,Package[0].packageType)
+
   return (
     <form
       onSubmit={handleSubmit}
@@ -61,7 +68,6 @@ console.log(Package.packageType,Package[0].packageType)
             name="packageType"
             type="text"
             placeholder="e.g. Fragile, Express"
-            
             value={form.packageType}
             onChange={handleChange}
             className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
@@ -76,7 +82,6 @@ console.log(Package.packageType,Package[0].packageType)
             type="number"
             step="0.01"
             placeholder="e.g. 2.5"
-            
             value={form.weight}
             onChange={handleChange}
             className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
@@ -90,7 +95,6 @@ console.log(Package.packageType,Package[0].packageType)
             name="dimensions"
             type="text"
             placeholder="e.g. 10x20x30 cm"
-            
             value={form.dimensions}
             onChange={handleChange}
             className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
@@ -102,7 +106,6 @@ console.log(Package.packageType,Package[0].packageType)
           <textarea
             name="specialInstructions"
             placeholder="Write any handling notes here..."
-            
             value={form.specialInstructions}
             onChange={handleChange}
             className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition resize-none"
