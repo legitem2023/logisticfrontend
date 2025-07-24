@@ -19,7 +19,7 @@ export default function SenderDashboard() {
   const [filteredDeliveries, setFilteredDeliveries] = useState<any[]>([]);
   const [originalDeliveries, setOriginalDeliveries] = useState<any[]>([]); 
 
-  const { data, loading, error } = useQuery(GETDISPATCH, {
+  const { data, loading, error,refresh } = useQuery(GETDISPATCH, {
     variables: { id: globalUserId },
     skip: !globalUserId,
   });
@@ -114,6 +114,7 @@ export default function SenderDashboard() {
                      <CreatePackageForm
                       deliveryId={delivery.id}
                       Package={delivery.packages}
+                       Refresh={refresh}
                     />
                     </Collapsible>
                     
