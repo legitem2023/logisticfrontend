@@ -25,20 +25,9 @@ const SenderDashboardLoading = () => {
 
       {/* Main Content - Loading */}
       <main className="flex-1 p-0">
-        {/* FilterBar Loading */}
-        <div className="p-4 bg-white/80 backdrop-blur-md border-b border-gray-200">
-          <div className="flex gap-4">
-            <div className="flex-1 h-10">
-              <Shimmer />
-            </div>
-            <div className="w-32 h-10">
-              <Shimmer />
-            </div>
-          </div>
-        </div>
 
         {/* Cards Loading */}
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3 p-4">
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3 p-2">
           {[...Array(6)].map((_, i) => (
             <Card key={i} className="bg-white/80 backdrop-blur-lg border border-gray-200 shadow-md">
               <CardContent className="p-5 space-y-4">
