@@ -54,7 +54,7 @@ export default function NotificationDropdown({ userId }: { userId: string | null
       readNotification({ variables: { notificationId: id } })
     }
   }
-
+console.log(notifications);
   const dropdownContent = (
     <ul className="max-h-64 overflow-y-auto divide-y divide-gray-100">  
       {!userId ? (
