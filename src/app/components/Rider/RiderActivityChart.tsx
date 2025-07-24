@@ -31,9 +31,9 @@ const barColors = ['#4ade80', '#60a5fa', '#fbbf24', '#f472b6', '#a78bfa', '#34d3
 
 const RiderActivityChart = () => {
   return (
-    <div className="w-full mx-auto p-2 bg-white shadow-md">
+    <div className="w-full mx-auto p-2 bg-white shadow-md rounded-2xl">
       <h2 className="text-xl font-semibold mb-4 text-center text-gray-700">Rider Daily Activity</h2>
-      <ResponsiveContainer width="100%" height={300}>
+      <ResponsiveContainer width="100%" aspect={16 / 9}>
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="date" tick={{ fontSize: 12 }} />
