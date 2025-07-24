@@ -35,7 +35,9 @@ export default function DriverDashboard() {
   const [search, setSearch] = useState("");
   const [filteredDeliveries, setFilteredDeliveries] = useState([]);
   const [originalDeliveries, setOriginalDeliveries] = useState([]);
-
+  
+  const location = useSelector((state: any) => state.location.current);
+  console.log(location,"Currloc")
   const openDetails = (delivery: any) => { 
     setSelectedDelivery(delivery); 
     setShowDetails(true); 
