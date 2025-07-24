@@ -134,34 +134,35 @@ const DeliveryDetailCard: React.FC<Props> = ({
       </div>
     </div>
      {/* Package */}
-      <div className="bg-white rounded-xl border border-gray-100 p-4 sm:p-4 shadow-sm hover:shadow-md transition w-[100%]">
-        <h3 className="text-lg font-bold flex items-center gap-2 mb-3 text-green-600 ">
-          <Package className="w-5 h-5" /> Package
-        </h3>
-        <div className="space-y-2">
-          <LabelRow
-            icon={<User className="w-4 h-4 text-green-400" />}
-            label="Type"
-            value={packages.packageType}
-          />
-          <LabelRow
-            icon={<User className="w-4 h-4 text-green-400" />}
-            label="Weight"
-            value={packages.weight}
-          />
-          <LabelRow
-            icon={<User className="w-4 h-4 text-green-400" />}
-            label="Dimensions"
-            value={packages.dimensions}
-          />
-          <LabelRow
-            icon={<User className="w-4 h-4 text-green-400" />}
-            label="Instructions"
-            value={packages.specialInstructions}
-          />
-        </div>
-      </div>
+<div className="bg-white rounded-xl border border-gray-100 p-4 sm:p-4 shadow-sm hover:shadow-md transition w-[100%]">
+  <h3 className="text-lg font-bold flex items-center gap-2 mb-3 text-green-600">
+    <Package className="w-5 h-5" /> Package(s)
+  </h3>
+  {packages.map((pkg, index) => (
+    <div key={index} className="space-y-2 mb-4">
+      <LabelRow
+        icon={<Package className="w-4 h-4 text-green-400" />}
+        label="Type"
+        value={pkg.packageType}
+      />
+      <LabelRow
+        icon={<Package className="w-4 h-4 text-green-400" />}
+        label="Weight"
+        value={`${pkg.weight} kg`}
+      />
+      <LabelRow
+        icon={<Package className="w-4 h-4 text-green-400" />}
+        label="Dimensions"
+        value={pkg.dimensions}
+      />
+      <LabelRow
+        icon={<Package className="w-4 h-4 text-green-400" />}
+        label="Instructions"
+        value={pkg.specialInstructions}
+      />
     </div>
+  ))}
+</div>
 
     {/* Tracking Button */}
     <div className="text-center">
