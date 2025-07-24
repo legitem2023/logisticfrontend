@@ -107,7 +107,7 @@ const RiderActivityChart = () => {
               onClick={() => setSelectedMonth(month)}
               className={`py-2 px-4 border-b-2 font-medium text-sm transition-all duration-200 ${
                 selectedMonth === month
-                  ? 'border-blue-500 text-blue-600'
+                  ? 'customgrad text-white-400 shadow-md'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
               }`}
             >
