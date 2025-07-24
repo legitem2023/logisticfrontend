@@ -19,6 +19,7 @@ const CreatePackageForm = ({
 }: {
   deliveryId: string;
   Package: Packages[]; // ✅ updated to array
+  Refresh:() => void;
 }) => {
   const firstPackage = Package?.[0];
 
@@ -32,6 +33,7 @@ const CreatePackageForm = ({
   const [createPackage, { loading }] = useMutation(CREATEPACKAGE, {
     onCompleted: (data) => {
       showToast(`✅ ${data.createPackage.statusText}`, 'success');
+      Refresh();
     },
     onError: (error) => {
       showToast(`❌ ${error.message}`, 'error');
