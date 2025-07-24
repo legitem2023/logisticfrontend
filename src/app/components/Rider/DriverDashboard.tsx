@@ -246,6 +246,7 @@ console.log(filteredDeliveries);
                   perKmRate: 10,
                   total: null,
                 }}
+                packages={selectedDelivery.packages}
                 coordinates={{
                   pickLat: selectedDelivery.pickupLatitude,
                   pickLng: selectedDelivery.pickupLongitude,
