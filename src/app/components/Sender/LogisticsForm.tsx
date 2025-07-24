@@ -56,27 +56,11 @@ const LogisticsForm = () => {
   const deliveryDetails = useSelector((state:any) => state.delivery);
 
   const [sendLoading,setsendLoading] = useState(false);
-
-  
+ 
   const toggleDetails = (vehicleId: string) => {
     setExpandedDetails(prev => (prev === vehicleId ? null : vehicleId));
   };
-   /* useEffect(() => {
-    const getRole = async () => {
-      try {
-        const token = Cookies.get("token");
-        const secret = process.env.NEXT_PUBLIC_JWT_SECRET as string;
-        if (token && secret) {
-          const payload = await decryptToken(token, secret);
-          setID(payload.userId);
-        }
-      } catch (err) {
-        console.error("Error getting role:", err);
-        setID(null);
-      }
-    };
-    getRole();
-  }, []);*/
+   
   // State management
   const [pickup, setPickup] = useState({
     address: '',
@@ -125,7 +109,6 @@ const LogisticsForm = () => {
     setDropoffs(updatedDropoffs);
   };
 
-  // console.log(dropoffs)
   // Location management
   const addDropoff = () => {
     setDropoffs([...dropoffs, {
@@ -339,7 +322,8 @@ const handleSubmit = (e) => {
 }
   
 const confirmCommand = ((selectedDriver:any) => {
-const today = new Date();
+  setsendLoading(true);
+  const today = new Date();
   const isoDateString = new Date(
     Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate())
   ).toISOString();
@@ -362,8 +346,8 @@ const today = new Date();
       recipientPhone: dropoff.contact,
       senderId: globalUserId,
     };
-   // console.log(input,"<<<");
-    setsendLoading(true);
+   
+    
     await createDelivery({ variables:{input} });
   });
   
