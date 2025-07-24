@@ -110,7 +110,7 @@ export default function SenderDashboard() {
                   </div>
 
                   <div>
-                    <Collapsible title="Package" defaultOpen={false}>
+                    <Collapsible title={delivery.packages.length > 0?"Package Ready":"Create Package"} defaultOpen={delivery.packages.length > 0?false:true}>
                      <CreatePackageForm
                       deliveryId={delivery.id}
                       Package={delivery.packages}
