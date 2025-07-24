@@ -11,7 +11,8 @@ import {
   Truck,
   Calculator,
   Receipt,
-  CheckSquare
+  CheckSquare,
+  Packages
 } from "lucide-react";
 
 type PartyDetails = {
@@ -120,6 +121,21 @@ const DeliveryDetailCard: React.FC<Props> = ({
             label="Contact"
             value={recipient.contact}
           />
+        </div>
+      </div>
+    </div>
+     {/* Package */}
+      <div className="bg-white rounded-xl border border-gray-100 p-4 sm:p-4 shadow-sm hover:shadow-md transition w-[100%]">
+        <h3 className="text-lg font-bold flex items-center gap-2 mb-3 text-green-600 ">
+          <Packages className="w-5 h-5" /> Package
+        </h3>
+        <div className="space-y-2">
+          <LabelRow
+            icon={<User className="w-4 h-4 text-green-400" />}
+            label="Name"
+            value={recipient.name}
+          />
+          
         </div>
       </div>
     </div>
