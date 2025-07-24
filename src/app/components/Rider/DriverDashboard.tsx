@@ -121,8 +121,12 @@ const handleFilter = ({ search, date }: { search: string; date: Date | null }) =
 };
 
   const handleGetIp = (delivery: any) => { 
+   if(location){
     setSelectedDelivery(delivery); 
-    setMap(true); 
+    setMap(true);
+   }else{
+         showToast("Open your Device GPS", "error");  
+   }
   };
 
   const handleAccept = async (id: string, riderId: string) => { 
