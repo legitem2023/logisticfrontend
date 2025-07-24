@@ -5,11 +5,6 @@ import { useState } from "react";
 import { UserCheck } from "lucide-react";
 import ConfirmationLoading from "../Loadings/ConfirmationLoading";
 
-const availableDrivers = [
-  { id: "d1", name: "Driver A", vehicle: "Motorbike" },
-  { id: "d2", name: "Driver B", vehicle: "Van" },
-];
-
 export default function ClassicConfirmForm({ order, onConfirm ,onLoading }) {
   const { data,loading,error} = useQuery(RIDERS);
   const [selectedDriver, setSelectedDriver] = useState("");
