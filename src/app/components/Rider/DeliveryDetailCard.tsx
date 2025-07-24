@@ -168,16 +168,6 @@ const DeliveryDetailCard: React.FC<Props> = ({
   ))}
 </div>
 
-    {/* Tracking Button */}
-    <div className="text-center">
-      <Button
-        onClick={onTrackClick}
-        className="flex items-center gap-2 px-2 py-2 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 text-white shadow-lg hover:brightness-110 transition"
-      >
-        <Calculator className="w-4 h-4" /> Calculate Distance & Billing
-      </Button>
-    </div>
-
     {/* Billing */}
     <div className="border-t pt-2">
       <h3 className="text-lg font-bold flex items-center gap-2 mb-3 text-rose-600">
