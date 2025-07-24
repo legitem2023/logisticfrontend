@@ -2,7 +2,7 @@
 
 import { Card, CardContent } from "../ui/Card";
 import Shimmer from "../ui/Shimmer";
-export function SenderDashboardLoading() {
+const SenderDashboardLoading = () => {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col md:flex-row">
       {/* Sidebar - Loading */}
@@ -111,4 +111,4 @@ export function SenderDashboardLoading() {
   );
 }
 
-
+export default SenderDashboardLoading;
