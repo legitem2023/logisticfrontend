@@ -243,7 +243,7 @@ console.log(filteredDeliveries);
                 }}
                 billing={{
                   distanceKm: null,
-                  baseRate: selectedDelivery.deliveryFee,
+                  baseRate: 50,
                   perKmRate: 10,
                   total: null,
                 }}
