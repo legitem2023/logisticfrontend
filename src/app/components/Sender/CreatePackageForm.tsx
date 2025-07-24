@@ -14,7 +14,7 @@ type Packages = {
 };
 
 const CreatePackageForm = ({ deliveryId, Package }: { deliveryId: string; Package: Packages }) => {
- console.log(Package,"<<<");
+ 
   const [form, setForm] = useState({
     packageType: Package.packageType || '',
     weight: Package.weight || '',
@@ -61,6 +61,7 @@ const CreatePackageForm = ({ deliveryId, Package }: { deliveryId: string; Packag
             name="packageType"
             type="text"
             placeholder="e.g. Fragile, Express"
+            defaultValue={Package.packageType}
             value={form.packageType}
             onChange={handleChange}
             className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
@@ -75,6 +76,7 @@ const CreatePackageForm = ({ deliveryId, Package }: { deliveryId: string; Packag
             type="number"
             step="0.01"
             placeholder="e.g. 2.5"
+            defaultValue={Package.weight}
             value={form.weight}
             onChange={handleChange}
             className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
@@ -88,6 +90,7 @@ const CreatePackageForm = ({ deliveryId, Package }: { deliveryId: string; Packag
             name="dimensions"
             type="text"
             placeholder="e.g. 10x20x30 cm"
+            defaultValue={Package.dimensions}
             value={form.dimensions}
             onChange={handleChange}
             className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
@@ -99,6 +102,7 @@ const CreatePackageForm = ({ deliveryId, Package }: { deliveryId: string; Packag
           <textarea
             name="specialInstructions"
             placeholder="Write any handling notes here..."
+            defaultValue={Package.specialInstructions}
             value={form.specialInstructions}
             onChange={handleChange}
             className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition resize-none"
