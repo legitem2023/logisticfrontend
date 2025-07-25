@@ -7,6 +7,7 @@ import AdminDeliveriesLoading from "../Loadings/AdminDeliveriesLoading";
 import { Card, CardContent } from '../ui/Card';
 import { Badge } from '../ui/Badge';
 import { useState } from 'react';
+import FilterBar from "../Rider/Filterbar";
 
 import { PackageCheck, User, Phone, MapPin, Truck, BadgeCheck, CreditCard } from "lucide-react";
 import Collapsible from "../ui/Collapsible"; // adjust path as needed
@@ -20,6 +21,10 @@ const AdminDeliveriesTable = () => {
     },
   });
 
+const [filteredDeliveries, setFilteredDeliveries] = useState<any[]>([]);
+const [originalDeliveries, setOriginalDeliveries] = useState<any[]>([]); 
+
+  
   const handleAssignRider = async (deliveryId: string, riderId: string) => {
     try {
       await assignRider({
@@ -47,10 +52,33 @@ const AdminDeliveriesTable = () => {
   const deliveries = data?.getDeliveries ?? [];
   const riders = ridersData?.getRiders ?? [];
 
+
+
+  // Set deliveries when fetched
+  useEffect(() => {
+    if (deliveries.length) {
+      setOriginalDeliveries(deliveries);
+      setFilteredDeliveries(deliveries);
+    }
+  }, [deliveries]);
+
+  
+  const handleFilter = ({ search, date }: { search: string; date: Date | null }) => {
+    let filtered = [...originalDeliveries];
+
+    if (search) {
+      filtered = filtered.filter(delivery =>
+        delivery.trackingNumber?.toLowerCase().includes(search.toLowerCase()) ||
+        delivery.assignedRider?.name?.toLowerCase().includes(search.toLowerCase())
+      );
+    }
+
+  
   return (
     <div className="w-full p-0">
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-        {deliveries.map((delivery: any) => (
+          <FilterBar onFilter={handleFilter} />
+        {filteredDeliveries.map((delivery: any) => (
           <Card key={delivery.id} className="border border-zinc-200 bg-gradient-to-br from-white to-zinc-50 shadow-lg hover:shadow-xl transition-shadow duration-300">
   <CardContent className="p-6 space-y-4 text-sm text-zinc-800">
     
