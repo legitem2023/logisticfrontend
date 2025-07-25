@@ -220,6 +220,9 @@ query GetDeliveries {
   getDeliveries {
     id
     trackingNumber
+    baseRate
+    perKmRate
+    distance
     packages {
       id
       packageType
