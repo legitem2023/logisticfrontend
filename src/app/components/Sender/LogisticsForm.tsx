@@ -262,7 +262,7 @@ const vehicleDetails = (id,data) => {
   
 useEffect(() => {
 getDistanceInKm({lat: pickup.lat,lng: pickup.lng}, 
-                {lat: dropoff.lat,lng: dropoff.lng})
+                {lat: dropoffs.lat,lng: dropoffs.lng})
   .then((distance) => {
   console.log(distance);
   return distance;
