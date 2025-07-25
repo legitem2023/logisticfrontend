@@ -23,6 +23,13 @@ export default function Sidebar({ tabs }: SidebarTabsProps) {
   const dispatch = useDispatch();
   const GlobalactiveIndex = useSelector((state: any) => state.activeIndex.value);
           console.log(GlobalactiveIndex);
+ 
+
+
+  useEffect(() => {
+     window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [GlobalactiveIndex]);
+  
   useEffect(() => {
     setIsMounted(true);
   }, []);
