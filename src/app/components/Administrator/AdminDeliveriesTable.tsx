@@ -166,7 +166,18 @@ const [originalDeliveries, setOriginalDeliveries] = useState<any[]>([]);
       <span>Fee</span>
       <span className="text-right">₱{delivery.deliveryFee?.toFixed(2) ?? '0.00'}</span>
     </div>
-
+    <div className="flex justify-between text-sm font-medium text-zinc-700">
+      <span>Distance</span>
+      <span className="text-right">₱{delivery.distance?.toFixed(2) ?? '0.00'}</span>
+    </div>
+    <div className="flex justify-between text-sm font-medium text-zinc-700">
+      <span>Base Rate</span>
+      <span className="text-right">₱{delivery.baseRate?.toFixed(2) ?? '0.00'}</span>
+    </div>
+    <div className="flex justify-between text-sm font-medium text-zinc-700">
+      <span>Per Km Rate</span>
+      <span className="text-right">₱{delivery.perKmRate?.toFixed(2) ?? '0.00'}</span>
+    </div>
     <div>
       <p className="text-[13px] font-semibold text-zinc-700 flex items-center gap-1">
         <CreditCard size={14} /> Payment
