@@ -65,7 +65,7 @@ const [originalDeliveries, setOriginalDeliveries] = useState<any[]>([]);
 
   
   const handleFilter = ({ search, date }: { search: string; date: Date | null }) => {
-    let filtered = [...originalDeliveries];
+    let filtered = [...filteredDeliveries];
 
     if (search) {
       filtered = filtered.filter(delivery =>
