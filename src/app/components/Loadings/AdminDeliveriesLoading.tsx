@@ -1,6 +1,6 @@
 'use client';
 
-import { Shimmer } from '../ui/Shimmer';
+import  Shimmer  from '../ui/Shimmer';
 
 const AdminDeliveriesLoading = () => {
   return (
