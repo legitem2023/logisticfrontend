@@ -81,7 +81,7 @@ const [originalDeliveries, setOriginalDeliveries] = useState<any[]>([]);
           <FilterBar onFilter={handleFilter} />
         {filteredDeliveries.map((delivery: any) => (
           <Card key={delivery.id} className="border border-zinc-200 bg-gradient-to-br from-white to-zinc-50 shadow-lg hover:shadow-xl transition-shadow duration-300">
-  <CardContent className="p-6 space-y-4 text-sm text-zinc-800">
+  <CardContent className="p-6 space-y-2 text-sm text-zinc-800">
     
     <div className="flex justify-between items-center font-mono text-xs text-zinc-500">
       <span className="font-semibold">📦 Tracking:</span>
