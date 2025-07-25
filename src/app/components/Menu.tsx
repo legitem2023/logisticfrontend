@@ -79,6 +79,7 @@ import { useDispatch,useSelector } from 'react-redux';
 import { setCurrentLocation } from '../../../Redux/locationSlice';
 import { setTempUserId,selectTempUserId } from '../../../Redux/tempUserSlice';
 import  AdminDeliveriesTable  from './Administrator/AdminDeliveriesTable';
+import  VehicleTypes  from './Administrator/VehicleTypes';
 
 
 // Your entire code remains unchanged except for the fixed JSX in the 'Home' tab item
@@ -248,6 +249,20 @@ export default function Menu() {
             content: (
               <div className="px-1 py-1 space-y-1">
                 <AdminDeliveriesTable />
+              </div>
+            ),
+          },
+        ]
+      : []),
+    ...(isUserActive() && (useRole === 'Administrator' || useRole === 'ADMINISTRATOR')
+      ? [
+          {
+            label: 'Vehicle Types',
+            role: '',
+            icon: <BadgeCheck color="green" />,
+            content: (
+              <div className="px-1 py-1 space-y-1">
+                <VehicleTypes />
               </div>
             ),
           },
