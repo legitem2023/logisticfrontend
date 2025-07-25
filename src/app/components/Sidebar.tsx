@@ -101,6 +101,8 @@
 
 import { useEffect, useRef, useState, ReactNode } from 'react';
 import { Menu } from 'lucide-react';
+import { useDispatch,useSelector } from 'react-redux';
+import { setActiveIndex } from '../../../Redux/activeIndexSlice';
 
 type Tab = {
   label: string;
@@ -117,7 +119,9 @@ export default function Sidebar({ tabs }: SidebarTabsProps) {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
   const sidebarRef = useRef<HTMLDivElement>(null);
-
+  const dispatch = useDispatch();
+  const GlobalactiveIndex = useSelector((state: any) => state.activeIndex.value);
+          console.log(GlobalactiveIndex);
   useEffect(() => {
     setIsMounted(true);
   }, []);
@@ -138,6 +142,7 @@ export default function Sidebar({ tabs }: SidebarTabsProps) {
   const handleTabClick = (index: number) => {
     setActiveIndex(index);
     setIsMobileOpen(false);
+    dispatch(setActiveIndex(index));
   };
 
   if (!tabs.length) return null;
