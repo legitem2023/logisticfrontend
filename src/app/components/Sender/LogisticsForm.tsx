@@ -95,7 +95,9 @@ const LogisticsForm = () => {
   const timeoutRef = useRef(null);
   const [showDetails, setShowDetails] = useState(false);
   const [useBaseCost,setBaseCost] = useState(null);
- const closeDetails = () =>{
+ const [distances, setDistances] = useState<number[]>([]);
+
+  const closeDetails = () =>{
   setShowDetails(false);
  }
   // Handle input changes
@@ -277,6 +279,35 @@ useEffect(() => {
     fetchDistance();
   }, [pickup, dropoffs]);
 */
+
+// Update your state to store distances for all dropoffs
+
+useEffect(() => {
+  const calculateDistances = async () => {
+    if (pickup.lat && pickup.lng) {
+      const calculatedDistances = await Promise.all(
+        dropoffs.map(async (dropoff) => {
+          if (dropoff.lat && dropoff.lng) {
+            try {
+              return await getDistanceInKm(
+                { lat: pickup.lat, lng: pickup.lng },
+                { lat: dropoff.lat, lng: dropoff.lng }
+              );
+            } catch (error) {
+              console.error('Error calculating distance:', error);
+              return 0;
+            }
+          }
+          return 0;
+        })
+      );
+      setDistances(calculatedDistances);
+    }
+  };
+
+  calculateDistances();
+}, [pickup.lat, pickup.lng, dropoffs]);
+ 
   console.log(dropoffs,"<<<");
 const validatePickup = (pickup) => {
   if (!pickup || typeof pickup !== 'object') {
@@ -780,11 +811,11 @@ const confirmCommand = ((selectedDriver:any) => {
 <ClassicConfirmForm
 order = {{
   sender: { name: pickup.name, address: pickup.address },
-    recipients: dropoffs.map(r => ({
+    recipients: dropoffs.map((r:any,i:number) => ({
     name: r.name,
     address: r.address,
     contact: r.contact,
-    distanceKm: useDistance,
+    distanceKm: distances[i],
     })),
   billing: {
     baseRate:parseFloat(useBaseCost),
