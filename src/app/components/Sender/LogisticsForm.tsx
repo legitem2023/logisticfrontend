@@ -10,6 +10,7 @@ import Cookies from "js-cookie";
 import LogisticFormLoading from '../Loadings/LogisticFormLoading';
 import { useSelector, useDispatch } from "react-redux";
 import { selectTempUserId } from '../../../../Redux/tempUserSlice';
+import { setActiveIndex } from '../../../../Redux/activeIndexSlice';
 
 
 import { 
@@ -34,13 +35,14 @@ import ConfirmOrderForm from './ClassicConfirmForm';
 import ClassicConfirmForm from './ClassicConfirmForm';
 
 const LogisticsForm = () => {
- 
+ const dispatch = useDispatch();
   const { loading, error, data } = useQuery(VEHICLEQUERY);
 
   const [createDelivery] = useMutation(CREATEDELIVERY, {
     onCompleted: (data) => {
       //console.log('Delivery created:', data);
       showToast("Delivery created", 'success');
+      setActiveIndex(1);
       setsendLoading(false);
     },
     onError: (error) => {
@@ -52,7 +54,7 @@ const LogisticsForm = () => {
   const [useID, setID] = useState();
   const globalUserId = useSelector(selectTempUserId);
   const [expandedDetails, setExpandedDetails] = useState<string | null>(null);
-  const dispatch = useDispatch();
+  
   const deliveryDetails = useSelector((state:any) => state.delivery);
 
   const [sendLoading,setsendLoading] = useState(false);
