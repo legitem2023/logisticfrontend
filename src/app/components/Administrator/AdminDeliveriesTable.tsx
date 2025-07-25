@@ -6,7 +6,7 @@ import { ASSIGNRIDER } from '../../../../graphql/mutation';
 import AdminDeliveriesLoading from "../Loadings/AdminDeliveriesLoading";
 import { Card, CardContent } from '../ui/Card';
 import { Badge } from '../ui/Badge';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import FilterBar from "../Rider/Filterbar";
 
 import { PackageCheck, User, Phone, MapPin, Truck, BadgeCheck, CreditCard } from "lucide-react";
