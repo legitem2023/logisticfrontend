@@ -1,6 +1,7 @@
 'use client';
 import { Icon } from '@iconify/react';
 import { showToast } from '../../../../utils/toastify';
+import { getDistanceInKm } from '../../../../utils/getDistanceInKm';
 
 import { useState, useEffect, useRef, use } from 'react';
 import { useMutation, useQuery } from '@apollo/client';
@@ -764,7 +765,17 @@ order = {{
     name: r.name,
     address: r.address,
     contact: r.contact,
-    distanceKm: 0
+    distanceKm: getDistanceInKm({
+  lat: pickup.lat,
+  lng: pickup.lng
+}, {
+  lat: dropoff.lat,
+  lng: dropoff.lng
+}).then((distance) => {
+  return distance
+}).catch((error) => {
+  console.error('Error:', error);
+});
   })),
   billing: {
     baseRate:parseFloat(useBaseCost),
