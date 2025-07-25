@@ -42,8 +42,8 @@ const LogisticsForm = () => {
     onCompleted: (data) => {
       //console.log('Delivery created:', data);
       showToast("Delivery created", 'success');
-      setActiveIndex(1);
       setsendLoading(false);
+      dispatch(setActiveIndex(1));
     },
     onError: (error) => {
       console.error('Delivery creation error:', error);
