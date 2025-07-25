@@ -162,13 +162,10 @@ const [originalDeliveries, setOriginalDeliveries] = useState<any[]>([]);
       <p className="text-xs text-zinc-400">{delivery.sender?.phoneNumber}</p>
     </div>
 
-    <div className="flex justify-between text-sm font-medium text-zinc-700">
-      <span>Fee</span>
-      <span className="text-right">₱{delivery.deliveryFee?.toFixed(2) ?? '0.00'}</span>
-    </div>
+    
     <div className="flex justify-between text-sm font-medium text-zinc-700">
       <span>Distance</span>
-      <span className="text-right">₱{delivery.distance?.toFixed(2) ?? '0.00'}</span>
+      <span className="text-right">{delivery.distance?.toFixed(2)} Km</span>
     </div>
     <div className="flex justify-between text-sm font-medium text-zinc-700">
       <span>Base Rate</span>
@@ -176,6 +173,10 @@ const [originalDeliveries, setOriginalDeliveries] = useState<any[]>([]);
     </div>
     <div className="flex justify-between text-sm font-medium text-zinc-700">
       <span>Per Km Rate</span>
+      <span className="text-right">₱{delivery.perKmRate?.toFixed(2) ?? '0.00'}</span>
+    </div>
+    <div className="flex justify-between text-sm font-medium text-zinc-700">
+      <span>Total</span>
       <span className="text-right">₱{delivery.perKmRate?.toFixed(2) ?? '0.00'}</span>
     </div>
     <div>
