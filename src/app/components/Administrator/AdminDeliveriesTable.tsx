@@ -39,17 +39,7 @@ const [originalDeliveries, setOriginalDeliveries] = useState<any[]>([]);
     }
   };
 
-  if (loading) return <AdminDeliveriesLoading />;
-
-  if (error) {
-    return (
-      <div className="text-red-500 text-center py-4">
-        Error fetching deliveries: {error.message}
-      </div>
-    );
-  }
-
-  const deliveries = data?.getDeliveries ?? [];
+    const deliveries = data?.getDeliveries ?? [];
   const riders = ridersData?.getRiders ?? [];
 
 
@@ -61,6 +51,17 @@ const [originalDeliveries, setOriginalDeliveries] = useState<any[]>([]);
       setFilteredDeliveries(deliveries);
     }
   }, [deliveries]);
+  if (loading) return <AdminDeliveriesLoading />;
+
+  if (error) {
+    return (
+      <div className="text-red-500 text-center py-4">
+        Error fetching deliveries: {error.message}
+      </div>
+    );
+  }
+
+
 
   
   const handleFilter = ({ search, date }: { search: string; date: Date | null }) => {
