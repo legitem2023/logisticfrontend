@@ -29,7 +29,8 @@ export default function VehicleTypes() {
             <div className="text-sm text-gray-800">
               <p><strong>Capacity:</strong> {vehicle.maxCapacityKg} kg</p>
               <p><strong>Volume:</strong> {vehicle.maxVolumeM3} m³</p>
-              <p><strong>Cost:</strong> ₱{vehicle.cost}</p>
+              <p><strong>Base Rate:</strong> ₱{vehicle.cost}</p>
+              <p><strong>Per Km Rate:</strong> ₱{10}</p>
             </div>
           </CardContent>
         </Card>
