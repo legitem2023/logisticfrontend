@@ -72,7 +72,7 @@ const [originalDeliveries, setOriginalDeliveries] = useState<any[]>([]);
         delivery.assignedRider?.name?.toLowerCase().includes(search.toLowerCase())
       );
     }
-
+  }
   
   return (
     <div className="w-full p-0">
