@@ -16,7 +16,7 @@ type SidebarTabsProps = {
 };
 
 export default function Sidebar({ tabs }: SidebarTabsProps) {
-  const [activeIndex, setActiveIndex] = useState(0);
+  //const [activeIndex, setActiveIndex] = useState(0);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
   const sidebarRef = useRef<HTMLDivElement>(null);
@@ -41,9 +41,10 @@ export default function Sidebar({ tabs }: SidebarTabsProps) {
   }, [isMobileOpen, isMounted]);
 
   const handleTabClick = (index: number) => {
-    setActiveIndex(index);
+   dispatch(setActiveIndex(index));
+    //setActiveIndex(index);
     setIsMobileOpen(false);
-    dispatch(setActiveIndex(index));
+    
   };
 
   if (!tabs.length) return null;
@@ -97,7 +98,7 @@ export default function Sidebar({ tabs }: SidebarTabsProps) {
           isMobileOpen ? 'opacity-60 pointer-events-none' : ''
         }`}
       >
-        {tabs[activeIndex]?.content}
+        {tabs[GlobalactiveIndex]?.content}
       </main>
 
       {/* Backdrop for mobile - Only render when mounted */}
