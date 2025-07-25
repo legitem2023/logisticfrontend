@@ -4,7 +4,7 @@ import  Shimmer  from '../ui/Shimmer';
 
 const AdminDeliveriesLoading = () => {
   return (
-    <div className="w-full p-4">
+    <div className="w-full p-0">
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
         {[...Array(6)].map((_, index) => (
           <div 
