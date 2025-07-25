@@ -260,7 +260,7 @@ const vehicleDetails = (id,data) => {
     }
   }, [pickup, dropoffs]);
 
-  
+/*  
 useEffect(() => {
     const fetchDistance = async () => {
       try {
@@ -276,7 +276,8 @@ useEffect(() => {
 
     fetchDistance();
   }, [pickup, dropoffs]);
-
+*/
+  console.log(dropoffs,"<<<");
 const validatePickup = (pickup) => {
   if (!pickup || typeof pickup !== 'object') {
     showToast("Pickup data is missing or invalid", 'warning');
