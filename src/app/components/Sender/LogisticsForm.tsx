@@ -261,20 +261,15 @@ const vehicleDetails = (id,data) => {
 
   
 useEffect(() => {
-getDistanceInKm({
-  lat: pickup.lat,
-  lng: pickup.lng
-}, {
-  lat: dropoff.lat,
-  lng: dropoff.lng
-}).then((distance) => {
-  console.log(distance)
+getDistanceInKm({lat: pickup.lat,lng: pickup.lng}, 
+                {lat: dropoff.lat,lng: dropoff.lng})
+  .then((distance) => {
+  console.log(distance);
   return distance;
 }).catch((error) => {
   console.error('Error:', error);
-});
-  }))
-  }, []); 
+});  
+}, []); 
 const validatePickup = (pickup) => {
   if (!pickup || typeof pickup !== 'object') {
     showToast("Pickup data is missing or invalid", 'warning');
