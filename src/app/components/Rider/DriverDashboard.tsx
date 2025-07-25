@@ -164,7 +164,7 @@ const handleFilter = ({ search, date }: { search: string; date: Date | null }) =
             <FilterBar onFilter={handleFilter} />
             <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3 p-0">
               {filteredDeliveries.length > 0? filteredDeliveries?.map((delivery) => (
-                <Card key={delivery.id} className="transition duration-300 ease-in-out hover:shadow-xl hover:scale-[1.01] border border-gray-200 rounded-2xl">
+                <Card key={delivery.id} className="transition duration-300 ease-in-out hover:shadow-xl hover:scale-[1.01] border border-gray-200">
                   <CardContent className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 p-4">
                     <div>
                       <div className="text-lg font-semibold text-gray-800">{delivery.trackingNumber}</div>
