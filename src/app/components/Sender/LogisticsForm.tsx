@@ -815,7 +815,7 @@ order = {{
     name: r.name,
     address: r.address,
     contact: r.contact,
-    distanceKm: distances[i],
+    distanceKm: distances[i].toFixed(2),
     })),
   billing: {
     baseRate:parseFloat(useBaseCost),
