@@ -9,7 +9,7 @@ import { Badge } from '../ui/Badge';
 import { useState } from 'react';
 
 import { PackageCheck, User, Phone, MapPin, Truck, BadgeCheck, CreditCard } from "lucide-react";
-import ReusableCollapse from "../ui/ReusableCollapse"; // adjust path as needed
+import Collapsible from "../ui/Collapsible"; // adjust path as needed
 
 const AdminDeliveriesTable = () => {
   const { data, loading, error } = useQuery(GETDELIVERIESADMIN);
@@ -152,7 +152,7 @@ const AdminDeliveriesTable = () => {
 
     {/* 📦 Packages */}
     {delivery.packages?.length > 0 && (
-      <ReusableCollapse title={`Packages (${delivery.packages.length})`}>
+      <Collapsible title={`Packages (${delivery.packages.length})`}>
         <div className="space-y-3 pt-2">
           {delivery.packages.map((pkg: any, index: number) => (
             <div key={index} className="border rounded-lg p-3 text-sm text-zinc-600 bg-zinc-50 shadow-sm">
