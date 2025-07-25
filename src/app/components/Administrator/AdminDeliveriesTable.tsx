@@ -163,7 +163,7 @@ const AdminDeliveriesTable = () => {
             </div>
           ))}
         </div>
-      </ReusableCollapse>
+      </Collapsible>
     )}
 
   </CardContent>
