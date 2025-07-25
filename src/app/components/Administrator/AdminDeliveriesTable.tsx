@@ -3,7 +3,7 @@
 import { useQuery, useMutation } from '@apollo/client';
 import { GETDELIVERIESADMIN, RIDERS } from '../../../../graphql/query';
 import { ASSIGNRIDER } from '../../../../graphql/mutation';
-import AdminDeliveriesLoading from "./AdminDeliveriesLoading";
+import AdminDeliveriesLoading from "../Loadings/AdminDeliveriesLoading";
 import { Card, CardContent } from '../ui/Card';
 import { Badge } from '../ui/Badge';
 import { useState } from 'react';
