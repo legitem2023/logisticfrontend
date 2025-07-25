@@ -95,7 +95,8 @@ const LogisticsForm = () => {
   const timeoutRef = useRef(null);
   const [showDetails, setShowDetails] = useState(false);
   const [useBaseCost,setBaseCost] = useState(null);
- const [distances, setDistances] = useState<number[]>([]);
+  const [usePerKmCost,setPerKmCost] = useState(null);
+  const [distances, setDistances] = useState<number[]>([]);
 
   const closeDetails = () =>{
   setShowDetails(false);
@@ -212,9 +213,10 @@ const LogisticsForm = () => {
 const vehicleDetails = (id,data) => {
    setSelected(id);
    setBaseCost(data.cost);
+   setPerKmCost(data.perKmRate);
    console.log(useBaseCost);
 }
-  
+  console.log(useBaseCost,usePerKmCost,"<<<<<");
   // Select a suggestion
   const selectSuggestion = (suggestion) => {
     const address = suggestion.formatted_address;
@@ -381,7 +383,7 @@ const confirmCommand = ((selectedDriver:any) => {
     Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate())
   ).toISOString();
 
-  dropoffs.forEach(async (dropoff) => {
+  dropoffs.forEach(async (dropoff:any,i:number) => {
     const input = {
       assignedRiderId: null,
       deliveryFee: selectedDriver.cost,
@@ -398,6 +400,9 @@ const confirmCommand = ((selectedDriver:any) => {
       recipientName: dropoff.name,
       recipientPhone: dropoff.contact,
       senderId: globalUserId,
+      baseRate: parseFloat(useBaseCost),
+      distance: parseFloat(distances[i].toFixed(2)),
+      perKmRate: parseFloat(selectedDriver.perKmRate)
     };
    
     
@@ -819,7 +824,7 @@ order = {{
     })),
   billing: {
     baseRate:parseFloat(useBaseCost),
-    perKmRate: 10,
+    perKmRate: usePerKmCost,
     total: null, // optional; will auto-compute if null
   },
 }}

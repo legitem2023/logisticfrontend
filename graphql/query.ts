@@ -8,10 +8,12 @@ query GetVehicleTypes {
     maxCapacityKg
     maxVolumeM3
     description
-    icon
     createdAt
     updatedAt
+    icon
     cost
+    perKmRate
+    rushTimeAddon
   }
 }
 `
