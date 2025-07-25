@@ -79,7 +79,7 @@ export default function Sidebar({ tabs }: SidebarTabsProps) {
               onClick={() => handleTabClick(i)}
               className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200
                 ${
-                  activeIndex === i
+                  GlobalactiveIndex === i
                     ? 'customgrad text-white shadow-md'
                     : 'text-gray-700 hover:bg-gray-100'
                 }
