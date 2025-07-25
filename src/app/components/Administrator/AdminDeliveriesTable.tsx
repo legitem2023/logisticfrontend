@@ -48,10 +48,10 @@ const AdminDeliveriesTable = () => {
   const riders = ridersData?.getRiders ?? [];
 
   return (
-    <div className="w-full p-4">
+    <div className="w-full p-0">
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
         {deliveries.map((delivery: any) => (
-          <Card key={delivery.id} className="rounded-2xl border border-zinc-200 bg-gradient-to-br from-white to-zinc-50 shadow-lg hover:shadow-xl transition-shadow duration-300">
+          <Card key={delivery.id} className="border border-zinc-200 bg-gradient-to-br from-white to-zinc-50 shadow-lg hover:shadow-xl transition-shadow duration-300">
   <CardContent className="p-6 space-y-4 text-sm text-zinc-800">
     
     <div className="flex justify-between items-center font-mono text-xs text-zinc-500">
