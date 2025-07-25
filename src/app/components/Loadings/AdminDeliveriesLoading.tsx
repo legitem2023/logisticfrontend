@@ -1,6 +1,6 @@
 'use client';
 
-import  Shimmer  from '../ui/Shimmer';
+import { Shimmer } from '../ui/Shimmer';
 
 const AdminDeliveriesLoading = () => {
   return (
@@ -9,7 +9,7 @@ const AdminDeliveriesLoading = () => {
         {[...Array(6)].map((_, index) => (
           <div 
             key={index}
-            className="rounded-2xl border border-zinc-200 bg-gradient-to-br from-white to-zinc-50 shadow-lg"
+            className="border border-zinc-200 bg-gradient-to-br from-white to-zinc-50 shadow-lg overflow-hidden"
           >
             <div className="p-6 space-y-4 text-sm text-zinc-800">
               {/* Tracking */}
