@@ -23,8 +23,13 @@ export default function Sidebar({ tabs }: SidebarTabsProps) {
   const dispatch = useDispatch();
   const GlobalactiveIndex = useSelector((state: any) => state.activeIndex.value);
           console.log(GlobalactiveIndex);
- 
+ const mainRef = useRef<HTMLDivElement>(null);
 
+  useEffect(() => {
+  if (mainRef.current) {
+    mainRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  }, [GlobalactiveIndex]);
 
   useEffect(() => {
      window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -101,6 +106,7 @@ export default function Sidebar({ tabs }: SidebarTabsProps) {
 
       {/* Main Content */}
       <main
+        ref={mainRef}
         className={`flex-1 overflow-y-auto transition-all duration-300 p-0 ${
           isMobileOpen ? 'opacity-60 pointer-events-none' : ''
         }`}
