@@ -1,5 +1,5 @@
 'use client';
-
+import { Icon } from '@iconify/react';
 import { useQuery } from '@apollo/client';
 import { Card, CardContent } from '../ui/Card';
 import { Loader2, AlertTriangle } from 'lucide-react';
@@ -22,7 +22,7 @@ export default function VehicleTypes() {
         <Card key={vehicle.id} className="shadow-lg border rounded-2xl p-4">
           <CardContent className="flex flex-col gap-2">
             <div className="flex items-center gap-2">
-              <img src={vehicle.icon} alt={vehicle.name} className="w-10 h-10 object-contain" />
+              <Icon icon={vehicle.icon} style={{ height: '40px', width: '40px' }} />
               <h3 className="text-xl font-semibold">{vehicle.name}</h3>
             </div>
             <p className="text-sm text-gray-600">{vehicle.description}</p>
