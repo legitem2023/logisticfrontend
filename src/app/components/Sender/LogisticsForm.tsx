@@ -84,6 +84,7 @@ const LogisticsForm = () => {
   }]);
   
   const [activeLocation, setActiveLocation] = useState(null);
+  const [useDistance,setDistance]= useState(0);
   const [selectedVehicle, setSelectedVehicle] = useState('Car');
   const [selectedService, setSelectedService] = useState('Regular');
   const [suggestions, setSuggestions] = useState([]);
@@ -261,15 +262,21 @@ const vehicleDetails = (id,data) => {
 
   
 useEffect(() => {
-getDistanceInKm({ lat:pickup.lat, lng:pickup.lng }, 
-                { lat:dropoffs.lat, lng:dropoffs.lng })
-  .then((distance) => {
-  console.log(distance);
-  return distance;
-}).catch((error) => {
-  console.error('Error:', error);
-});  
-}, []); 
+    const fetchDistance = async () => {
+      try {
+        const result = await getDistanceInKm(
+          { lat: pickup.lat, lng: pickup.lng },
+          { lat: dropoffs.lat, lng: dropoffs.lng }
+        );
+        setDistance(result);
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    };
+
+    fetchDistance();
+  }, [pickup, dropoffs]);
+
 const validatePickup = (pickup) => {
   if (!pickup || typeof pickup !== 'object') {
     showToast("Pickup data is missing or invalid", 'warning');
@@ -776,7 +783,7 @@ order = {{
     name: r.name,
     address: r.address,
     contact: r.contact,
-    distanceKm: 0
+    distanceKm: useDistance,
     })),
   billing: {
     baseRate:parseFloat(useBaseCost),
