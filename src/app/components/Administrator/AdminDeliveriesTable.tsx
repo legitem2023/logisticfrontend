@@ -163,22 +163,40 @@ const [originalDeliveries, setOriginalDeliveries] = useState<any[]>([]);
     </div>
 
     
-    <div className="flex justify-between text-sm font-medium text-zinc-700">
-      <span>Distance</span>
-      <span className="text-right">{delivery.distance?.toFixed(2)} Km</span>
-    </div>
-    <div className="flex justify-between text-sm font-medium text-zinc-700">
-      <span>Base Rate</span>
-      <span className="text-right">₱{delivery.baseRate?.toFixed(2) ?? '0.00'}</span>
-    </div>
-    <div className="flex justify-between text-sm font-medium text-zinc-700">
-      <span>Per Km Rate</span>
-      <span className="text-right">₱{delivery.perKmRate?.toFixed(2) ?? '0.00'}</span>
-    </div>
-    <div className="flex justify-between text-sm font-medium text-zinc-700">
-      <span>Total</span>
-      <span className="text-right">₱{delivery.perKmRate?.toFixed(2) ?? '0.00'}</span>
-    </div>
+<div className="border rounded-xl p-4 shadow-sm bg-white space-y-2">
+  <div className="flex justify-between text-sm font-medium text-zinc-700">
+    <span>Base Rate</span>
+    <span className="text-right">
+      ₱{(delivery.baseRate ?? 0).toFixed(2)}
+    </span>
+  </div>
+
+  <div className="flex justify-between text-sm font-medium text-zinc-700">
+    <span>Distance</span>
+    <span className="text-right">
+      {delivery.distance ?? 0} km
+    </span>
+  </div>
+
+  <div className="flex justify-between text-sm font-medium text-zinc-700">
+    <span>Per KM Rate</span>
+    <span className="text-right">
+      ₱{(delivery.perKmRate ?? 0).toFixed(2)}
+    </span>
+  </div>
+
+  <hr className="my-2" />
+
+  <div className="flex justify-between text-sm font-bold text-zinc-900">
+    <span>Total</span>
+    <span className="text-right">
+      ₱{(
+        (delivery.baseRate ?? 0) +
+        ((delivery.distance ?? 0) * (delivery.perKmRate ?? 0))
+      ).toFixed(2)}
+    </span>
+  </div>
+</div>
     <div>
       <p className="text-[13px] font-semibold text-zinc-700 flex items-center gap-1">
         <CreditCard size={14} /> Payment
