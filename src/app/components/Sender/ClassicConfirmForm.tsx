@@ -66,7 +66,7 @@ export default function ClassicConfirmForm({ order, onConfirm ,onLoading }) {
       </div>
       {recipient.distanceKm !== undefined ? (
         <span>
-          ₱{recipient.distanceKm * order.billing.perKmRate}
+          ₱{(recipient.distanceKm * order.billing.perKmRate).toFixed(2)}
         </span>
       ) : (
         <span className="text-gray-400 text-sm">—</span>
