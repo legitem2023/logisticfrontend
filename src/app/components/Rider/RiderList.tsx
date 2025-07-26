@@ -49,7 +49,7 @@ type RiderListProps = {
   // Remove the riders prop since we'll fetch them internally
 };
 
-const RiderList: React.FC<RiderListProps> = () => {
+const RiderList = () => {
   const [selectedRider, setSelectedRider] = useState<Rider | null>(null);
   
   // Use the query hook
