@@ -162,7 +162,7 @@ const handleFilter = ({ search, date }: { search: string; date: Date | null }) =
         {activeTab === "Deliveries" && (
           <>
             
-            <div className="grid gap-2 md:grid-cols-2 xl:grid-cols-3 p-0">
+            <div className="grid gap-1 md:grid-cols-2 xl:grid-cols-3 p-0">
               <FilterBar onFilter={handleFilter} />
               {filteredDeliveries.length > 0? filteredDeliveries?.map((delivery) => (
                 <Card key={delivery.id} className="transition duration-300 ease-in-out hover:shadow-xl hover:scale-[1.01] border border-gray-200">
