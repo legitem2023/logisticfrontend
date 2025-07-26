@@ -4,22 +4,34 @@ import { useState, useEffect } from "react";
 import { Card, CardContent } from "../ui/Card";
 import { Button } from "../ui/Button"; 
 import Collapsible from "../ui/Collapsible";
-import { Clock, MapPin, Bike, Compass } from "lucide-react";
+import { Clock, MapPin, Bike, Compass, X } from "lucide-react";
 import { useQuery } from "@apollo/client";
 import { GETDISPATCH } from '../../../../graphql/query';
 import CreatePackageForm from "./CreatePackageForm";
 import { useSelector } from "react-redux";
 import { selectTempUserId } from '../../../../Redux/tempUserSlice';
-import { getMinutesFromNow } from '../../../../utils/decryptToken';
+import { formatDate, getMinutesFromNow } from '../../../../utils/decryptToken';
 import FilterBar from "../Rider/Filterbar";
 import SenderDashboardLoading from "./SenderDashboardLoading";
+import SenderMap from "./SenderMap";
+
 export default function SenderDashboard() {
   const globalUserId = useSelector(selectTempUserId);
 
   const [search, setSearch] = useState("");
   const [filteredDeliveries, setFilteredDeliveries] = useState<any[]>([]);
   const [originalDeliveries, setOriginalDeliveries] = useState<any[]>([]); 
+  const [activeTab, setActiveTab] = useState("Deliveries"); 
+  const [showMap, setMap] = useState(false); 
+  const [selectedDelivery, setSelectedDelivery] = useState(null); 
 
+
+
+    const openMap = (delivery: any) => { 
+    setSelectedDelivery(delivery); 
+      console.log(delivery);
+    setMap(true); 
+  };
   const { data, loading, error,refetch } = useQuery(GETDISPATCH, {
     variables: { id: globalUserId },
     skip: !globalUserId,
@@ -61,36 +73,47 @@ export default function SenderDashboard() {
       {/* Sidebar */}
       <aside className="hidden md:block md:w-64 bg-white/80 backdrop-blur-md border-r border-gray-200 shadow-inner p-6">
         <h2 className="text-2xl font-bold text-gray-800 mb-8">Sender Panel</h2>
-        <nav className="space-y-6 text-base">
-          <div className="text-blue-600 font-semibold border-l-4 border-blue-600 pl-2">Active Deliveries</div>
-          <div className="text-gray-500 hover:text-gray-800 cursor-pointer">History</div>
-          <div className="text-gray-500 hover:text-gray-800 cursor-pointer">Settings</div>
-        </nav>
+        <nav> 
+          <ul className="space-y-4 text-[15px] font-medium">
+            {['Deliveries', 'History'].map(tab => (
+              <li
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                className={`cursor-pointer rounded-lg px-3 py-2 transition-all duration-200 ${
+                  activeTab === tab
+                    ? 'customgrad text-white shadow-md'
+                    : 'text-gray-600 hover:text-gray-800 hover:bg-gray-100'
+                }`}
+              >
+                {tab}
+              </li>
+            ))}
+          </ul> 
+        </nav> 
       </aside>
 
       {/* Main Content */}
       <main className="flex-1 p-0">
-        
-        {loading ? (
+           <FilterBar onFilter={handleFilter} />
+        { activeTab === "Deliveries" && loading ? (
           <SenderDashboardLoading/>
         ) : error ? (
           <div className="text-center mt-8 text-red-500">Error loading deliveries</div>
         ) : (
           <div className="grid gap-1 md:grid-cols-2 xl:grid-cols-3 p-0">
-           <FilterBar onFilter={handleFilter} />
+        
             {filteredDeliveries.map((delivery) => (
               <Card
                 key={delivery.id}
                 className="bg-white/80 backdrop-blur-lg border border-gray-200 shadow-md hover:shadow-xl transition-all duration-300"
               >
                 <CardContent className="p-5 space-y-4">
+                  <div>Created:{formatDate(delivery.createdAt)}</div>
                   <div className="text-lg font-semibold text-gray-800">{delivery.trackingNumber}</div>
-                  
                   <div className="flex items-center gap-2 text-sm text-gray-700 font-medium">
                     <Bike className="w-4 h-4 text-blue-600" />
                     <span>Rider: {delivery.assignedRider?.name || "Unassigned"}</span>
                   </div>
-
                   <div className="flex items-center gap-2 text-sm text-gray-600">
                     <MapPin className="w-4 h-4 text-green-500" />
                     <span>{delivery.pickupAddress}</span>
@@ -111,7 +134,8 @@ export default function SenderDashboard() {
                     </span>
                   </div>
                   {delivery.deliveryStatus==='in_transit' && (<div className="flex items-center gap-2 text-sm text-gray-500">
-                  <Button 
+                  <Button
+                        onClick={() => openMap(delivery)} 
                         variant="outline"
                         className="w-full sm:w-auto transition-all text-white duration-200 customgrad hover:bg-blue-50 hover:border-blue-500">
                         <Compass className="w-4 h-4 mr-1" />Track</Button>
@@ -123,26 +147,53 @@ export default function SenderDashboard() {
                       Package={delivery.packages}
                       refresh={refetch}
                     />
-                    </Collapsible>
-                    
+                    </Collapsible>                    
                   </div>
-
                   <div className="inline-block text-xs font-semibold text-white px-3 py-1 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 shadow">
                     {delivery.deliveryStatus}
                   </div>
                 </CardContent>
               </Card>
             ))}
+            { activeTab === "History" && <>No Dara</>}
           </div>
         )}
       </main>
 
       {/* Mobile Nav */}
       <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-md border-t border-gray-300 shadow-inner flex justify-around p-2 z-50">
-        <button className="text-blue-600 font-semibold transition-colors">Active</button>
-        <button className="text-gray-500 hover:text-gray-800 transition-colors">History</button>
-        <button className="text-gray-500 hover:text-gray-800 transition-colors">Settings</button>
+        {['Deliveries','History'].map(tab => (
+          <button
+            key={tab}
+            className={`flex flex-col items-center transition p-2 w-[100%] h-[100%] ${
+              activeTab === tab ? 'customgrad text-white-100 font-semibold' : 'text-gray-500'
+            }`}
+            onClick={() => setActiveTab(tab)}
+          >
+            {tab}
+          </button>
+        ))}
       </nav>
+
+      {showMap && (
+        <div className="fixed h-[100vh] inset-0 z-50 flex items-end sm:items-center justify-center bg-black/50 flex flex-col">
+          <button
+            onClick={() => setMap(false)}
+            className="fixed top-5 right-5 z-50 p-1 rounded hover:bg-gray-100 transition"
+          >
+            <X className="w-5 h-5 text-gray-600" />
+          </button>
+          <div className="w-full h-[100vh] sm:max-w-md bg-white p-0 shadow-lg animate-slide-up overflow-y-auto">
+
+            <SenderMap 
+              senderLocation={[selectedDelivery.dropoffLongitude,selectedDelivery.dropoffLongitude]} 
+              riderLocation={[selectedDelivery.pickupLongitude,selectedDelivery.pickupLatitude]} 
+              packageLocation={[selectedDelivery.pickupLongitude,selectedDelivery.pickupLatitude]} 
+            />
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }

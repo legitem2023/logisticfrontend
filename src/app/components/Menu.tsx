@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { use, useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
 import Image from 'next/image';
 import { useMutation, useSubscription } from '@apollo/client';
@@ -13,7 +13,7 @@ import HomeDataCarousel from './HomeDataCarousel';
 import LogisticsHomePage from './LogisticsHomePage';
 import DriverDashboard from './Rider/DriverDashboard';
 import SenderDashboard from './Sender/SenderDashboard';
-import RiderActivityChart from './Rider/RiderActivityChart';
+import RiderActivityChart from './Administrator/RiderActivityChart';
 import LogisticsForm from './Sender/LogisticsForm';
 import SettingsPage from './SettingsPage';
 import HelpPage from './HelpPage';
@@ -80,6 +80,7 @@ import { setCurrentLocation } from '../../../Redux/locationSlice';
 import { setTempUserId,selectTempUserId } from '../../../Redux/tempUserSlice';
 import  AdminDeliveriesTable  from './Administrator/AdminDeliveriesTable';
 import  VehicleTypes  from './Administrator/VehicleTypes';
+import RiderPerformanceChart from './Rider/RiderPerformanceChart';
 
 
 // Your entire code remains unchanged except for the fixed JSX in the 'Home' tab item
@@ -176,7 +177,11 @@ export default function Menu() {
           <HomeDataCarousel items={mockItems} />
           <LogisticsHomePage />
         </div>
-      ) : (
+      ) : useRole === 'Rider' || useRole === 'RIDER' ? (
+        <div className="px-1 py-1 space-y-1">
+          <RiderPerformanceChart />
+        </div>
+      ):(
         <div className="px-1 py-1 space-y-1">
           <RiderActivityChart />
         </div>

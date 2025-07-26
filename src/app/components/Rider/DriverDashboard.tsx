@@ -159,11 +159,12 @@ const handleFilter = ({ search, date }: { search: string; date: Date | null }) =
       </aside>
       
       <main className="flex-1">
+        <FilterBar onFilter={handleFilter} />
         {activeTab === "Deliveries" && (
           <>
             
             <div className="grid gap-1 md:grid-cols-2 xl:grid-cols-3 p-0">
-              <FilterBar onFilter={handleFilter} />
+              
               {filteredDeliveries.length > 0? filteredDeliveries?.map((delivery) => (
                 <Card key={delivery.id} className="transition duration-300 ease-in-out hover:shadow-xl hover:scale-[1.01] border border-gray-200">
                   <CardContent className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 p-4">

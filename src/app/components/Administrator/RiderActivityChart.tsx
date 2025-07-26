@@ -35,6 +35,8 @@ const RiderActivityChart = () => {
       in_transit: 0,
     };
 
+        
+
     const monthlyMap: Record<string, Record<string, number>> = {};
 
     deliveries.forEach((delivery: any) => {
@@ -48,16 +50,16 @@ const RiderActivityChart = () => {
 
       // Count by status
       switch (delivery.deliveryStatus) {
-        case 'COMPLETED':
+        case 'Delivered':
           statusMap.Delivered += 1;
           break;
-        case 'PENDING':
+        case 'Pending':
           statusMap.Pending += 1;
           break;
-        case 'CANCELLED':
+        case 'Cancelled':
           statusMap.Cancelled += 1;
           break;
-        case 'ONGOING':
+        case 'in_transit':
           statusMap.in_transit += 1;
           break;
         default:
