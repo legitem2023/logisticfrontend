@@ -45,9 +45,6 @@ type Rider = {
   };
 };
 
-type RiderListProps = {
-  // Remove the riders prop since we'll fetch them internally
-};
 
 const RiderList = () => {
   const [selectedRider, setSelectedRider] = useState<Rider | null>(null);
