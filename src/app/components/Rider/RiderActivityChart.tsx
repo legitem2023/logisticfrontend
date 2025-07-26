@@ -29,10 +29,10 @@ const RiderActivityChart = () => {
   // ⏳ Process data
   const { allMonthlyData, statusSummary, months } = useMemo(() => {
     const statusMap: Record<string, number> = {
-      Completed: 0,
+      Delivered: 0,
       Pending: 0,
       Cancelled: 0,
-      Ongoing: 0,
+      in_transit: 0,
     };
 
     const monthlyMap: Record<string, Record<string, number>> = {};
@@ -49,7 +49,7 @@ const RiderActivityChart = () => {
       // Count by status
       switch (delivery.deliveryStatus) {
         case 'COMPLETED':
-          statusMap.Completed += 1;
+          statusMap.Delivered += 1;
           break;
         case 'PENDING':
           statusMap.Pending += 1;
@@ -58,7 +58,7 @@ const RiderActivityChart = () => {
           statusMap.Cancelled += 1;
           break;
         case 'ONGOING':
-          statusMap.Ongoing += 1;
+          statusMap.in_transit += 1;
           break;
         default:
           break;
@@ -76,7 +76,7 @@ const RiderActivityChart = () => {
     const summary = [
       {
         label: 'Completed',
-        count: statusMap.Completed,
+        count: statusMap.Delivered,
         color: 'bg-green-100 text-green-700',
         icon: <CheckCheck className="w-5 h-5 text-green-600" />,
         description: 'Deliveries successfully completed'
@@ -97,7 +97,7 @@ const RiderActivityChart = () => {
       },
       {
         label: 'Ongoing',
-        count: statusMap.Ongoing,
+        count: statusMap.in_transit,
         color: 'bg-blue-100 text-blue-700',
         icon: <Loader className="w-5 h-5 text-blue-500" />,
         description: 'Deliveries currently in progress'
