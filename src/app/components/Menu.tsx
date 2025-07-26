@@ -223,23 +223,7 @@ export default function Menu() {
             icon: <Bike color="green" />,
             content: (
               <div className="px-1 py-1 space-y-1">
-                <RiderList
-                  riders={[
-                    {
-                      id: "1",
-                      name: "Juan Dela Cruz",
-                      phone: "09171234567",
-                      avatarUrl: "https://i.pravatar.cc/150?img=3",
-                      location: { latitude: 14.5995, longitude: 120.9842 },
-                    },
-                    {
-                      id: "2",
-                      name: "Maria Santos",
-                      phone: "09181112222",
-                      location: { latitude: 14.676, longitude: 121.0437 },
-                    },
-                  ]}
-                />
+                <RiderList/>
               </div>
             ),
           },
