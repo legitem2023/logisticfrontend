@@ -76,7 +76,7 @@ export default function SenderDashboard() {
         ) : error ? (
           <div className="text-center mt-8 text-red-500">Error loading deliveries</div>
         ) : (
-          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3 p-0">
+          <div className="grid gap-1 md:grid-cols-2 xl:grid-cols-3 p-0">
            <FilterBar onFilter={handleFilter} />
             {filteredDeliveries.map((delivery) => (
               <Card
