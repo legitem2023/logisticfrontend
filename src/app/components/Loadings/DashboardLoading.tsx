@@ -41,7 +41,7 @@ export function DashboardLoading() {
         {/* Cards Loading */}
         <div className="grid gap-1 md:grid-cols-2 xl:grid-cols-3 p-0">
           {[...Array(6)].map((_, i) => (
-            <Card key={i} className="border border-gray-200 rounded-2xl">
+            <Card key={i} className="border border-gray-200">
               <CardContent className="p-4 space-y-4">
                 {/* Tracking Number */}
                 <div className="h-6 w-3/4">
