@@ -13,7 +13,9 @@ import { selectTempUserId } from '../../../../Redux/tempUserSlice';
 import { formatDate, getMinutesFromNow } from '../../../../utils/decryptToken';
 import FilterBar from "../Rider/Filterbar";
 import SenderDashboardLoading from "./SenderDashboardLoading";
-import SenderMap from "./SenderMap";
+import dynamic from "next/dynamic";
+const SenderMap = dynamic(() => import("./SenderMap"), { ssr: false });
+
 
 export default function SenderDashboard() {
   const globalUserId = useSelector(selectTempUserId);
