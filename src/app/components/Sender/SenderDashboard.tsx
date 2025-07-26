@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"; 
 import { Card, CardContent } from "../ui/Card";
+import { Button } from "../ui/Button"; 
 import Collapsible from "../ui/Collapsible";
 import { Clock, MapPin, Bike } from "lucide-react";
 import { useQuery } from "@apollo/client";
