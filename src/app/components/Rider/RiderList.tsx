@@ -1,5 +1,38 @@
 import React, { useState } from "react";
 import { MapPin, Phone, MessageSquare, X } from "lucide-react";
+import { gql, useQuery } from '@apollo/client';
+
+// Define your GraphQL query
+export const RIDERS = gql`
+  query GetRiders {
+    getRiders {
+      id
+      name
+      email
+      phoneNumber
+      vehicleType {
+        id
+        name
+        maxCapacityKg
+        maxVolumeM3
+        description
+        createdAt
+        updatedAt
+        icon
+        cost
+      }
+      licensePlate
+      status
+      currentLatitude
+      currentLongitude
+      lastUpdatedAt
+      createdAt
+      updatedAt
+      role
+      image
+    }
+  }
+`;
 
 type Rider = {
   id: string;
@@ -13,18 +46,36 @@ type Rider = {
 };
 
 type RiderListProps = {
-  riders: Rider[];
+  // Remove the riders prop since we'll fetch them internally
 };
 
-const RiderList: React.FC<RiderListProps> = ({ riders }) => {
+const RiderList: React.FC<RiderListProps> = () => {
   const [selectedRider, setSelectedRider] = useState<Rider | null>(null);
+  
+  // Use the query hook
+  const { loading, error, data } = useQuery(RIDERS);
+
+  if (loading) return <div>Loading riders...</div>;
+  if (error) return <div>Error loading riders: {error.message}</div>;
+
+  // Transform the GraphQL data to match your Rider type
+  const riders = data.getRiders.map((rider: any) => ({
+    id: rider.id,
+    name: rider.name,
+    avatarUrl: rider.image,
+    phone: rider.phoneNumber,
+    location: {
+      latitude: rider.currentLatitude || 0,
+      longitude: rider.currentLongitude || 0
+    }
+  }));
 
   return (
     <>
       <div className="w-full max-w-5xl mx-auto p-4">
         <h2 className="text-2xl font-semibold mb-4">Active Riders</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {riders.map((rider) => (
+          {riders.map((rider: Rider) => (
             <div
               key={rider.id}
               className="bg-white rounded-2xl shadow-md p-4 flex items-center space-x-4 transition hover:shadow-lg cursor-pointer"
