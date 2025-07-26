@@ -141,7 +141,7 @@ const handleFilter = ({ search, date }: { search: string; date: Date | null }) =
         <h2 className="text-2xl font-bold text-gray-800 mb-10 tracking-tight">🚚 Driver Panel</h2> 
         <nav> 
           <ul className="space-y-4 text-[15px] font-medium">
-            {['Deliveries','Dispatch', 'History'].map(tab => (
+            {['Deliveries', 'History'].map(tab => (
               <li
                 key={tab}
                 onClick={() => setActiveTab(tab)}
@@ -204,17 +204,10 @@ const handleFilter = ({ search, date }: { search: string; date: Date | null }) =
         )}
 
         {activeTab === "History" && <HistoryContainer />}
-
-        {activeTab === "Dispatch" && (
-          <div className="p-4">
-            <h1 className="text-2xl font-bold mb-4">Settings</h1>
-            <p className="text-gray-600">Settings panel coming soon...</p>
-          </div>
-        )}
       </main>
 
       <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-md border-t border-gray-300 shadow-inner flex justify-around z-50">
-        {['Deliveries','Dispatch','History'].map(tab => (
+        {['Deliveries','History'].map(tab => (
           <button
             key={tab}
             className={`flex flex-col items-center transition p-2 w-[100%] h-[100%] ${
