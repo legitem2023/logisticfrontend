@@ -46,6 +46,7 @@ export default function SenderDashboard() {
 
     const openMap = (delivery: any) => { 
     setSelectedDelivery(delivery); 
+      console.log(delivery);
     setMap(true); 
   };
   const { data, loading, error,refetch } = useQuery(GETDISPATCH, {
