@@ -53,6 +53,9 @@ query GetRidersDelivery($getRidersDeliveryId: String) {
   getRidersDelivery(id: $getRidersDeliveryId) {
     id
     trackingNumber
+    baseRate
+    perKmRate
+    distance
     packages {
       id
       packageType
@@ -127,6 +130,9 @@ query GetDispatch($getDispatchId: String) {
   getDispatch(id: $getDispatchId) {
     id
     trackingNumber
+    baseRate
+    perKmRate
+    distance
     sender {
       id
       image
