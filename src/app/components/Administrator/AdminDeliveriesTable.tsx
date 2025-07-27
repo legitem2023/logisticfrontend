@@ -8,9 +8,8 @@ import { Card, CardContent } from '../ui/Card';
 import { Badge } from '../ui/Badge';
 import { useState, useEffect } from 'react';
 import FilterBar from "../Rider/Filterbar";
-
 import { PackageCheck, User, Phone, MapPin, Truck, BadgeCheck, CreditCard } from "lucide-react";
-import Collapsible from "../ui/Collapsible"; // adjust path as needed
+import Collapsible from "../ui/Collapsible";
 
 const AdminDeliveriesTable = () => {
   const { data, loading, error, refetch } = useQuery(GETDELIVERIESADMIN);
@@ -21,10 +20,9 @@ const AdminDeliveriesTable = () => {
     },
   });
 
-const [filteredDeliveries, setFilteredDeliveries] = useState<any[]>([]);
-const [originalDeliveries, setOriginalDeliveries] = useState<any[]>([]); 
+  const [filteredDeliveries, setFilteredDeliveries] = useState<any[]>([]);
+  const [originalDeliveries, setOriginalDeliveries] = useState<any[]>([]); 
 
-  
   const handleAssignRider = async (deliveryId: string, riderId: string) => {
     try {
       await assignRider({
@@ -42,8 +40,6 @@ const [originalDeliveries, setOriginalDeliveries] = useState<any[]>([]);
   const deliveries = data?.getDeliveries.filter((delivery: any) => delivery.assignedRiderId === "" || delivery.assignedRiderId === null) ?? [];
   const riders = ridersData?.getRiders ?? [];
 
-
-
   // Set deliveries when fetched
   useEffect(() => {
     if (deliveries.length) {
@@ -51,6 +47,33 @@ const [originalDeliveries, setOriginalDeliveries] = useState<any[]>([]);
       setFilteredDeliveries(deliveries);
     }
   }, [deliveries]);
+
+  const handleFilter = ({ search, date }: { search: string; date: Date | null }) => {
+    let filtered = [...originalDeliveries];
+
+    if (search) {
+      filtered = filtered.filter(delivery =>
+        delivery.trackingNumber?.toLowerCase().includes(search.toLowerCase()) ||
+        delivery.recipientName?.toLowerCase().includes(search.toLowerCase()) ||
+        delivery.recipientPhone?.toLowerCase().includes(search.toLowerCase()) ||
+        (delivery.assignedRider?.name?.toLowerCase().includes(search.toLowerCase()))
+    }
+
+    if (date) {
+      const filterDate = new Date(date);
+      filtered = filtered.filter(delivery => {
+        const deliveryDate = new Date(delivery.createdAt);
+        return (
+          deliveryDate.getFullYear() === filterDate.getFullYear() &&
+          deliveryDate.getMonth() === filterDate.getMonth() &&
+          deliveryDate.getDate() === filterDate.getDate()
+        );
+      });
+    }
+
+    setFilteredDeliveries(filtered);
+  }
+
   if (loading) return <AdminDeliveriesLoading />;
 
   if (error) {
@@ -61,20 +84,6 @@ const [originalDeliveries, setOriginalDeliveries] = useState<any[]>([]);
     );
   }
 
-
-
-  
-  const handleFilter = ({ search, date }: { search: string; date: Date | null }) => {
-    let filtered = [...filteredDeliveries];
-
-    if (search) {
-      filtered = filtered.filter(delivery =>
-        delivery.trackingNumber?.toLowerCase().includes(search.toLowerCase()) ||
-        delivery.assignedRider?.name?.toLowerCase().includes(search.toLowerCase())
-      );
-    }
-  }
-  
   return (
     <div className="w-full p-0">
       <FilterBar onFilter={handleFilter} />
@@ -82,152 +91,149 @@ const [originalDeliveries, setOriginalDeliveries] = useState<any[]>([]);
           
         {filteredDeliveries.map((delivery: any) => (
           <Card key={delivery.id} className="border border-zinc-200 bg-gradient-to-br from-white to-zinc-50 shadow-lg hover:shadow-xl transition-shadow duration-300">
-  <CardContent className="p-6 space-y-2 text-sm text-zinc-800">
-    
-    <div className="flex justify-between items-center font-mono text-xs text-zinc-500">
-      <span className="font-semibold">📦 Tracking:</span>
-      <span>{delivery.trackingNumber}</span>
-    </div>
+            <CardContent className="p-6 space-y-2 text-sm text-zinc-800">
+              <div className="flex justify-between items-center font-mono text-xs text-zinc-500">
+                <span className="font-semibold">📦 Tracking:</span>
+                <span>{delivery.trackingNumber}</span>
+              </div>
 
-    <div>
-      <p className="text-[13px] font-semibold text-zinc-700 flex items-center gap-1">
-        <User size={14} /> Recipient
-      </p>
-      <p>{delivery.recipientName}</p>
-      <p className="text-xs text-zinc-400 flex items-center gap-1"><Phone size={12} /> {delivery.recipientPhone}</p>
-    </div>
+              <div>
+                <p className="text-[13px] font-semibold text-zinc-700 flex items-center gap-1">
+                  <User size={14} /> Recipient
+                </p>
+                <p>{delivery.recipientName}</p>
+                <p className="text-xs text-zinc-400 flex items-center gap-1"><Phone size={12} /> {delivery.recipientPhone}</p>
+              </div>
 
-    <div>
-      <p className="text-[13px] font-semibold text-zinc-700 flex items-center gap-1">
-        <MapPin size={14} /> Pickup
-      </p>
-      <p className="text-xs text-zinc-500">{delivery.pickupAddress}</p>
-    </div>
+              <div>
+                <p className="text-[13px] font-semibold text-zinc-700 flex items-center gap-1">
+                  <MapPin size={14} /> Pickup
+                </p>
+                <p className="text-xs text-zinc-500">{delivery.pickupAddress}</p>
+              </div>
 
-    <div>
-      <p className="text-[13px] font-semibold text-zinc-700 flex items-center gap-1">
-        <MapPin size={14} /> Dropoff
-      </p>
-      <p className="text-xs text-zinc-500">{delivery.dropoffAddress}</p>
-    </div>
+              <div>
+                <p className="text-[13px] font-semibold text-zinc-700 flex items-center gap-1">
+                  <MapPin size={14} /> Dropoff
+                </p>
+                <p className="text-xs text-zinc-500">{delivery.dropoffAddress}</p>
+              </div>
 
-    <div>
-      <p className="text-[13px] font-semibold text-zinc-700 flex items-center gap-1">
-        <BadgeCheck size={14} /> Status
-      </p>
-      <div className="flex flex-wrap gap-2">
-        <Badge variant="outline">{delivery.deliveryStatus}</Badge>
-        {delivery.isCancelled && (
-          <Badge variant="destructive">Cancelled</Badge>
-        )}
-      </div>
-    </div>
+              <div>
+                <p className="text-[13px] font-semibold text-zinc-700 flex items-center gap-1">
+                  <BadgeCheck size={14} /> Status
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  <Badge variant="outline">{delivery.deliveryStatus}</Badge>
+                  {delivery.isCancelled && (
+                    <Badge variant="destructive">Cancelled</Badge>
+                  )}
+                </div>
+              </div>
 
-    <div>
-      <p className="text-[13px] font-semibold text-zinc-700 flex items-center gap-1">
-        <Truck size={14} /> Rider
-      </p>
-      {delivery.assignedRider ? (
-        <div className="text-sm text-zinc-700">
-          {delivery.assignedRider.name}
-          <br />
-          <span className="text-xs text-zinc-400">
-            {delivery.assignedRider.phoneNumber}
-          </span>
-        </div>
-      ) : (
-        <select
-          className="w-full mt-1 text-sm border border-zinc-300 rounded-lg px-3 py-2 bg-white focus:ring-2 focus:ring-indigo-400 focus:outline-none"
-          defaultValue=""
-          onChange={(e) => {
-            if (e.target.value) {
-              handleAssignRider(delivery.id, e.target.value);
-            }
-          }}
-        >
-          <option value="" disabled>Select a rider</option>
-          {riders.map((rider: any) => (
-            <option key={rider.id} value={rider.id}>
-              {rider.name} ({rider.phoneNumber})
-            </option>
-          ))}
-        </select>
-      )}
-    </div>
+              <div>
+                <p className="text-[13px] font-semibold text-zinc-700 flex items-center gap-1">
+                  <Truck size={14} /> Rider
+                </p>
+                {delivery.assignedRider ? (
+                  <div className="text-sm text-zinc-700">
+                    {delivery.assignedRider.name}
+                    <br />
+                    <span className="text-xs text-zinc-400">
+                      {delivery.assignedRider.phoneNumber}
+                    </span>
+                  </div>
+                ) : (
+                  <select
+                    className="w-full mt-1 text-sm border border-zinc-300 rounded-lg px-3 py-2 bg-white focus:ring-2 focus:ring-indigo-400 focus:outline-none"
+                    defaultValue=""
+                    onChange={(e) => {
+                      if (e.target.value) {
+                        handleAssignRider(delivery.id, e.target.value);
+                      }
+                    }}
+                  >
+                    <option value="" disabled>Select a rider</option>
+                    {riders.map((rider: any) => (
+                      <option key={rider.id} value={rider.id}>
+                        {rider.name} ({rider.phoneNumber})
+                      </option>
+                    ))}
+                  </select>
+                )}
+              </div>
 
-    <div>
-      <p className="text-[13px] font-semibold text-zinc-700 flex items-center gap-1">
-        <User size={14} /> Sender
-      </p>
-      <p className="text-sm text-zinc-700">{delivery.sender?.name}</p>
-      <p className="text-xs text-zinc-400">{delivery.sender?.phoneNumber}</p>
-    </div>
+              <div>
+                <p className="text-[13px] font-semibold text-zinc-700 flex items-center gap-1">
+                  <User size={14} /> Sender
+                </p>
+                <p className="text-sm text-zinc-700">{delivery.sender?.name}</p>
+                <p className="text-xs text-zinc-400">{delivery.sender?.phoneNumber}</p>
+              </div>
 
-    
-<div className="border rounded-xl p-4 shadow-sm bg-white space-y-2">
-  <div className="flex justify-between text-sm font-medium text-zinc-700">
-    <span>Base Rate</span>
-    <span className="text-right">
-      ₱{(delivery.baseRate ?? 0).toFixed(2)}
-    </span>
-  </div>
+              <div className="border rounded-xl p-4 shadow-sm bg-white space-y-2">
+                <div className="flex justify-between text-sm font-medium text-zinc-700">
+                  <span>Base Rate</span>
+                  <span className="text-right">
+                    ₱{(delivery.baseRate ?? 0).toFixed(2)}
+                  </span>
+                </div>
 
-  <div className="flex justify-between text-sm font-medium text-zinc-700">
-    <span>Distance</span>
-    <span className="text-right">
-      {delivery.distance ?? 0} km
-    </span>
-  </div>
+                <div className="flex justify-between text-sm font-medium text-zinc-700">
+                  <span>Distance</span>
+                  <span className="text-right">
+                    {delivery.distance ?? 0} km
+                  </span>
+                </div>
 
-  <div className="flex justify-between text-sm font-medium text-zinc-700">
-    <span>Per KM Rate</span>
-    <span className="text-right">
-      ₱{(delivery.perKmRate ?? 0).toFixed(2)}
-    </span>
-  </div>
+                <div className="flex justify-between text-sm font-medium text-zinc-700">
+                  <span>Per KM Rate</span>
+                  <span className="text-right">
+                    ₱{(delivery.perKmRate ?? 0).toFixed(2)}
+                  </span>
+                </div>
 
-  <hr className="my-2" />
+                <hr className="my-2" />
 
-  <div className="flex justify-between text-sm font-bold text-zinc-900">
-    <span>Total</span>
-    <span className="text-right">
-      ₱{(
-        (delivery.baseRate ?? 0) +
-        ((delivery.distance ?? 0) * (delivery.perKmRate ?? 0))
-      ).toFixed(2)}
-    </span>
-  </div>
-</div>
-    <div>
-      <p className="text-[13px] font-semibold text-zinc-700 flex items-center gap-1">
-        <CreditCard size={14} /> Payment
-      </p>
-      <div className="flex items-center gap-2">
-        <span className="text-xs text-zinc-600">{delivery.paymentMethod}</span>
-        <Badge variant={delivery.paymentStatus === 'PAID' ? 'default' : 'secondary'}>
-          {delivery.paymentStatus}
-        </Badge>
-      </div>
-    </div>
+                <div className="flex justify-between text-sm font-bold text-zinc-900">
+                  <span>Total</span>
+                  <span className="text-right">
+                    ₱{(
+                      (delivery.baseRate ?? 0) +
+                      ((delivery.distance ?? 0) * (delivery.perKmRate ?? 0))
+                    ).toFixed(2)}
+                  </span>
+                </div>
+              </div>
 
-    {/* 📦 Packages */}
-    {delivery.packages?.length > 0 && (
-      <Collapsible title={`Packages (${delivery.packages.length})`}>
-        <div className="space-y-3 pt-2">
-          {delivery.packages.map((pkg: any, index: number) => (
-            <div key={index} className="border rounded-lg p-3 text-sm text-zinc-600 bg-zinc-50 shadow-sm">
-              <p><strong>Type:</strong> {pkg.packageType}</p>
-              <p><strong>Weight:</strong> {pkg.weight}kg</p>
-              <p><strong>Dimensions:</strong> {pkg.dimensions}</p>
-              <p className="text-xs text-zinc-400 italic">{pkg.specialInstructions}</p>
-            </div>
-          ))}
-        </div>
-      </Collapsible>
-    )}
+              <div>
+                <p className="text-[13px] font-semibold text-zinc-700 flex items-center gap-1">
+                  <CreditCard size={14} /> Payment
+                </p>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-zinc-600">{delivery.paymentMethod}</span>
+                  <Badge variant={delivery.paymentStatus === 'PAID' ? 'default' : 'secondary'}>
+                    {delivery.paymentStatus}
+                  </Badge>
+                </div>
+              </div>
 
-  </CardContent>
-</Card>
+              {delivery.packages?.length > 0 && (
+                <Collapsible title={`Packages (${delivery.packages.length})`}>
+                  <div className="space-y-3 pt-2">
+                    {delivery.packages.map((pkg: any, index: number) => (
+                      <div key={index} className="border rounded-lg p-3 text-sm text-zinc-600 bg-zinc-50 shadow-sm">
+                        <p><strong>Type:</strong> {pkg.packageType}</p>
+                        <p><strong>Weight:</strong> {pkg.weight}kg</p>
+                        <p><strong>Dimensions:</strong> {pkg.dimensions}</p>
+                        <p className="text-xs text-zinc-400 italic">{pkg.specialInstructions}</p>
+                      </div>
+                    ))}
+                  </div>
+                </Collapsible>
+              )}
+            </CardContent>
+          </Card>
         ))}
       </div>
     </div>
