@@ -214,9 +214,9 @@ export default function DriverDashboard() {
                   contact: selectedDelivery.recipientPhone,
                 }}
                 billing={{
-                  distanceKm: null,
-                  baseRate: 50,
-                  perKmRate: 10,
+                  distanceKm:selectedDelivery.distance,
+                  baseRate:selectedDelivery.baseRate,
+                  perKmRate:selectedDelivery.perKmRate,
                   total: null,
                 }}
                 packages={selectedDelivery.packages}
