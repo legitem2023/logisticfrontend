@@ -24,7 +24,7 @@ const RiderList = () => {
   const { data: subscriptionData } = useSubscription(LocationTracking);
 
   
-  const baseRiders: Rider[] = data.getRiders.map((r: any) => ({
+  const baseRiders: Rider[] = data?.getRiders.map((r: any) => ({
     id: r.id,
     name: r.name,
     avatarUrl: r.image,
