@@ -1,91 +1,186 @@
 "use client";
 
-import { useQuery } from "@apollo/client";
-import { gql } from "@apollo/client";
 import { Card, CardContent } from "./ui/Card";
 import { Input } from "./ui/Input";
 import { Button } from "./ui/Button";
 import { Badge } from "./ui/Badge";
-import { CalendarIcon, EyeIcon, DollarSign } from "lucide-react";
-import { useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+
+import { useSelector } from 'react-redux';
+
 import { selectTempUserId } from '../../../Redux/tempUserSlice';
-import { GETDISPATCH } from '../../../graphql/query';
 
 
-
-export default function RiderShipmentHistory() {
+import { CalendarIcon, DownloadIcon, EyeIcon, XIcon } from "lucide-react";
+import { useState, useEffect, useMemo } from "react";
+import Cookies from 'js-cookie';
+import { useQuery } from '@apollo/client';
+import { DELIVERIES } from '../../../graphql/query';
+import { decryptToken, capitalize, formatDate } from '../../../utils/decryptToken';
+import FilterBar from "./Rider/Filterbar";
+export default function RiderShipmentHistory({status}:any) {
+  const [useID, setID] = useState();
   const [search, setSearch] = useState("");
-  const globalUserId = useSelector(selectTempUserId);
+  const [useStatus,setStatus] = useState(status);
+  const [selectedShipment, setSelectedShipment] = useState<any>(null);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [filteredDeliveries, setFilteredDeliveries] = useState([]);
+  const [originalDeliveries, setOriginalDeliveries] = useState([]);
 
-  const { data, loading, error } = useQuery(GETDISPATCH, {
-    variables: { getDispatchId: globalUserId },
-    skip: !globalUserId,
+
+const globalUserId = useSelector(selectTempUserId);
+  const { data, loading } = useQuery(DELIVERIES, {
+    variables: { getNotificationsId: globalUserId }
   });
 
-  if (loading) return <div className="p-6">Loading...</div>;
-  if (error) return <div className="p-6 text-red-500">Error loading dispatch history</div>;
-  if (!data?.getDispatch) return <div className="p-6">No dispatch found.</div>;
+console.log(status,data);
 
-  const delivery = data.getDispatch;
+useEffect(() => {
+  if (data) {
+    const mockShipment = data.getRidersDelivery.filter((delivery: any) => delivery.deliveryStatus === status).map((delivery: any) => ({
+      trackingNumber: delivery.trackingNumber, 
+      id: delivery.id, 
+      sender: delivery.sender.name, 
+      phoneNumber: delivery.sender.phoneNumber, 
+      pickupAddress: delivery.pickupAddress, 
+      pickupLatitude: delivery.pickupLatitude, 
+      pickupLongitude: delivery.pickupLongitude, 
+      recipientName: delivery.recipientName, 
+      recipientPhone: delivery.recipientPhone, 
+      dropoffAddress: delivery.dropoffAddress, 
+      dropoffLatitude: delivery.dropoffLatitude, 
+      dropoffLongitude: delivery.dropoffLongitude, 
+      deliveryStatus: capitalize(delivery.deliveryStatus), 
+      estimatedDeliveryTime: formatDate(delivery.estimatedDeliveryTime), 
+      earnings: "120.00", 
+    }));
+    setOriginalDeliveries(mockShipment);
+    setFilteredDeliveries(mockShipment);
+  }
+}, [data,status]);
 
-  const filtered = [delivery].filter((d) =>
-    d.id.toLowerCase().includes(search.toLowerCase())
-  );
 
+
+const handleFilter = ({ search, date }: { search: string; date: Date | null }) => {
+  // Reset to original data if filters are empty
+  if (!search && !date) {
+    setFilteredDeliveries(originalDeliveries);
+    return;
+  }
+
+const result = filteredDeliveries.filter((d) => {
+    // Search filter (case insensitive)
+    const searchMatch = search 
+      ? d.trackingNumber.toLowerCase().includes(search.toLowerCase()) ||
+        d.recipientName.toLowerCase().includes(search.toLowerCase()) ||
+        d.sender.toLowerCase().includes(search.toLowerCase())
+      : true;
+
+    // Date filter
+    const dateMatch = date
+      ? new Date(d.estimatedDeliveryTime).toDateString() === date.toDateString()
+      : true;
+
+    return searchMatch && dateMatch;
+  });
+
+  setFilteredDeliveries(result);
+  
+  // Optional: Show message when no results found
+  if (result.length === 0) {
+    // showToast("No deliveries match your filters", "info");
+  }
+};
+  if (loading || !data) return null;
+  
   return (
-    <div className="p-6 space-y-4">
-      <div className="flex items-center justify-between flex-wrap gap-2">
-        <Input
-          placeholder="Search Delivery ID"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="max-w-sm"
+    <>
+      <div className="relative p-1 space-y-4">
+        <FilterBar onFilter={handleFilter}/>
+
+        <div className="grid gap-4">
+          {filteredDeliveries.map((shipment) => (
+            <Card key={shipment.id} className="bg-white border border-gray-200 shadow-sm">
+              <CardContent className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 p-4">
+                <div>
+                  <div className="text-sm text-gray-800">
+                    {shipment.date}
+                  </div>
+                  <div className="font-semibold text-gray-900">{shipment.trackingNumber}</div>
+                  <div className="text-sm text-gray-800">
+                    To: {shipment.recipientName} ({shipment.dropoffAddress})
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <Badge
+                    variant={
+                      shipment.deliveryStatus === "Delivered"
+                        ? "success"
+                        : shipment.deliveryStatus === "In_transit"
+                        ? "secondary"
+                        : shipment.deliveryStatus === "Pending"
+                        ? "outline"
+                        : shipment.deliveryStatus === "Cancelled"
+                        ? "destructive"
+                        : "default"
+                    }
+                  >
+                    {shipment.deliveryStatus}
+                  </Badge>
+                  <Button
+                    className="flex items-center gap-1 bg-blue-600 text-white hover:bg-blue-700"
+                    size="sm"
+                    onClick={() => {
+                      setSelectedShipment(shipment);
+                      setDrawerOpen(true);
+                    }}
+                  >
+                    <EyeIcon className="w-4 h-4" /> View
+                  </Button>
+                  <Button variant="ghost" size="sm" className="flex items-center gap-1 text-gray-700 hover:text-gray-900">
+                    <DownloadIcon className="w-4 h-4" /> Receipt
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+
+        {/* Sliding Drawer (Bottom) */}
+        <div
+          className={`fixed bottom-0 left-0 w-full bg-white shadow-t-lg transform transition-transform duration-300 ease-in-out z-50
+            ${drawerOpen ? "translate-y-0" : "translate-y-full"}
+            h-1/2 sm:h-[300px] rounded-t-2xl border-t
+          `}
+        >
+          <div className="flex justify-between items-center p-4 border-b">
+            <h2 className="text-lg font-semibold text-gray-900">Shipment Details</h2>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setDrawerOpen(false)}
+            >
+              <XIcon className="w-5 h-5" />
+            </Button>
+          </div>
+          {selectedShipment && (
+            <div className="p-4 space-y-3 text-sm text-gray-900 overflow-y-auto">
+              <div><strong>Tracking ID:</strong> {selectedShipment.trackingNumber}</div>
+              <div><strong>Receiver:</strong> {selectedShipment.recipientName}</div>
+              <div><strong>Drop-off Address:</strong> {selectedShipment.dropoffAddress}</div>
+              <div><strong>Status:</strong> {selectedShipment.DeliveryStatus}</div>
+              <div><strong>Date:</strong> {selectedShipment.estimatedDeliveryTime}</div>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Overlay */}
+      {drawerOpen && (
+        <div
+          className="absolute top-0 bottom-0 left-0 right-0 bg-[rgba(0,0,0,0.5)] z-40"
+          onClick={() => setDrawerOpen(false)}
         />
-        <Button variant="outline" className="flex items-center gap-2">
-          <CalendarIcon className="w-4 h-4" />
-          Filter by Date
-        </Button>
-      </div>
-
-      <div className="grid gap-4">
-        {filtered.map((d) => (
-          <Card key={d.id}>
-            <CardContent className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 p-4">
-              <div>
-                <div className="text-sm text-muted-foreground">
-                  {new Date(d.createdAt).toLocaleDateString()}
-                </div>
-                <div className="font-semibold">{d.id}</div>
-                <div className="text-sm">
-                  From: {d.pickupAddress} → To: {d.dropoffAddress}
-                </div>
-              </div>
-
-              <div className="flex items-center gap-2 flex-wrap">
-                <Badge
-                  variant={
-                    d.deliveryStatus === "Delivered"
-                      ? "success"
-                      : d.deliveryStatus === "Canceled"
-                      ? "destructive"
-                      : "secondary"
-                  }
-                >
-                  {d.deliveryStatus}
-                </Badge>
-                <div className="text-sm text-green-600 flex items-center gap-1">
-                  <DollarSign className="w-4 h-4" />
-                  ₱{d.deliveryFee || 0}
-                </div>
-                <Button variant="outline" size="sm" className="flex items-center gap-1">
-                  <EyeIcon className="w-4 h-4" /> View
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-    </div>
+      )}
+    </>
   );
 }
