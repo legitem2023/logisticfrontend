@@ -78,6 +78,10 @@ import {
 import { useDispatch,useSelector } from 'react-redux';
 import { setCurrentLocation } from '../../../Redux/locationSlice';
 import { setTempUserId,selectTempUserId } from '../../../Redux/tempUserSlice';
+
+
+import { setRole, clearRole, selectRole } from '../../../Redux/roleSlice';
+
 import  AdminDeliveriesTable  from './Administrator/AdminDeliveriesTable';
 import  VehicleTypes  from './Administrator/VehicleTypes';
 import RiderPerformanceChart from './Rider/RiderPerformanceChart';
@@ -109,6 +113,7 @@ export default function Menu() {
         if (token && secret) {
           const payload = await decryptToken(token, secret);
           setRole(payload.role);
+          dispatch(setRole(payload.role));
           dispatch(setTempUserId(payload.userId));
         }
       } catch (err) {
