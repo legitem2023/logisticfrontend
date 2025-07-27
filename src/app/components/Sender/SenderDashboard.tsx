@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { Card, CardContent } from "../ui/Card";
 import { Button } from "../ui/Button"; 
 import Collapsible from "../ui/Collapsible";
-import { Clock, MapPin, Bike, Compass, X } from "lucide-react";
+import { Clock, MapPin, Bike, Compass, X, XCircle } from "lucide-react";
 
 import { CANCELEDDELIVERY } from "../../../../graphql/mutation"; 
 import { useMutation, useQuery } from "@apollo/client"; 
@@ -174,7 +174,7 @@ const handleCancel = (data) =>{
                         onClick={() => handleCancel(delivery)} 
                         variant="outline"
                         className="w-full sm:w-auto transition-all text-white duration-200 bg-red-200 hover:bg-blue-50 hover:border-blue-500">
-                        <Compass className="w-4 h-4 mr-1" />Cancel</Button>
+                        <XCircle className="w-4 h-4 mr-1" />Cancel</Button>
                   </div>)}
                   <div>
                     <Collapsible title={delivery.packages.length > 0?"Package Ready":"Create Package"} defaultOpen={delivery.packages.length > 0?false:true}>
@@ -217,7 +217,7 @@ const handleCancel = (data) =>{
             onClick={() => setMap(false)}
             className="fixed top-5 right-5 z-50 p-1 rounded hover:bg-gray-100 transition"
           >
-            <X className="w-5 h-5 text-gray-600" />
+            <XCircle className="w-5 h-5 text-red-600" />
           </button>
           <div className="w-full h-[100vh] sm:max-w-md bg-white p-0 shadow-lg animate-slide-up overflow-y-auto">
 
