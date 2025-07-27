@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useMemo } from "react";
-import { MapPin, Phone, MessageSquare, X, ChevronDown, ChevronUp, Sparkles, Shield, Star, Clock, Bike } from "lucide-react";
+import { MapPin, Phone, MessageSquare, X, ChevronDown, ChevronUp,ChevronRight, Sparkles, Shield, Star, Clock, Bike } from "lucide-react";
 import { gql, useQuery, useSubscription } from '@apollo/client';
 import { LocationTracking } from '../../../../graphql/subscription';
 import { RIDERS } from '../../../../graphql/query';
