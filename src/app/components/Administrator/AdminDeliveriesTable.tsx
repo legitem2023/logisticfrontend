@@ -37,7 +37,7 @@ const AdminDeliveriesTable = () => {
     }
   };
 
-  const deliveries = data?.getDeliveries.filter((delivery: any) => delivery.assignedRiderId === "" || delivery.assignedRiderId === null) ?? [];
+  const deliveries = data?.getDeliveries.filter((delivery: any) => delivery.assignedRiderId === null) ?? [];
   const riders = ridersData?.getRiders ?? [];
 
   // Set deliveries when fetched
