@@ -223,11 +223,15 @@ const handleCancel = (data) =>{
             <XCircle className="w-5 h-5 text-red-600" />
           </button>
           <div className="w-full h-[100vh] sm:max-w-md bg-white p-0 shadow-lg animate-slide-up overflow-y-auto">
-
-            <SenderMap 
-              senderLocation={[selectedDelivery.dropoffLongitude,selectedDelivery.dropoffLongitude]} 
-              riderLocation={[selectedDelivery.pickupLongitude,selectedDelivery.pickupLatitude]} 
-              packageLocation={[selectedDelivery.pickupLongitude,selectedDelivery.pickupLatitude]} 
+            <SenderMap
+              riderPOS={{
+                lat: selectedDelivery.pickupLatitude,
+                lng: selectedDelivery.pickupLatitude,
+              }}
+              receiverPOS={{
+                lat: selectedDelivery.dropoffLatitude,
+                lng: selectedDelivery.dropoffLongitude,
+              }}
             />
           </div>
         </div>
