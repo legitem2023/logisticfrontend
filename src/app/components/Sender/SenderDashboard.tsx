@@ -75,6 +75,14 @@ export default function SenderDashboard() {
     setFilteredDeliveries(filtered);
   };
 
+const handleCancel = (data) =>{
+  const conf = confirm("Are you sure you want to cancel this delivery?");
+  if(conf){
+   console.log(data); 
+  }
+}
+
+  
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col md:flex-row">
       {/* Sidebar */}
@@ -146,6 +154,14 @@ export default function SenderDashboard() {
                         variant="outline"
                         className="w-full sm:w-auto transition-all text-white duration-200 customgrad hover:bg-blue-50 hover:border-blue-500">
                         <Compass className="w-4 h-4 mr-1" />Track</Button>
+                  </div>)}
+
+                  {delivery.deliveryStatus==='in_transit' && (<div className="flex items-center gap-2 text-sm text-gray-500">
+                  <Button
+                        onClick={() => handleCancel(delivery)} 
+                        variant="outline"
+                        className="w-full sm:w-auto transition-all text-white duration-200 bg-red hover:bg-blue-50 hover:border-blue-500">
+                        <Compass className="w-4 h-4 mr-1" />Cancel</Button>
                   </div>)}
                   <div>
                     <Collapsible title={delivery.packages.length > 0?"Package Ready":"Create Package"} defaultOpen={delivery.packages.length > 0?false:true}>
