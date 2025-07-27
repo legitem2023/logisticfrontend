@@ -39,7 +39,7 @@ const [originalDeliveries, setOriginalDeliveries] = useState<any[]>([]);
     }
   };
 
-  const deliveries = data?.getDeliveries.filter((delivery: any) => delivery.assignedRiderId === "" && delivery.assignedRiderId === null) ?? [];
+  const deliveries = data?.getDeliveries.filter((delivery: any) => delivery.assignedRiderId === "" || delivery.assignedRiderId === null) ?? [];
   const riders = ridersData?.getRiders ?? [];
 
 
