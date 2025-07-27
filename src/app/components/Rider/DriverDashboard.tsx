@@ -63,7 +63,7 @@ const [acceptDelivery] = useMutation(ACCEPTDELIVERY, {
   });
 
 useEffect(() =>{
-  refetch(),
+  refetch();
 },[GlobalactiveIndex])
  
 useEffect(() => {
