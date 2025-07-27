@@ -32,7 +32,7 @@ export default function SenderDashboard() {
   const [selectedDelivery, setSelectedDelivery] = useState(null); 
  
   const { data: locationData } = useSubscription(LocationTracking, {
-    variables: { userId: selectedDelivery.assignedRiderId },
+    variables: { userId: selectedDelivery?.assignedRiderId },
   });
   console.log(locationData,'x');
   const [cancelDelivery] = useMutation(CANCELEDDELIVERY,{
