@@ -124,7 +124,7 @@ const handleCancel = (data) =>{
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 p-0">
+      <main className="flex-1 p-0 border-box">
         { activeTab === "Deliveries" && (
          <FilterBar onFilter={handleFilter} />
         )}     
