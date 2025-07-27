@@ -90,7 +90,6 @@ export default function SenderMap({ receiverPOS, riderPOS }: { receiverPOS: Coor
         id="map"
         style={{ width: '100%', height: '100%', position: 'absolute', top: 0, zIndex: 0 }}
       />
-      </div>
     </div>
   );
 }
