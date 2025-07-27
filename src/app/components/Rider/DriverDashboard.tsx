@@ -2,23 +2,17 @@
 
 import { useState, useEffect } from "react"; 
 import 'react-datepicker/dist/react-datepicker.css';
-
-
 import { useSelector } from 'react-redux';
-
 import { selectTempUserId } from '../../../../Redux/tempUserSlice';
-
-
 import { Button } from "../ui/Button"; 
 import { showToast } from '../../../../utils/toastify'; 
 import { Card, CardContent } from "../ui/Card"; 
-
 import { useMutation, useQuery } from "@apollo/client"; 
 import { DELIVERIES } from "../../../../graphql/query"; 
 import HistoryContainer from "../History/HistoryContainer"; 
-import { Clock, X, Compass,FileText } from "lucide-react"; 
-import {DashboardLoading} from "../Loadings/DashboardLoading"; 
-import {  capitalize, formatDate } from "../../../../utils/decryptToken"; 
+import { Clock, X, Compass, FileText } from "lucide-react"; 
+import { DashboardLoading } from "../Loadings/DashboardLoading"; 
+import { capitalize, formatDate } from "../../../../utils/decryptToken"; 
 import { ACCEPTDELIVERY } from "../../../../graphql/mutation"; 
 import DeliveryDetailCard from "./DeliveryDetailCard"; 
 import dynamic from "next/dynamic"; 
@@ -33,9 +27,9 @@ export default function DriverDashboard() {
   const [showMap, setMap] = useState(false); 
   const [showDetails, setShowDetails] = useState(false); 
   const [selectedDelivery, setSelectedDelivery] = useState(null); 
-  const [search, setSearch] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [filteredDeliveries, setFilteredDeliveries] = useState([]);
-  const [originalDeliveries, setOriginalDeliveries] = useState([]);
   
   const location = useSelector((state: any) => state.location.current);
   
@@ -49,12 +43,12 @@ export default function DriverDashboard() {
     setSelectedDelivery(null); 
   };
 
-  const { data, loading ,refetch} = useQuery(DELIVERIES, { 
+  const { data, loading, refetch } = useQuery(DELIVERIES, { 
     variables: { getRidersDeliveryId: globalUserId }, 
     skip: !globalUserId, 
   });
 
-const [acceptDelivery] = useMutation(ACCEPTDELIVERY, { 
+  const [acceptDelivery] = useMutation(ACCEPTDELIVERY, { 
     onCompleted: () => {
       showToast("Delivery accepted successfully", "success");
       refetch();
@@ -62,87 +56,44 @@ const [acceptDelivery] = useMutation(ACCEPTDELIVERY, {
     onError: (e: any) => console.log('Acceptance Error', e) 
   });
 
-useEffect(() =>{
-  refetch();
-},[GlobalactiveIndex])
+  const acceptedDeliveries = data?.getRidersDelivery?.filter((delivery: any) => 
+    delivery.deliveryStatus !== "Delivered" && delivery.deliveryStatus !== "Cancelled"
+  ) || [];
+
+  useEffect(() => {
+    refetch();
+  }, [GlobalactiveIndex]);
  
-/*useEffect(() => {
-  if (data) {
-    const mockShipment = data.getRidersDelivery.filter((delivery: any) => delivery.deliveryStatus !== "Delivered" && delivery.deliveryStatus !== "Cancelled").map((delivery: any) => ({
-      trackingNumber: delivery.trackingNumber, 
-      id: delivery.id, 
-      sender: delivery.sender.name, 
-      phoneNumber: delivery.sender.phoneNumber, 
-      pickupAddress: delivery.pickupAddress, 
-      pickupLatitude: delivery.pickupLatitude, 
-      pickupLongitude: delivery.pickupLongitude, 
-      recipientName: delivery.recipientName, 
-      recipientPhone: delivery.recipientPhone, 
-      dropoffAddress: delivery.dropoffAddress, 
-      dropoffLatitude: delivery.dropoffLatitude, 
-      dropoffLongitude: delivery.dropoffLongitude, 
-      deliveryStatus: capitalize(delivery.deliveryStatus), 
-      estimatedDeliveryTime: formatDate(delivery.estimatedDeliveryTime), 
-      deliveryFee:delivery.deliveryFee,
-      earnings: "120.00", 
-      packages: delivery.packages
-    }));
-    setOriginalDeliveries(data.getRidersDelivery);
-    setFilteredDeliveries(data.getRidersDelivery);
-  }
-}, [data]);*/
+  useEffect(() => {
+    const filtered = acceptedDeliveries.filter((delivery: any) => {
+      const matchesSearch = searchTerm 
+        ? delivery.trackingNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          delivery.recipientName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          (delivery.sender?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ?? false)
+        : true;
 
-const acceptedDeliveries = data?.getRidersDelivery.filter((delivery: any) => delivery.deliveryStatus !== "Delivered" && delivery.deliveryStatus !== "Cancelled") || [];
+      const matchesDate = selectedDate
+        ? new Date(delivery.estimatedDeliveryTime).toDateString() === selectedDate.toDateString()
+        : true;
 
-useEffect(() => {
-    if (acceptedDeliveries.length) {
-      //setOriginalDeliveries(acceptedDeliveries);
-      setFilteredDeliveries(acceptedDeliveries);
-    }
-  }, [acceptedDeliveries]);
+      return matchesSearch && matchesDate;
+    });
 
+    setFilteredDeliveries(filtered);
+  }, [acceptedDeliveries, searchTerm, selectedDate]);
 
-  
-  if (loading || !data) return <DashboardLoading />;
-
-const handleFilter = ({ search, date }: { search: string; date: Date | null }) => {
-  // Reset to original data if filters are empty
-  /*if (!search && !date) {
-    setFilteredDeliveries(originalDeliveries);
-    return;
-  }*/
-
-  const result = filteredDeliveries.filter((d) => {
-    // Search filter (case insensitive)
-    const searchMatch = search 
-      ? d.trackingNumber.toLowerCase().includes(search.toLowerCase()) ||
-        d.recipientName.toLowerCase().includes(search.toLowerCase()) ||
-        d.sender.toLowerCase().includes(search.toLowerCase())
-      : true;
-
-    // Date filter
-    const dateMatch = date
-      ? new Date(d.estimatedDeliveryTime).toDateString() === date.toDateString()
-      : true;
-
-    return searchMatch && dateMatch;
-  });
-
-  setFilteredDeliveries(result);
-  
-  // Optional: Show message when no results found
-  if (result.length === 0) {
-    // showToast("No deliveries match your filters", "info");
-  }
-};
+  const handleFilter = ({ search, date }: { search: string; date: Date | null }) => {
+    setSearchTerm(search);
+    setSelectedDate(date);
+  };
 
   const handleGetIp = (delivery: any) => { 
-   if(location){
-    setSelectedDelivery(delivery); 
-    setMap(true);
-   }else{
-         showToast("Open your Device GPS", "error");  
-   }
+    if(location){
+      setSelectedDelivery(delivery); 
+      setMap(true);
+    } else {
+      showToast("Open your Device GPS", "error");  
+    }
   };
 
   const handleAccept = async (id: string, riderId: string) => { 
@@ -150,6 +101,8 @@ const handleFilter = ({ search, date }: { search: string; date: Date | null }) =
       variables: { deliveryId: id, riderId: riderId } 
     });
   };
+
+  if (loading || !data) return <DashboardLoading />;
 
   return ( 
     <div className="min-h-screen bg-gray-50 flex flex-col md:flex-row"> 
@@ -178,10 +131,8 @@ const handleFilter = ({ search, date }: { search: string; date: Date | null }) =
         <FilterBar onFilter={handleFilter} />
         {activeTab === "Deliveries" && (
           <>
-            
             <div className="grid gap-1 md:grid-cols-2 xl:grid-cols-3 p-0">
-              
-              {filteredDeliveries.length > 0? filteredDeliveries?.map((delivery) => (
+              {filteredDeliveries.length > 0 ? filteredDeliveries?.map((delivery: any) => (
                 <Card key={delivery.id} className="transition duration-300 ease-in-out hover:shadow-xl hover:scale-[1.01] border border-gray-200">
                   <CardContent className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 p-4">
                     <div>
@@ -192,7 +143,7 @@ const handleFilter = ({ search, date }: { search: string; date: Date | null }) =
                       </div>
                       <div className="flex items-center gap-2 text-sm text-gray-500 mt-2">
                         <Clock className="w-4 h-4 text-blue-500" />
-                        <span className="italic">ETA: {delivery.estimatedDeliveryTime || "N/A"}</span>
+                        <span className="italic">ETA: {formatDate(delivery.estimatedDeliveryTime) || "N/A"}</span>
                       </div>
                     </div>
                     <div className="flex flex-col gap-2 w-full sm:w-auto">
@@ -215,7 +166,11 @@ const handleFilter = ({ search, date }: { search: string; date: Date | null }) =
                     </div>
                   </CardContent>
                 </Card>
-              )):(<h1 className="text-2xl font-bold text-gray-800 mb-4">No Deliveries...</h1>)}
+              )) : (
+                <div className="col-span-full flex justify-center items-center h-64">
+                  <h1 className="text-2xl font-bold text-gray-800 mb-4">No Deliveries Found...</h1>
+                </div>
+              )}
             </div>
           </>
         )}
@@ -249,7 +204,7 @@ const handleFilter = ({ search, date }: { search: string; date: Date | null }) =
             <div className="space-y-2 text-sm sm:text-base text-gray-700">
               <DeliveryDetailCard
                 sender={{
-                  name: selectedDelivery.sender.name,
+                  name: selectedDelivery.sender?.name || "N/A",
                   address: selectedDelivery.pickupAddress,
                   contact: selectedDelivery.phoneNumber,
                 }}
