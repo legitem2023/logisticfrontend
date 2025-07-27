@@ -41,7 +41,7 @@ const { data: locationData } = useSubscription(LocationTracking, {
     variables: { userId: globalUserId },
   });
 
-  
+  console.log(locationData);
   const sender = locationData?.LocationTracking
   ? L.latLng(locationData.LocationTracking.latitude, locationData.LocationTracking.longitude)
   : L.latLng(location?.latitude, location?.longitude); // fallback
@@ -84,7 +84,7 @@ const { data: locationData } = useSubscription(LocationTracking, {
         createMarker: () => null,
         addWaypoints: false,
         routeWhileDragging: false,
-        show: true,
+        show:false,
       } as any).addTo(mapRef.current!);
 
       routingRef.current = routingControl;
