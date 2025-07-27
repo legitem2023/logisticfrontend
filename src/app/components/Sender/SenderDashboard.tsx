@@ -6,8 +6,10 @@ import { Button } from "../ui/Button";
 import Collapsible from "../ui/Collapsible";
 import { Clock, MapPin, Bike, Compass, X, XCircle } from "lucide-react";
 import HistoryContainer from "../History/HistoryContainer"; 
+import { LocationTracking } from '../../../../graphql/subscription'; // update with correct path
+
 import { CANCELEDDELIVERY } from "../../../../graphql/mutation"; 
-import { useMutation, useQuery } from "@apollo/client"; 
+import { useMutation, useQuery, useSubscription } from "@apollo/client"; 
 import { showToast } from '../../../../utils/toastify'; 
 import { GETDISPATCH } from '../../../../graphql/query';
 import CreatePackageForm from "./CreatePackageForm";
@@ -28,7 +30,11 @@ export default function SenderDashboard() {
   const [activeTab, setActiveTab] = useState("Deliveries"); 
   const [showMap, setMap] = useState(false); 
   const [selectedDelivery, setSelectedDelivery] = useState(null); 
-  
+ 
+  const { data: locationData } = useSubscription(LocationTracking, {
+    variables: { userId: selectedDelivery.assignedRiderId },
+  });
+  console.log(locationData,'x');
   const [cancelDelivery] = useMutation(CANCELEDDELIVERY,{
    onCompleted: () => {
      showToast("Delivery Cancelled", "success");
