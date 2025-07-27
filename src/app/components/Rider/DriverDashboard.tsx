@@ -66,7 +66,7 @@ useEffect(() =>{
   refetch();
 },[GlobalactiveIndex])
  
-useEffect(() => {
+/*useEffect(() => {
   if (data) {
     const mockShipment = data.getRidersDelivery.filter((delivery: any) => delivery.deliveryStatus !== "Delivered" && delivery.deliveryStatus !== "Cancelled").map((delivery: any) => ({
       trackingNumber: delivery.trackingNumber, 
@@ -90,16 +90,27 @@ useEffect(() => {
     setOriginalDeliveries(data.getRidersDelivery);
     setFilteredDeliveries(data.getRidersDelivery);
   }
-}, [data]);
+}, [data]);*/
 
+const acceptedDeliveries = data?.getRidersDelivery.filter((delivery: any) => delivery.deliveryStatus !== "Delivered" && delivery.deliveryStatus !== "Cancelled") || [];
+
+useEffect(() => {
+    if (acceptedDeliveries.length) {
+      //setOriginalDeliveries(acceptedDeliveries);
+      setFilteredDeliveries(acceptedDeliveries);
+    }
+  }, [acceptedDeliveries]);
+
+
+  
   if (loading || !data) return <DashboardLoading />;
 
 const handleFilter = ({ search, date }: { search: string; date: Date | null }) => {
   // Reset to original data if filters are empty
-  if (!search && !date) {
+  /*if (!search && !date) {
     setFilteredDeliveries(originalDeliveries);
     return;
-  }
+  }*/
 
   const result = filteredDeliveries.filter((d) => {
     // Search filter (case insensitive)
