@@ -5,7 +5,7 @@ import { Card, CardContent } from "../ui/Card";
 import { Button } from "../ui/Button"; 
 import Collapsible from "../ui/Collapsible";
 import { Clock, MapPin, Bike, Compass, X, XCircle } from "lucide-react";
-
+import HistoryContainer from "../History/HistoryContainer"; 
 import { CANCELEDDELIVERY } from "../../../../graphql/mutation"; 
 import { useMutation, useQuery } from "@apollo/client"; 
 import { showToast } from '../../../../utils/toastify'; 
@@ -194,7 +194,7 @@ const handleCancel = (data) =>{
                 </CardContent>
               </Card>
             ))}
-            { activeTab === "History" && <>No Dara</>}
+            { activeTab === "History" && <HistoryContainer/>}
           </div>
         )}
       </main>
