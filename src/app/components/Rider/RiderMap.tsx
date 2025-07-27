@@ -10,7 +10,11 @@ import { useSelector } from 'react-redux';
 import { selectTempUserId } from '../../../../Redux/tempUserSlice';
 
 import { CANCELEDDELIVERY,FINISHDELIVERY } from "../../../../graphql/mutation"; 
-import { useMutation, useQuery } from "@apollo/client"; 
+
+//import { useSubscription } from '@apollo/client';
+import { LocationTracking } from '../../../../graphql/subscription'; // update with correct path
+
+import { useMutation, useQuery, useSubscription } from "@apollo/client"; 
 type Coordinates = {
   lat: number;
   lng: number;
@@ -24,11 +28,21 @@ export default function RiderMap({ coordinates,deliveryId }: { coordinates: Coor
    onCompleted: () => showToast("Delivery successfully completed", "success"),
    onError: (e: any) => console.log('Finished Error', e)
   })
+  const { data: locationData } = useSubscription(LocationTracking, {
+    variables: { userId: globalUserId },
+  });
+
+  
   const location = useSelector((state: any) => state.location.current);
   const globalUserId = useSelector(selectTempUserId);
   const [status, setStatus] = useState<'pending' | 'cancelled' | 'finished' | null>(null);
   const [showPanel, setShowPanel] = useState(false);
-  const sender = L.latLng(location?.latitude, location?.longitude);   // Manila
+
+  const sender = locationData?.LocationTracking
+  ? L.latLng(locationData.LocationTracking.latitude, locationData.LocationTracking.longitude)
+  : L.latLng(location?.latitude, location?.longitude); // fallback
+
+  //const sender = L.latLng(location?.latitude, location?.longitude);   // Manila
   const receiver = L.latLng(coordinates.lat, coordinates.lng); // Quezon City
 
   const senderIcon = L.icon({
