@@ -129,7 +129,7 @@ export default function DriverDashboard() {
       </aside>
       
       <main className="flex-1">
-        <FilterBar onFilter={handleFilter} />
+        {activeTab === "Deliveries" &&( <FilterBar onFilter={handleFilter} />)}
         {activeTab === "Deliveries" && (
           <>
             <div className="grid gap-1 md:grid-cols-2 xl:grid-cols-3 p-0">
