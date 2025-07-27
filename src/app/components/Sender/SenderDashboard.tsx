@@ -41,7 +41,6 @@ export default function SenderDashboard() {
 
     const openMap = (delivery: any) => { 
     setSelectedDelivery(delivery); 
-      console.log(delivery);
     setMap(true); 
   };
   const { data, loading, error,refetch } = useQuery(GETDISPATCH, {
@@ -88,7 +87,6 @@ export default function SenderDashboard() {
 const handleCancel = (data) =>{
   const conf = confirm("Are you sure you want to cancel this delivery?");
   if(conf){
-   console.log(data);
     cancelDelivery({
       variables: {
         deliveryId:data.id,
