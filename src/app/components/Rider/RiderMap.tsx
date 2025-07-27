@@ -28,9 +28,7 @@ export default function RiderMap({ coordinates,deliveryId }: { coordinates: Coor
    onCompleted: () => showToast("Delivery successfully completed", "success"),
    onError: (e: any) => console.log('Finished Error', e)
   })
-  const { data: locationData } = useSubscription(LocationTracking, {
-    variables: { userId: globalUserId },
-  });
+  
 
   
   const location = useSelector((state: any) => state.location.current);
@@ -38,6 +36,12 @@ export default function RiderMap({ coordinates,deliveryId }: { coordinates: Coor
   const [status, setStatus] = useState<'pending' | 'cancelled' | 'finished' | null>(null);
   const [showPanel, setShowPanel] = useState(false);
 
+
+const { data: locationData } = useSubscription(LocationTracking, {
+    variables: { userId: globalUserId },
+  });
+
+  
   const sender = locationData?.LocationTracking
   ? L.latLng(locationData.LocationTracking.latitude, locationData.LocationTracking.longitude)
   : L.latLng(location?.latitude, location?.longitude); // fallback
