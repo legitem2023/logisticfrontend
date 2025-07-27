@@ -28,6 +28,7 @@ const RiderMap = dynamic(() => import("./RiderMap"), { ssr: false });
 export default function DriverDashboard() { 
   
   const globalUserId = useSelector(selectTempUserId);
+  const GlobalactiveIndex = useSelector((state: any) => state.activeIndex.value);
   const [activeTab, setActiveTab] = useState("Deliveries"); 
   const [showMap, setMap] = useState(false); 
   const [showDetails, setShowDetails] = useState(false); 
@@ -60,7 +61,11 @@ const [acceptDelivery] = useMutation(ACCEPTDELIVERY, {
     }, 
     onError: (e: any) => console.log('Acceptance Error', e) 
   });
-  
+
+useEffect(() =>{
+  refetch(),
+},[GlobalactiveIndex])
+ 
 useEffect(() => {
   if (data) {
     const mockShipment = data.getRidersDelivery.filter((delivery: any) => delivery.deliveryStatus !== "Delivered" && delivery.deliveryStatus !== "Cancelled").map((delivery: any) => ({
@@ -82,8 +87,8 @@ useEffect(() => {
       earnings: "120.00", 
       packages: delivery.packages
     }));
-    setOriginalDeliveries(mockShipment);
-    setFilteredDeliveries(mockShipment);
+    setOriginalDeliveries(data.getRidersDelivery);
+    setFilteredDeliveries(data.getRidersDelivery);
   }
 }, [data]);
 
