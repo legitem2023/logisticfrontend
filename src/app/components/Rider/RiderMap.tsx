@@ -41,7 +41,7 @@ const { data: locationData } = useSubscription(LocationTracking, {
     variables: { userId: globalUserId },
   });
 
-  console.log(locationData);
+  
   const sender = locationData?.LocationTracking
   ? L.latLng(locationData.LocationTracking.latitude, locationData.LocationTracking.longitude)
   : L.latLng(location?.latitude, location?.longitude); // fallback
