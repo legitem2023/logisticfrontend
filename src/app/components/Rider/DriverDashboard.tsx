@@ -217,7 +217,7 @@ export default function DriverDashboard() {
                   distanceKm:selectedDelivery.distance,
                   baseRate:selectedDelivery.baseRate,
                   perKmRate:selectedDelivery.perKmRate,
-                  total: null,
+                  total: selectedDelivery.baseRate + (selectedDelivery.distance * selectedDelivery.perKmRate),
                 }}
                 packages={selectedDelivery.packages}
                 coordinates={{
