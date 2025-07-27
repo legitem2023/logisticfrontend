@@ -19,7 +19,7 @@ const SenderMap = dynamic(() => import("./SenderMap"), { ssr: false });
 
 export default function SenderDashboard() {
   const globalUserId = useSelector(selectTempUserId);
-
+  const GlobalactiveIndex = useSelector((state: any) => state.activeIndex.value);
   const [search, setSearch] = useState("");
   const [filteredDeliveries, setFilteredDeliveries] = useState<any[]>([]);
   const [originalDeliveries, setOriginalDeliveries] = useState<any[]>([]); 
@@ -41,6 +41,11 @@ export default function SenderDashboard() {
 
   const acceptedDeliveries = data?.getDispatch || [];
 
+  useEffect(() =>{
+   refetch();
+  },[GlobalactiveIndex])
+
+  
   // Set deliveries when fetched
   useEffect(() => {
     if (acceptedDeliveries.length) {
