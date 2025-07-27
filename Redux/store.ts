@@ -6,6 +6,7 @@ import VehicleReducer from './vehicleSlice';
 import locationReducer from './locationSlice';
 import tempUserReducer from './tempUserSlice';
 import activeIndexReducer from './activeIndexSlice';
+import roleReducer from './roleSlice';
 const store = configureStore({
   reducer: {
     drawer:DrawerReducer,
@@ -13,7 +14,8 @@ const store = configureStore({
     vehicle:VehicleReducer,
     location: locationReducer,
     tempUser:tempUserReducer,
-    activeIndex:activeIndexReducer
+    activeIndex:activeIndexReducer,
+    role:roleReducer
   },
 });
 
