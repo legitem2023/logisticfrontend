@@ -24,7 +24,7 @@ const handleClear = () => {
 
 
   return (
-    <div className="customgrad flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 shadow-sm">
+    <div className="border-box customgrad flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 shadow-sm">
       <Input
         placeholder="🔍 Search Delivery ID"
         value={search}
