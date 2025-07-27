@@ -92,10 +92,12 @@ import RiderPerformanceChart from './Rider/RiderPerformanceChart';
 // ...[imports remain unchanged]
 
 export default function Menu() {
-  const [useRole, setRole] = useState('');
+ // const [useRole, setRole] = useState('');
   
   const dispatch = useDispatch();
   const globalUserId = useSelector(selectTempUserId);
+
+  const useRole = useSelector(selectRole); 
   const [LocationTracker] = useMutation(LOCATIONTRACKING, {
     onCompleted: (data) => {
       console.log("Mutation Success:", data);
@@ -112,7 +114,7 @@ export default function Menu() {
         const secret = process.env.NEXT_PUBLIC_JWT_SECRET as string;
         if (token && secret) {
           const payload = await decryptToken(token, secret);
-          setRole(payload.role);
+        //  setRole(payload.role);
           dispatch(setRole(payload.role));
           dispatch(setTempUserId(payload.userId));
         }
