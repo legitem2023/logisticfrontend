@@ -53,8 +53,8 @@ const AdminDeliveriesTable = () => {
 
     if (search) {
       filtered = filtered.filter(delivery =>
-        delivery.trackingNumber?.toLowerCase().includes(search.toLowerCase()) ||
-        delivery.assignedRider?.name?.toLowerCase().includes(search.toLowerCase())
+        delivery.trackingNumber?.toLowerCase().includes(search.toLowerCase())
+        
       );
     }
 
