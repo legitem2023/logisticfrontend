@@ -5,7 +5,10 @@ import { Card, CardContent } from "../ui/Card";
 import { Button } from "../ui/Button"; 
 import Collapsible from "../ui/Collapsible";
 import { Clock, MapPin, Bike, Compass, X } from "lucide-react";
-import { useQuery } from "@apollo/client";
+
+import { CANCELEDDELIVERY } from "../../../../graphql/mutation"; 
+import { useMutation, useQuery } from "@apollo/client"; 
+
 import { GETDISPATCH } from '../../../../graphql/query';
 import CreatePackageForm from "./CreatePackageForm";
 import { useSelector } from "react-redux";
@@ -26,7 +29,11 @@ export default function SenderDashboard() {
   const [activeTab, setActiveTab] = useState("Deliveries"); 
   const [showMap, setMap] = useState(false); 
   const [selectedDelivery, setSelectedDelivery] = useState(null); 
-
+  
+  const [cancelDelivery] = useMutation(CANCELEDDELIVERY,{
+   onCompleted: () => showToast("Delivery Cancelled", "success"),
+   onError: (e: any) => console.log('Finished Error', e)
+  })
 
 
     const openMap = (delivery: any) => { 
@@ -78,7 +85,13 @@ export default function SenderDashboard() {
 const handleCancel = (data) =>{
   const conf = confirm("Are you sure you want to cancel this delivery?");
   if(conf){
-   console.log(data); 
+   console.log(data);
+   /* cancelDelivery({
+      variables: {
+        deliveryId,
+        riderId
+      }
+    })*/
   }
 }
 
