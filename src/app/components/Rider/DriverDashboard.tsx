@@ -238,7 +238,7 @@ const handleFilter = ({ search, date }: { search: string; date: Date | null }) =
             <div className="space-y-2 text-sm sm:text-base text-gray-700">
               <DeliveryDetailCard
                 sender={{
-                  name: selectedDelivery.sender,
+                  name: selectedDelivery.sender.name,
                   address: selectedDelivery.pickupAddress,
                   contact: selectedDelivery.phoneNumber,
                 }}
