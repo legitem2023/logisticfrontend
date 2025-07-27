@@ -21,7 +21,7 @@ const AdminDeliveriesTable = () => {
   });
 
   const [filteredDeliveries, setFilteredDeliveries] = useState<any[]>([]);
-  const [originalDeliveries, setOriginalDeliveries] = useState<any[]>([]); 
+ // const [originalDeliveries, setOriginalDeliveries] = useState<any[]>([]); 
 
   const handleAssignRider = async (deliveryId: string, riderId: string) => {
     try {
@@ -43,13 +43,13 @@ const AdminDeliveriesTable = () => {
   // Set deliveries when fetched
   useEffect(() => {
     if (deliveries.length) {
-      setOriginalDeliveries(deliveries);
+      //setOriginalDeliveries(deliveries);
       setFilteredDeliveries(deliveries);
     }
   }, [deliveries]);
 
   const handleFilter = ({ search, date }: { search: string; date: Date | null }) => {
-    let filtered = [...originalDeliveries];
+    let filtered = [...filteredDeliveries];
 
     if (search) {
       filtered = filtered.filter(delivery =>
