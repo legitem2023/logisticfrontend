@@ -86,12 +86,12 @@ const handleCancel = (data) =>{
   const conf = confirm("Are you sure you want to cancel this delivery?");
   if(conf){
    console.log(data);
-   /* cancelDelivery({
+    cancelDelivery({
       variables: {
-        deliveryId,
-        riderId
+        deliveryId:data.id,
+        riderId:data.assignedRiderId
       }
-    })*/
+    })
   }
 }
 
