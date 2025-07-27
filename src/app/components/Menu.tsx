@@ -151,7 +151,7 @@ export default function Menu() {
       }).catch((error) => {
         console.error('Location tracking failed:', error);
       });
-    }, 5000);
+    }, 10000);
 
     const stopWatching = startWatchingLocation(throttledUpdate);
 
