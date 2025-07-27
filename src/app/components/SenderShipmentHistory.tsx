@@ -14,7 +14,7 @@ import { CalendarIcon, DownloadIcon, EyeIcon, XIcon } from "lucide-react";
 import { useState, useEffect, useMemo } from "react";
 import Cookies from 'js-cookie';
 import { useQuery } from '@apollo/client';
-import { DELIVERIES } from '../../../graphql/query';
+import { GETDISPATCH } from '../../../graphql/query';
 import { decryptToken, capitalize, formatDate } from '../../../utils/decryptToken';
 import FilterBar from "./Rider/Filterbar";
 export default function SenderShipmentHistory({status}:any) {
@@ -28,7 +28,7 @@ export default function SenderShipmentHistory({status}:any) {
 
 
 const globalUserId = useSelector(selectTempUserId);
-  const { data, loading } = useQuery(DELIVERIES, {
+  const { data, loading } = useQuery(GETDISPATCH, {
     variables: { getNotificationsId: globalUserId }
   });
 
@@ -36,7 +36,7 @@ console.log(status,data);
 
 useEffect(() => {
   if (data) {
-    const mockShipment = data.getRidersDelivery.filter((delivery: any) => delivery.deliveryStatus === status).map((delivery: any) => ({
+    const mockShipment = data.getDispatch.filter((delivery: any) => delivery.deliveryStatus === status).map((delivery: any) => ({
       trackingNumber: delivery.trackingNumber, 
       id: delivery.id, 
       sender: delivery.sender.name, 
