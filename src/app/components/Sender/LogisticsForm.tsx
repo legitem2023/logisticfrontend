@@ -402,7 +402,7 @@ const confirmCommand = ((selectedDriver:any) => {
       senderId: globalUserId,
       baseRate: parseFloat(useBaseCost),
       distance: parseFloat(distances[i].toFixed(2)),
-      perKmRate: parseFloat(selectedDriver.perKmRate)
+      perKmRate: parseFloat(usePerKmCost)
     };
    
     
