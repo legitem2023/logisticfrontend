@@ -23,9 +23,7 @@ const RiderList = () => {
   const { loading, error, data } = useQuery(RIDERS);
   const { data: subscriptionData } = useSubscription(LocationTracking);
 
-  if (loading) return <div>Loading riders...</div>;
-  if (error) return <div>Error loading riders: {error.message}</div>;
-
+  
   const baseRiders: Rider[] = data.getRiders.map((r: any) => ({
     id: r.id,
     name: r.name,
@@ -55,6 +53,8 @@ const RiderList = () => {
         : r
     );
   }, [baseRiders, subscriptionData]);
+if (loading) return <div>Loading riders...</div>;
+if (error) return <div>Error loading riders: {error.message}</div>;
 
   return (
     <>
