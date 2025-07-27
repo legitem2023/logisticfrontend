@@ -226,7 +226,7 @@ const handleCancel = (data) =>{
             <SenderMap
               riderPOS={{
                 lat: selectedDelivery.pickupLatitude,
-                lng: selectedDelivery.pickupLatitude,
+                lng: selectedDelivery.pickupLongitude,
               }}
               receiverPOS={{
                 lat: selectedDelivery.dropoffLatitude,
