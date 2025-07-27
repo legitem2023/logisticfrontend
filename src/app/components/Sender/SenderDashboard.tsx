@@ -126,14 +126,15 @@ const handleCancel = (data) =>{
       {/* Main Content */}
       <main className="flex-1 p-0">
            <FilterBar onFilter={handleFilter} />
-        { activeTab === "Deliveries" && loading ? (
+        { loading ? (
           <SenderDashboardLoading/>
         ) : error ? (
           <div className="text-center mt-8 text-red-500">Error loading deliveries</div>
         ) : (
+      
           <div className="grid gap-1 md:grid-cols-2 xl:grid-cols-3 p-0">
         
-            {filteredDeliveries.map((delivery) => (
+            { activeTab === "Deliveries" &&  filteredDeliveries.map((delivery) => (
               <Card
                 key={delivery.id}
                 className="bg-white/80 backdrop-blur-lg border border-gray-200 shadow-md hover:shadow-xl transition-all duration-300"
