@@ -39,7 +39,7 @@ export default function SenderDashboard() {
     skip: !globalUserId,
   });
 
-  const acceptedDeliveries = data?.getDispatch || [];
+  const acceptedDeliveries = data?.getDispatch.filter((delivery: any) => delivery.deliveryStatus !== "Delivered" && delivery.deliveryStatus !== "Cancelled") || [];
 
   useEffect(() =>{
    refetch();
