@@ -173,7 +173,7 @@ const handleCancel = (data) =>{
                   <Button
                         onClick={() => handleCancel(delivery)} 
                         variant="outline"
-                        className="w-full sm:w-auto transition-all text-white duration-200 bg-red-200 hover:bg-blue-50 hover:border-blue-500">
+                        className="w-full sm:w-auto transition-all text-white duration-200 bg-red-800 hover:bg-red-200 hover:border-red-500">
                         <XCircle className="w-4 h-4 mr-1" />Cancel</Button>
                   </div>)}
                   <div>
