@@ -13,7 +13,7 @@ import { PackageCheck, User, Phone, MapPin, Truck, BadgeCheck, CreditCard } from
 import Collapsible from "../ui/Collapsible"; // adjust path as needed
 
 const AdminDeliveriesTable = () => {
-  const { data, loading, error } = useQuery(GETDELIVERIESADMIN);
+  const { data, loading, error, refetch } = useQuery(GETDELIVERIESADMIN);
   const { data: ridersData } = useQuery(RIDERS);
   const [assignRider] = useMutation(ASSIGNRIDER, {
     onCompleted: (e) => {
@@ -39,7 +39,7 @@ const [originalDeliveries, setOriginalDeliveries] = useState<any[]>([]);
     }
   };
 
-    const deliveries = data?.getDeliveries ?? [];
+  const deliveries = data?.getDeliveries.filter((delivery: any) => delivery.assignedRiderId === "" && delivery.assignedRiderId === null) ?? [];
   const riders = ridersData?.getRiders ?? [];
 
 
