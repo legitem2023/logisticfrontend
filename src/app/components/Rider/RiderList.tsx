@@ -1,11 +1,12 @@
 'use client';
 
 import React, { useState, useMemo } from "react";
-import { MapPin, Phone, MessageSquare, X, ChevronDown, ChevronUp,ChevronRight, Sparkles, Shield, Star, Clock, Bike } from "lucide-react";
+import { MapPin, Phone, MessageSquare, X, ChevronDown,ChevronRight, ChevronUp, Sparkles, Shield, Star, Clock, Bike, ChevronRight } from "lucide-react";
 import { gql, useQuery, useSubscription } from '@apollo/client';
 import { LocationTracking } from '../../../../graphql/subscription';
 import { RIDERS } from '../../../../graphql/query';
 import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 
 type Rider = {
   id: string;
@@ -36,12 +37,12 @@ const RiderList = () => {
   const { loading, error, data } = useQuery(RIDERS);
   const { data: subscriptionData } = useSubscription(LocationTracking);
 
-  const baseRiders: Rider[] = data?.getRiders.map((r: any) => ({
+  const baseRiders: Rider[] = data?.getRiders?.map((r: any) => ({
     id: r.id,
     name: r.name,
     avatarUrl: r.image,
     phone: r.phoneNumber,
-    rating: Math.min(5, Math.max(3.5, Math.random() * 5)).toFixed(1),
+    rating: parseFloat(Math.min(5, Math.max(3.5, Math.random() * 5)).toFixed(1),
     deliveryCount: Math.floor(Math.random() * 500),
     averageSpeed: Math.floor(15 + Math.random() * 20),
     vehicle: ['Motorcycle', 'Bicycle', 'Scooter', 'E-bike'][Math.floor(Math.random() * 4)],
@@ -50,7 +51,7 @@ const RiderList = () => {
       latitude: r.currentLatitude || 0,
       longitude: r.currentLongitude || 0,
     },
-  }));
+  })) || [];
 
   // Apply real-time updates
   const updatedRiders = useMemo(() => {
@@ -116,57 +117,60 @@ const RiderList = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3 }}
-              className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100 hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:-translate-y-1"
               onClick={() => {
                 setSelectedRider(rider);
                 setExpandedView(true);
               }}
             >
-              <div className="p-5">
-                <div className="flex items-start justify-between">
-                  <div className="flex items-center space-x-4">
-                    {rider.avatarUrl ? (
-                      <img
-                        src={rider.avatarUrl}
-                        alt={rider.name}
-                        className="w-14 h-14 rounded-full object-cover border-2 border-white shadow-md"
-                      />
-                    ) : (
-                      <div className="w-14 h-14 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center text-white font-bold text-xl">
-                        {rider.name.charAt(0)}
+              <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100 hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:-translate-y-1">
+                <div className="p-5">
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-center space-x-4">
+                      {rider.avatarUrl ? (
+                        <Image
+                          src={rider.avatarUrl}
+                          alt={rider.name}
+                          width={56}
+                          height={56}
+                          className="w-14 h-14 rounded-full object-cover border-2 border-white shadow-md"
+                        />
+                      ) : (
+                        <div className="w-14 h-14 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center text-white font-bold text-xl">
+                          {rider.name.charAt(0)}
+                        </div>
+                      )}
+                      <div>
+                        <h3 className="text-lg font-semibold text-gray-900">{rider.name}</h3>
+                        <div className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${statusColors[rider.status || 'available']}`}>
+                          {rider.status?.toUpperCase()}
+                        </div>
                       </div>
-                    )}
-                    <div>
-                      <h3 className="text-lg font-semibold text-gray-900">{rider.name}</h3>
-                      <div className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${statusColors[rider.status || 'available']}`}>
-                        {rider.status?.toUpperCase()}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex items-center">
-                    <Star className="w-4 h-4 text-amber-400 fill-current" />
-                    <span className="ml-1 text-sm font-medium">{rider.rating}</span>
-                  </div>
-                </div>
-
-                <div className="mt-4 pt-4 border-t border-gray-100">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="flex items-center">
-                      <Bike className="w-5 h-5 text-gray-400 mr-2" />
-                      <span className="text-sm text-gray-600">{rider.vehicle}</span>
                     </div>
                     <div className="flex items-center">
-                      <Shield className="w-5 h-5 text-gray-400 mr-2" />
-                      <span className="text-sm text-gray-600">{rider.deliveryCount}+ deliveries</span>
+                      <Star className="w-4 h-4 text-amber-400 fill-current" />
+                      <span className="ml-1 text-sm font-medium">{rider.rating}</span>
                     </div>
                   </div>
-                </div>
 
-                <div className="mt-4 flex items-center text-sm text-gray-500">
-                  <MapPin className="w-4 h-4 mr-1 text-rose-500" />
-                  <span className="truncate">
-                    {rider.location.latitude.toFixed(4)}, {rider.location.longitude.toFixed(4)}
-                  </span>
+                  <div className="mt-4 pt-4 border-t border-gray-100">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="flex items-center">
+                        <Bike className="w-5 h-5 text-gray-400 mr-2" />
+                        <span className="text-sm text-gray-600">{rider.vehicle}</span>
+                      </div>
+                      <div className="flex items-center">
+                        <Shield className="w-5 h-5 text-gray-400 mr-2" />
+                        <span className="text-sm text-gray-600">{rider.deliveryCount}+ deliveries</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mt-4 flex items-center text-sm text-gray-500">
+                    <MapPin className="w-4 h-4 mr-1 text-rose-500" />
+                    <span className="truncate">
+                      {rider.location.latitude.toFixed(4)}, {rider.location.longitude.toFixed(4)}
+                    </span>
+                  </div>
                 </div>
               </div>
             </motion.div>
@@ -223,8 +227,10 @@ const RiderList = () => {
                     <div className="flex-1">
                       <div className="flex items-center space-x-6">
                         {selectedRider.avatarUrl ? (
-                          <img
+                          <Image
                             src={selectedRider.avatarUrl}
+                            width={80}
+                            height={80}
                             className="w-20 h-20 rounded-full object-cover border-4 border-white shadow-lg"
                             alt={selectedRider.name}
                           />
