@@ -36,7 +36,6 @@ export default function DriverDashboard() {
   const openDetails = (delivery: any) => { 
     setSelectedDelivery(delivery); 
     setShowDetails(true); 
-    console.log(delivery);
   };
 
   const closeDetails = () => { 
