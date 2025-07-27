@@ -25,7 +25,6 @@ export default function SenderDashboard() {
   const GlobalactiveIndex = useSelector((state: any) => state.activeIndex.value);
   const [search, setSearch] = useState("");
   const [filteredDeliveries, setFilteredDeliveries] = useState<any[]>([]);
-  const [originalDeliveries, setOriginalDeliveries] = useState<any[]>([]); 
   const [activeTab, setActiveTab] = useState("Deliveries"); 
   const [showMap, setMap] = useState(false); 
   const [selectedDelivery, setSelectedDelivery] = useState(null); 
@@ -58,13 +57,12 @@ export default function SenderDashboard() {
   // Set deliveries when fetched
   useEffect(() => {
     if (acceptedDeliveries.length) {
-      setOriginalDeliveries(acceptedDeliveries);
       setFilteredDeliveries(acceptedDeliveries);
     }
   }, [acceptedDeliveries]);
 
   const handleFilter = ({ search, date }: { search: string; date: Date | null }) => {
-    let filtered = [...originalDeliveries];
+    let filtered = [...filteredDeliveries];
 
     if (search) {
       filtered = filtered.filter(delivery =>
