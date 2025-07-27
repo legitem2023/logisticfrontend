@@ -31,7 +31,10 @@ export default function SenderDashboard() {
   const [selectedDelivery, setSelectedDelivery] = useState(null); 
   
   const [cancelDelivery] = useMutation(CANCELEDDELIVERY,{
-   onCompleted: () => showToast("Delivery Cancelled", "success"),
+   onCompleted: () => {
+     showToast("Delivery Cancelled", "success");
+     refetch();                
+   },
    onError: (e: any) => console.log('Finished Error', e)
   })
 
