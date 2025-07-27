@@ -125,7 +125,9 @@ const handleCancel = (data) =>{
 
       {/* Main Content */}
       <main className="flex-1 p-0">
-           <FilterBar onFilter={handleFilter} />
+        { activeTab === "Deliveries" && (
+         <FilterBar onFilter={handleFilter} />
+        )}     
         { loading ? (
           <SenderDashboardLoading/>
         ) : error ? (
