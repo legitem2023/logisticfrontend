@@ -10,12 +10,6 @@ export default function HistoryContainer() {
 
   const progressitem = [
     {
-      label: 'Pending',
-      content: role === 'Sender'
-        ? <SenderShipmentHistory status="Pending" />
-        : <RiderShipmentHistory status="Pending" />
-    },
-    {
       label: 'Completed',
       content: role === 'Sender'
         ? <SenderShipmentHistory status="Delivered" />
