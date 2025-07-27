@@ -62,7 +62,7 @@ export default function SenderMap({ receiverPOS, riderPOS }: { receiverPOS: Coor
         createMarker: () => null,
         addWaypoints: false,
         routeWhileDragging: false,
-        show: true,
+        show: false,
       } as any).addTo(mapRef.current!);
 
       routingRef.current = routingControl;
