@@ -77,7 +77,7 @@ const RiderList = () => {
       </div>
     </div>
   );
-
+console.log(data);
   return (
     <>
       <div className="w-full max-w-5xl mx-auto p-4">
