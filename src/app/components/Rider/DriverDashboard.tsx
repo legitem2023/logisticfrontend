@@ -38,6 +38,12 @@ const [useIndicator, setIndicator] = useState<Indicator>({
   loadingText: 'Accept Delivery',
   enable: false,
 });  
+
+const [useIndicatorA, setIndicatorA] = useState<Indicator>({
+  loadingText: 'Skip Delivery',
+  enable: false,
+});  
+  
   const location = useSelector((state: any) => state.location.current);
   
   const openDetails = (delivery: any) => { 
@@ -57,7 +63,11 @@ const [useIndicator, setIndicator] = useState<Indicator>({
 
   const [acceptDelivery] = useMutation(ACCEPTDELIVERY, { 
     onCompleted: () => {
-      showToast("Delivery accepted successfully", "success");
+     showToast("Delivery accepted successfully", "success");
+      setIndicator({
+     loadingText: 'Done.',
+     enable:true,
+   })
       refetch();
     }, 
     onError: (e: any) => console.log('Acceptance Error', e) 
@@ -65,7 +75,11 @@ const [useIndicator, setIndicator] = useState<Indicator>({
 
 const [skipDelivery] = useMutation(SKIPDELIVERY, { 
     onCompleted: (e:any) => {
-      showToast(e, "success");
+      showToast("You have successfuly skipped this delivery", "success");
+      setIndicatorA({
+       loadingText: 'Done.',
+       enable:true,
+      })
       refetch();
     }, 
     onError: (e: any) => console.log('Acceptance Error', e) 
@@ -131,6 +145,10 @@ const [skipDelivery] = useMutation(SKIPDELIVERY, {
 const handleSkip = async (id: string, riderId: string) => { 
   const cnfrm = confirm("Are you sure you want to skip the delivery?");
   if(cnfrm){
+    setIndicatorA({
+     loadingText: 'Loading...',
+     enable:true,
+   })
    await skipDelivery({ 
       variables: { deliveryId: id, riderId: riderId } 
     }); 
@@ -264,6 +282,7 @@ const handleSkip = async (id: string, riderId: string) => {
                   dropLng: selectedDelivery.dropoffLongitude,
                 }}
                 Indicator={useIndicator}
+                IndicatorA={useIndicatorA}
                 onAcceptClick={() => {handleAccept(selectedDelivery.id, globalUserId);}}
                 onSkipClick={() => { handleSkip(selectedDelivery.id, globalUserId)}}
               />
