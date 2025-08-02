@@ -127,6 +127,16 @@ mutation AcceptDelivery($deliveryId: String!, $riderId: String!) {
   }
 }
 `
+
+export const SKIPDELIVERY = gql`
+mutation SkipDelivery($deliveryId: String!, $riderId: String!) {
+  skipDelivery(deliveryId: $deliveryId, riderId: $riderId) {
+    statusText
+  }
+}
+`
+
+
 export const FINISHDELIVERY = gql`
 mutation FinishDelivery($deliveryId: String!, $riderId: String!) {
   finishDelivery(deliveryId: $deliveryId, riderId: $riderId) {
