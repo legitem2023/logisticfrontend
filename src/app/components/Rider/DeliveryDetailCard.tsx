@@ -58,6 +58,7 @@ type Props = {
   coordinates:Coordinates;
   packages: Packages[];
   Indicator:Indicator;
+  IndicatorA:Indicator;
   onAcceptClick: () => void;
   onSkipClick: () => void;
 };
@@ -87,6 +88,7 @@ const DeliveryDetailCard: React.FC<Props> = ({
   coordinates,
   packages,
   Indicator,
+  IndicatorA,
   onAcceptClick,
   onSkipClick
 }) => {
@@ -219,10 +221,11 @@ const DeliveryDetailCard: React.FC<Props> = ({
           <CheckSquare className="w-4 h-4" /> { Indicator.loadingText }
         </Button>
         <Button
+          disabled={IndicatorA.enable}
           onClick={onSkipClick}
           className="flex-1 flex items-center gap-2 px-2 py-2 rounded-full bg-gradient-to-r from-red-800 to-red-500 text-white shadow-lg hover:brightness-110 transition"
         >
-          <CheckSquare className="w-4 h-4" /> Skip
+          <CheckSquare className="w-4 h-4" /> { IndicatorA.loadingText }
         </Button>
       </div>
     </div>
