@@ -46,13 +46,18 @@ type Packages = {
   specialInstructions: string;
 };
 
+type Indicator = {
+  loadingText:string;
+  enable:boolean;
+}
+
 type Props = {
   sender: PartyDetails;
   recipient: PartyDetails;
   billing: BillingDetails;
   coordinates:Coordinates;
   packages: Packages[];
-  onTrackClick: () => void;
+  Indicator:Indicator;
   onAcceptClick: () => void;
   onSkipClick: () => void;
 };
@@ -81,7 +86,7 @@ const DeliveryDetailCard: React.FC<Props> = ({
   billing,
   coordinates,
   packages,
-  onTrackClick,
+  Indicator,
   onAcceptClick,
   onSkipClick
 }) => {
@@ -207,10 +212,11 @@ const DeliveryDetailCard: React.FC<Props> = ({
 
       <div className="text-center flex flex-row gap-2 mt-3">
         <Button
+          enabled={Indicator.enable}
           onClick={onAcceptClick}
           className="flex-1 flex items-center gap-2 px-2 py-2 rounded-full bg-gradient-to-r from-green-800 to-green-500 text-white shadow-lg hover:brightness-110 transition"
         >
-          <CheckSquare className="w-4 h-4" /> Accept Delivery
+          <CheckSquare className="w-4 h-4" /> { Indicator.loadingText }
         </Button>
         <Button
           onClick={onSkipClick}
