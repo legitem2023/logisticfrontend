@@ -228,6 +228,7 @@ export default function DriverDashboard() {
                 }}
                 onTrackClick={() => {}}
                 onAcceptClick={() => {handleAccept(selectedDelivery.id, globalUserId);}}
+                onSkipClick={() => {}}
               />
             </div>
           </div>
