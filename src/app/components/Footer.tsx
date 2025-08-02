@@ -24,22 +24,6 @@ const Footer = () => {
               We support GCash, PayPal, and secure bank transfers. All transactions are encrypted and protected.
             </p>
           </div>
-          <div>
-            <h3 className="text-lg font-semibold text-white tracking-wide mb-4">Newsletter</h3>
-            <form className="flex flex-col sm:flex-row gap-3">
-              <input
-                type="email"
-                placeholder="Your email address"
-                className="w-full px-4 py-2 rounded-md bg-[#f1f1f1] text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#ffffff]"
-              />
-              <button
-                type="submit"
-                className="bg-[#ffffff] text-black px-5 py-2 rounded-md font-semibold hover:customgrad transition"
-              >
-                Subscribe
-              </button>
-            </form>
-          </div>
         </div>
 
         <div className="mt-8 text-center text-sm text-gray-500 tracking-wide">
