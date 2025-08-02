@@ -212,7 +212,7 @@ const DeliveryDetailCard: React.FC<Props> = ({
 
       <div className="text-center flex flex-row gap-2 mt-3">
         <Button
-          enabled={Indicator.enable}
+          disabled={Indicator.enable}
           onClick={onAcceptClick}
           className="flex-1 flex items-center gap-2 px-2 py-2 rounded-full bg-gradient-to-r from-green-800 to-green-500 text-white shadow-lg hover:brightness-110 transition"
         >
