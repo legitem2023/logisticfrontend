@@ -142,18 +142,6 @@ const { data: locationData } = useSubscription(LocationTracking, {
 
         <div className="flex justify-between gap-3">
           <button
-            onClick={() => handleStatusChange('pending')}
-            className="flex-1 bg-yellow-400 hover:bg-yellow-500 text-white font-semibold py-2 rounded-xl shadow-lg transition-all focus:ring-2 focus:ring-yellow-300"
-          >
-            Pending
-          </button>
-          <button
-            onClick={() => handleStatusChange('cancelled')}
-            className="flex-1 bg-red-500 hover:bg-red-600 text-white font-semibold py-2 rounded-xl shadow-lg transition-all focus:ring-2 focus:ring-red-300"
-          >
-            Cancel
-          </button>
-          <button
             onClick={() => handleStatusChange('finished')}
             className="flex-1 bg-green-600 hover:bg-green-700 text-white font-semibold py-2 rounded-xl shadow-lg transition-all focus:ring-2 focus:ring-green-300"
           >
