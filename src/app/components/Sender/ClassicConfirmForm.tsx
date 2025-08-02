@@ -9,7 +9,7 @@ export default function ClassicConfirmForm({ order, onConfirm ,onLoading }) {
   const { data,loading,error} = useQuery(RIDERS);
   const [selectedDriver, setSelectedDriver] = useState("");
   if (loading) return <ConfirmationLoading/>
- //console.log(onLoading,"<==");
+ console.log(onLoading,"<==");
   return (
     <div className="max-w-2xl mx-auto p-6 bg-gradient-to-b from-white to-gray-50 border border-gray-300 rounded-xl shadow-md space-y-6">
       <h1 className="text-2xl font-semibold text-gray-800 tracking-tight border-b pb-2">
