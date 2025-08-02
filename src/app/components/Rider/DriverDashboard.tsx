@@ -18,7 +18,10 @@ import DeliveryDetailCard from "./DeliveryDetailCard";
 import dynamic from "next/dynamic"; 
 import FilterBar from "./Filterbar";
 const RiderMap = dynamic(() => import("./RiderMap"), { ssr: false });
-
+type Indicator = {
+  loadingText:string;
+  enable:boolean;
+}
 export default function DriverDashboard() { 
   
   const globalUserId = useSelector(selectTempUserId);
@@ -31,6 +34,10 @@ export default function DriverDashboard() {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [filteredDeliveries, setFilteredDeliveries] = useState([]);
   
+const [useIndicator, setIndicator] = useState<Indicator>({
+  loadingText: 'Accept Delivery',
+  enable: false,
+});  
   const location = useSelector((state: any) => state.location.current);
   
   const openDetails = (delivery: any) => { 
@@ -110,7 +117,11 @@ const [skipDelivery] = useMutation(SKIPDELIVERY, {
   const handleAccept = async (id: string, riderId: string) => { 
   const cnfrm = confirm("Are you sure you want to accept the delivery?");
    if(cnfrm){
-   await acceptDelivery({ 
+   setIndicator({
+     loadingText: 'Loading...',
+     enable:true,
+   })
+     await acceptDelivery({ 
       variables: { deliveryId: id, riderId: riderId } 
     });  
    }   
@@ -252,7 +263,7 @@ const handleSkip = async (id: string, riderId: string) => {
                   dropLat: selectedDelivery.dropoffLatitude,
                   dropLng: selectedDelivery.dropoffLongitude,
                 }}
-                onTrackClick={() => {}}
+                Indicator={useIndicator}
                 onAcceptClick={() => {handleAccept(selectedDelivery.id, globalUserId);}}
                 onSkipClick={() => { handleSkip(selectedDelivery.id, globalUserId)}}
               />
