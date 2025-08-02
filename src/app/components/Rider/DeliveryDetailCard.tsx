@@ -16,7 +16,8 @@ import {
   Scale,
   Ruler,
   Layers,
-  BookOpen
+  BookOpen,
+  SkipForward
 } from "lucide-react";
 
 type PartyDetails = {
@@ -225,7 +226,7 @@ const DeliveryDetailCard: React.FC<Props> = ({
           onClick={onSkipClick}
           className="flex-1 flex items-center gap-2 px-2 py-2 rounded-full bg-gradient-to-r from-red-800 to-red-500 text-white shadow-lg hover:brightness-110 transition"
         >
-          <CheckSquare className="w-4 h-4" /> { IndicatorA.loadingText }
+          <SkipForward className="w-4 h-4" /> { IndicatorA.loadingText }
         </Button>
       </div>
     </div>
