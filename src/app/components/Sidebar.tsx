@@ -107,7 +107,7 @@ export default function Sidebar({ tabs }: SidebarTabsProps) {
       {/* Main Content */}
       <main
         ref={mainRef}
-        className={`flex-1 overflow-y-auto transition-all duration-300 p-0 ${
+        className={`flex-1 transition-all duration-300 p-0 ${
           isMobileOpen ? 'opacity-60 pointer-events-none' : ''
         }`}
       >
