@@ -13,7 +13,7 @@ import HistoryContainer from "../History/HistoryContainer";
 import { Clock, X, Compass, FileText } from "lucide-react"; 
 import { DashboardLoading } from "../Loadings/DashboardLoading"; 
 import { capitalize, formatDate } from "../../../../utils/decryptToken"; 
-import { ACCEPTDELIVERY } from "../../../../graphql/mutation"; 
+import { ACCEPTDELIVERY, SKIPDELIVERY } from "../../../../graphql/mutation"; 
 import DeliveryDetailCard from "./DeliveryDetailCard"; 
 import dynamic from "next/dynamic"; 
 import FilterBar from "./Filterbar";
@@ -56,6 +56,17 @@ export default function DriverDashboard() {
     onError: (e: any) => console.log('Acceptance Error', e) 
   });
 
+const [skipDelivery] = useMutation(SKIPDELIVERY, { 
+    onCompleted: (e:any) => {
+      showToast(e, "success");
+      refetch();
+    }, 
+    onError: (e: any) => console.log('Acceptance Error', e) 
+  });
+
+
+
+  
   const acceptedDeliveries = data?.getRidersDelivery?.filter((delivery: any) => 
     delivery.deliveryStatus !== "Delivered" && delivery.deliveryStatus !== "Cancelled"
   ) || [];
@@ -97,11 +108,26 @@ export default function DriverDashboard() {
   };
 
   const handleAccept = async (id: string, riderId: string) => { 
-    await acceptDelivery({ 
+  const cnfrm = confirm("Are you sure you want to accept the delivery?");
+   if(cnfrm){
+   await acceptDelivery({ 
       variables: { deliveryId: id, riderId: riderId } 
-    });
+    });  
+   }   
   };
 
+
+const handleSkip = async (id: string, riderId: string) => { 
+  const cnfrm = confirm("Are you sure you want to skip the delivery?");
+  if(cnfrm){
+   await skipDelivery({ 
+      variables: { deliveryId: id, riderId: riderId } 
+    }); 
+   }  
+  };
+
+
+  
   if (loading || !data) return <DashboardLoading />;
 
   return ( 
@@ -228,7 +254,7 @@ export default function DriverDashboard() {
                 }}
                 onTrackClick={() => {}}
                 onAcceptClick={() => {handleAccept(selectedDelivery.id, globalUserId);}}
-                onSkipClick={() => {}}
+                onSkipClick={() => { handleSkip(selectedDelivery.id, globalUserId)}}
               />
             </div>
           </div>
