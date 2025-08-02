@@ -54,6 +54,7 @@ type Props = {
   packages: Packages[];
   onTrackClick: () => void;
   onAcceptClick: () => void;
+  onSkipClick: () => void;
 };
 
 const LabelRow = ({
@@ -82,6 +83,7 @@ const DeliveryDetailCard: React.FC<Props> = ({
   packages,
   onTrackClick,
   onAcceptClick,
+  onSkipClick
 }) => {
 
   return (
@@ -211,7 +213,7 @@ const DeliveryDetailCard: React.FC<Props> = ({
           <CheckSquare className="w-4 h-4" /> Accept Delivery
         </Button>
         <Button
-          onClick={onAcceptClick}
+          onClick={onSkipClick}
           className="flex-1 flex items-center gap-2 px-2 py-2 rounded-full bg-gradient-to-r from-red-800 to-red-500 text-white shadow-lg hover:brightness-110 transition"
         >
           <CheckSquare className="w-4 h-4" /> Skip
