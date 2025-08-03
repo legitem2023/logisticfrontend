@@ -281,6 +281,7 @@ const handleSkip = async (id: string, riderId: string) => {
                   dropLat: selectedDelivery.dropoffLatitude,
                   dropLng: selectedDelivery.dropoffLongitude,
                 }}
+                status={selectedDelivery.deliveryStatus}
                 Indicator={useIndicator}
                 IndicatorA={useIndicatorA}
                 onAcceptClick={() => {handleAccept(selectedDelivery.id, globalUserId);}}
