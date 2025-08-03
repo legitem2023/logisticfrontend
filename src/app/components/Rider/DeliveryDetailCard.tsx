@@ -99,7 +99,7 @@ const DeliveryDetailCard: React.FC<Props> = ({
   onAcceptClick,
   onSkipClick
 }) => {
-console.log(status.status,"Stat");
+console.log(status.deliveryStatus,"Stat");
   return (
     <Card className="w-full max-w-2xl p-[2px] sm:p-2 rounded-2xl bg-gradient-to-br from-white via-gray-50 to-white shadow-xl border border-gray-200">
   <CardContent className="space-y-2 p-0">
