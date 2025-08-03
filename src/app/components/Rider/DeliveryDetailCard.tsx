@@ -106,7 +106,7 @@ const DeliveryDetailCard: React.FC<Props> = ({
     {/* Sender and Recipient Info */}
     <div className="grid gap-2">
       {/* Sender */}
-      {status}
+      {status.status}
       <div className="bg-white rounded-xl border border-gray-100 p-4 sm:p-4 shadow-sm hover:shadow-md transition w-[100%]">
         <h3 className="text-lg font-bold flex items-center gap-2 mb-3 text-indigo-600">
           <User className="w-5 h-5" /> Sender
