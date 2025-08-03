@@ -52,12 +52,17 @@ type Indicator = {
   enable:boolean;
 }
 
+type Status = {
+  status:string
+}
+
 type Props = {
   sender: PartyDetails;
   recipient: PartyDetails;
   billing: BillingDetails;
   coordinates:Coordinates;
   packages: Packages[];
+  status: Status;
   Indicator:Indicator;
   IndicatorA:Indicator;
   onAcceptClick: () => void;
