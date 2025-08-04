@@ -23,7 +23,7 @@ export const startBackgroundTracking = async (
   await BackgroundGeolocation.ready({
     reset: true,
     desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_HIGH,
-    distanceFilter: 50,
+    distanceFilter: 1,
     stopOnTerminate: false,
     startOnBoot: true,
     autoSync: true,
