@@ -8,7 +8,7 @@ const startBackgroundTracking = (userId: string) => {
     stopOnTerminate: false,
     startOnBoot: true,
     autoSync: true,
-    url: 'https://your-server.com/api/graphql', // your GraphQL endpoint
+    url: 'https://logisticbackend-bkc3.onrender.com/graphql', // your GraphQL endpoint
     httpRootProperty: 'variables.input',
     headers: {
       'Content-Type': 'application/json',
