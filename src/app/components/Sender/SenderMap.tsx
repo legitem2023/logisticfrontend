@@ -31,9 +31,13 @@ export default function SenderMap({ riderId,receiverPOS,senderPOS, riderPOS }: {
   const [showPanel, setShowPanel] = useState(false);
 
   const sender = L.latLng(senderPOS.lat, senderPOS.lng);
-  const rider = L.latLng(riderPOS.lat, riderPOS.lng);
   const receiver = L.latLng(receiverPOS.lat, receiverPOS.lng);
 
+  const rider = locationData?.LocationTracking
+  ? L.latLng(locationData.LocationTracking.latitude, locationData.LocationTracking.longitude)
+  : L.latLng(location?.latitude, location?.longitude); // fallback
+
+  
   const riderIcon = L.icon({
     iconUrl: '/Bike.svg',
     iconSize: [40, 40],
