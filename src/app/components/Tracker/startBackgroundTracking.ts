@@ -38,9 +38,9 @@ export const startBackgroundTracking = async (
 
   // Monitor battery level (optional)
   let batteryLevel: number | null = null;
-  BackgroundGeolocation.onBatteryChange(event => {
+  /*BackgroundGeolocation.onBatteryChange(event => {
     batteryLevel = event.level;
-  });
+  });*/
 
   // 🕒 Run every 15 seconds
   if (intervalId) clearInterval(intervalId);
@@ -63,7 +63,7 @@ export const startBackgroundTracking = async (
             speed: coords.speed,
             heading: coords.heading,
             accuracy: coords.accuracy,
-            batteryLevel: batteryLevel ?? null,
+            batteryLevel: null,
             timestamp: Date.now(),
           },
         },
