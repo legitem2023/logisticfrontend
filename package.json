@@ -9,7 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@capacitor-community/background-geolocation": "1.2.1",
+    "@capacitor-community/background-geolocation": "^3.0.0",
+    "idb": "^7.1.1",
     "dayjs": "^1.11.10",
     "recharts": "^2.9.0",
     "@apollo/client": "^3.13.8",
