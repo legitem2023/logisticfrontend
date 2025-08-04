@@ -8,17 +8,23 @@ import 'leaflet-routing-machine/dist/leaflet-routing-machine.css';
 import { showToast } from '../../../../utils/toastify'; 
 import { useSelector } from 'react-redux';
 import { selectTempUserId } from '../../../../Redux/tempUserSlice';
+import { LocationTracking } from '../../../../graphql/subscription'; // update with correct path
+import { useMutation, useQuery, useSubscription } from "@apollo/client"; 
 
 type Coordinates = {
   lat: number;
   lng: number;
 }
 
-export default function SenderMap({ receiverPOS,senderPOS, riderPOS }: { receiverPOS: Coordinates, senderPOS:Coordinates, riderPOS:Coordinates }) {
+export default function SenderMap({ riderId,receiverPOS,senderPOS, riderPOS }: { riderId:any,receiverPOS: Coordinates, senderPOS:Coordinates, riderPOS:Coordinates }) {
   const mapRef = useRef<L.Map | null>(null);
   const routingRef = useRef<L.Routing.Control | null>(null);
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
   
+  const { data: locationData } = useSubscription(LocationTracking, {
+    variables: { userId: "" },
+  });
+
   const location = useSelector((state: any) => state.location.current);
   const globalUserId = useSelector(selectTempUserId);
   const [status, setStatus] = useState<'pending' | 'cancelled' | 'finished' | null>(null);
