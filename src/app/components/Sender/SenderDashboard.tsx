@@ -234,6 +234,10 @@ const handleCancel = (data) =>{
                 lat: selectedDelivery.pickupLatitude,
                 lng: selectedDelivery.pickupLongitude,
               }}
+              senderPOS={{
+                lat: selectedDelivery.pickupLatitude,
+                lng: selectedDelivery.pickupLongitude, 
+              }}
               receiverPOS={{
                 lat: selectedDelivery.dropoffLatitude,
                 lng: selectedDelivery.dropoffLongitude,
