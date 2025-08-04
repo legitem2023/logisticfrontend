@@ -23,17 +23,25 @@ export default function SenderMap({ receiverPOS,senderPOS, riderPOS }: { receive
   const globalUserId = useSelector(selectTempUserId);
   const [status, setStatus] = useState<'pending' | 'cancelled' | 'finished' | null>(null);
   const [showPanel, setShowPanel] = useState(false);
-  
-  const sender = L.latLng(riderPOS.lat, riderPOS.lng);
+
+  const sender = L.latLng(senderPOS.lat, senderPOS.lng);
+  const rider = L.latLng(riderPOS.lat, riderPOS.lng);
   const receiver = L.latLng(receiverPOS.lat, receiverPOS.lng);
 
-  const senderIcon = L.icon({
+  const riderIcon = L.icon({
     iconUrl: '/Bike.svg',
     iconSize: [40, 40],
     iconAnchor: [20, 40],
     popupAnchor: [0, -35],
   });
 
+const senderIcon = L.icon({
+    iconUrl: 'https://cdn-icons-png.flaticon.com/512/535/535137.png',
+    iconSize: [40, 40],
+    iconAnchor: [20, 40],
+    popupAnchor: [0, -35],
+  });
+  
   const receiverIcon = L.icon({
     iconUrl: 'https://cdn-icons-png.flaticon.com/512/535/535137.png',
     iconSize: [40, 40],
@@ -51,6 +59,7 @@ export default function SenderMap({ receiverPOS,senderPOS, riderPOS }: { receive
       attribution: '&copy; OpenStreetMap contributors',
     }).addTo(map);
 
+    L.marker(rider, { icon: riderIcon }).bindPopup('Rider Point').addTo(map);
     L.marker(sender, { icon: senderIcon }).bindPopup('📦 Pickup Point').addTo(map);
     L.marker(receiver, { icon: receiverIcon }).bindPopup('📍 Delivery Point').addTo(map);
 
