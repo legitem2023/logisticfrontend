@@ -14,7 +14,7 @@ type Coordinates = {
   lng: number;
 }
 
-export default function SenderMap({ receiverPOS, riderPOS }: { receiverPOS: Coordinates, riderPOS:Coordinates }) {
+export default function SenderMap({ receiverPOS,senderPOS, riderPOS }: { receiverPOS: Coordinates, senderPOS:Coordinates, riderPOS:Coordinates }) {
   const mapRef = useRef<L.Map | null>(null);
   const routingRef = useRef<L.Routing.Control | null>(null);
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
