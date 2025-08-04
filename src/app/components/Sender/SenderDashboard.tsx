@@ -230,6 +230,7 @@ const handleCancel = (data) =>{
           </button>
           <div className="w-full h-[100vh] sm:max-w-md bg-white p-0 shadow-lg animate-slide-up overflow-y-auto">
             <SenderMap
+              riderId={selectedDelivery.assignedRiderId}
               riderPOS={{
                 lat: selectedDelivery.pickupLatitude,
                 lng: selectedDelivery.pickupLongitude,
