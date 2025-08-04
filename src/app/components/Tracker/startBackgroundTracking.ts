@@ -17,35 +17,38 @@ export const LOCATIONTRACKING = gql`
   }
 `;
 
-let intervalId: any = null;
+let intervalId: NodeJS.Timeout | null = null;
 
 export const startBackgroundTracking = async (
   userId: string,
   client: ApolloClient<any>
 ) => {
+  // Set up background service (required to keep app alive in background)
   await BackgroundGeolocation.ready({
     reset: true,
     desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_HIGH,
-    distanceFilter: -1, // disable distance-based filtering
+    distanceFilter: -1, // disable movement filtering
     stopOnTerminate: false,
     startOnBoot: true,
-    autoSync: false, // handled manually
+    foregroundService: true, // Android: keeps service alive visibly
   });
 
-  // Start background geolocation service
-  BackgroundGeolocation.start();
+  // Start the background geolocation system
+  await BackgroundGeolocation.start();
 
-  // Optional: listen for battery level updates (to include in mutation)
-  let batteryLevel = null;
+  // Monitor battery level (optional)
+  let batteryLevel: number | null = null;
   BackgroundGeolocation.onBatteryChange(event => {
     batteryLevel = event.level;
   });
 
-  // 🔁 Start sending coordinates every 15 seconds
+  // 🕒 Run every 15 seconds
+  if (intervalId) clearInterval(intervalId);
   intervalId = setInterval(async () => {
     try {
       const position = await Geolocation.getCurrentPosition({
         enableHighAccuracy: true,
+        timeout: 10000,
       });
 
       const coords = position.coords;
@@ -65,13 +68,18 @@ export const startBackgroundTracking = async (
           },
         },
       });
+
+      console.log('Location sent:', coords.latitude, coords.longitude);
     } catch (error) {
-      console.error('Error tracking location:', error);
+      console.error('Location tracking error:', error);
     }
-  }, 15000); // 15 seconds
+  }, 15000); // 🔁 15-second interval
 };
 
 export const stopBackgroundTracking = () => {
-  if (intervalId) clearInterval(intervalId);
+  if (intervalId) {
+    clearInterval(intervalId);
+    intervalId = null;
+  }
   BackgroundGeolocation.stop();
 };
