@@ -1,5 +1,6 @@
 'use client';
 import React, { use, useEffect, useState } from 'react';
+import { useApolloClient } from '@apollo/client';
 import Cookies from 'js-cookie';
 import Image from 'next/image';
 import { useMutation, useSubscription } from '@apollo/client';
@@ -93,7 +94,7 @@ import RiderPerformanceChart from './Rider/RiderPerformanceChart';
 
 export default function Menu() {
  // const [useRole, setRole] = useState('');
-  
+  const client = useApolloClient();
   const dispatch = useDispatch();
   const globalUserId = useSelector(selectTempUserId);
 
@@ -162,7 +163,7 @@ export default function Menu() {
       throttledUpdate.cancel();
     };
 
-    startBackgroundTracking(globalUserId);
+    startBackgroundTracking(globalUserId,client);
   }, [globalUserId]);
 
   const { data: subscriptionData, error: subscriptionError } = useSubscription(LocationTracking,{
