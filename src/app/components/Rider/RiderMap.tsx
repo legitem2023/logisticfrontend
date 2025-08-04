@@ -142,9 +142,17 @@ const { data: locationData } = useSubscription(LocationTracking, {
 
         <div className="flex justify-between gap-3">
           <button
+            className="flex-1 bg-yellow-600 hover:bg-green-700 text-white font-semibold py-2 rounded-xl shadow-lg transition-all focus:ring-2 focus:ring-green-300">
+            En Route to Pickup Location.
+          </button>
+          <button
+            className="flex-1 bg-yellow-600 hover:bg-green-700 text-white font-semibold py-2 rounded-xl shadow-lg transition-all focus:ring-2 focus:ring-green-300">
+            Arrived at Pickup Location
+          </button>
+          
+          <button
             onClick={() => handleStatusChange('finished')}
-            className="flex-1 bg-green-600 hover:bg-green-700 text-white font-semibold py-2 rounded-xl shadow-lg transition-all focus:ring-2 focus:ring-green-300"
-          >
+            className="flex-1 bg-green-600 hover:bg-green-700 text-white font-semibold py-2 rounded-xl shadow-lg transition-all focus:ring-2 focus:ring-green-300">
             Finish
           </button>
         </div>
