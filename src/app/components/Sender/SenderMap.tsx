@@ -22,7 +22,7 @@ export default function SenderMap({ riderId,receiverPOS,senderPOS, riderPOS }: {
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
   
   const { data: locationData } = useSubscription(LocationTracking, {
-    variables: { userId: "" },
+    variables: { userId: riderId },
   });
 
   const location = useSelector((state: any) => state.location.current);
