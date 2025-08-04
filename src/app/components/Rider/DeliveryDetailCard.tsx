@@ -223,14 +223,25 @@ console.log(status,"Stat");
         <Button
           disabled={Indicator.enable}
           onClick={onAcceptClick}
-          className="flex-1 flex items-center gap-2 px-2 py-2 rounded-full bg-gradient-to-r from-green-800 to-green-500 text-white shadow-lg hover:brightness-110 transition"
+          style={{display:status==='in_transit' && 'none'}}
+          className="flex-1 flex items-center 
+                     gap-2 px-2 py-2 rounded-full 
+                     bg-gradient-to-r from-green-800 
+                     to-green-500 text-white 
+                     shadow-lg hover:brightness-110 
+                     transition"
         >
           <CheckSquare className="w-4 h-4" /> { Indicator.loadingText }
         </Button>
         <Button
           disabled={IndicatorA.enable}
           onClick={onSkipClick}
-          className="flex-1 flex items-center gap-2 px-2 py-2 rounded-full bg-gradient-to-r from-red-800 to-red-500 text-white shadow-lg hover:brightness-110 transition"
+          style={{display:status==='in_transit' && 'none'}}
+          className="flex-1 flex items-center 
+                     gap-2 px-2 py-2 rounded-full 
+                     bg-gradient-to-r from-red-800 
+                     to-red-500 text-white shadow-lg 
+                     hover:brightness-110 transition"
         >
           <SkipForward className="w-4 h-4" /> { IndicatorA.loadingText }
         </Button>
