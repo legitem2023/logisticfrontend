@@ -303,7 +303,11 @@ const handleSkip = async (id: string, riderId: string) => {
           <div className="w-full h-[100vh] sm:max-w-md bg-white p-0 shadow-lg animate-slide-up overflow-y-auto">
             <RiderMap
               deliveryId={selectedDelivery.id}
-              coordinates={{
+              PickUpCoordinates={{
+                lat: selectedDelivery.pickupLatitude,
+                lng: selectedDelivery.pickupLongitude,
+              }}
+              DropOffCoordinates={{
                 lat: selectedDelivery.dropoffLatitude,
                 lng: selectedDelivery.dropoffLongitude,
               }}
