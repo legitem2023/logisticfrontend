@@ -1,5 +1,6 @@
 import { gql, ApolloClient } from '@apollo/client';
 import BackgroundGeolocation from '@transistorsoft/capacitor-background-geolocation';
+import { Geolocation } from '@capacitor/geolocation';
 
 export const LOCATIONTRACKING = gql`
   mutation LocationTracking($input: LocationTrackingInput) {
@@ -16,6 +17,8 @@ export const LOCATIONTRACKING = gql`
   }
 `;
 
+let intervalId: any = null;
+
 export const startBackgroundTracking = async (
   userId: string,
   client: ApolloClient<any>
@@ -23,28 +26,30 @@ export const startBackgroundTracking = async (
   await BackgroundGeolocation.ready({
     reset: true,
     desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_HIGH,
-    distanceFilter: 1,
+    distanceFilter: -1, // disable distance-based filtering
     stopOnTerminate: false,
     startOnBoot: true,
-    autoSync: true,
-    batchSync: true, // allow queued syncing
-    maxBatchSize: 10,
-    url: 'https://logisticbackend-bkc3.onrender.com/graphql',
-    httpRootProperty: 'variables.input',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    params: {
-      input: {
-        userID: userId,
-      },
-    },
+    autoSync: false, // handled manually
   });
 
-  BackgroundGeolocation.onLocation(async location => {
-    const coords = location.coords;
+  // Start background geolocation service
+  BackgroundGeolocation.start();
 
+  // Optional: listen for battery level updates (to include in mutation)
+  let batteryLevel = null;
+  BackgroundGeolocation.onBatteryChange(event => {
+    batteryLevel = event.level;
+  });
+
+  // 🔁 Start sending coordinates every 15 seconds
+  intervalId = setInterval(async () => {
     try {
+      const position = await Geolocation.getCurrentPosition({
+        enableHighAccuracy: true,
+      });
+
+      const coords = position.coords;
+
       await client.mutate({
         mutation: LOCATIONTRACKING,
         variables: {
@@ -55,15 +60,18 @@ export const startBackgroundTracking = async (
             speed: coords.speed,
             heading: coords.heading,
             accuracy: coords.accuracy,
-            batteryLevel: location.battery.level,
+            batteryLevel: batteryLevel ?? null,
             timestamp: Date.now(),
           },
         },
       });
     } catch (error) {
-      console.error('Mutation error, will retry when online:', error);
+      console.error('Error tracking location:', error);
     }
-  });
+  }, 15000); // 15 seconds
+};
 
-  BackgroundGeolocation.start();
+export const stopBackgroundTracking = () => {
+  if (intervalId) clearInterval(intervalId);
+  BackgroundGeolocation.stop();
 };
