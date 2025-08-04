@@ -20,7 +20,7 @@ type Coordinates = {
   lng: number;
 }
 
-export default function RiderMap({ coordinates,deliveryId }: { coordinates: Coordinates,deliveryId:any }) {
+export default function RiderMap({ PickUpCoordinates,DropOffCoordinates,deliveryId }: { PickUpCoordinates:Coordinates,DropOffCoordinates: Coordinates,deliveryId:any }) {
   const mapRef = useRef<L.Map | null>(null);
   const routingRef = useRef<L.Routing.Control | null>(null);
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
@@ -42,20 +42,27 @@ const { data: locationData } = useSubscription(LocationTracking, {
   });
 
   
-  const sender = locationData?.LocationTracking
+  const rider = locationData?.LocationTracking
   ? L.latLng(locationData.LocationTracking.latitude, locationData.LocationTracking.longitude)
   : L.latLng(location?.latitude, location?.longitude); // fallback
 
-  //const sender = L.latLng(location?.latitude, location?.longitude);   // Manila
-  const receiver = L.latLng(coordinates.lat, coordinates.lng); // Quezon City
+  const sender = L.latLng(PickUpCoordinates?.lat, PickUpCoordinates?.lng);   // Manila
+  const receiver = L.latLng(DropOffCoordinates.lat, DropOffCoordinates.lng); // Quezon City
 
-  const senderIcon = L.icon({
+  const riderIcon = L.icon({
     iconUrl: '/Bike.svg',
     iconSize: [40, 40],
     iconAnchor: [20, 40],
     popupAnchor: [0, -35],
   });
 
+  const senderIcon = L.icon({
+    iconUrl: 'https://cdn-icons-png.flaticon.com/512/535/535137.png',
+    iconSize: [40, 40],
+    iconAnchor: [20, 40],
+    popupAnchor: [0, -35],
+  });
+  
   const receiverIcon = L.icon({
     iconUrl: 'https://cdn-icons-png.flaticon.com/512/535/535137.png',
     iconSize: [40, 40],
@@ -72,7 +79,8 @@ const { data: locationData } = useSubscription(LocationTracking, {
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; OpenStreetMap contributors',
     }).addTo(map);
-
+    
+    L.marker(rider, { icon: riderIcon }).bindPopup('Rider Point').addTo(map);
     L.marker(sender, { icon: senderIcon }).bindPopup('📦 Pickup Point').addTo(map);
     L.marker(receiver, { icon: receiverIcon }).bindPopup('📍 Delivery Point').addTo(map);
 
