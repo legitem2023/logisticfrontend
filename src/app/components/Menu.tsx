@@ -7,7 +7,7 @@ import { LOCATIONTRACKING } from '../../../graphql/mutation';
 import { LocationTracking } from '../../../graphql/subscription';
 import { decryptToken, capitalize } from '../../../utils/decryptToken';
 import NotificationDropdown from './NotificationDropdown';
-
+import { startBackgroundTracking } from './Tracking/startBackgroundTracking';
 import Sidebar from './Sidebar';
 import HomeDataCarousel from './HomeDataCarousel';
 import LogisticsHomePage from './LogisticsHomePage';
@@ -161,6 +161,8 @@ export default function Menu() {
       }
       throttledUpdate.cancel();
     };
+
+    startBackgroundTracking(globalUserId);
   }, [globalUserId]);
 
   const { data: subscriptionData, error: subscriptionError } = useSubscription(LocationTracking,{
