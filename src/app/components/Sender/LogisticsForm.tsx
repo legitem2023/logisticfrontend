@@ -217,9 +217,7 @@ const vehicleDetails = (id,data) => {
    setBaseCost(data.cost);
    setPerKmCost(data.perKmRate);
    setvehicleName(data.name);
-   console.log(useBaseCost);
 }
-  console.log(useBaseCost,usePerKmCost,"<<<<<");
   // Select a suggestion
   const selectSuggestion = (suggestion) => {
     const address = suggestion.formatted_address;
@@ -267,23 +265,6 @@ const vehicleDetails = (id,data) => {
     }
   }, [pickup, dropoffs]);
 
-/*  
-useEffect(() => {
-    const fetchDistance = async () => {
-      try {
-        const result = await getDistanceInKm(
-          { lat: pickup.lat, lng: pickup.lng },
-          { lat: dropoffs.lat, lng: dropoffs.lng }
-        );
-        setDistance(result);
-      } catch (error) {
-        console.error('Error:', error);
-      }
-    };
-
-    fetchDistance();
-  }, [pickup, dropoffs]);
-*/
 
 // Update your state to store distances for all dropoffs
 
@@ -313,7 +294,6 @@ useEffect(() => {
   calculateDistances();
 }, [pickup.lat, pickup.lng, dropoffs]);
  
-  console.log(dropoffs,"<<<");
 const validatePickup = (pickup) => {
   if (!pickup || typeof pickup !== 'object') {
     showToast("Pickup data is missing or invalid", 'warning');
@@ -380,6 +360,8 @@ const handleSubmit = (e) => {
 }
   
 const confirmCommand = ((selectedDriver:any) => {
+  const conf = confirm("Are you sure you want to place your order?");
+  if(conf){
   setsendLoading(true);
   const today = new Date();
   const isoDateString = new Date(
@@ -387,8 +369,7 @@ const confirmCommand = ((selectedDriver:any) => {
   ).toISOString();
 
 
-console.log(calculateEta(parseFloat(distances[i].toFixed(2)),"Priority"),"calculated");
-  
+console.log(calculateEta(parseFloat(distances[i].toFixed(2)),"Priority"),"calculated");  
   dropoffs.forEach(async (dropoff:any,i:number) => {
     const input = {
       assignedRiderId: null,
@@ -409,12 +390,11 @@ console.log(calculateEta(parseFloat(distances[i].toFixed(2)),"Priority"),"calcul
       baseRate: parseFloat(useBaseCost),
       distance: parseFloat(distances[i].toFixed(2)),
       perKmRate: parseFloat(usePerKmCost)
-    };
-   
-    
+    };   
     await createDelivery({ variables:{input} });
   });
-  
+      
+  }  
 }) 
 
   
