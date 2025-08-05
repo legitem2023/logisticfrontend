@@ -371,6 +371,8 @@ const confirmCommand = ((selectedDriver:any) => {
 
 
   dropoffs.forEach(async (dropoff:any,i:number) => {
+   const { eta }  = calculateEta(parseFloat(distances[i].toFixed(2)),"Priority");
+    
     const input = {
       assignedRiderId: null,
       deliveryFee: selectedDriver.cost,
@@ -378,7 +380,7 @@ const confirmCommand = ((selectedDriver:any) => {
       dropoffAddress: dropoff.address,
       dropoffLatitude: dropoff.lat,
       dropoffLongitude: dropoff.lng,
-      estimatedDeliveryTime:isoDateString,
+      estimatedDeliveryTime:eta,
       paymentMethod: "Cash",
       paymentStatus: "Unpaid",
       pickupAddress: pickup.address,
@@ -391,8 +393,7 @@ const confirmCommand = ((selectedDriver:any) => {
       distance: parseFloat(distances[i].toFixed(2)),
       perKmRate: parseFloat(usePerKmCost)
     };
-    const estimatedtimearival = calculateEta(parseFloat(distances[i].toFixed(2)),"Priority");
-    console.log(estimatedtimearival.eta,"calculated");
+    
     await createDelivery({ variables:{input} });
   });
       
