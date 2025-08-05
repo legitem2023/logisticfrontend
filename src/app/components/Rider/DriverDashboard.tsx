@@ -10,7 +10,7 @@ import { Card, CardContent } from "../ui/Card";
 import { useMutation, useQuery } from "@apollo/client"; 
 import { DELIVERIES } from "../../../../graphql/query"; 
 import HistoryContainer from "../History/HistoryContainer"; 
-import { Clock, X, Compass, FileText } from "lucide-react"; 
+import { Clock, X, Compass, FileText, Upload } from "lucide-react"; 
 import { DashboardLoading } from "../Loadings/DashboardLoading"; 
 import { capitalize, formatDate } from "../../../../utils/decryptToken"; 
 import { ACCEPTDELIVERY, SKIPDELIVERY } from "../../../../graphql/mutation"; 
@@ -222,7 +222,7 @@ const handleSkip = async (id: string, riderId: string) => {
                       </Button>
                       <Collapsible title={"Delivery Proof"} defaultOpen={false}>
                         <div>
-                          <input type="file" style={{display:'none'}}/> <label>Upload</label>
+                          <input id="upload" type="file" style={{display:'none'}}/> <label htmlFor="upload"><Upload/></label>
                         </div>
                       </Collapsible>
                     </div>
