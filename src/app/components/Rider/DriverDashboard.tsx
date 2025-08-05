@@ -17,6 +17,8 @@ import { ACCEPTDELIVERY, SKIPDELIVERY } from "../../../../graphql/mutation";
 import DeliveryDetailCard from "./DeliveryDetailCard"; 
 import dynamic from "next/dynamic"; 
 import FilterBar from "./Filterbar";
+import Collapsible from "../ui/Collapsible";
+
 const RiderMap = dynamic(() => import("./RiderMap"), { ssr: false });
 type Indicator = {
   loadingText:string;
@@ -218,6 +220,7 @@ const handleSkip = async (id: string, riderId: string) => {
                       >
                         <Compass className="w-4 h-4 mr-1" /> {delivery.deliveryStatus === "Pending" ? "Accept Delivery" : "Track"}
                       </Button>
+                      
                     </div>
                   </CardContent>
                 </Card>
