@@ -9,7 +9,7 @@ import { showToast } from '../../../../utils/toastify';
 import { useSelector } from 'react-redux';
 import { selectTempUserId } from '../../../../Redux/tempUserSlice';
 
-import { CANCELEDDELIVERY,FINISHDELIVERY } from "../../../../graphql/mutation"; 
+import { CANCELEDDELIVERY,FINISHDELIVERY,SENDNOTIFICATION } from "../../../../graphql/mutation"; 
 
 //import { useSubscription } from '@apollo/client';
 import { LocationTracking } from '../../../../graphql/subscription'; // update with correct path
@@ -20,7 +20,7 @@ type Coordinates = {
   lng: number;
 }
 
-export default function RiderMap({ PickUpCoordinates,DropOffCoordinates,deliveryId }: { PickUpCoordinates:Coordinates,DropOffCoordinates: Coordinates,deliveryId:any }) {
+export default function RiderMap({ PickUpCoordinates,DropOffCoordinates,deliveryId,senderId }: { PickUpCoordinates:Coordinates,DropOffCoordinates: Coordinates,deliveryId:any,senderId:any }) {
   const mapRef = useRef<L.Map | null>(null);
   const routingRef = useRef<L.Routing.Control | null>(null);
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
@@ -29,7 +29,10 @@ export default function RiderMap({ PickUpCoordinates,DropOffCoordinates,delivery
    onError: (e: any) => console.log('Finished Error', e)
   })
   
-
+const [sendNotification] = useMutation(SENDNOTIFICATION,{
+   onCompleted: () => showToast("Notification sent", "success"),
+   onError: (e: any) => console.log('Finished Error', e)
+  })
   
   const location = useSelector((state: any) => state.location.current);
   const globalUserId = useSelector(selectTempUserId);
@@ -41,6 +44,16 @@ const { data: locationData } = useSubscription(LocationTracking, {
     variables: { userId: globalUserId },
   });
 
+  const handleNotification = (message:any) =>{
+    sendNotification({
+      variables:{
+        userID: senderId, 
+        title: message, 
+        message: message, 
+        type: 'Notification Message'
+      }
+    })
+  }
   
   const rider = locationData?.LocationTracking
   ? L.latLng(locationData.LocationTracking.latitude, locationData.LocationTracking.longitude)
