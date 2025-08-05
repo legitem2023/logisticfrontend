@@ -390,8 +390,9 @@ const confirmCommand = ((selectedDriver:any) => {
       baseRate: parseFloat(useBaseCost),
       distance: parseFloat(distances[i].toFixed(2)),
       perKmRate: parseFloat(usePerKmCost)
-    };   
-    console.log(calculateEta(parseFloat(distances[i].toFixed(2)),"Priority"),"calculated");
+    };
+    const estimatedtimearival = calculateEta(parseFloat(distances[i].toFixed(2)),"Priority");
+    console.log(estimatedtimearival.eta,"calculated");
     await createDelivery({ variables:{input} });
   });
       
