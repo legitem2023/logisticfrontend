@@ -386,6 +386,9 @@ const confirmCommand = ((selectedDriver:any) => {
     Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate())
   ).toISOString();
 
+
+console.log(calculateEta(parseFloat(distances[i].toFixed(2)),"Priority"),"calculated");
+  
   dropoffs.forEach(async (dropoff:any,i:number) => {
     const input = {
       assignedRiderId: null,
@@ -394,7 +397,7 @@ const confirmCommand = ((selectedDriver:any) => {
       dropoffAddress: dropoff.address,
       dropoffLatitude: dropoff.lat,
       dropoffLongitude: dropoff.lng,
-      estimatedDeliveryTime:calculateEta(parseFloat(distances[i].toFixed(2)),"Priority"),
+      estimatedDeliveryTime:isoDateString,
       paymentMethod: "Cash",
       paymentStatus: "Unpaid",
       pickupAddress: pickup.address,
