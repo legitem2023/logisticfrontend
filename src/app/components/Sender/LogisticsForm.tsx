@@ -394,7 +394,7 @@ const confirmCommand = ((selectedDriver:any) => {
       dropoffAddress: dropoff.address,
       dropoffLatitude: dropoff.lat,
       dropoffLongitude: dropoff.lng,
-      estimatedDeliveryTime:calculateEta(parseFloat(useBaseCost),vehicleName),
+      estimatedDeliveryTime:calculateEta(parseFloat(distances[i].toFixed(2),"Priority")),
       paymentMethod: "Cash",
       paymentStatus: "Unpaid",
       pickupAddress: pickup.address,
