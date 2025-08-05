@@ -164,10 +164,7 @@ const handleCancel = (data) =>{
                   <div className="flex items-center gap-2 text-sm text-gray-500">
                     <Clock className="w-4 h-4" />
                     <span>
-                      ETA:{" "}
-                      {delivery.estimatedDeliveryTime
-                        ? getMinutesFromNow(delivery.estimatedDeliveryTime)
-                        : "Unknown"}
+                      ETA:{ delivery.estimatedDeliveryTime }
                     </span>
                   </div>
                   {delivery.deliveryStatus==='in_transit' && (<div className="flex items-center gap-2 text-sm text-gray-500">
