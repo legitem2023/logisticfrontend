@@ -1,6 +1,6 @@
 // utils/calculateEta.ts
 
-type DeliveryType = 'priority' | 'regular' | 'polling';
+type DeliveryType = 'Priority' | 'Regular' | 'Polling';
 
 interface EtaResult {
   eta: Date;
@@ -8,15 +8,15 @@ interface EtaResult {
 }
 
 const SPEEDS: Record<DeliveryType, number> = {
-  priority: 60, // km/h
-  regular: 40,
-  polling: 30,
+  Priority: 60, // km/h
+  Regular: 40,
+  Polling: 30,
 };
 
 const DELAYS: Record<DeliveryType, number> = {
-  priority: 0,  // mins
-  regular: 0,
-  polling: 5,
+  Priority: 0,  // mins
+  Regular: 0,
+  Polling: 5,
 };
 
 export function calculateEta(distanceKm: number, type: DeliveryType): EtaResult {
