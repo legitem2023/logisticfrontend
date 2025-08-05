@@ -2,6 +2,7 @@
 import { Icon } from '@iconify/react';
 import { showToast } from '../../../../utils/toastify';
 import { getDistanceInKm } from '../../../../utils/getDistanceInKm';
+import { calculateEta } from '../../../../utils/calculateEta';
 
 import { useState, useEffect, useRef, use } from 'react';
 import { useMutation, useQuery } from '@apollo/client';
@@ -391,7 +392,7 @@ const confirmCommand = ((selectedDriver:any) => {
       dropoffAddress: dropoff.address,
       dropoffLatitude: dropoff.lat,
       dropoffLongitude: dropoff.lng,
-      estimatedDeliveryTime: isoDateString,
+      estimatedDeliveryTime:calculateEta(parseFloat(useBaseCost),selectedService),
       paymentMethod: "Cash",
       paymentStatus: "Unpaid",
       pickupAddress: pickup.address,
