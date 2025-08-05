@@ -369,7 +369,7 @@ const confirmCommand = ((selectedDriver:any) => {
   ).toISOString();
 
 
-console.log(calculateEta(parseFloat(distances[i].toFixed(2)),"Priority"),"calculated");  
+
   dropoffs.forEach(async (dropoff:any,i:number) => {
     const input = {
       assignedRiderId: null,
@@ -391,6 +391,7 @@ console.log(calculateEta(parseFloat(distances[i].toFixed(2)),"Priority"),"calcul
       distance: parseFloat(distances[i].toFixed(2)),
       perKmRate: parseFloat(usePerKmCost)
     };   
+    console.log(calculateEta(parseFloat(distances[i].toFixed(2)),"Priority"),"calculated");
     await createDelivery({ variables:{input} });
   });
       
