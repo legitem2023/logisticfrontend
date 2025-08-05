@@ -98,6 +98,7 @@ const LogisticsForm = () => {
   const [useBaseCost,setBaseCost] = useState(null);
   const [usePerKmCost,setPerKmCost] = useState(null);
   const [distances, setDistances] = useState<number[]>([]);
+  const [vehicleName, setvehicleName] = useState<number[]>([]);
 
   const closeDetails = () =>{
   setShowDetails(false);
@@ -215,6 +216,7 @@ const vehicleDetails = (id,data) => {
    setSelected(id);
    setBaseCost(data.cost);
    setPerKmCost(data.perKmRate);
+   setvehicleName(data.name);
    console.log(useBaseCost);
 }
   console.log(useBaseCost,usePerKmCost,"<<<<<");
@@ -392,7 +394,7 @@ const confirmCommand = ((selectedDriver:any) => {
       dropoffAddress: dropoff.address,
       dropoffLatitude: dropoff.lat,
       dropoffLongitude: dropoff.lng,
-      estimatedDeliveryTime:calculateEta(parseFloat(useBaseCost),selectedService),
+      estimatedDeliveryTime:calculateEta(parseFloat(useBaseCost),vehicleName),
       paymentMethod: "Cash",
       paymentStatus: "Unpaid",
       pickupAddress: pickup.address,
