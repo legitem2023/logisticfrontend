@@ -56,14 +56,7 @@ query GetRidersDelivery($getRidersDeliveryId: String) {
     baseRate
     perKmRate
     distance
-    proofOfDelivery {
-      id
-      deliveryId
-      photoUrl
-      signatureData
-      receivedBy
-      receivedAt    
-    }
+    
     packages {
       id
       packageType
