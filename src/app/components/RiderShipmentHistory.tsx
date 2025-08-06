@@ -166,11 +166,16 @@ const result = filteredDeliveries.filter((d) => {
             <div className="p-4 space-y-3 text-sm text-gray-900 overflow-y-auto">
               <div><strong>Tracking ID:</strong> {selectedShipment.trackingNumber}</div>
 
-              <div><strong>Package Type:</strong> {selectedShipment.packages[0].packageType}</div>
-              <div><strong>Dimension :</strong> {selectedShipment.packages[0].dimensions}</div>
-              <div><strong>Weight:</strong> {selectedShipment.packages[0].weight}</div>
-              <div><strong>Instructions :</strong> {selectedShipment.packages[0].specialInstructions}</div>
-              
+              {
+                selectedShipment.packages.map((item:any,i:number)=>(
+                  <div key={i}>
+                    <div><strong>Package Type:</strong> {item.packageType}</div>
+                    <div><strong>Dimension :</strong> {item.dimensions}</div>
+                    <div><strong>Weight:</strong> {item.weight}</div>
+                    <div><strong>Instructions :</strong> {item.specialInstructions}</div>
+                  </>
+                ))
+              }
               <div><strong>Receiver:</strong> {selectedShipment.recipientName}</div>
               <div><strong>Drop-off Address:</strong> {selectedShipment.dropoffAddress}</div>
               <div><strong>Status:</strong> {selectedShipment.DeliveryStatus}</div>
