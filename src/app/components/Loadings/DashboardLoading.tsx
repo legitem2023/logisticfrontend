@@ -29,10 +29,10 @@ export function DashboardLoading() {
         {/* FilterBar Loading */}
         <div className=" customgrad p-4 backdrop-blur-md border-b border-gray-200">
           <div className="flex flex-col gap-4">
-            <div className="flex-1 h-10 rounded-lg">
+            <div className="w-full h-10 rounded-lg">
               <Shimmer />
             </div>
-            <div className="w-32 h-10 rounded-lg">
+            <div className="w-full h-10 rounded-lg">
               <Shimmer />
             </div>
           </div>
