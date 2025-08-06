@@ -101,7 +101,7 @@ const { data: locationData } = useSubscription(LocationTracking, {
       if (!mapRef.current) return;
 
       const routingControl = L.Routing.control({
-        waypoints: [sender, receiver],
+        waypoints: [rider, sender, receiver],
         createMarker: () => null,
         addWaypoints: false,
         routeWhileDragging: false,
