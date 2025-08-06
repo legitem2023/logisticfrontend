@@ -165,6 +165,12 @@ const result = filteredDeliveries.filter((d) => {
           {selectedShipment && (
             <div className="p-4 space-y-3 text-sm text-gray-900 overflow-y-auto">
               <div><strong>Tracking ID:</strong> {selectedShipment.trackingNumber}</div>
+
+              <div><strong>Package Type:</strong> {selectedShipment.packages.packageType}</div>
+              <div><strong>Dimension :</strong> {selectedShipment.packages.dimensions}</div>
+              <div><strong>Weight:</strong> {selectedShipment.packages.weight}</div>
+              <div><strong>Instructions :</strong> {selectedShipment.packages.specialInstructions}</div>
+              
               <div><strong>Receiver:</strong> {selectedShipment.recipientName}</div>
               <div><strong>Drop-off Address:</strong> {selectedShipment.dropoffAddress}</div>
               <div><strong>Status:</strong> {selectedShipment.DeliveryStatus}</div>
