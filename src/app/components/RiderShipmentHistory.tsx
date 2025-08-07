@@ -173,7 +173,7 @@ const result = filteredDeliveries.filter((d) => {
                     <div><strong>Dimension :</strong> {item.dimensions}</div>
                     <div><strong>Weight:</strong> {item.weight}</div>
                     <div><strong>Instructions :</strong> {item.specialInstructions}</div>
-                  </>
+                  </div>
                 ))
               }
               <div><strong>Receiver:</strong> {selectedShipment.recipientName}</div>
