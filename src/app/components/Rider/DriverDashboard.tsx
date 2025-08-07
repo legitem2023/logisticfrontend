@@ -1,5 +1,5 @@
 'use client';
-
+import ProofOfDeliveryForm from './ProofOfDeliveryForm';
 import { useState, useEffect } from "react"; 
 import 'react-datepicker/dist/react-datepicker.css';
 import { useSelector } from 'react-redux';
@@ -221,9 +221,7 @@ const handleSkip = async (id: string, riderId: string) => {
                         <Compass className="w-4 h-4 mr-1" /> {delivery.deliveryStatus === "Pending" ? "Accept Delivery" : "Track"}
                       </Button>
                       <Collapsible title={"Delivery Proof"} defaultOpen={false}>
-                        <div>
-                          <input id="upload" type="file" style={{display:'none'}}/> <label htmlFor="upload"><Upload/></label>
-                        </div>
+                        <ProofOfDeliveryForm/>
                       </Collapsible>
                     </div>
                   </CardContent>
