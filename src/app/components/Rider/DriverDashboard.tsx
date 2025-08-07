@@ -35,7 +35,8 @@ export default function DriverDashboard() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [filteredDeliveries, setFilteredDeliveries] = useState([]);
-  
+  const [showProof, setProof] = useState(false);
+   
 const [useIndicator, setIndicator] = useState<Indicator>({
   loadingText: 'Accept Delivery',
   enable: false,
@@ -221,7 +222,7 @@ const handleSkip = async (id: string, riderId: string) => {
                         <Compass className="w-4 h-4 mr-1" /> {delivery.deliveryStatus === "Pending" ? "Accept Delivery" : "Track"}
                       </Button>
                       <Collapsible title={"Delivery Proof"} defaultOpen={false}>
-                        <ProofOfDeliveryForm/>
+                        <button onclick={setProof(true)}>+</button>
                       </Collapsible>
                     </div>
                   </CardContent>
@@ -297,6 +298,13 @@ const handleSkip = async (id: string, riderId: string) => {
         </div>
       )}
 
+      {showProof && (
+       <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40 backdrop-blur-sm transition-all">
+         <div className="w-full h-[100vh] sm:max-w-md bg-white p-0 shadow-lg animate-slide-up overflow-y-auto">
+          <ProofOfDeliveryForm/>
+         </div>
+       </div>
+      )}
       {showMap && selectedDelivery && (
         <div className="fixed h-[100vh] inset-0 z-50 flex items-end sm:items-center justify-center bg-black/50 flex flex-col">
           <button
