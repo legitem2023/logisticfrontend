@@ -217,3 +217,13 @@ mutation ReadNotification($notificationId: String!) {
 //   "specialInstructions": null
 // }
 
+export const UPLOAD = gql`
+mutation UploadFile($file: Upload!) {
+  uploadFile(file: $file) {
+    filename
+    mimetype
+    encoding
+    url
+  }
+}
+`

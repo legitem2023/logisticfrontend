@@ -32,7 +32,7 @@ const globalUserId = useSelector(selectTempUserId);
     variables: { getNotificationsId: globalUserId }
   });
 
-console.log(status,data);
+// console.log(status,data);
 
 useEffect(() => {
   if (data) {

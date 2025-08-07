@@ -8,7 +8,7 @@ import { LOCATIONTRACKING } from '../../../graphql/mutation';
 import { LocationTracking } from '../../../graphql/subscription';
 import { decryptToken, capitalize } from '../../../utils/decryptToken';
 import NotificationDropdown from './NotificationDropdown';
-import { startBackgroundTracking } from './Tracker/startBackgroundTracking';
+// import { startBackgroundTracking } from './Tracker/startBackgroundTracking';
 import Sidebar from './Sidebar'; 
 import HomeDataCarousel from './HomeDataCarousel';
 import LogisticsHomePage from './LogisticsHomePage';
@@ -23,7 +23,27 @@ import SignupCard from './SignupCard';
 import { startWatchingLocation } from './ObtainLocation';
 import { mockItems } from './json/mockItems';
 import dynamic from 'next/dynamic';
+import {
+  Home,
+  LogIn,
+  UserPlus,
+  Bike,
+  Settings,
+  ClipboardCheck,
+  HelpCircle,
+  Truck,
+  BadgeCheck
+} from "lucide-react";
+import { useDispatch,useSelector } from 'react-redux';
+import { setCurrentLocation } from '../../../Redux/locationSlice';
+import { setTempUserId,selectTempUserId } from '../../../Redux/tempUserSlice';
 
+
+import { setRole, clearRole, selectRole } from '../../../Redux/roleSlice';
+
+import  AdminDeliveriesTable  from './Administrator/AdminDeliveriesTable';
+import  VehicleTypes  from './Administrator/VehicleTypes';
+import RiderPerformanceChart from './Rider/RiderPerformanceChart';
 const RiderList = dynamic(() => import('./Rider/RiderList'), {
   ssr: false
 });
@@ -65,27 +85,7 @@ function throttle<T extends (...args: any[]) => void>(
 }
 
 
-import {
-  Home,
-  LogIn,
-  UserPlus,
-  Bike,
-  Settings,
-  ClipboardCheck,
-  HelpCircle,
-  Truck,
-  BadgeCheck
-} from "lucide-react";
-import { useDispatch,useSelector } from 'react-redux';
-import { setCurrentLocation } from '../../../Redux/locationSlice';
-import { setTempUserId,selectTempUserId } from '../../../Redux/tempUserSlice';
 
-
-import { setRole, clearRole, selectRole } from '../../../Redux/roleSlice';
-
-import  AdminDeliveriesTable  from './Administrator/AdminDeliveriesTable';
-import  VehicleTypes  from './Administrator/VehicleTypes';
-import RiderPerformanceChart from './Rider/RiderPerformanceChart';
 
 
 // Your entire code remains unchanged except for the fixed JSX in the 'Home' tab item
@@ -163,7 +163,7 @@ export default function Menu() {
       throttledUpdate.cancel();
     };
 
-    startBackgroundTracking(globalUserId,client);
+    // startBackgroundTracking(globalUserId,client);
   }, [globalUserId]);
 
   const { data: subscriptionData, error: subscriptionError } = useSubscription(LocationTracking,{
