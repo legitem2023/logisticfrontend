@@ -53,8 +53,8 @@ useEffect(() => {
       estimatedDeliveryTime: formatDate(delivery.estimatedDeliveryTime), 
       earnings: "120.00", 
     }));
-    setOriginalDeliveries(mockShipment);
-    setFilteredDeliveries(mockShipment);
+    setOriginalDeliveries(data.getRidersDelivery);
+    setFilteredDeliveries(data.getRidersDelivery);
   }
 }, [data,status]);
 
