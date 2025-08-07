@@ -143,10 +143,10 @@ const ProofOfDeliveryForm = () => {
   const [showSuccess, setShowSuccess] = useState(false);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-800 via-green-700 to-teal-800 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-emerald-800 via-green-700 to-teal-800 flex items-center justify-center">
       {/* Success Notification */}
       {showSuccess && (
-        <div className="fixed top-6 right-6 bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg flex items-center animate-fadeInOut z-50">
+        <div className="fixed top-6 right-6 bg-green-600 text-white px-6 py-3 shadow-lg flex items-center animate-fadeInOut z-50">
           <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
           </svg>
@@ -388,11 +388,7 @@ const ProofOfDeliveryForm = () => {
             </button>
           </div>
         </form>
-        
-        {/* Footer */}
-        <div className="bg-gray-50 p-5 text-center text-gray-500 text-sm border-t border-gray-200">
-          <p>© 2023 Green Delivery Services • All deliveries must be documented</p>
-        </div>
+      
       </div>
     </div>
   );
