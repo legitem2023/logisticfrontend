@@ -91,7 +91,10 @@ const result = filteredDeliveries.filter((d) => {
   }
 };
   if (loading || !data) return null;
-  
+  const selectData = (data:any) =>{
+    console.log(data,"<<<<<<");
+    setSelectedShipment(data);
+  }
   return (
     <>
       <div className="relative p-1 space-y-4">
@@ -130,7 +133,7 @@ const result = filteredDeliveries.filter((d) => {
                     className="flex items-center gap-1 bg-blue-600 text-white hover:bg-blue-700"
                     size="sm"
                     onClick={() => {
-                      setSelectedShipment(shipment);
+                      selectData(shipment);
                       setDrawerOpen(true);
                     }}
                   >
