@@ -222,7 +222,9 @@ const handleSkip = async (id: string, riderId: string) => {
                         <Compass className="w-4 h-4 mr-1" /> {delivery.deliveryStatus === "Pending" ? "Accept Delivery" : "Track"}
                       </Button>
                       <Collapsible title={"Delivery Proof"} defaultOpen={false}>
-                        <button onclick={setProof(true)}>+</button>
+                        <div>
+                          <button onClick={()=>setProof(true)}>+</button>
+                        </div>  
                       </Collapsible>
                     </div>
                   </CardContent>
