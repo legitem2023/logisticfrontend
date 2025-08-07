@@ -31,7 +31,7 @@ const ProofOfDeliveryForm = () => {
       context.lineJoin = 'round';
       context.lineCap = 'round';
       context.lineWidth = 3;
-      context.strokeStyle = '#4b6cb7';
+      context.strokeStyle = '#2e8b57';
       
       setCtx(context);
     }
@@ -143,22 +143,48 @@ const ProofOfDeliveryForm = () => {
   const [showSuccess, setShowSuccess] = useState(false);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-800 to-pink-900 flex items-center justify-center p-4">
-      
+    <div className="min-h-screen bg-gradient-to-br from-emerald-800 via-green-700 to-teal-800 flex items-center justify-center p-4">
+      {/* Success Notification */}
+      {showSuccess && (
+        <div className="fixed top-6 right-6 bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg flex items-center animate-fadeInOut z-50">
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+          </svg>
+          Proof of Delivery submitted successfully!
+        </div>
+      )}
       
       <div className="w-full max-w-4xl bg-white/90 backdrop-blur-lg rounded-2xl shadow-2xl overflow-hidden">
         {/* Header Section */}
-        
+        <div className="bg-gradient-to-r from-emerald-600 to-green-700 p-8 text-center relative overflow-hidden">
+          {/* Decorative elements */}
+          <div className="absolute top-0 left-0 w-full h-full opacity-10">
+            <div className="absolute -top-20 -left-20 w-60 h-60 rounded-full bg-white"></div>
+            <div className="absolute -bottom-20 -right-20 w-60 h-60 rounded-full bg-white"></div>
+          </div>
+          
+          <div className="relative z-10 flex items-center justify-center mb-4">
+            <div className="bg-white/20 p-4 rounded-full mr-3">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+            </div>
+            <h1 className="text-3xl md:text-4xl font-bold text-white">Proof of Delivery</h1>
+          </div>
+          <p className="text-emerald-100 max-w-lg mx-auto text-lg">
+            Complete delivery details with photo evidence and recipient signature
+          </p>
+        </div>
         
         {/* Form Section */}
-        <form onSubmit={handleSubmit} className="p-2">
+        <form onSubmit={handleSubmit} className="p-6 md:p-10">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {/* Left Column */}
             <div>
               {/* ID Field */}
               <div className="mb-8">
                 <label className="block text-gray-700 font-medium mb-3 flex items-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-blue-600" viewBox="0 0 20 20" fill="currentColor">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-emerald-600" viewBox="0 0 20 20" fill="currentColor">
                     <path fillRule="evenodd" d="M10 2a1 1 0 00-1 1v1a1 1 0 002 0V3a1 1 0 00-1-1zM4 4h3a3 3 0 006 0h3a2 2 0 012 2v9a2 2 0 01-2 2H4a2 2 0 01-2-2V6a2 2 0 012-2zm2.5 7a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm2.45 4a2.5 2.5 0 10-4.9 0h4.9zM12 9a1 1 0 100 2h3a1 1 0 100-2h-3zm-1 4a1 1 0 011-1h2a1 1 0 110 2h-2a1 1 0 01-1-1z" clipRule="evenodd" />
                   </svg>
                   Delivery ID
@@ -168,7 +194,7 @@ const ProofOfDeliveryForm = () => {
                   name="id"
                   value={formData.id}
                   onChange={handleChange}
-                  className="w-full px-5 py-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition bg-white shadow-sm"
+                  className="w-full px-5 py-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition bg-white shadow-sm"
                   placeholder="Enter delivery ID"
                   required
                 />
@@ -177,7 +203,7 @@ const ProofOfDeliveryForm = () => {
               {/* Received By Field */}
               <div className="mb-8">
                 <label className="block text-gray-700 font-medium mb-3 flex items-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-blue-600" viewBox="0 0 20 20" fill="currentColor">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-emerald-600" viewBox="0 0 20 20" fill="currentColor">
                     <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
                   </svg>
                   Received By
@@ -187,7 +213,7 @@ const ProofOfDeliveryForm = () => {
                   name="receivedBy"
                   value={formData.receivedBy}
                   onChange={handleChange}
-                  className="w-full px-5 py-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition bg-white shadow-sm"
+                  className="w-full px-5 py-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition bg-white shadow-sm"
                   placeholder="Recipient's full name"
                   required
                 />
@@ -196,7 +222,7 @@ const ProofOfDeliveryForm = () => {
               {/* Received At Field */}
               <div className="mb-8">
                 <label className="block text-gray-700 font-medium mb-3 flex items-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-blue-600" viewBox="0 0 20 20" fill="currentColor">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-emerald-600" viewBox="0 0 20 20" fill="currentColor">
                     <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" />
                   </svg>
                   Received At
@@ -206,7 +232,7 @@ const ProofOfDeliveryForm = () => {
                   name="receivedAt"
                   value={formData.receivedAt}
                   onChange={handleChange}
-                  className="w-full px-5 py-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition bg-white shadow-sm"
+                  className="w-full px-5 py-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition bg-white shadow-sm"
                   required
                 />
               </div>
@@ -217,12 +243,12 @@ const ProofOfDeliveryForm = () => {
               {/* Photo Upload */}
               <div className="mb-8">
                 <label className="block text-gray-700 font-medium mb-3 flex items-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                   </svg>
                   Delivery Photo
                 </label>
-                <div className="border-2 border-dashed border-blue-300 rounded-2xl p-6 text-center bg-blue-50/30 transition hover:bg-blue-50/50">
+                <div className="border-2 border-dashed border-emerald-300 rounded-2xl p-6 text-center bg-emerald-50/30 transition hover:bg-emerald-50/50">
                   {previewUrl ? (
                     <div className="relative">
                       <img 
@@ -248,13 +274,13 @@ const ProofOfDeliveryForm = () => {
                       <div className="flex flex-col items-center justify-center">
                         {isUploading ? (
                           <div className="mb-5">
-                            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-600 mx-auto"></div>
+                            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-emerald-600 mx-auto"></div>
                             <p className="mt-3 font-medium text-gray-700">Uploading...</p>
                           </div>
                         ) : (
                           <>
-                            <div className="bg-blue-100 p-4 rounded-full mb-4">
-                              <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <div className="bg-emerald-100 p-4 rounded-full mb-4">
+                              <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
                               </svg>
                             </div>
@@ -264,7 +290,7 @@ const ProofOfDeliveryForm = () => {
                               </p>
                               <p className="text-sm text-gray-500 mt-1">PNG, JPG or JPEG (Max 5MB)</p>
                               <div className="mt-3">
-                                <span className="px-4 py-2 bg-blue-600 text-white rounded-lg font-medium inline-block">
+                                <span className="px-4 py-2 bg-emerald-600 text-white rounded-lg font-medium inline-block">
                                   Browse Files
                                 </span>
                               </div>
@@ -286,12 +312,12 @@ const ProofOfDeliveryForm = () => {
               {/* Signature Pad */}
               <div>
                 <label className="block text-gray-700 font-medium mb-3 flex items-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                   </svg>
                   Recipient Signature
                   {signatureSaved && (
-                    <span className="ml-2 text-green-600 text-sm flex items-center">
+                    <span className="ml-2 text-emerald-600 text-sm flex items-center">
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
                         <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                       </svg>
@@ -300,7 +326,7 @@ const ProofOfDeliveryForm = () => {
                   )}
                 </label>
                 <div 
-                  className="border-2 border-blue-300 rounded-2xl bg-white p-4 shadow-inner"
+                  className="border-2 border-emerald-300 rounded-2xl bg-white p-4 shadow-inner"
                   onMouseDown={startDrawing}
                   onMouseMove={draw}
                   onMouseUp={stopDrawing}
@@ -326,7 +352,7 @@ const ProofOfDeliveryForm = () => {
                     <button
                       type="button"
                       onClick={saveSignature}
-                      className="px-5 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-white font-medium transition flex items-center shadow-md"
+                      className="px-5 py-2 bg-emerald-600 hover:bg-emerald-700 rounded-lg text-white font-medium transition flex items-center shadow-md"
                     >
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
@@ -353,7 +379,7 @@ const ProofOfDeliveryForm = () => {
             </button>
             <button
               type="submit"
-              className="px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold rounded-2xl shadow-lg transform transition hover:scale-[1.02] duration-300 flex items-center justify-center"
+              className="px-8 py-4 bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white font-bold rounded-2xl shadow-lg transform transition hover:scale-[1.02] duration-300 flex items-center justify-center"
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -363,7 +389,10 @@ const ProofOfDeliveryForm = () => {
           </div>
         </form>
         
-        
+        {/* Footer */}
+        <div className="bg-gray-50 p-5 text-center text-gray-500 text-sm border-t border-gray-200">
+          <p>© 2023 Green Delivery Services • All deliveries must be documented</p>
+        </div>
       </div>
     </div>
   );
