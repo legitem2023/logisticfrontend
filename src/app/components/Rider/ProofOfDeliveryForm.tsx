@@ -243,7 +243,7 @@ const [uploadFile] = useMutation(UPLOAD,{
   const [showSuccess, setShowSuccess] = useState(false);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-800 via-green-700 to-teal-800 flex items-center justify-center">
+    <div className="min-h-screen bg-gradient-to-br from-emerald-800 via-green-700 to-lime-800 flex items-center justify-center">
       <div className="w-full max-w-4xl bg-white/90 backdrop-blur-lg shadow-2xl overflow-hidden">
         {/* Header Section */}
         <div className="bg-gradient-to-r from-emerald-600 to-green-700 p-6 md:p-8 text-center relative overflow-hidden">
