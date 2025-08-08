@@ -1,4 +1,5 @@
 'use client';
+import Image from 'next/image';
 import ProofOfDeliveryForm from './ProofOfDeliveryForm';
 import { useState, useEffect } from "react"; 
 import 'react-datepicker/dist/react-datepicker.css';
