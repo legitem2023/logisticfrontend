@@ -5,6 +5,7 @@ type data ={
 }
 const ProofOfDeliveryForm = ({data:data}) => {
   // Form state
+  console.log(data);
   const [formData, setFormData] = useState({
     id: data.id,
     receivedBy: '',
