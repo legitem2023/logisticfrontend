@@ -218,8 +218,8 @@ mutation ReadNotification($notificationId: String!) {
 // }
 
 export const UPLOAD = gql`
-mutation UploadFile($input: ProofOfDeliveryInput!) {
-  uploadFile(input: $input) {
+mutation UploadFile($file: ProofOfDeliveryInput!) {
+  uploadFile(file: $file) {
     statusText
   }
 }

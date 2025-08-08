@@ -230,7 +230,7 @@ const [uploadFile] = useMutation(UPLOAD,{
     // In a real app, you would send this to your backend
     await uploadFile({
       variables: {
-        input: formData
+        file: formData
       }
     });
   //};
