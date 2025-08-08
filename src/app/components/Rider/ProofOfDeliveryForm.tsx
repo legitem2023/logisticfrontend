@@ -1,5 +1,6 @@
 // components/ProofOfDeliveryForm.jsx
 import { useState, useRef, useEffect } from 'react';
+import { useMutation, useQuery, useSubscription } from "@apollo/client"; 
 import { UPLOAD } from "../../../../graphql/mutation"; 
 
 type data ={
@@ -7,7 +8,11 @@ type data ={
 }
 const ProofOfDeliveryForm = ({data:data}) => {
   // Form state
-const [uploadFile, { loading, error, data }] = useMutation(UPLOAD);
+const [uploadFile] = useMutation(UPLOAD,{
+  onCompleted:(e) =>{
+    console.log(e);
+  }
+});
 
   
   const [formData, setFormData] = useState({
