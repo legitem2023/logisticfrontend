@@ -162,7 +162,7 @@ const handleSkip = async (id: string, riderId: string) => {
 
   
   if (loading || !data) return <DashboardLoading />;
-
+console.log(filteredDeliveries,"<-data")
   return ( 
     <div className="min-h-screen bg-gray-50 flex flex-col md:flex-row"> 
       <aside className="hidden md:block md:w-64 bg-white/70 backdrop-blur-lg border-r border-gray-200 shadow-md p-6 rounded-r-3xl"> 
@@ -227,14 +227,14 @@ const handleSkip = async (id: string, riderId: string) => {
                           <button onClick={()=>{setdeliveryId(delivery.id);
                                                 setProof(true);
                                                }}><Plus/></button>
-                          {(
+                          {/*(
   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
     {delivery.proofOfDelivery.map((item: any, idx: number) => (
       <div
         key={idx}
         className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 border border-gray-100"
       >
-        {/* Photo */}
+        
         <div className="relative h-48 w-full">
           <Image
             src={item.photoUrl}
@@ -244,15 +244,15 @@ const handleSkip = async (id: string, riderId: string) => {
           />
         </div>
 
-        {/* Details */}
+        
         <div className="p-5 space-y-3">
-          {/* Receiver */}
+          
           <div className="flex items-center gap-2 text-gray-700">
             <User size={18} className="text-blue-500" />
             <span className="font-semibold">{item.receivedBy}</span>
           </div>
 
-          {/* Time */}
+          
           <div className="flex items-center gap-2 text-gray-500 text-sm">
             <Clock size={16} className="text-amber-500" />
             <span>
@@ -263,7 +263,7 @@ const handleSkip = async (id: string, riderId: string) => {
             </span>
           </div>
 
-          {/* Signature */}
+          
           {item.signatureUrl && (
             <div className="relative h-16 w-full border-t pt-3">
               <Image
@@ -278,7 +278,7 @@ const handleSkip = async (id: string, riderId: string) => {
       </div>
     ))}
   </div>
-)}
+)*/}
                         </div>  
                       </Collapsible>
                     </div>
