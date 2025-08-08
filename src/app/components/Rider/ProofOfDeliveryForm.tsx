@@ -1,10 +1,12 @@
 // components/ProofOfDeliveryForm.jsx
 import { useState, useRef, useEffect } from 'react';
-
-const ProofOfDeliveryForm = () => {
+type data ={
+  id:string
+}
+const ProofOfDeliveryForm = (data:data) => {
   // Form state
   const [formData, setFormData] = useState({
-    id: '',
+    id: data.id,
     receivedBy: '',
     receivedAt: '',
     photoUrl: null,
