@@ -8,7 +8,7 @@ const ProofOfDeliveryForm = () => {
     receivedBy: '',
     receivedAt: '',
     photoUrl: null,
-    signatureData: null,
+    signatureData: null, // This holds the signature data URL
   });
   
   // File handling
@@ -150,10 +150,12 @@ const ProofOfDeliveryForm = () => {
     setIsDrawing(false);
   };
   
-  // Save signature
+  // Save signature to form data
   const saveSignature = () => {
     const canvas = canvasRef.current;
     const dataUrl = canvas.toDataURL();
+    
+    // Update form data with signature
     setFormData(prev => ({ ...prev, signatureData: dataUrl }));
     setSignatureSaved(true);
     
@@ -173,6 +175,8 @@ const ProofOfDeliveryForm = () => {
     
     // Clear while maintaining high resolution
     ctx.clearRect(0, 0, displayWidth * 5, displayHeight * 5);
+    
+    // Remove signature from form data
     setFormData(prev => ({ ...prev, signatureData: null }));
   };
   
@@ -192,6 +196,26 @@ const ProofOfDeliveryForm = () => {
   // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
+    
+    // Check if signature exists
+    if (!formData.signatureData) {
+      alert("Please save your signature before submitting");
+      return;
+    }
+    
+    // Create a FormData object for submission
+    const formPayload = new FormData();
+    formPayload.append("id", formData.id);
+    formPayload.append("receivedBy", formData.receivedBy);
+    formPayload.append("receivedAt", formData.receivedAt);
+    
+    if (formData.photoUrl) {
+      formPayload.append("photo", formData.photoUrl);
+    }
+    
+    formPayload.append("signature", formData.signatureData);
+    
+    // In a real app, you would send this to your backend
     console.log('Form submitted:', formData);
     
     // Show success notification
@@ -223,6 +247,13 @@ const ProofOfDeliveryForm = () => {
         
         {/* Form Section */}
         <form onSubmit={handleSubmit} className="p-4 md:p-8">
+          {/* Hidden input to store signature data */}
+          <input 
+            type="hidden" 
+            name="signature" 
+            value={formData.signatureData || ''} 
+          />
+          
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
             {/* Left Column */}
             <div>
