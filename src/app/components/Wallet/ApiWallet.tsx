@@ -231,7 +231,7 @@ export default function ApiWallet() {
                 <FiRefreshCw className="text-blue-600 text-xl" />
               </div>
               <div>
-                <h3 className="text-lg font-medium text-gray-700">Today's Requests</h3>
+                <h3 className="text-lg font-medium text-gray-700">Todays Requests</h3>
                 <p className="text-3xl font-bold mt-1">{todayRequests.toLocaleString()}</p>
               </div>
             </div>
