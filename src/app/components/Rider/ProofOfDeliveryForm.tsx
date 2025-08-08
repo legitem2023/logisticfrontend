@@ -143,7 +143,7 @@ const ProofOfDeliveryForm = () => {
   const [showSuccess, setShowSuccess] = useState(false);
 
   return (
-    <div className="h-full bg-gradient-to-br from-emerald-800 via-green-700 to-teal-800 flex items-center justify-center">
+    <div className="h-[auto] bg-gradient-to-br from-emerald-800 via-green-700 to-teal-800 flex items-center justify-center">
          
       <div className="w-full max-w-4xl bg-white/90 backdrop-blur-lg shadow-2xl">
         {/* Header Section */}
