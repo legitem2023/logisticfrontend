@@ -1,10 +1,15 @@
 // components/ProofOfDeliveryForm.jsx
 import { useState, useRef, useEffect } from 'react';
+import { UPLOAD } from "../../../../graphql/mutation"; 
+
 type data ={
   id:string
 }
 const ProofOfDeliveryForm = ({data:data}) => {
   // Form state
+const [uploadFile, { loading, error, data }] = useMutation(UPLOAD);
+
+  
   const [formData, setFormData] = useState({
     id: data.id,
     receivedBy: '',
@@ -196,7 +201,7 @@ const ProofOfDeliveryForm = ({data:data}) => {
   };
   
   // Handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
     // Check if signature exists
@@ -220,6 +225,13 @@ const ProofOfDeliveryForm = ({data:data}) => {
     // In a real app, you would send this to your backend
     console.log('Form submitted:', formData);
     
+    //const submitProof = async (formData: any) => {
+    await uploadFile({
+      variables: {
+        input: formData
+      }
+    });
+  //};
     // Show success notification
     setShowSuccess(true);
     setTimeout(() => setShowSuccess(false), 3000);
