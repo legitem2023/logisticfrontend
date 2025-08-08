@@ -14,7 +14,39 @@ interface ApiKey {
 }
 
 export default function ApiWallet() {
-  const [keys, setKeys] = useState<ApiKey[]>();
+  
+  const [keys, setKeys] = useState<ApiKey[]>([
+  {
+    id: '1',
+    name: 'Production Server',
+    key: process.env.PRODUCTION_KEY,
+    created: '2023-06-15',
+    lastUsed: '2025-08-07',
+    usage: 1429,
+    status: 'active',
+    scopes: ['read', 'write', 'delete'],
+  },
+  {
+    id: '2',
+    name: 'Development Testing',
+    key: process.env.PRODUCTION_KEY_2,
+    created: '2025-07-22',
+    lastUsed: null,
+    usage: 0,
+    status: 'active',
+    scopes: ['read'],
+  },
+  {
+    id: '3',
+    name: 'Mobile App',
+    key: process.env.PRODUCTION_KEY_3  ,
+    created: '2025-07-10',
+    lastUsed: '2025-08-06',
+    usage: 327,
+    status: 'revoked',
+    scopes: ['read', 'write'],
+  },
+]);
   
   const [showModal, setShowModal] = useState(false);
   const [newKeyName, setNewKeyName] = useState('');
