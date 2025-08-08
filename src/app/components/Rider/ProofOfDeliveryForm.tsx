@@ -37,6 +37,27 @@ const ProofOfDeliveryForm = () => {
     }
   }, []);
   
+  // Get coordinates from both mouse and touch events
+  const getCoordinates = (e) => {
+    const canvas = canvasRef.current;
+    const rect = canvas.getBoundingClientRect();
+    
+    // For touch events
+    if (e.touches && e.touches[0]) {
+      return {
+        x: e.touches[0].clientX - rect.left,
+        y: e.touches[0].clientY - rect.top
+      };
+    } 
+    // For mouse events
+    else {
+      return {
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top
+      };
+    }
+  };
+  
   // Handle form field changes
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -66,10 +87,12 @@ const ProofOfDeliveryForm = () => {
   const startDrawing = (e) => {
     if (!ctx) return;
     
-    const canvas = canvasRef.current;
-    const rect = canvas.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
+    // Prevent scrolling on mobile
+    if (e.touches) {
+      e.preventDefault();
+    }
+    
+    const { x, y } = getCoordinates(e);
     
     ctx.beginPath();
     ctx.moveTo(x, y);
@@ -79,10 +102,12 @@ const ProofOfDeliveryForm = () => {
   const draw = (e) => {
     if (!isDrawing || !ctx) return;
     
-    const canvas = canvasRef.current;
-    const rect = canvas.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
+    // Prevent scrolling on mobile
+    if (e.touches) {
+      e.preventDefault();
+    }
+    
+    const { x, y } = getCoordinates(e);
     
     ctx.lineTo(x, y);
     ctx.stroke();
@@ -144,7 +169,6 @@ const ProofOfDeliveryForm = () => {
 
   return (
     <div className="h-[auto] bg-gradient-to-br from-emerald-800 via-green-700 to-teal-800 flex items-center justify-center">
-         
       <div className="w-full max-w-4xl bg-white/90 backdrop-blur-lg shadow-2xl">
         {/* Header Section */}
         <div className="bg-gradient-to-r from-emerald-600 to-green-700 p-8 text-center relative overflow-hidden">
@@ -154,7 +178,9 @@ const ProofOfDeliveryForm = () => {
             <div className="absolute -bottom-20 -right-20 w-60 h-60 rounded-full bg-white"></div>
           </div>
           
-          
+          <h1 className="text-3xl md:text-4xl font-bold text-white mb-3 relative z-10">
+            Proof of Delivery
+          </h1>
           <p className="text-emerald-100 max-w-lg mx-auto text-lg">
             Complete delivery details with photo evidence and recipient signature
           </p>
@@ -311,16 +337,21 @@ const ProofOfDeliveryForm = () => {
                 </label>
                 <div 
                   className="border-2 border-emerald-300 rounded-2xl bg-white p-4 shadow-inner"
-                  onMouseDown={startDrawing}
-                  onMouseMove={draw}
-                  onMouseUp={stopDrawing}
-                  onMouseLeave={stopDrawing}
                 >
                   <canvas
                     ref={canvasRef}
                     width="100%"
                     height="150"
-                    className="w-full h-[150px] border border-gray-200 rounded-lg bg-gray-50 cursor-crosshair"
+                    className="w-full h-[150px] border border-gray-200 rounded-lg bg-gray-50 cursor-crosshair touch-none"
+                    // Mouse events
+                    onMouseDown={startDrawing}
+                    onMouseMove={draw}
+                    onMouseUp={stopDrawing}
+                    onMouseLeave={stopDrawing}
+                    // Touch events
+                    onTouchStart={startDrawing}
+                    onTouchMove={draw}
+                    onTouchEnd={stopDrawing}
                   />
                   <div className="flex justify-between mt-4">
                     <button
@@ -372,7 +403,6 @@ const ProofOfDeliveryForm = () => {
             </button>
           </div>
         </form>
-      
       </div>
     </div>
   );
