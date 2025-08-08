@@ -3,6 +3,8 @@ import React, { use, useEffect, useState } from 'react';
 import { useApolloClient } from '@apollo/client';
 import Cookies from 'js-cookie';
 import Image from 'next/image';
+import ApiWallet from './Wallet/ApiWallet';
+
 import { useMutation, useSubscription } from '@apollo/client';
 import { LOCATIONTRACKING } from '../../../graphql/mutation';
 import { LocationTracking } from '../../../graphql/subscription';
@@ -220,6 +222,20 @@ export default function Menu() {
         content: (
           <div className="px-1 py-1 space-y-1">
             <LogisticsForm />
+          </div>
+        ),
+      },
+    ]
+  : []),
+     ...(isUserActive() && (useRole === 'Sender' || useRole === 'SENDER')
+  ? [
+      {
+        label: 'Wallet',
+        role: 'Sender',
+        icon: <Truck color="green" />,
+        content: (
+          <div className="px-1 py-1 space-y-1">
+            <ApiWallet/>
           </div>
         ),
       },
