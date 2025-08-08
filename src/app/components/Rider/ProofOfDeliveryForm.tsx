@@ -3,7 +3,7 @@ import { useState, useRef, useEffect } from 'react';
 type data ={
   id:string
 }
-const ProofOfDeliveryForm = (data:data) => {
+const ProofOfDeliveryForm = ({data:data}) => {
   // Form state
   const [formData, setFormData] = useState({
     id: data.id,
