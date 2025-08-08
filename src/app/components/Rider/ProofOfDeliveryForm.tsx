@@ -228,9 +228,6 @@ const [uploadFile] = useMutation(UPLOAD,{
     formPayload.append("signature", formData.signatureData);
     
     // In a real app, you would send this to your backend
-    console.log('Form submitted:', formData);
-    
-    //const submitProof = async (formData: any) => {
     await uploadFile({
       variables: {
         input: formData
