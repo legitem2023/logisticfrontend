@@ -6,7 +6,7 @@ import { UPLOAD } from "../../../../graphql/mutation";
 type data ={
   id:string
 }
-const ProofOfDeliveryForm = ({data:data}) => {
+const ProofOfDeliveryForm = ({data}:{data:data}) => {
   // Form state
 const [uploadFile] = useMutation(UPLOAD,{
   onCompleted:(e) =>{
@@ -17,9 +17,9 @@ const [uploadFile] = useMutation(UPLOAD,{
   
   const [formData, setFormData] = useState({
     id: data.id,
-    receivedBy: '',
-    receivedAt: '',
     photoUrl: null,
+    receivedAt: '',
+    receivedBy: '',
     signatureData: null, // This holds the signature data URL
   });
   
@@ -228,6 +228,8 @@ const [uploadFile] = useMutation(UPLOAD,{
     formPayload.append("signature", formData.signatureData);
     
     // In a real app, you would send this to your backend
+    console.log('Form submitted:', formData);
+
     await uploadFile({
       variables: {
         file: formData
@@ -243,7 +245,7 @@ const [uploadFile] = useMutation(UPLOAD,{
   const [showSuccess, setShowSuccess] = useState(false);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-800 via-green-700 to-lime-800 flex items-center justify-center">
+    <div className="min-h-screen bg-[rgba(0,0,0,0.5] flex items-center justify-center">
       <div className="w-full max-w-4xl bg-white/90 backdrop-blur-lg shadow-2xl overflow-hidden">
         {/* Header Section */}
         <div className="bg-gradient-to-r from-emerald-600 to-green-700 p-6 md:p-8 text-center relative overflow-hidden">

@@ -237,7 +237,7 @@ const handleSkip = async (id: string, riderId: string) => {
         
         <div className="relative h-48 w-full">
           <Image
-            src={item.photoUrl}
+            src={`https://logisticbackend-bkc3.onrender.com`+item.photoUrl}
             alt={`Proof of Delivery ${idx + 1}`}
             fill
             className="object-cover"
@@ -267,7 +267,7 @@ const handleSkip = async (id: string, riderId: string) => {
           {item.signatureUrl && (
             <div className="relative h-16 w-full border-t pt-3">
               <Image
-                src={item.signatureUrl}
+                src={`https://logisticbackend-bkc3.onrender.com`+item.signatureUrl}
                 alt="Signature"
                 fill
                 className="object-contain"
