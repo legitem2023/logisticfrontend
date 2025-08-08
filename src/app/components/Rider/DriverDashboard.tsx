@@ -10,7 +10,7 @@ import { Card, CardContent } from "../ui/Card";
 import { useMutation, useQuery } from "@apollo/client"; 
 import { DELIVERIES } from "../../../../graphql/query"; 
 import HistoryContainer from "../History/HistoryContainer"; 
-import { Clock, X, Compass, FileText, Upload } from "lucide-react"; 
+import { Clock, X, Compass, FileText, Upload, Plus, User } from "lucide-react"; 
 import { DashboardLoading } from "../Loadings/DashboardLoading"; 
 import { capitalize, formatDate } from "../../../../utils/decryptToken"; 
 import { ACCEPTDELIVERY, SKIPDELIVERY } from "../../../../graphql/mutation"; 
@@ -225,7 +225,59 @@ const handleSkip = async (id: string, riderId: string) => {
                         <div>
                           <button onClick={()=>{setdeliveryId(delivery.id);
                                                 setProof(true);
-                                               }}>+</button>
+                                               }}><Plus/></button>
+                          {delivery.proofOfDelivery.length > 0 && (
+  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    {delivery.proofOfDelivery.map((item: any, idx: number) => (
+      <div
+        key={idx}
+        className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 border border-gray-100"
+      >
+        {/* Photo */}
+        <div className="relative h-48 w-full">
+          <Image
+            src={item.photoUrl}
+            alt={`Proof of Delivery ${idx + 1}`}
+            fill
+            className="object-cover"
+          />
+        </div>
+
+        {/* Details */}
+        <div className="p-5 space-y-3">
+          {/* Receiver */}
+          <div className="flex items-center gap-2 text-gray-700">
+            <User size={18} className="text-blue-500" />
+            <span className="font-semibold">{item.receivedBy}</span>
+          </div>
+
+          {/* Time */}
+          <div className="flex items-center gap-2 text-gray-500 text-sm">
+            <Clock size={16} className="text-amber-500" />
+            <span>
+              {new Date(item.receivedAt).toLocaleString("en-US", {
+                dateStyle: "medium",
+                timeStyle: "short",
+              })}
+            </span>
+          </div>
+
+          {/* Signature */}
+          {item.signatureUrl && (
+            <div className="relative h-16 w-full border-t pt-3">
+              <Image
+                src={item.signatureUrl}
+                alt="Signature"
+                fill
+                className="object-contain"
+              />
+            </div>
+          )}
+        </div>
+      </div>
+    ))}
+  </div>
+)}
                         </div>  
                       </Collapsible>
                     </div>
