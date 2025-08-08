@@ -144,16 +144,7 @@ const ProofOfDeliveryForm = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-800 via-green-700 to-teal-800 flex items-center justify-center">
-      {/* Success Notification */}
-      {showSuccess && (
-        <div className="fixed top-6 right-6 bg-green-600 text-white px-6 py-3 shadow-lg flex items-center animate-fadeInOut z-50">
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-          </svg>
-          Proof of Delivery submitted successfully!
-        </div>
-      )}
-      
+         
       <div className="w-full max-w-4xl bg-white/90 backdrop-blur-lg rounded-2xl shadow-2xl overflow-hidden">
         {/* Header Section */}
         <div className="bg-gradient-to-r from-emerald-600 to-green-700 p-8 text-center relative overflow-hidden">
@@ -169,7 +160,7 @@ const ProofOfDeliveryForm = () => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
             </div>
-            <h1 className="text-3xl md:text-4xl font-bold text-white">Proof of Delivery</h1>
+            
           </div>
           <p className="text-emerald-100 max-w-lg mx-auto text-lg">
             Complete delivery details with photo evidence and recipient signature
