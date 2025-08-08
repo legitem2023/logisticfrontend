@@ -36,7 +36,7 @@ export default function DriverDashboard() {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [filteredDeliveries, setFilteredDeliveries] = useState([]);
   const [showProof, setProof] = useState(false);
-   
+   const [deliveryId,setdeliveryId] = useState();
 const [useIndicator, setIndicator] = useState<Indicator>({
   loadingText: 'Accept Delivery',
   enable: false,
@@ -223,7 +223,9 @@ const handleSkip = async (id: string, riderId: string) => {
                       </Button>
                       <Collapsible title={"Delivery Proof"} defaultOpen={false}>
                         <div>
-                          <button onClick={()=>setProof(true)}>+</button>
+                          <button onClick={()=>{setdeliveryId(delivery.id);
+                                                setProof(true);
+                                               }}>+</button>
                         </div>  
                       </Collapsible>
                     </div>
@@ -303,7 +305,7 @@ const handleSkip = async (id: string, riderId: string) => {
       {showProof && (
        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40 backdrop-blur-sm transition-all">
          <div className="w-full h-[100vh] sm:max-w-md bg-white p-0 shadow-lg animate-slide-up overflow-y-auto">
-          <ProofOfDeliveryForm/>
+          <ProofOfDeliveryForm data={deliveryId} />
          </div>
        </div>
       )}
