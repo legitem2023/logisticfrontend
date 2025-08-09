@@ -237,7 +237,7 @@ console.log(filteredDeliveries);
         
         <div className="relative h-48 w-full">
           <Image
-            src={`https://tsbriguuaznlvwbnylop.supabase.co/storage/v1/object/public/legitemfiles/ ${item.photoUrl}`}
+            src={item.photoUrl}
             alt={`Proof of Delivery ${idx + 1}`}
             fill
             className="object-cover"
@@ -267,7 +267,7 @@ console.log(filteredDeliveries);
           {item.signatureUrl && (
             <div className="relative h-16 w-full border-t pt-3">
               <Image
-                src={`https://tsbriguuaznlvwbnylop.supabase.co/storage/v1/object/public/legitemfiles/${item.signatureUrl}`}
+                src={item.signatureUrl}
                 alt="Signature"
                 fill
                 className="object-contain"
