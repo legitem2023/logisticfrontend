@@ -264,10 +264,10 @@ console.log(filteredDeliveries);
           </div>
 
           
-          {item.signatureUrl && (
+          {item.signatureData && (
             <div className="relative h-16 w-full border-t pt-3">
               <Image
-                src={item.signatureUrl}
+                src={item.signatureData}
                 alt="Signature"
                 fill
                 className="object-contain"
