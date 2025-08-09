@@ -255,6 +255,8 @@ console.log(filteredDeliveries);
                 alt={`Proof of Delivery ${idx + 1}`}
                 fill
                 className="object-cover"
+                height="100px"
+                width="200px"
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-gray-900/60 to-transparent"></div>
@@ -295,6 +297,8 @@ console.log(filteredDeliveries);
                       src={item.signatureData}
                       alt="Signature"
                       fill
+                      height="100px"
+                      width="200px"
                       className="object-contain"
                     />
                   </div>
