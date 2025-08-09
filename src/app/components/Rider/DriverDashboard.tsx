@@ -162,7 +162,7 @@ const handleSkip = async (id: string, riderId: string) => {
 
   
   if (loading || !data) return <DashboardLoading />;
-
+console.log(filteredDeliveries);
   return ( 
     <div className="min-h-screen bg-gray-50 flex flex-col md:flex-row"> 
       <aside className="hidden md:block md:w-64 bg-white/70 backdrop-blur-lg border-r border-gray-200 shadow-md p-6 rounded-r-3xl"> 
@@ -237,7 +237,7 @@ const handleSkip = async (id: string, riderId: string) => {
         
         <div className="relative h-48 w-full">
           <Image
-            src={`https://logisticbackend-bkc3.onrender.com`+item.photoUrl}
+            src={item.photoUrl}
             alt={`Proof of Delivery ${idx + 1}`}
             fill
             className="object-cover"
@@ -267,7 +267,7 @@ const handleSkip = async (id: string, riderId: string) => {
           {item.signatureUrl && (
             <div className="relative h-16 w-full border-t pt-3">
               <Image
-                src={`https://logisticbackend-bkc3.onrender.com`+item.signatureUrl}
+                src={item.signatureUrl}
                 alt="Signature"
                 fill
                 className="object-contain"
