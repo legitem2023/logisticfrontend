@@ -4,10 +4,10 @@ import { useState, useEffect } from "react";
 import { Card, CardContent } from "../ui/Card";
 import { Button } from "../ui/Button"; 
 import Collapsible from "../ui/Collapsible";
-import { Clock, MapPin, Bike, Compass, X, XCircle } from "lucide-react";
+import { Clock, MapPin, Bike, Compass, X, XCircle, FileSignature, User } from "lucide-react";
 import HistoryContainer from "../History/HistoryContainer"; 
 import { LocationTracking } from '../../../../graphql/subscription'; // update with correct path
-
+import Image from 'next/image';
 import { CANCELEDDELIVERY } from "../../../../graphql/mutation"; 
 import { useMutation, useQuery, useSubscription } from "@apollo/client"; 
 import { showToast } from '../../../../utils/toastify'; 
@@ -189,7 +189,107 @@ const handleCancel = (data) =>{
                       Package={delivery.packages}
                       refresh={refetch}
                     />
-                    </Collapsible>                    
+                    </Collapsible>   
+                    <div>
+                    <Collapsible 
+  title={'Delivery Proof'}
+  defaultOpen={false}>
+  <div className="space-y-4">
+    {/* Add Proof Button */}
+    <div className="flex justify-end">
+      <button 
+        onClick={() => {
+          setdeliveryId(delivery.id);
+          setProof(true);
+        }}
+        className="flex items-center gap-2 px-4 py-2 m-2 bg-gradient-to-r from-amber-500 to-amber-600 text-white rounded-lg shadow hover:shadow-lg transition-all duration-300 transform hover:-translate-y-0.5 focus:ring-2 focus:ring-amber-300 focus:ring-opacity-50"
+      >
+        <Plus className="text-white" size={18} />
+        <span className="font-semibold">Add Proof</span>
+      </button>
+    </div>
+
+    {/* Proof Gallery */}
+    {delivery.proofOfDelivery.length > 0 ? (
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {delivery.proofOfDelivery.map((item: any, idx: number) => (
+          <div 
+            key={idx}
+            className="bg-gradient-to-br from-white to-gray-50 shadow-xl overflow-hidden border border-gray-100 transform transition-transform duration-300 hover:-translate-y-1 hover:shadow-2xl"
+          >
+            {/* Photo */}
+            <div className="relative h-52 w-full">
+              <Image
+                src={item.photoUrl}
+                alt={`Proof of Delivery ${idx + 1}`}
+                fill
+                className="object-cover"
+                height="100px"
+                width="200px"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-gray-900/60 to-transparent"></div>
+            </div>
+
+            {/* Content */}
+            <div className="p-5 space-y-4">
+              {/* Receiver */}
+              <div className="flex items-center gap-3">
+                <div className="bg-amber-100 p-2 rounded-full">
+                  <User size={18} className="text-amber-600" />
+                </div>
+                <div>
+                  <p className="text-xs text-gray-500">Received by</p>
+                  <p className="font-medium text-gray-900">{item.receivedBy}</p>
+                </div>
+              </div>
+
+              {/* Timestamp */}
+              <div className="flex items-center gap-3">
+                <div className="bg-blue-100 p-2 rounded-full">
+                  <Clock size={16} className="text-blue-600" />
+                </div>
+                <div>
+                  <p className="text-xs text-gray-500">Time received</p>
+                  <p className="font-medium text-gray-900">
+                    {formatDate(item.receivedAt)}
+                  </p>
+                </div>
+              </div>
+
+              {/* Signature */}
+              {item.signatureData && (
+                <div className="pt-3 border-t border-gray-100">
+                  <p className="text-xs text-gray-500 mb-2">Signature:</p>
+                  <div className="relative h-16 w-full bg-gray-50 rounded-lg p-2 border border-gray-200">
+                    <Image
+                      src={item.signatureData}
+                      alt="Signature"
+                      fill
+                      height="100px"
+                      width="200px"
+                      className="object-contain"
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+    ) : (
+      // Empty State
+      <div className="flex flex-col items-center justify-center py-12 bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl border-2 border-dashed border-gray-300">
+        <FileSignature className="text-gray-400" size={48} />
+        <h3 className="mt-4 text-lg font-medium text-gray-700">No proof added</h3>
+        <p className="mt-2 text-gray-500 text-center max-w-md">
+          Add delivery proof including photos, recipient information, and signatures
+        </p>
+      </div>
+    )}
+  </div>
+</Collapsible>
+                    </div>
                   </div>
                   <div className="inline-block text-xs font-semibold text-white px-3 py-1 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 shadow">
                     {delivery.deliveryStatus}
