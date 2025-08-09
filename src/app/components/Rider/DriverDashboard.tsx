@@ -224,9 +224,7 @@ console.log(filteredDeliveries);
                       </Button>
                       <Collapsible 
   title={'Delivery Proof'}
-  defaultOpen={false}
-  className="bg-white rounded-xl border border-gray-200 p-4 shadow-sm transition-all hover:shadow-md"
->
+  defaultOpen={false}>
   <div className="space-y-4">
     {/* Add Proof Button */}
     <div className="flex justify-end">
