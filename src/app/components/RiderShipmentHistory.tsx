@@ -231,6 +231,72 @@ const result = filteredDeliveries.filter((d) => {
           <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
           </svg>
+{selectedShipment && (
+  <div className="relative bg-gradient-to-br from-slate-900 to-indigo-900 rounded-2xl shadow-[0_25px_50px_-12px_rgba(0,0,0,0.5)] overflow-hidden border border-indigo-500/30 transform transition-all duration-300 hover:shadow-[0_35px_60px_-15px_rgba(99,102,241,0.3)]">
+    {/* Decorative elements */}
+    <div className="absolute top-0 left-0 w-32 h-32 bg-indigo-500 rounded-full filter blur-[100px] opacity-20"></div>
+    <div className="absolute bottom-0 right-0 w-48 h-48 bg-amber-400 rounded-full filter blur-[100px] opacity-20"></div>
+    
+    {/* Header section */}
+    <div className="p-6 border-b border-indigo-500/30 bg-gradient-to-r from-slate-800/50 to-indigo-800/30 backdrop-blur-sm">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <div className="bg-gradient-to-br from-amber-400 to-amber-600 p-2 rounded-lg">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+            </svg>
+          </div>
+          <div>
+            <h2 className="text-xl font-bold text-white">Shipment Details</h2>
+            <p className="text-xs text-indigo-300">Premium tracking information</p>
+          </div>
+        </div>
+        
+        <div className="flex flex-wrap gap-2">
+          <span className={`px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1 ${
+            selectedShipment.DeliveryStatus === 'Delivered' 
+              ? 'bg-emerald-500/20 text-emerald-300' 
+              : selectedShipment.DeliveryStatus === 'In Transit'
+                ? 'bg-amber-500/20 text-amber-300'
+                : 'bg-cyan-500/20 text-cyan-300'
+          }`}>
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            {selectedShipment.DeliveryStatus}
+          </span>
+          
+          <span className="px-3 py-1 bg-indigo-500/20 rounded-full text-xs font-semibold text-indigo-300 flex items-center gap-1">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+            {selectedShipment.estimatedDeliveryTime}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    {/* Content section */}
+    <div className="p-6 space-y-6 text-slate-200 overflow-y-auto max-h-[70vh]">
+      {/* Tracking ID */}
+      <div className="bg-slate-800/40 backdrop-blur-sm rounded-xl p-5 border border-indigo-500/20 shadow-lg">
+        <div className="flex items-center gap-2 text-slate-400 text-sm mb-2">
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z" />
+          </svg>
+          TRACKING NUMBER
+        </div>
+        <div className="font-mono text-xl font-bold text-white tracking-wider px-4 py-3 rounded-lg bg-slate-900/50 border border-indigo-500/30">
+          {selectedShipment.trackingNumber}
+        </div>
+      </div>
+
+      {/* Packages section */}
+      <div className="space-y-4">
+        <div className="flex items-center gap-2 text-slate-300 font-semibold text-sm uppercase tracking-wider border-b border-indigo-500/30 pb-2">
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+          </svg>
           PACKAGE DETAILS
         </div>
         
