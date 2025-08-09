@@ -223,12 +223,7 @@ console.log(filteredDeliveries);
                         <Compass className="w-4 h-4 mr-1" /> {delivery.deliveryStatus === "Pending" ? "Accept Delivery" : "Track"}
                       </Button>
                       <Collapsible 
-  title={
-    <div className="flex items-center gap-2">
-      <PackageOpen size={20} className="text-amber-500" />
-      <span className="font-medium">Delivery Proof</span>
-    </div>
-  }
+  title={'Delivery Proof'}
   defaultOpen={false}
   className="bg-white rounded-xl border border-gray-200 p-4 shadow-sm transition-all hover:shadow-md"
 >
