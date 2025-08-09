@@ -281,10 +281,7 @@ console.log(filteredDeliveries);
                 <div>
                   <p className="text-xs text-gray-500">Time received</p>
                   <p className="font-medium text-gray-900">
-                    {new Date(item.receivedAt).toLocaleString("en-US", {
-                      dateStyle: "medium",
-                      timeStyle: "short",
-                    })}
+                    {formatDate(item.receivedAt)}
                   </p>
                 </div>
               </div>
