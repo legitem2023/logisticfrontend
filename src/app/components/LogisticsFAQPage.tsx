@@ -102,13 +102,6 @@ export default function LogisticsFAQPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
-        <div className="text-center mb-16">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Logistics Support Center</h1>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Find answers to common questions about shipping, tracking, returns, and more.
-          </p>
-        </div>
-
         <div className="bg-white rounded-2xl shadow-xl overflow-hidden mb-12">
           <div className="p-6 md:p-8">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
@@ -188,24 +181,6 @@ export default function LogisticsFAQPage() {
           </div>
         </div>
 
-        <div className="bg-blue-50 rounded-2xl p-8 border border-blue-100">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-            <div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-2">Need more help?</h3>
-              <p className="text-gray-600 max-w-xl">
-                Our logistics support team is available 24/7 to assist with any questions or issues you may have.
-              </p>
-            </div>
-            <div className="flex flex-col sm:flex-row gap-3">
-              <button className="px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors shadow-md">
-                Contact Support
-              </button>
-              <button className="px-6 py-3 bg-white text-blue-600 font-medium rounded-lg border border-blue-200 hover:bg-blue-50 transition-colors">
-                Live Chat
-              </button>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   );
