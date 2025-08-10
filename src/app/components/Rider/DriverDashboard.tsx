@@ -241,8 +241,16 @@ console.log(filteredDeliveries);
                               </button>
                               
                           </div>
-                              <span>Payment Method: {delivery.paymentMethod}</span>
-                              <span>Payment Status: {delivery.paymentStatus}</span>
+                        <div className="flex items-center gap-3">
+                         <div className="bg-amber-100 p-2 rounded-full">
+                            <User size={18} className="text-amber-600" />
+                         </div>
+                         <div>
+                         <p className="text-xs text-gray-500">Payment Status</p>
+                         <p className="font-medium text-gray-900">{delivery.paymentStatus}</p>
+                         </div>
+                       </div>
+                              
                       </Collapsible>
                       <Collapsible 
   title={'Delivery Proof'}
