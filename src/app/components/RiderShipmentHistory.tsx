@@ -275,6 +275,7 @@ export default function RiderShipmentHistory({ status }: any) {
                       label="Drop-off Address"
                       value={selectedShipment.dropoffAddress}
                     />
+                    <div className="h-[80px]"></div>
                   </div>
                 </div>
               </div>
