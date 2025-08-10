@@ -242,6 +242,15 @@ console.log(filteredDeliveries);
                               
                           </div>
                         <div className="p-5 space-y-4">
+                          <div className="flex items-center gap-3">
+                           <div className="bg-amber-100 p-2 rounded-full">
+                             <CreditCard size={18} className="text-amber-600" />
+                           </div>
+                           <div>
+                            <p className="text-xs text-gray-500">Payment Method</p>
+                            <p className="font-medium text-gray-900">{delivery.paymentMethod}</p>
+                           </div>
+                         </div>
                          <div className="flex items-center gap-3">
                            <div className="bg-amber-100 p-2 rounded-full">
                              <CreditCard size={18} className="text-amber-600" />
