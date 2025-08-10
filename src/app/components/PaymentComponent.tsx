@@ -7,9 +7,12 @@ type data ={
   distance:number
 }
 const PaymentComponent = ({data}:{data:data}) => {
+  
+  const totalFare = data.distance ? data.base + (data.distance * data.perKmRate) : null;
+
   const [paymentDetails, setPaymentDetails] = useState({
     orderId: data.id,
-    amount: '',
+    amount: totalFare,
     riderCode: '',
     paymentMethod: 'cod',
     isPaid: false,
