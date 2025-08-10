@@ -40,8 +40,8 @@ const PaymentComponent = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-emerald-50 to-teal-50 p-4">
-      <div className="w-full max-w-2xl bg-white rounded-2xl overflow-hidden shadow-2xl">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-emerald-50 to-teal-50">
+      <div className="w-full max-w-2xl bg-white overflow-hidden shadow-2xl">
         {/* Premium Header */}
         <div className="bg-gradient-to-r from-emerald-800 to-green-900 p-8 text-white relative overflow-hidden">
           <div className="absolute top-0 right-0 w-32 h-32 bg-green-700 rounded-full -mt-16 -mr-16 opacity-20"></div>
