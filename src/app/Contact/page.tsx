@@ -1,7 +1,8 @@
 'use client';
 import Image from 'next/image';
-import LogisticContactFormPage‎ from "../components/LogisticContactFormPage‎";
-export default function page() {
+import LogisticContactFormPage from "../components/LogisticContactFormPage";
+
+export default function Page() {
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
       <div className="h-[75px] w-full flex items-center justify-center customgrad border-b-4 border-green-500 px-4">
@@ -16,7 +17,7 @@ export default function page() {
       </div>
       
       {/* Sidebar with tab content */}
-      <LogisticContactFormPage‎/>
+      <LogisticContactFormPage />
     </div>
   );
 }
