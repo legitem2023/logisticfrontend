@@ -429,22 +429,14 @@ console.log(filteredDeliveries);
       )}
       {showMap && selectedDelivery && (
         <div className="fixed h-[100vh] inset-0 z-50 flex items-end sm:items-center justify-center bg-black/50 flex flex-col">
-          <button
-            onClick={() => setMap(false)}
-            className="fixed top-5 right-5 z-50 p-1 rounded hover:bg-gray-100 transition"
-          >
-            <X className="w-5 h-5 text-gray-600" />
-          </button>
-
-           <div className="flex justify-between items-center h-[10vh]">
+          
+           <div className="flex justify-between items-center h-[10vh] bg-white">
               <h2 className="text-xl font-bold text-gray-800">Map</h2>
               <button onClick={() => setMap(false)} className="p-1 rounded hover:bg-gray-100 transition">
-                <X className="w-5 h-5 text-gray-600" />
+                <X className="w-5 h-5 text-red-600" />
               </button>
             </div>
-
-
-          
+     
           <div className="w-full h-[90vh] sm:max-w-md bg-white p-0 shadow-lg animate-slide-up overflow-y-auto">
             <RiderMap
               deliveryId={selectedDelivery.id}
