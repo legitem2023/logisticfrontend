@@ -14,7 +14,7 @@ export default function page() {
           priority
         />
       </div>
-      <NotificationDropdown userId={globalUserId}/>
+      
       {/* Sidebar with tab content */}
       <LogisticsFAQPage/>
     </div>
