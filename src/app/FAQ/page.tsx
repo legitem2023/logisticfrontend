@@ -1,6 +1,6 @@
 'use client'
 import LogisticsFAQPage from "../components/LogisticsFAQPage";
-
+import Image from 'next/image';
 export default function page() {
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
