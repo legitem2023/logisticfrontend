@@ -6,7 +6,7 @@ import { Button } from "./ui/Button";
 import { Badge } from "./ui/Badge";
 import { useSelector } from 'react-redux';
 import { selectTempUserId } from '../../../Redux/tempUserSlice';
-import { CalendarIcon, DownloadIcon, EyeIcon, XIcon } from "lucide-react";
+import { CalendarIcon, DownloadIcon, EyeIcon, XIcon, ChevronLeft, ChevronRight, MoreHorizontal } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useQuery } from '@apollo/client';
 import { DELIVERIES } from '../../../graphql/query';
@@ -45,6 +45,8 @@ export default function RiderShipmentHistory({ status }: any) {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [filteredDeliveries, setFilteredDeliveries] = useState([]);
   const [originalDeliveries, setOriginalDeliveries] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(5);
 
   const globalUserId = useSelector(selectTempUserId);
   const { data, loading } = useQuery(DELIVERIES, {
@@ -68,6 +70,7 @@ export default function RiderShipmentHistory({ status }: any) {
   const handleFilter = ({ search, date }: { search: string; date: Date | null }) => {
     if (!search && !date) {
       setFilteredDeliveries(originalDeliveries);
+      setCurrentPage(1); // Reset to first page when filters are cleared
       return;
     }
 
@@ -85,6 +88,20 @@ export default function RiderShipmentHistory({ status }: any) {
     });
 
     setFilteredDeliveries(result);
+    setCurrentPage(1); // Reset to first page when filters change
+  };
+
+  // Calculate pagination
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentDeliveries = filteredDeliveries.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(filteredDeliveries.length / itemsPerPage);
+
+  // Handle page change
+  const handlePageChange = (newPage: number) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      setCurrentPage(newPage);
+    }
   };
 
   if (loading || !data) return null;
@@ -94,8 +111,25 @@ export default function RiderShipmentHistory({ status }: any) {
       <div className="relative p-1 space-y-4">
         <FilterBar onFilter={handleFilter} />
 
+        {/* Items Per Page Selector */}
+        <div className="flex items-center justify-end gap-2 text-sm">
+          <span className="text-gray-600">Items per page:</span>
+          <select 
+            value={itemsPerPage}
+            onChange={(e) => {
+              setItemsPerPage(Number(e.target.value));
+              setCurrentPage(1); // Reset to first page
+            }}
+            className="border rounded-md p-1 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+          >
+            <option value={5}>5</option>
+            <option value={10}>10</option>
+            <option value={20}>20</option>
+          </select>
+        </div>
+
         <div className="grid gap-4">
-          {filteredDeliveries.map((shipment: any) => (
+          {currentDeliveries.map((shipment: any) => (
             <Card key={shipment.id} className="bg-white border border-gray-200 shadow-sm">
               <CardContent className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 p-4">
                 <div>
@@ -141,6 +175,103 @@ export default function RiderShipmentHistory({ status }: any) {
             </Card>
           ))}
         </div>
+
+        {/* Pagination Controls */}
+        {totalPages > 0 && (
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-t pt-4">
+            <div className="text-sm text-gray-700">
+              Showing {indexOfFirstItem + 1} to {Math.min(indexOfLastItem, filteredDeliveries.length)} of {filteredDeliveries.length} shipments
+            </div>
+            
+            <div className="flex items-center gap-1">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+                className="disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </Button>
+              
+              {/* First Page */}
+              {currentPage > 1 && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handlePageChange(1)}
+                >
+                  1
+                </Button>
+              )}
+              
+              {/* Ellipsis for skipped pages */}
+              {currentPage > 3 && (
+                <Button variant="ghost" size="sm" disabled className="px-2">
+                  <MoreHorizontal className="h-4 w-4" />
+                </Button>
+              )}
+              
+              {/* Previous Page */}
+              {currentPage > 2 && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handlePageChange(currentPage - 1)}
+                >
+                  {currentPage - 1}
+                </Button>
+              )}
+              
+              {/* Current Page */}
+              <Button
+                variant="default"
+                size="sm"
+              >
+                {currentPage}
+              </Button>
+              
+              {/* Next Page */}
+              {currentPage < totalPages - 1 && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handlePageChange(currentPage + 1)}
+                >
+                  {currentPage + 1}
+                </Button>
+              )}
+              
+              {/* Ellipsis for skipped pages */}
+              {currentPage < totalPages - 2 && (
+                <Button variant="ghost" size="sm" disabled className="px-2">
+                  <MoreHorizontal className="h-4 w-4" />
+                </Button>
+              )}
+              
+              {/* Last Page */}
+              {currentPage < totalPages && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handlePageChange(totalPages)}
+                >
+                  {totalPages}
+                </Button>
+              )}
+              
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+                className="disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <ChevronRight className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+        )}
 
         {/* Sliding Drawer */}
         <div
@@ -293,4 +424,4 @@ export default function RiderShipmentHistory({ status }: any) {
       )}
     </>
   );
-}
+              }
