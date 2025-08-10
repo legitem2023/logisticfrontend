@@ -231,6 +231,7 @@ console.log(filteredDeliveries);
                             <div className="flex justify-end">
                               <button 
                                onClick={() => {
+                               setSelectedDelivery(delivery)
                                setdeliveryId(delivery.id);
                                setPayment(true);
                                }}
@@ -422,7 +423,7 @@ console.log(filteredDeliveries);
       {showPayment &&(
        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40 backdrop-blur-sm transition-all">
          <div className="w-full h-[100vh] bg-white p-0 shadow-lg animate-slide-up overflow-y-auto">
-            <PaymentComponent data={{id:deliveryId}}/>
+            <PaymentComponent data={{id:deliveryId,base:selectedDelivery.baseRate,perKmRate:selectedDelivery.perKmRate,distance:selectedDelivery.distance}}/>
          </div>
        </div>
       )}
