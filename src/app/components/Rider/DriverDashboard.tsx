@@ -12,7 +12,7 @@ import { Card, CardContent } from "../ui/Card";
 import { useMutation, useQuery } from "@apollo/client"; 
 import { DELIVERIES } from "../../../../graphql/query"; 
 import HistoryContainer from "../History/HistoryContainer"; 
-import { Clock, X, Compass, FileText, Upload, Plus, User,PackageOpen, FileSignature } from "lucide-react"; 
+import { Clock, X, Compass, FileText, Upload, Plus, User,PackageOpen, FileSignature ,CreditCard} from "lucide-react"; 
 import { DashboardLoading } from "../Loadings/DashboardLoading"; 
 import { capitalize, formatDate } from "../../../../utils/decryptToken"; 
 import { ACCEPTDELIVERY, SKIPDELIVERY } from "../../../../graphql/mutation"; 
@@ -244,7 +244,7 @@ console.log(filteredDeliveries);
                         <div className="p-5 space-y-4">
                          <div className="flex items-center gap-3">
                            <div className="bg-amber-100 p-2 rounded-full">
-                             <User size={18} className="text-amber-600" />
+                             <CreditCard size={18} className="text-amber-600" />
                            </div>
                            <div>
                             <p className="text-xs text-gray-500">Payment Status</p>
