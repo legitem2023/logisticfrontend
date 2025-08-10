@@ -342,7 +342,7 @@ export default function RiderShipmentHistory({ status }: any) {
                     </svg>
                     TRACKING NUMBER
                   </div>
-                  <div className="font-mono text-xl font-bold text-gray-900 tracking-wider px-4 py-3 rounded-lg bg-green-50 border border-green-200">
+                  <div className="font-mono text-lg font-bold text-gray-900 tracking-wider px-4 py-3 rounded-lg bg-green-50 border border-green-200">
                     {selectedShipment.trackingNumber}
                   </div>
                 </div>
