@@ -46,10 +46,7 @@ const LogisticContactFormPage = () => {
 
   return (
     <>
-      <Head>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet" />
-      </Head>
+      
       
       <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-[#0a192f] to-[#172a45] relative overflow-hidden">
         {/* Background pattern */}
@@ -60,62 +57,11 @@ const LogisticContactFormPage = () => {
           <div className="flex flex-col lg:flex-row">
             {/* Contact Information Side */}
             <div className="lg:w-2/5 bg-gradient-to-br from-[#0d2b4e] to-[#0a1a30] p-10 relative overflow-hidden">
-              <div className="absolute top-0 left-0 w-full h-full bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgdmlld0JveD0iMCAwIDYwIDYwIj48cGF0aCBkPSJNMTUgMTVoMzBNMTUgMzBoMzBNMTUgNDVoMzBNNDUgMTVoMzBNNDUgMzBoMzBNNDUgNDVoMzAiIHN0cm9rZT0iIzQwOWNmZiIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtZGFzaGFycmF5PSI0IiBvcGFjaXR5PSIwLjEiLz48L3N2Zz4=')] opacity-10" />
               
-              <div className="relative z-10">
-                <h2 className="text-3xl font-bold font-playfair text-white mb-8">Connect With Us</h2>
-                
-                <div className="space-y-6 mb-10">
-                  <div className="flex items-start">
-                    <div className="bg-[#112240]/50 p-3 rounded-full mr-4">
-                      <i className="fa-solid fa-location-dot text-[#64ffda] text-lg"></i>
-                    </div>
-                    <div>
-                      <h3 className="text-lg font-semibold text-white mb-1">Headquarters</h3>
-                      <p className="text-[#a8b2d1]">123 Logistics Blvd, Suite 500<br />New York, NY 10001</p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-start">
-                    <div className="bg-[#112240]/50 p-3 rounded-full mr-4">
-                      <i className="fa-solid fa-phone text-[#64ffda] text-lg"></i>
-                    </div>
-                    <div>
-                      <h3 className="text-lg font-semibold text-white mb-1">Contact</h3>
-                      <p className="text-[#a8b2d1]">+1 (800) 555-1234<br />support@globallogix.com</p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-start">
-                    <div className="bg-[#112240]/50 p-3 rounded-full mr-4">
-                      <i className="fa-solid fa-clock text-[#64ffda] text-lg"></i>
-                    </div>
-                    <div>
-                      <h3 className="text-lg font-semibold text-white mb-1">Business Hours</h3>
-                      <p className="text-[#a8b2d1]">Monday - Friday: 8am - 8pm<br />Saturday: 9am - 4pm</p>
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="mt-12">
-                  <h3 className="text-xl font-playfair font-semibold text-white mb-4">Global Reach</h3>
-                  <div className="flex space-x-3">
-                    {['🇺🇸', '🇪🇺', '🇨🇳', '🇯🇵', '🇦🇪', '🇸🇬'].map((flag, idx) => (
-                      <div key={idx} className="bg-[#112240]/50 w-12 h-12 rounded-full flex items-center justify-center text-xl">
-                        {flag}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
             
             {/* Form Side */}
             <div className="lg:w-3/5 p-10">
-              <div className="text-center mb-10">
-                <h1 className="text-4xl font-bold font-playfair text-white mb-2">Contact Our Team</h1>
-                <p className="text-[#a8b2d1] max-w-lg mx-auto">Get in touch with our logistics experts. Well respond within 24 hours to discuss your shipping needs.</p>
-              </div>
+   
               
               {submitSuccess ? (
                 <div className="bg-green-900/30 border border-green-500 rounded-xl p-8 text-center">
