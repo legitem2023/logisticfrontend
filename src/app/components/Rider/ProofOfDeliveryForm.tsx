@@ -2,6 +2,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useMutation, useQuery, useSubscription } from "@apollo/client"; 
 import { UPLOAD } from "../../../../graphql/mutation"; 
+import { showToast } from '../../../../utils/toastify'; 
 
 type data ={
   id:string
@@ -11,6 +12,7 @@ const ProofOfDeliveryForm = ({data}:{data:data}) => {
 const [uploadFile] = useMutation(UPLOAD,{
   onCompleted:(e) =>{
     console.log(e);
+    showToast(e,'success');
   }
 });
 
