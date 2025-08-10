@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { FaMotorcycle, FaMoneyBillWave, FaReceipt, FaShieldAlt, FaCheckCircle } from 'react-icons/fa';
-
-const PaymentComponent = () => {
+type data ={
+  id:string
+}
+const PaymentComponent = ({data}:{data:data}) => {
   const [paymentDetails, setPaymentDetails] = useState({
-    orderId: '',
+    orderId: data.id,
     amount: '',
     riderCode: '',
     paymentMethod: 'cod',
