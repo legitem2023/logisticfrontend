@@ -1,6 +1,7 @@
 'use client';
 import Image from 'next/image';
 import ProofOfDeliveryForm from './ProofOfDeliveryForm';
+import PaymentComponent from '../PaymentComponent';
 import { useState, useEffect } from "react"; 
 import 'react-datepicker/dist/react-datepicker.css';
 import { useSelector } from 'react-redux';
@@ -37,6 +38,8 @@ export default function DriverDashboard() {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [filteredDeliveries, setFilteredDeliveries] = useState([]);
   const [showProof, setProof] = useState(false);
+
+  const [showPayment,setPayment]= useState(false);
    const [deliveryId,setdeliveryId] = useState();
 const [useIndicator, setIndicator] = useState<Indicator>({
   loadingText: 'Accept Delivery',
@@ -223,6 +226,20 @@ console.log(filteredDeliveries);
                         <Compass className="w-4 h-4 mr-1" /> {delivery.deliveryStatus === "Pending" ? "Accept Delivery" : "Track"}
                       </Button>
                       <Collapsible 
+                        title={'Payment'}
+                        defaultOpen={false}>
+                            <div className="flex justify-end">
+                              <button 
+                               onClick={() => {
+                               setPayment(true);
+                               }}
+                               className="flex items-center gap-2 px-4 py-2 m-2 bg-gradient-to-r from-amber-500 to-amber-600 text-white rounded-lg shadow hover:shadow-lg transition-all duration-300 transform hover:-translate-y-0.5 focus:ring-2 focus:ring-amber-300 focus:ring-opacity-50">
+                               <Plus className="text-white" size={18} />
+                               <span className="font-semibold">Add Payment</span>
+                              </button>
+                          </div>
+                      </Collapsible>
+                      <Collapsible 
   title={'Delivery Proof'}
   defaultOpen={false}>
   <div className="space-y-4">
@@ -398,6 +415,13 @@ console.log(filteredDeliveries);
        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40 backdrop-blur-sm transition-all">
          <div className="w-full h-[100vh] bg-white p-0 shadow-lg animate-slide-up overflow-y-auto">
           <ProofOfDeliveryForm data={{id:deliveryId}} />
+         </div>
+       </div>
+      )}
+      {showPayment &&(
+       <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40 backdrop-blur-sm transition-all">
+         <div className="w-full h-[100vh] bg-white p-0 shadow-lg animate-slide-up overflow-y-auto">
+            <PaymentComponent/>
          </div>
        </div>
       )}
