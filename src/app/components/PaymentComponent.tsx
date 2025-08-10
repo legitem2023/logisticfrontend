@@ -39,7 +39,7 @@ const PaymentComponent = ({data}:{data:data}) => {
   const handleNewPayment = () => {
     setPaymentDetails({
       orderId: '',
-      amount: '',
+      amount: 0,
       riderCode: '',
       paymentMethod: 'cod',
       isPaid: false,
