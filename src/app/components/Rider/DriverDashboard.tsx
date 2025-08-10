@@ -239,6 +239,8 @@ console.log(filteredDeliveries);
                                <Plus className="text-white" size={18} />
                                <span className="font-semibold">Add Payment</span>
                               </button>
+                              <span>{delivery.paymentMethod}</span>
+                              <span>{delivery.paymentStatus}</span>
                           </div>
                       </Collapsible>
                       <Collapsible 
