@@ -1,6 +1,6 @@
-'use client'
-import LogisticContactFormPage‎ from "../components/LogisticContactFormPage‎";
+'use client';
 import Image from 'next/image';
+import LogisticContactFormPage‎ from "../components/LogisticContactFormPage‎";
 export default function page() {
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
