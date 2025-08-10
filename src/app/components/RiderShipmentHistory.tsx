@@ -55,7 +55,7 @@ export default function RiderShipmentHistory({ status }: any) {
 
   useEffect(() => {
     if (data) {
-      const formattedDeliveries = data.getRidersDelivery.map((delivery: any) => ({
+      const formattedDeliveries = data.getRidersDelivery.filter((del:any)=>del.deliveryStatus === status).map((delivery: any) => ({
         ...delivery,
         deliveryStatus: capitalize(delivery.deliveryStatus),
         estimatedDeliveryTime: formatDate(delivery.estimatedDeliveryTime),
