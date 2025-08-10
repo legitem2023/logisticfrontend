@@ -239,9 +239,10 @@ console.log(filteredDeliveries);
                                <Plus className="text-white" size={18} />
                                <span className="font-semibold">Add Payment</span>
                               </button>
-                              <span>{delivery.paymentMethod}</span>
-                              <span>{delivery.paymentStatus}</span>
+                              
                           </div>
+                              <span>Payment Method: {delivery.paymentMethod}</span>
+                              <span>Payment Status: {delivery.paymentStatus}</span>
                       </Collapsible>
                       <Collapsible 
   title={'Delivery Proof'}
