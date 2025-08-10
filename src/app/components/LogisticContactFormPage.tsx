@@ -114,7 +114,7 @@ const LogisticContactFormPage = () => {
             <div className="lg:w-3/5 p-10">
               <div className="text-center mb-10">
                 <h1 className="text-4xl font-bold font-playfair text-white mb-2">Contact Our Team</h1>
-                <p className="text-[#a8b2d1] max-w-lg mx-auto">Get in touch with our logistics experts. We'll respond within 24 hours to discuss your shipping needs.</p>
+                <p className="text-[#a8b2d1] max-w-lg mx-auto">Get in touch with our logistics experts. Well respond within 24 hours to discuss your shipping needs.</p>
               </div>
               
               {submitSuccess ? (
