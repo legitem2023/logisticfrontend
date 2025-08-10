@@ -11,7 +11,7 @@ export default function Collapsible({ title, children, defaultOpen = false }: Co
   const [open, setOpen] = useState(defaultOpen);
 
   return (
-    <div className="bg-white/70 backdrop-blur-md shadow-md overflow-hidden transition-all mb-4">
+    <div className="bg-white/70 backdrop-blur-md shadow-md overflow-hidden transition-all">
       <button
         onClick={() => setOpen(!open)}
         className="w-full flex items-center justify-between px-3 py-2 text-gray-800 font-semibold text-base bg-gradient-to-r from-white to-gray-100 hover:from-gray-100 hover:to-white transition-colors duration-300"
