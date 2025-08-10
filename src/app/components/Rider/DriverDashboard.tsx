@@ -430,7 +430,7 @@ console.log(filteredDeliveries);
       {showMap && selectedDelivery && (
         <div className="fixed h-[100vh] inset-0 z-50 flex items-end sm:items-center justify-center bg-black/50 flex flex-col">
           
-           <div className="flex justify-between items-center h-[10vh] bg-white">
+           <div className="flex justify-between items-center h-[10vh] bg-white w-full p-2">
               <h2 className="text-xl font-bold text-gray-800">Map</h2>
               <button onClick={() => setMap(false)} className="p-1 rounded hover:bg-gray-100 transition">
                 <X className="w-5 h-5 text-red-600" />
