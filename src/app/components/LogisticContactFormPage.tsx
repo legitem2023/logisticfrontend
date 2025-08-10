@@ -202,7 +202,7 @@ const LogisticContactFormPage = () => {
                       value={formData.message}
                       onChange={handleChange}
                       required
-                      rows="4"
+                      
                       className="w-full bg-[#112240]/50 border border-[#233554] rounded-xl py-4 px-5 text-white placeholder-[#495c7c] focus:outline-none focus:ring-2 focus:ring-[#64ffda] transition-all duration-300"
                       placeholder="Your Message"
                     ></textarea>
