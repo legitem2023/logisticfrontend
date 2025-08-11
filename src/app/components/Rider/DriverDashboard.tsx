@@ -361,6 +361,7 @@ const handleSkip = async (id: string, riderId: string) => {
   </div>
 </Collapsible>
                     <Button
+                        disabled={delivery.paymentStatus==='Unpaid' && delivery.proofOfDelivery.length <1?true:false}
                         variant="outline"
                         className="w-full sm:w-auto transition-all text-white duration-200 bg-orange-500 hover:bg-blue-50 hover:border-blue-500"
                         onClick={() => openDetails(delivery)}
