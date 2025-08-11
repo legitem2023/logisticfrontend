@@ -15,7 +15,8 @@ import HistoryContainer from "../History/HistoryContainer";
 import { Clock, X, Compass, FileText, Upload, Plus, User,PackageOpen, FileSignature ,CreditCard ,WalletCards, Flag } from "lucide-react"; 
 import { DashboardLoading } from "../Loadings/DashboardLoading"; 
 import { capitalize, formatDate } from "../../../../utils/decryptToken"; 
-import { ACCEPTDELIVERY, SKIPDELIVERY } from "../../../../graphql/mutation"; 
+import { ACCEPTDELIVERY, SKIPDELIVERY, CANCELEDDELIVERY,FINISHDELIVERY,SENDNOTIFICATION } from "../../../../graphql/mutation"; 
+
 import DeliveryDetailCard from "./DeliveryDetailCard"; 
 import dynamic from "next/dynamic"; 
 import FilterBar from "./Filterbar";
@@ -40,16 +41,31 @@ export default function DriverDashboard() {
   const [showProof, setProof] = useState(false);
 
   const [showPayment,setPayment]= useState(false);
-   const [deliveryId,setdeliveryId] = useState();
-const [useIndicator, setIndicator] = useState<Indicator>({
-  loadingText: 'Accept Delivery',
-  enable: false,
-});  
+  const [deliveryId,setdeliveryId] = useState();
+  const [useIndicator, setIndicator] = useState<Indicator>({
+    loadingText: 'Accept Delivery',
+    enable: false,
+  });  
 
-const [useIndicatorA, setIndicatorA] = useState<Indicator>({
-  loadingText: 'Skip Delivery',
-  enable: false,
-});  
+  const [useIndicatorA, setIndicatorA] = useState<Indicator>({
+    loadingText: 'Skip Delivery',
+    enable: false,
+  });  
+  const [finishDelivery] = useMutation(FINISHDELIVERY,{
+   onCompleted: () => showToast("Delivery successfully completed", "success"),
+   onError: (e: any) => console.log('Finished Error', e)
+  })
+
+
+  const handleStatusChange = async (id:any) => {
+     const conf = confirm("Are you sure you want to finish this delivery?"); 
+    if(conf){
+      await finishDelivery({
+           variables : {"deliveryId":id,"riderId": globalUserId}
+       })      
+    }
+  };
+
   
   const location = useSelector((state: any) => state.location.current);
   
@@ -364,7 +380,7 @@ const handleSkip = async (id: string, riderId: string) => {
                         disabled={delivery.paymentStatus==='Unpaid'?true:false}
                         variant="outline"
                         className="w-full sm:w-auto transition-all text-white duration-200 bg-green-500 hover:bg-blue-50 hover:border-blue-500"
-                        onClick={() => openDetails(delivery)}
+                        onClick={() => handleStatusChange(delivery.id)}
                       >
                         <Flag className="w-4 h-4 mr-1" />
                         Finish
