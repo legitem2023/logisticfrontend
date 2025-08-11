@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { Card, CardContent } from "../ui/Card";
 import { Button } from "../ui/Button"; 
 import Collapsible from "../ui/Collapsible";
-import { Clock, MapPin, Bike, Compass, X, XCircle, FileSignature, User } from "lucide-react";
+import { Clock, MapPin, Bike, Compass, X, XCircle, FileSignature, User, Truck  } from "lucide-react";
 import HistoryContainer from "../History/HistoryContainer"; 
 import { LocationTracking } from '../../../../graphql/subscription'; // update with correct path
 import Image from 'next/image';
@@ -100,29 +100,31 @@ const handleCancel = (data) =>{
     })
   }
 }
-
+const tabs = [
+  { label: "Deliveries", icon: Truck },
+  { label: "History", icon: Clock }
+];
   
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col md:flex-row">
       {/* Sidebar */}
-      <aside className="hidden md:block md:w-64 bg-white/80 backdrop-blur-md border-r border-gray-200 shadow-inner p-6">
-        <h2 className="text-2xl font-bold text-gray-800 mb-8">Sender Panel</h2>
+      <aside className="hidden md:block md:w-10 bg-white/80 backdrop-blur-md border-r border-gray-200 shadow-inner p-2">
         <nav> 
-          <ul className="space-y-4 text-[15px] font-medium">
-            {['Deliveries', 'History'].map(tab => (
-              <li
-                key={tab}
-                onClick={() => setActiveTab(tab)}
-                className={`cursor-pointer rounded-lg px-3 py-2 transition-all duration-200 ${
-                  activeTab === tab
-                    ? 'customgrad text-white shadow-md'
-                    : 'text-gray-600 hover:text-gray-800 hover:bg-gray-100'
-                }`}
-              >
-                {tab}
-              </li>
-            ))}
-          </ul> 
+<ul className="space-y-4 text-[15px] font-medium">
+  {tabs.map(({ label, icon: Icon }) => (
+    <li
+      key={label}
+      onClick={() => setActiveTab(label)}
+      className={`flex items-center gap-2 cursor-pointer rounded-lg px-3 py-2 transition-all duration-200 ${
+        activeTab === label
+          ? 'customgrad text-white shadow-md'
+          : 'text-gray-600 hover:text-gray-800 hover:bg-gray-100'
+      }`}
+    >
+      <Icon size={18} />
+    </li>
+  ))}
+</ul>
         </nav> 
       </aside>
 
@@ -171,7 +173,7 @@ const handleCancel = (data) =>{
                   <Button
                         onClick={() => openMap(delivery)} 
                         variant="outline"
-                        className="w-full sm:w-auto transition-all text-white duration-200 customgrad hover:bg-blue-50 hover:border-blue-500">
+                        className="w-full transition-all text-white duration-200 customgrad hover:bg-blue-50 hover:border-blue-500">
                         <Compass className="w-4 h-4 mr-1" />Track</Button>
                   </div>)}
 
@@ -179,10 +181,10 @@ const handleCancel = (data) =>{
                   <Button
                         onClick={() => handleCancel(delivery)} 
                         variant="outline"
-                        className="w-full sm:w-auto transition-all text-white duration-200 bg-red-800 hover:bg-red-200 hover:border-red-500">
+                        className="w-full transition-all text-white duration-200 bg-red-800 hover:bg-red-200 hover:border-red-500">
                         <XCircle className="w-4 h-4 mr-1" />Cancel</Button>
                   </div>)}
-                  <div>
+                  <div className="flex flex-col gap-2 w-full">
                     <Collapsible title={delivery.packages.length > 0?"Package Ready":"Create Package"} defaultOpen={delivery.packages.length > 0?false:true}>
                      <CreatePackageForm
                       deliveryId={delivery.id}
@@ -199,7 +201,7 @@ const handleCancel = (data) =>{
 
     {/* Proof Gallery */}
     {delivery.proofOfDelivery.length > 0 ? (
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 gap-6">
         {delivery.proofOfDelivery.map((item: any, idx: number) => (
           <div 
             key={idx}
@@ -210,7 +212,7 @@ const handleCancel = (data) =>{
               <Image
                 src={item.photoUrl}
                 alt={`Proof of Delivery ${idx + 1}`}
-                className="object-cover"
+                className="object-cover w-full h-full"
                 height="100"
                 width="200"
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -254,7 +256,7 @@ const handleCancel = (data) =>{
                       alt="Signature"
                       height="100"
                       width="200"
-                      className="object-contain"
+                      className="object-contain w-full h-full"
                     />
                   </div>
                 </div>

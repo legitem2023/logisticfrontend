@@ -12,7 +12,7 @@ import { Card, CardContent } from "../ui/Card";
 import { useMutation, useQuery } from "@apollo/client"; 
 import { DELIVERIES } from "../../../../graphql/query"; 
 import HistoryContainer from "../History/HistoryContainer"; 
-import { Clock, X, Compass, FileText, Upload, Plus, User,PackageOpen, FileSignature ,CreditCard ,WalletCards, Flag,Code } from "lucide-react"; 
+import { Clock, X, Compass, FileText, Upload, Plus, User,PackageOpen, FileSignature ,CreditCard ,WalletCards, Flag,Code,Truck } from "lucide-react"; 
 import { DashboardLoading } from "../Loadings/DashboardLoading"; 
 import { capitalize, formatDate } from "../../../../utils/decryptToken"; 
 import { ACCEPTDELIVERY, SKIPDELIVERY, CANCELEDDELIVERY,FINISHDELIVERY,SENDNOTIFICATION, MARKPAID } from "../../../../graphql/mutation"; 
@@ -206,27 +206,31 @@ const handleSkip = async (id: string, riderId: string) => {
 
   
   if (loading || !data) return <DashboardLoading />;
-
+const tabs = [
+  { label: "Deliveries", icon: Truck },
+  { label: "History", icon: Clock }
+];
+  
   return ( 
     <div className="min-h-screen bg-gray-50 flex flex-col md:flex-row"> 
       <aside className="hidden md:block md:w-64 bg-white/70 backdrop-blur-lg border-r border-gray-200 shadow-md p-6 rounded-r-3xl"> 
         <h2 className="text-2xl font-bold text-gray-800 mb-10 tracking-tight">🚚 Driver Panel</h2> 
         <nav> 
-          <ul className="space-y-4 text-[15px] font-medium">
-            {['Deliveries', 'History'].map(tab => (
-              <li
-                key={tab}
-                onClick={() => setActiveTab(tab)}
-                className={`cursor-pointer rounded-lg px-3 py-2 transition-all duration-200 ${
-                  activeTab === tab
-                    ? 'customgrad text-white shadow-md'
-                    : 'text-gray-600 hover:text-gray-800 hover:bg-gray-100'
-                }`}
-              >
-                {tab}
-              </li>
-            ))}
-          </ul> 
+ <ul className="space-y-4 text-[15px] font-medium">
+  {tabs.map(({ label, icon: Icon }) => (
+    <li
+      key={label}
+      onClick={() => setActiveTab(label)}
+      className={`flex items-center gap-2 cursor-pointer rounded-lg px-3 py-2 transition-all duration-200 ${
+        activeTab === label
+          ? 'customgrad text-white shadow-md'
+          : 'text-gray-600 hover:text-gray-800 hover:bg-gray-100'
+      }`}
+    >
+      <Icon size={18} />
+    </li>
+  ))}
+</ul>
         </nav> 
       </aside>
       
@@ -270,7 +274,7 @@ const handleSkip = async (id: string, riderId: string) => {
                         title={'Payment'}
                         defaultOpen={false}>
                             <div className="flex justify-end">
-                              <button 
+                              {delivery.paymentStatus !== "Paid" && (<button 
                                onClick={() => {
                                setSelectedDelivery(delivery)
                                setdeliveryId(delivery.id);
@@ -279,7 +283,7 @@ const handleSkip = async (id: string, riderId: string) => {
                                className="flex items-center gap-2 px-4 py-2 m-2 bg-gradient-to-r from-amber-500 to-amber-600 text-white rounded-lg shadow hover:shadow-lg transition-all duration-300 transform hover:-translate-y-0.5 focus:ring-2 focus:ring-amber-300 focus:ring-opacity-50">
                                <Plus className="text-white" size={18} />
                                <span className="font-semibold">Add Payment</span>
-                              </button>
+                              </button>)}
                               
                           </div>
                         <div className="p-5 space-y-4">

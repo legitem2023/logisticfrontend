@@ -79,7 +79,7 @@ export default function ApiWallet() {
         <div className="flex justify-between items-center mb-8">
           <div>
             <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
-              <FiDollarSign className="text-green-600" /> Logistics Wallet
+              <span className="text-green-600" >₱</span> Logistics Wallet
             </h1>
             <p className="text-gray-600 mt-2">Manage your funds for seamless logistics payments</p>
           </div>
@@ -96,7 +96,7 @@ export default function ApiWallet() {
           <div className="flex justify-between items-start">
             <div>
               <p className="text-lg">Available Balance</p>
-              <h2 className="text-4xl font-bold mt-2">${balance.toFixed(2)}</h2>
+              <h2 className="text-4xl font-bold mt-2">₱{balance.toFixed(2)}</h2>
               <p className="mt-4 text-emerald-100">Logistics Wallet</p>
             </div>
             <div className="bg-white/20 p-3 rounded-xl">
