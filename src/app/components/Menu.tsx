@@ -34,7 +34,8 @@ import {
   ClipboardCheck,
   HelpCircle,
   Truck,
-  BadgeCheck
+  BadgeCheck,
+  WalletMinimal
 } from "lucide-react";
 import { useDispatch,useSelector } from 'react-redux';
 import { setCurrentLocation } from '../../../Redux/locationSlice';
@@ -232,7 +233,7 @@ export default function Menu() {
       {
         label: 'Wallet',
         role: 'Sender',
-        icon: <Truck color="green" />,
+        icon: <WalletMinimal color="green" />,
         content: (
           <div className="px-1 py-1 space-y-1">
             <ApiWallet/>
