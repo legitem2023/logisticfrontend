@@ -12,7 +12,7 @@ import { Card, CardContent } from "../ui/Card";
 import { useMutation, useQuery } from "@apollo/client"; 
 import { DELIVERIES } from "../../../../graphql/query"; 
 import HistoryContainer from "../History/HistoryContainer"; 
-import { Clock, X, Compass, FileText, Upload, Plus, User,PackageOpen, FileSignature ,CreditCard ,WalletCards } from "lucide-react"; 
+import { Clock, X, Compass, FileText, Upload, Plus, User,PackageOpen, FileSignature ,CreditCard ,WalletCards, Flag } from "lucide-react"; 
 import { DashboardLoading } from "../Loadings/DashboardLoading"; 
 import { capitalize, formatDate } from "../../../../utils/decryptToken"; 
 import { ACCEPTDELIVERY, SKIPDELIVERY } from "../../../../graphql/mutation"; 
@@ -360,6 +360,15 @@ const handleSkip = async (id: string, riderId: string) => {
     )}
   </div>
 </Collapsible>
+                    <Button
+                        variant="outline"
+                        className="w-full sm:w-auto transition-all text-white duration-200 bg-orange-500 hover:bg-blue-50 hover:border-blue-500"
+                        onClick={() => openDetails(delivery)}
+                      >
+                        <Flag className="w-4 h-4 mr-1" />
+                        Finish
+                      </Button>
+                      
                     </div>
                   </CardContent>
                 </Card>
