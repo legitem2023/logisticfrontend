@@ -1,8 +1,8 @@
 'use client';
 import Image from 'next/image';
 import ProofOfDeliveryForm from './ProofOfDeliveryForm';
-import PaymentComponent from '../PaymentComponent';
-import { useState, useEffect } from "react"; 
+import PaymentComponent from './PaymentComponent';
+import { useState, useEffect, useMemo } from "react"; 
 import 'react-datepicker/dist/react-datepicker.css';
 import { useSelector } from 'react-redux';
 import { selectTempUserId } from '../../../../Redux/tempUserSlice';
@@ -12,10 +12,10 @@ import { Card, CardContent } from "../ui/Card";
 import { useMutation, useQuery } from "@apollo/client"; 
 import { DELIVERIES } from "../../../../graphql/query"; 
 import HistoryContainer from "../History/HistoryContainer"; 
-import { Clock, X, Compass, FileText, Upload, Plus, User,PackageOpen, FileSignature ,CreditCard ,WalletCards, Flag } from "lucide-react"; 
+import { Clock, X, Compass, FileText, Upload, Plus, User,PackageOpen, FileSignature ,CreditCard ,WalletCards, Flag,Code } from "lucide-react"; 
 import { DashboardLoading } from "../Loadings/DashboardLoading"; 
 import { capitalize, formatDate } from "../../../../utils/decryptToken"; 
-import { ACCEPTDELIVERY, SKIPDELIVERY, CANCELEDDELIVERY,FINISHDELIVERY,SENDNOTIFICATION } from "../../../../graphql/mutation"; 
+import { ACCEPTDELIVERY, SKIPDELIVERY, CANCELEDDELIVERY,FINISHDELIVERY,SENDNOTIFICATION, MARKPAID } from "../../../../graphql/mutation"; 
 
 import DeliveryDetailCard from "./DeliveryDetailCard"; 
 import dynamic from "next/dynamic"; 
@@ -37,7 +37,7 @@ export default function DriverDashboard() {
   const [selectedDelivery, setSelectedDelivery] = useState(null); 
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-  const [filteredDeliveries, setFilteredDeliveries] = useState([]);
+  // const [filteredDeliveries, setFilteredDeliveries] = useState([]);
   const [showProof, setProof] = useState(false);
 
   const [showPayment,setPayment]= useState(false);
@@ -56,6 +56,10 @@ export default function DriverDashboard() {
    onError: (e: any) => console.log('Finished Error', e)
   })
 
+  const [markPaid] = useMutation(MARKPAID,{
+   onCompleted: () => console.log("Delivery marked as paid", "success"),
+   onError: (e: any) => console.log('Finished Error', e)
+  })
 
   const handleStatusChange = async (id:any) => {
      const conf = confirm("Are you sure you want to finish this delivery?"); 
@@ -111,32 +115,53 @@ const [skipDelivery] = useMutation(SKIPDELIVERY, {
 
 
   
-  const acceptedDeliveries = data?.getRidersDelivery?.filter((delivery: any) => 
-    delivery.deliveryStatus !== "Delivered" && delivery.deliveryStatus !== "Cancelled"
-  ) || [];
+  // const acceptedDeliveries = data?.getRidersDelivery?.filter((delivery: any) => 
+  //   delivery.deliveryStatus !== "Delivered" && delivery.deliveryStatus !== "Cancelled"
+  // ) || [];
 
   useEffect(() => {
     refetch();
   }, [GlobalactiveIndex]);
  
-  useEffect(() => {
-    const filtered = acceptedDeliveries.filter((delivery: any) => {
-      const matchesSearch = searchTerm 
-        ? delivery.trackingNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          delivery.recipientName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          (delivery.sender?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ?? false)
-        : true;
+  // useEffect(() => {
+  //   const filtered = acceptedDeliveries.filter((delivery: any) => {
+  //     const matchesSearch = searchTerm 
+  //       ? delivery.trackingNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
+  //         delivery.recipientName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+  //         (delivery.sender?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ?? false)
+  //       : true;
 
-      const matchesDate = selectedDate
-        ? new Date(delivery.estimatedDeliveryTime).toDateString() === selectedDate.toDateString()
-        : true;
+  //     const matchesDate = selectedDate
+  //       ? new Date(delivery.estimatedDeliveryTime).toDateString() === selectedDate.toDateString()
+  //       : true;
 
-      return matchesSearch && matchesDate;
-    });
+  //     return matchesSearch && matchesDate;
+  //   });
 
-    setFilteredDeliveries(filtered);
-  }, [acceptedDeliveries, searchTerm, selectedDate]);
+  //   setFilteredDeliveries(filtered);
+  // }, [acceptedDeliveries, searchTerm, selectedDate]);
+const acceptedDeliveries = useMemo(() => 
+  data?.getRidersDelivery?.filter((delivery: any) => 
+    delivery.deliveryStatus !== "Delivered" && delivery.deliveryStatus !== "Cancelled"
+  ) || [],
+  [data?.getRidersDelivery]
+);
 
+const filteredDeliveries = useMemo(() => {
+  return acceptedDeliveries.filter((delivery: any) => {
+    const matchesSearch = searchTerm 
+      ? delivery.trackingNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        delivery.recipientName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (delivery.sender?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ?? false)
+      : true;
+
+    const matchesDate = selectedDate
+      ? new Date(delivery.estimatedDeliveryTime).toDateString() === selectedDate.toDateString()
+      : true;
+
+    return matchesSearch && matchesDate;
+  });
+}, [acceptedDeliveries, searchTerm, selectedDate]);
   const handleFilter = ({ search, date }: { search: string; date: Date | null }) => {
     setSearchTerm(search);
     setSelectedDate(date);
@@ -212,7 +237,7 @@ const handleSkip = async (id: string, riderId: string) => {
             <div className="grid gap-1 md:grid-cols-2 xl:grid-cols-3 p-0">
               {filteredDeliveries.length > 0 ? filteredDeliveries?.map((delivery: any) => (
                 <Card key={delivery.id} className="transition duration-300 ease-in-out hover:shadow-xl hover:scale-[1.01] border border-gray-200">
-                  <CardContent className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 p-4">
+                  <CardContent className="flex flex-col justify-between items-start sm:items-center gap-4 p-4">
                     <div>
                       <div className="text-lg font-semibold text-gray-800">{delivery.trackingNumber}</div>
                       <div className="text-sm text-gray-500 mt-1">
@@ -224,7 +249,7 @@ const handleSkip = async (id: string, riderId: string) => {
                         <span className="italic">ETA: {formatDate(delivery.estimatedDeliveryTime) || "N/A"}</span>
                       </div>
                     </div>
-                    <div className="flex flex-col gap-2 w-full sm:w-auto">
+                    <div className="flex flex-col gap-2 w-full">
                       <Button
                         variant="outline"
                         className="w-full sm:w-auto transition-all text-white duration-200 bg-orange-500 hover:bg-blue-50 hover:border-blue-500"
@@ -258,6 +283,15 @@ const handleSkip = async (id: string, riderId: string) => {
                               
                           </div>
                         <div className="p-5 space-y-4">
+                          <div className="flex items-center gap-3">
+                           <div className="bg-amber-100 p-2 rounded-full">
+                             <Code size={18} className="text-amber-600" />
+                           </div>
+                           <div>
+                            <p className="text-xs text-gray-500">Payment Code</p>
+                            <p className="font-medium text-gray-900">{delivery.paymentCode}</p>
+                           </div>
+                         </div>
                           <div className="flex items-center gap-3">
                            <div className="bg-amber-100 p-2 rounded-full">
                              <WalletCards size={18} className="text-amber-600" />
@@ -298,7 +332,7 @@ const handleSkip = async (id: string, riderId: string) => {
 
     {/* Proof Gallery */}
     {delivery.proofOfDelivery.length > 0 ? (
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 gap-6">
         {delivery.proofOfDelivery.map((item: any, idx: number) => (
           <div 
             key={idx}
@@ -309,8 +343,8 @@ const handleSkip = async (id: string, riderId: string) => {
               <Image
                 src={item.photoUrl}
                 alt={`Proof of Delivery ${idx + 1}`}
-                fill
-                className="object-cover"
+                // fill
+                className="object-cover  h-full w-full"
                 height="100"
                 width="200"
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -352,10 +386,10 @@ const handleSkip = async (id: string, riderId: string) => {
                     <Image
                       src={item.signatureData}
                       alt="Signature"
-                      fill
+                      // fill
                       height="100"
                       width="200"
-                      className="object-contain"
+                      className="object-contain h-full w-full"
                     />
                   </div>
                 </div>

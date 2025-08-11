@@ -1,5 +1,10 @@
 import React, { useState } from 'react';
 import { FaMotorcycle, FaMoneyBillWave, FaReceipt, FaShieldAlt, FaCheckCircle } from 'react-icons/fa';
+import { ACCEPTDELIVERY, SKIPDELIVERY, CANCELEDDELIVERY,FINISHDELIVERY,SENDNOTIFICATION, MARKPAID } from "../../../../graphql/mutation"; 
+import { useMutation } from '@apollo/client';
+import { useSelector } from 'react-redux';
+import { selectTempUserId } from '../../../../Redux/tempUserSlice';
+
 type data ={
   id:string;
   base:number;
@@ -7,13 +12,18 @@ type data ={
   distance:number
 }
 const PaymentComponent = ({data}:{data:data}) => {
-  
+    const [markPaid] = useMutation(MARKPAID,{
+     onCompleted: () => console.log("Delivery marked as paid", "success"),
+     onError: (e: any) => console.log('Finished Error', e)
+    })
+    const globalUserId = useSelector(selectTempUserId);
+
   const totalFare = data.distance ? data.base + (data.distance * data.perKmRate) : null;
 
   const [paymentDetails, setPaymentDetails] = useState({
     orderId: data.id,
     amount: totalFare,
-    riderCode: '',
+    riderCode: globalUserId,
     paymentMethod: 'cod',
     isPaid: false,
     paymentConfirmation: ''
@@ -34,6 +44,14 @@ const PaymentComponent = ({data}:{data:data}) => {
         paymentConfirmation: `COD-${Date.now().toString().slice(-6)}`
       }));
     }, 1500);
+
+    markPaid({
+      variables: {
+        deliveryId: data.id,
+        riderId: globalUserId,
+        code: `COD-${Date.now().toString().slice(-6)}`
+      }
+    })
   };
 
   const handleNewPayment = () => {
@@ -78,7 +96,7 @@ const PaymentComponent = ({data}:{data:data}) => {
               <div className="bg-gradient-to-r from-emerald-50 to-green-50 rounded-xl p-6 max-w-md mx-auto mb-8 border border-emerald-100">
                 <div className="flex justify-between items-center mb-4 pb-4 border-b border-emerald-200">
                   <span className="text-emerald-600 font-medium">Amount:</span>
-                  <span className="text-2xl font-bold text-emerald-800">${paymentDetails.amount}</span>
+                  <span className="text-2xl font-bold text-emerald-800">₱{paymentDetails.amount}</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-emerald-600 font-medium">Confirmation:</span>
@@ -115,7 +133,7 @@ const PaymentComponent = ({data}:{data:data}) => {
                 </div>
                 
                 <div className="relative">
-                  <label className="block text-emerald-800 font-medium mb-2">Amount ($)</label>
+                  <label className="block text-emerald-800 font-medium mb-2">Amount (₱)</label>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                       <FaMoneyBillWave className="text-emerald-600" />

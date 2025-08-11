@@ -224,3 +224,11 @@ mutation UploadFile($file: ProofOfDeliveryInput!) {
   }
 }
 `
+
+export const MARKPAID = gql`
+mutation MarkPaid($deliveryId: String!, $riderId: String!, $code: String) {
+  markPaid(deliveryId: $deliveryId, riderId: $riderId, code: $code) {
+    statusText
+  }
+}
+`

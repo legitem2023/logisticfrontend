@@ -210,7 +210,6 @@ const handleCancel = (data) =>{
               <Image
                 src={item.photoUrl}
                 alt={`Proof of Delivery ${idx + 1}`}
-                fill
                 className="object-cover"
                 height="100"
                 width="200"
@@ -253,7 +252,6 @@ const handleCancel = (data) =>{
                     <Image
                       src={item.signatureData}
                       alt="Signature"
-                      fill
                       height="100"
                       width="200"
                       className="object-contain"

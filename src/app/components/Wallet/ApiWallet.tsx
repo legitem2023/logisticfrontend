@@ -362,7 +362,7 @@ export default function ApiWallet() {
                   Payment Amount
                 </label>
                 <div className="relative">
-                  <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">$</span>
+                  <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">₱</span>
                   <input
                     type="number"
                     value={paymentAmount}
@@ -373,7 +373,7 @@ export default function ApiWallet() {
                   />
                 </div>
                 <p className="text-xs text-gray-500 mt-2">
-                  Available balance: ${balance.toFixed(2)}
+                  Available balance: ₱{balance.toFixed(2)}
                 </p>
               </div>
               
@@ -421,7 +421,7 @@ export default function ApiWallet() {
                   </>
                 ) : (
                   <>
-                    <FiArrowUp /> Pay ${paymentAmount}
+                    <FiArrowUp /> Pay ₱{paymentAmount}
                   </>
                 )}
               </button>

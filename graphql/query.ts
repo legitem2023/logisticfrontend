@@ -56,6 +56,7 @@ query GetRidersDelivery($getRidersDeliveryId: String) {
     baseRate
     perKmRate
     distance
+    paymentCode
     proofOfDelivery {
       id
       photoUrl
@@ -140,6 +141,7 @@ query GetDispatch($getDispatchId: String) {
     baseRate
     perKmRate
     distance
+    paymentCode
     proofOfDelivery {
       id
       photoUrl
