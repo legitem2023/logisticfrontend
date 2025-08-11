@@ -363,7 +363,7 @@ const handleSkip = async (id: string, riderId: string) => {
                     <Button
                         disabled={delivery.paymentStatus==='Unpaid'?true:false}
                         variant="outline"
-                        className="w-full sm:w-auto transition-all text-white duration-200 bg-orange-500 hover:bg-blue-50 hover:border-blue-500"
+                        className="w-full sm:w-auto transition-all text-white duration-200 bg-green-500 hover:bg-blue-50 hover:border-blue-500"
                         onClick={() => openDetails(delivery)}
                       >
                         <Flag className="w-4 h-4 mr-1" />
