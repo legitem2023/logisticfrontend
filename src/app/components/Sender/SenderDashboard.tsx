@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { Card, CardContent } from "../ui/Card";
 import { Button } from "../ui/Button"; 
 import Collapsible from "../ui/Collapsible";
-import { Clock, MapPin, Bike, Compass, X, XCircle, FileSignature, User, Truck  } from "lucide-react";
+import { Clock, MapPin, Bike, Compass, X, XCircle, FileSignature, User, Truck, WalletCards, CreditCard, Code  } from "lucide-react";
 import HistoryContainer from "../History/HistoryContainer"; 
 import { LocationTracking } from '../../../../graphql/subscription'; // update with correct path
 import Image from 'next/image';
@@ -277,6 +277,43 @@ const tabs = [
     )}
   </div>
 </Collapsible>
+                                            <Collapsible 
+                        title={'Payment'}
+                        defaultOpen={false}>
+                            <div className="flex justify-end">
+                              
+         
+                          </div>
+                        <div className="p-5 space-y-4">
+                          <div className="flex items-center gap-3">
+                           <div className="bg-amber-100 p-2 rounded-full">
+                             <Code size={18} className="text-amber-600" />
+                           </div>
+                           <div>
+                            <p className="text-xs text-gray-500">Payment Code</p>
+                            <p className="font-medium text-gray-900">{delivery.paymentCode}</p>
+                           </div>
+                         </div>
+                          <div className="flex items-center gap-3">
+                           <div className="bg-amber-100 p-2 rounded-full">
+                             <WalletCards size={18} className="text-amber-600" />
+                           </div>
+                           <div>
+                            <p className="text-xs text-gray-500">Payment Method</p>
+                            <p className="font-medium text-gray-900">{delivery.paymentMethod}</p>
+                           </div>
+                         </div>
+                         <div className="flex items-center gap-3">
+                           <div className="bg-amber-100 p-2 rounded-full">
+                             <CreditCard size={18} className="text-amber-600" />
+                           </div>
+                           <div>
+                            <p className="text-xs text-gray-500">Payment Status</p>
+                            <p className="font-medium text-gray-900">{delivery.paymentStatus}</p>
+                           </div>
+                         </div>
+                        </div>      
+                      </Collapsible>
                     </div>
                   </div>
                   <div className="inline-block text-xs font-semibold text-white px-3 py-1 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 shadow">
