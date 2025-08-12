@@ -148,9 +148,9 @@ export function SideBarMenu({ activeTab, setActiveTab, useRole, isUserActive }: 
                 >
                   <span className="mr-2">{tab.icon}</span>
                   {tab.label}
-                  {activeTab === tab.label && (
+                  {/* {activeTab === tab.label && (
                     <span className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-4/5 h-0.5 bg-blue-300 rounded-full" />
-                  )}
+                  )} */}
                 </button>
               ))}
             </nav>
