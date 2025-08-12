@@ -1,6 +1,6 @@
 // components/ProofOfDeliveryForm.jsx
 import { useState, useRef, useEffect } from 'react';
-import { useMutation, useQuery, useSubscription } from "@apollo/client"; 
+import { useMutation } from "@apollo/client"; 
 import { UPLOAD } from "../../../../graphql/mutation"; 
 import { showToast } from '../../../../utils/toastify'; 
 
@@ -11,8 +11,7 @@ const ProofOfDeliveryForm = ({data}:{data:data}) => {
   // Form state
 const [uploadFile] = useMutation(UPLOAD,{
   onCompleted:(e) =>{
-    console.log(e);
-    showToast(e,'success');
+    showToast("Proof of delivery submitted successfully!",'success');
   }
 });
 

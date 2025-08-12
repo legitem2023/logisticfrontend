@@ -214,7 +214,6 @@ const tabs = [
   return ( 
     <div className="min-h-screen bg-gray-50 flex flex-col md:flex-row"> 
       <aside className="hidden md:block md:w-64 bg-white/70 backdrop-blur-lg border-r border-gray-200 shadow-md p-6 rounded-r-3xl"> 
-        <h2 className="text-2xl font-bold text-gray-800 mb-10 tracking-tight">🚚 Driver Panel</h2> 
         <nav> 
  <ul className="space-y-4 text-[15px] font-medium">
   {tabs.map(({ label, icon: Icon }) => (

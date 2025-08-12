@@ -37,21 +37,23 @@ const PaymentComponent = ({data}:{data:data}) => {
   const handlePaymentSubmit = (e) => {
     e.preventDefault();
     // Simulate API call
+    const paymentConfirmation = `COD-${Date.now().toString().slice(-6)}`;
     setTimeout(() => {
       setPaymentDetails(prev => ({
         ...prev,
         isPaid: true,
-        paymentConfirmation: `COD-${Date.now().toString().slice(-6)}`
+        paymentConfirmation: paymentConfirmation
       }));
+      markPaid({
+        variables: {
+          deliveryId: data.id,
+          riderId: globalUserId,
+          code: paymentConfirmation
+        }
+      })
     }, 1500);
 
-    markPaid({
-      variables: {
-        deliveryId: data.id,
-        riderId: globalUserId,
-        code: `COD-${Date.now().toString().slice(-6)}`
-      }
-    })
+
   };
 
   const handleNewPayment = () => {

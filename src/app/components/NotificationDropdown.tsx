@@ -117,7 +117,7 @@ export default function NotificationDropdown({ userId }: { userId: string | null
   )
 
   return (
-    <div className="absolute top-4 right-4 z-50" ref={dropdownRef}>
+    <div className="z-50" ref={dropdownRef}>
       <div className="relative">
         <button
           onClick={() => userId && setOpen(!open)}

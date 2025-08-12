@@ -1,0 +1,236 @@
+// Add this component where you want to display the active content
+'use client';
+import React from 'react';
+
+import ApiWallet from './Wallet/ApiWallet';
+import HomeDataCarousel from './HomeDataCarousel';
+import LogisticsHomePage from './LogisticsHomePage';
+import DriverDashboard from './Rider/DriverDashboard';
+import SenderDashboard from './Sender/SenderDashboard';
+import RiderActivityChart from './Administrator/RiderActivityChart';
+import LogisticsForm from './Sender/LogisticsForm';
+import SettingsPage from './SettingsPage';
+import HelpPage from './HelpPage';
+import LoginCard from './LoginCard';
+import SignupCard from './SignupCard';
+import { mockItems } from './json/mockItems';
+import dynamic from 'next/dynamic';
+import {
+  Home,
+  LogIn,
+  UserPlus,
+  Bike,
+  Settings,
+  ClipboardCheck,
+  HelpCircle,
+  Truck,
+  BadgeCheck,
+  WalletMinimal,ChartBar,ChartBarIcon,
+  HomeIcon
+} from "lucide-react";
+import { useDispatch,useSelector } from 'react-redux';
+import { setCurrentLocation } from '../../../Redux/locationSlice';
+import { setTempUserId,selectTempUserId } from '../../../Redux/tempUserSlice';
+
+
+import { setRole, clearRole, selectRole } from '../../../Redux/roleSlice';
+
+import  AdminDeliveriesTable  from './Administrator/AdminDeliveriesTable';
+import  VehicleTypes  from './Administrator/VehicleTypes';
+import RiderPerformanceChart from './Rider/RiderPerformanceChart';
+import  {SideBarMenu}  from './SideBarMenu';
+const RiderList = dynamic(() => import('./Rider/RiderList'), {
+  ssr: false
+});
+
+
+export function ActiveContentDisplay({ activeTab, useRole, isUserActive }: {
+  activeTab: string;
+  useRole: string;
+  isUserActive: () => boolean;
+}) {
+    console.log(useRole,"<<<<");
+  
+  const tabItems = [
+    {
+      label: 'Home',
+      role: '',
+      icon: <Home color="green" />,
+      content: (
+        <div className="px-1 py-1 space-y-1">
+          <HomeDataCarousel items={mockItems} />
+          <LogisticsHomePage />
+        </div>
+      )
+    },
+        {
+      label: 'Chart',
+      role: '',
+      icon: <ChartBarIcon color="green" />,
+      content: useRole === 'Rider' || useRole === 'RIDER' ? (
+        <div className="px-1 py-1 space-y-1">
+          <RiderPerformanceChart />
+        </div>
+      ):(
+        <div className="px-1 py-1 space-y-1">
+          <RiderActivityChart />
+        </div>
+      ),
+    },
+    ...(isUserActive()
+      ? [
+          {
+            label: 'Logistics Panel',
+            role: '',
+            icon: <ClipboardCheck color="green" />,
+            content: useRole === 'Rider' || useRole === 'RIDER' ? (
+                    <div className="px-1 py-1 space-y-1">
+                    <DriverDashboard />
+                    </div>
+                ):(
+                    <div className="px-1 py-1 space-y-1">
+                    <SenderDashboard />
+                    </div>
+                )
+          },
+        ]
+      : []),
+ ...(isUserActive() && (useRole === 'Sender' || useRole === 'SENDER')
+  ? [
+      {
+        label: 'Create Delivery',
+        role: 'Sender',
+        icon: <Truck color="green" />,
+        content: (
+          <div className="px-1 py-1 space-y-1">
+            <LogisticsForm />
+          </div>
+        ),
+      },
+    ]
+  : []),
+     ...(isUserActive() && (useRole === 'Sender' || useRole === 'SENDER')
+  ? [
+      {
+        label: 'Wallet',
+        role: 'Sender',
+        icon: <WalletMinimal color="green" />,
+        content: (
+          <div className="px-1 py-1 space-y-1">
+            <ApiWallet/>
+          </div>
+        ),
+      },
+    ]
+  : []),
+        ...(isUserActive() && (useRole === 'Administrator' || useRole === 'ADMINISTRATOR')
+      ? [
+          {
+            label: 'Rider',
+            role: '',
+            icon: <Bike color="green" />,
+            content: (
+              <div className="px-1 py-1 space-y-1">
+                <RiderList/>
+              </div>
+            ),
+          },
+        ]
+      : []),
+              ...(isUserActive() && (useRole === 'Administrator' || useRole === 'ADMINISTRATOR')
+      ? [
+          {
+            label: 'Requested Deliveries',
+            role: '',
+            icon: <BadgeCheck color="green" />,
+            content: (
+              <div className="px-1 py-1 space-y-1">
+                <AdminDeliveriesTable />
+              </div>
+            ),
+          },
+        ]
+      : []),
+    ...(isUserActive() && (useRole === 'Administrator' || useRole === 'ADMINISTRATOR')
+      ? [
+          {
+            label: 'Vehicle Types',
+            role: '',
+            icon: <BadgeCheck color="green" />,
+            content: (
+              <div className="px-1 py-1 space-y-1">
+                <VehicleTypes />
+              </div>
+            ),
+          },
+        ]
+      : []),
+      ...(isUserActive()
+      ? [
+          {
+            label: 'Settings',
+            role: '',
+            icon: <Settings color="green" />,
+            content: (
+              <div className="px-1 py-1 space-y-1">
+                <SettingsPage />
+              </div>
+            ),
+          },
+        ]
+      : []),
+    {
+      label: 'Help Center',
+      role: '',
+      icon: <HelpCircle color="green" />,
+      content: (
+        <div className="px-1 py-1 space-y-1">
+          <HelpPage />
+        </div>
+      ),
+    },
+    ...(!isUserActive()
+      ? [
+          {
+            label: 'Signup',
+            role: '',
+            icon: <UserPlus color="green" />,
+            content: (
+              <div className="px-1 py-1 space-y-1">
+                <SignupCard />
+              </div>
+            ),
+          },
+        ]
+      : []),
+    ...(!isUserActive()
+      ? [
+          {
+            label: 'Login',
+            role: '',
+            icon: <LogIn color="green" />,
+            content: (
+              <div className="px-1 py-1 space-y-1">
+                <LoginCard />
+              </div>
+            ),
+          },
+        ]
+      : []),
+  ];
+
+
+  const activeTabData = tabItems.find(tab => tab.label === activeTab);
+
+  return (
+    <div className="flex-1 overflow-y-auto">
+      {activeTabData ? (
+        activeTabData.content
+      ) : (
+        <div className="flex items-center justify-center h-full">
+          <p className="text-gray-500">Select a tab to view content</p>
+        </div>
+      )}
+    </div>
+  );
+}
