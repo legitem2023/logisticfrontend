@@ -183,6 +183,7 @@ export default function Menu() {
   //console.log(useRole,"<-role");
 
 
+  const GlobalactiveIndex = useSelector((state: any) => state.activeIndex.value);
 const [activeTab, setActiveTab] = useState('Home');
 // const activeContent = tabItems.find(tab => tab.label === activeTab)?.content;
   return (
