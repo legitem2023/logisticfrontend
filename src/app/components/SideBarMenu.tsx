@@ -122,7 +122,7 @@ export function SideBarMenu({ activeTab, setActiveTab, useRole, isUserActive }: 
             {/* Logo with subtle animation */}
             <div className="flex items-center">
               <Link href="/" className="flex items-center group">
-                <div className="relative h-12 w-12 transition-transform duration-300 group-hover:rotate-6">
+                <div className="relative h-15 w-15 transition-transform duration-300 group-hover:rotate-6">
                   <Image
                     src="/Motogo.svg"
                     alt="MotoGo Logo"
