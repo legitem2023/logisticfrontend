@@ -12,7 +12,7 @@ import { Card, CardContent } from "../ui/Card";
 import { useMutation, useQuery } from "@apollo/client"; 
 import { DELIVERIES } from "../../../../graphql/query"; 
 import HistoryContainer from "../History/HistoryContainer"; 
-import { Clock, X, Compass, FileText, Upload, Plus, User,PackageOpen, FileSignature ,CreditCard ,WalletCards, Flag,Code,Truck } from "lucide-react"; 
+import { Clock, X,XIcon, Compass, FileText, Upload, Plus, User,PackageOpen, FileSignature ,CreditCard ,WalletCards, Flag,Code,Truck } from "lucide-react"; 
 import { DashboardLoading } from "../Loadings/DashboardLoading"; 
 import { capitalize, formatDate } from "../../../../utils/decryptToken"; 
 import { ACCEPTDELIVERY, SKIPDELIVERY, CANCELEDDELIVERY,FINISHDELIVERY,SENDNOTIFICATION, MARKPAID } from "../../../../graphql/mutation"; 
@@ -500,27 +500,51 @@ const tabs = [
 
       {showProof && (
        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40 backdrop-blur-sm transition-all">
+         <div className="flex justify-between items-center p-4 border-b bg-white">
+            <h2 className="text-lg font-semibold text-gray-900">Delivery Proof</h2>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setProof(false)}
+            >
+              <XIcon className="w-5 h-5" />
+            </Button>
+          </div>
          <div className="w-full h-[90vh] bg-white p-0 shadow-lg animate-slide-up overflow-y-auto">
           <ProofOfDeliveryForm data={{id:deliveryId}} />
          </div>
        </div>
       )}
       {showPayment &&(
-       <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40 backdrop-blur-sm transition-all">
+       <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40 backdrop-blur-sm transition-all">    
          <div className="w-full h-[90vh] bg-white p-0 shadow-lg animate-slide-up overflow-y-auto">
-            <PaymentComponent data={{id:deliveryId,base:selectedDelivery.baseRate,perKmRate:selectedDelivery.perKmRate,distance:selectedDelivery.distance}}/>
+         <div className="flex justify-between items-center p-4 border-b bg-white">
+            <h2 className="text-lg font-semibold text-gray-900">Delivery Proof</h2>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setPayment(false)}
+            >
+              <XIcon className="w-5 h-5" />
+            </Button>
+          </div>
+           <PaymentComponent data={{id:deliveryId,base:selectedDelivery.baseRate,perKmRate:selectedDelivery.perKmRate,distance:selectedDelivery.distance}}/>
          </div>
        </div>
       )}
       {showMap && selectedDelivery && (
         <div className="fixed h-[100vh] inset-0 z-50 flex items-end sm:items-center justify-center bg-black/50 flex flex-col">
           
-           <div className="flex justify-between items-center h-[10vh] bg-white w-full p-2">
-              <h2 className="text-xl font-bold text-gray-800">Map</h2>
-              <button onClick={() => setMap(false)} className="p-1 rounded hover:bg-gray-100 transition">
-                <X className="w-5 h-5 text-red-600" />
-              </button>
-            </div>
+           <div className="flex justify-between items-center p-4 border-b bg-white">
+            <h2 className="text-lg font-semibold text-gray-900">Map</h2>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setMap(false)}
+            >
+              <XIcon className="w-5 h-5" />
+            </Button>
+          </div>
      
           <div className="w-full h-[90vh] sm:max-w-md bg-white p-0 shadow-lg animate-slide-up overflow-y-auto">
             <RiderMap
