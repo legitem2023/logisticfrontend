@@ -98,7 +98,7 @@ const HomeDataCarousel: FC<Props> = ({ items }) => {
         }}
         loop={true}
         grabCursor
-        centeredSlides={false}
+        centeredSlides={true}
         pagination={{ clickable: true, dynamicBullets: true }}
         breakpoints={{
           640: {
