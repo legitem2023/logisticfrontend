@@ -477,17 +477,32 @@ const [uploadFile] = useMutation(UPLOAD,{
               Reset Form
             </button>
             <button
-              disabled={useLoading}
-              type="submit"
-              className="px-6 py-3 bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white font-bold rounded-2xl shadow-lg transform transition hover:scale-[1.02] duration-300 flex items-center justify-center"
-            >{useLoading?("Loading..."):(
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              Submit Proof of Delivery
-            )}
-              
-            </button>
+  disabled={useLoading}
+  type="submit"
+  className="px-6 py-3 bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white font-bold rounded-2xl shadow-lg transform transition hover:scale-[1.02] duration-300 flex items-center justify-center"
+>
+  {useLoading ? (
+    "Loading..."
+  ) : (
+    <>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        className="h-5 w-5 mr-2"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={2}
+          d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+        />
+      </svg>
+      Submit Proof of Delivery
+    </>
+  )}
+</button>
           </div>
           
           {/* Success Notification */}
