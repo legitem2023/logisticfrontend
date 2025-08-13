@@ -21,98 +21,186 @@ export function SideBarMenu({ activeTab, useRole, isUserActive }: {
      window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [GlobalactiveIndex]);
   // EXACTLY YOUR EXISTING tabItems CONFIG - NO CHANGES
-  const tabItems = [
+const tabItems = [
     {
       id:0,
       label: 'Home',
       role: '',
-      icon: <HomeIcon color="green" />
+      icon: <Home color="green" />,
+      content: (
+        <div className="px-1 py-1 space-y-1">
+          <HomeDataCarousel items={mockItems} />
+          <LogisticsHomePage />
+        </div>
+      )
     },
-    {
+        {
       id:1,
       label: 'Chart',
       role: '',
-      icon: <ChartBarIcon color="green" />
+      icon: <ChartBarIcon color="green" />,
+      content: useRole === 'Rider' || useRole === 'RIDER' ? (
+        <div className="px-1 py-1 space-y-1">
+          <RiderPerformanceChart />
+        </div>
+      ):(
+        <div className="px-1 py-1 space-y-1">
+          <RiderActivityChart />
+        </div>
+      ),
     },
     ...(isUserActive()
-      ? [{
-          id:2,
-          label: 'Logistics Panel',
-          role: '',
-          icon: <ClipboardCheck color="green" />
-        }]
+      ? [
+          {
+            id:3,
+            label: 'Logistics Panel',
+            role: '',
+            icon: <ClipboardCheck color="green" />,
+            content: useRole === 'Rider' || useRole === 'RIDER' ? (
+                    <div className="px-1 py-1 space-y-1">
+                    <DriverDashboard />
+                    </div>
+                ):(
+                    <div className="px-1 py-1 space-y-1">
+                    <SenderDashboard />
+                    </div>
+                )
+          },
+        ]
       : []),
-    ...(isUserActive() && (useRole === 'Sender' || useRole === 'SENDER')
-      ? [{
-          id:3,
-          label: 'Create Delivery',
-          role: 'Sender',
-          icon: <Truck color="green" />
-        }]
+ ...(isUserActive() && (useRole === 'Sender' || useRole === 'SENDER')
+  ? [
+      {
+        id:4,
+        label: 'Create Delivery',
+        role: 'Sender',
+        icon: <Truck color="green" />,
+        content: (
+          <div className="px-1 py-1 space-y-1">
+            <LogisticsForm />
+          </div>
+        ),
+      },
+    ]
+  : []),
+     ...(isUserActive() && (useRole === 'Sender' || useRole === 'SENDER')
+  ? [
+      {
+        id:5,
+        label: 'Wallet',
+        role: 'Sender',
+        icon: <WalletMinimal color="green" />,
+        content: (
+          <div className="px-1 py-1 space-y-1">
+            <ApiWallet/>
+          </div>
+        ),
+      },
+    ]
+  : []),
+        ...(isUserActive() && (useRole === 'Administrator' || useRole === 'ADMINISTRATOR')
+      ? [
+          {
+            id:6,
+            label: 'Rider',
+            role: '',
+            icon: <Bike color="green" />,
+            content: (
+              <div className="px-1 py-1 space-y-1">
+                <RiderList/>
+              </div>
+            ),
+          },
+        ]
       : []),
-    ...(isUserActive() && (useRole === 'Sender' || useRole === 'SENDER')
-      ? [{
-          id:4,
-          label: 'Wallet',
-          role: 'Sender',
-          icon: <WalletMinimal color="green" />
-        }]
+              ...(isUserActive() && (useRole === 'Administrator' || useRole === 'ADMINISTRATOR')
+      ? [
+          {
+            id:7,
+            label: 'Requested Deliveries',
+            role: '',
+            icon: <BadgeCheck color="green" />,
+            content: (
+              <div className="px-1 py-1 space-y-1">
+                <AdminDeliveriesTable />
+              </div>
+            ),
+          },
+        ]
       : []),
     ...(isUserActive() && (useRole === 'Administrator' || useRole === 'ADMINISTRATOR')
-      ? [{
-          id:5,
-          label: 'Rider',
-          role: '',
-          icon: <Bike color="green" />
-        }]
+      ? [
+          {
+            id:8,
+            label: 'Vehicle Types',
+            role: '',
+            icon: <BadgeCheck color="green" />,
+            content: (
+              <div className="px-1 py-1 space-y-1">
+                <VehicleTypes />
+              </div>
+            ),
+          },
+        ]
       : []),
-    ...(isUserActive() && (useRole === 'Administrator' || useRole === 'ADMINISTRATOR')
-      ? [{
-          id:6,
-          label: 'Requested Deliveries',
-          role: '',
-          icon: <BadgeCheck color="green" />
-        }]
-      : []),
-    ...(isUserActive() && (useRole === 'Administrator' || useRole === 'ADMINISTRATOR')
-      ? [{
-          id:7,
-          label: 'Vehicle Types',
-          role: '',
-          icon: <BadgeCheck color="green" />
-        }]
-      : []),
-    ...(isUserActive()
-      ? [{
-          id:8,
-          label: 'Settings',
-          role: '',
-          icon: <Settings color="green" />
-        }]
+      ...(isUserActive()
+      ? [
+          {
+            id:9,
+            label: 'Settings',
+            role: '',
+            icon: <Settings color="green" />,
+            content: (
+              <div className="px-1 py-1 space-y-1">
+                <SettingsPage />
+              </div>
+            ),
+          },
+        ]
       : []),
     {
-      id:9,
+      id:10,
       label: 'Help Center',
       role: '',
-      icon: <HelpCircle color="green" />
+      icon: <HelpCircle color="green" />,
+      content: (
+        <div className="px-1 py-1 space-y-1">
+          <HelpPage />
+        </div>
+      ),
     },
     ...(!isUserActive()
-      ? [{
-          id:10,
-          label: 'Signup',
-          role: '',
-          icon: <UserPlus color="green" />
-        }]
+      ? [
+          {
+            id:11,
+            label: 'Signup',
+            role: '',
+            icon: <UserPlus color="green" />,
+            content: (
+              <div className="px-1 py-1 space-y-1">
+                <SignupCard />
+              </div>
+            ),
+          },
+        ]
       : []),
     ...(!isUserActive()
-      ? [{
-          id:11,
-          label: 'Login',
-          role: '',
-          icon: <LogIn color="green" />
-        }]
+      ? [
+          {
+            id:12,
+            label: 'Login',
+            role: '',
+            icon: <LogIn color="green" />,
+            content: (
+              <div className="px-1 py-1 space-y-1">
+                <LoginCard />
+              </div>
+            ),
+          },
+        ]
       : []),
   ];
+
 
   // Filter logic remains exactly the same
   const visibleTabs = tabItems.filter(tab => {
