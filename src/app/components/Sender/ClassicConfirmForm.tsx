@@ -93,14 +93,14 @@ export default function ClassicConfirmForm({ order, onConfirm ,onLoading }) {
 
       {/* Confirm Button */}
       <button
-        disabled={onLoading}
+        disabled={onLoading?true:false}
         onClick={() => {
             onConfirm(selectedDriver);
         }}
         className="w-full customgrad hover:bg-blue-700 text-white py-2 px-4 rounded-sm flex items-center justify-center gap-2 transition"
       >
         <UserCheck className="w-5 h-5" />
-        Confirm
+        {onLoading?'Loading...':'Confirm'}
       </button>
     </div>
   );
