@@ -21,6 +21,41 @@ import dayjs from 'dayjs';
 
 const barColors = ['#4ade80', '#60a5fa', '#fbbf24', '#f472b6'];
 
+// Helper function to validate dates
+function isValidDate(date: any): boolean {
+  const d = new Date(date);
+  return !isNaN(d.getTime()) && d.getFullYear() >= 2000;
+}
+
+// Helper function to parse dates correctly
+function parseDeliveryDate(rawDate: any): Date | null {
+  try {
+    // Handle numeric timestamps
+    if (typeof rawDate === 'number') {
+      // Check if timestamp is in seconds (10 digits) or milliseconds (13 digits)
+      const timestamp = rawDate.toString().length <= 10 ? rawDate * 1000 : rawDate;
+      const date = new Date(timestamp);
+      return isValidDate(date) ? date : null;
+    }
+    
+    // Handle string dates (ISO format or others)
+    if (typeof rawDate === 'string') {
+      const date = new Date(rawDate);
+      return isValidDate(date) ? date : null;
+    }
+    
+    // Handle Date objects
+    if (rawDate instanceof Date) {
+      return isValidDate(rawDate) ? rawDate : null;
+    }
+    
+    return null;
+  } catch (e) {
+    console.error('Error parsing date:', e);
+    return null;
+  }
+}
+
 const RiderPerformanceChart = () => {
   const globalUserId = useSelector(selectTempUserId);
 
@@ -28,8 +63,13 @@ const RiderPerformanceChart = () => {
     variables: { getRidersDeliveryId: globalUserId },
   });
   
-  const deliveries = data?.getRidersDelivery ?? [];
-  
+  // Filter out deliveries with invalid dates before processing
+  const deliveries = useMemo(() => {
+    return (data?.getRidersDelivery ?? []).filter(delivery => {
+      return isValidDate(delivery.createdAt);
+    });
+  }, [data]);
+
   // Process data and get available months
   const { monthlyData, performanceStats, months } = useMemo(() => {
     const statusMap = {
@@ -41,40 +81,29 @@ const RiderPerformanceChart = () => {
 
     const monthlyMap: Record<string, Record<string, number>> = {};
 
+    deliveries.forEach((delivery: any) => {
+      const deliveryDate = parseDeliveryDate(delivery.createdAt);
+      if (!deliveryDate) return;
 
-deliveries.forEach((delivery: any) => {
-  // Handle timestamp conversion properly
-  let deliveryDate;
-  
-  if (typeof delivery.createdAt === 'number') {
-    // If timestamp is in seconds (like 1755099466), convert to milliseconds
-    if (delivery.createdAt < 10000000000) {
-      deliveryDate = new Date(delivery.createdAt * 1000);
-    } 
-    // If timestamp is already in milliseconds (like 1755099466902)
-    else {
-      deliveryDate = new Date(delivery.createdAt);
-    }
-  } 
-  else if (typeof delivery.createdAt === 'string') {
-    // Handle ISO strings or other string formats
-    deliveryDate = new Date(delivery.createdAt);
-  } 
-  else if (delivery.createdAt instanceof Date) {
-    deliveryDate = new Date(delivery.createdAt);
-  }
+      const month = dayjs(deliveryDate).format('MMMM');
+      const date = dayjs(deliveryDate).format('MMM DD');
 
-  // Validate the date - reject suspiciously old dates
-  if (!deliveryDate || isNaN(deliveryDate.getTime()) || deliveryDate.getFullYear() < 2000) {
-    console.warn('Invalid or pre-2000 date:', delivery.createdAt, 'for delivery:', delivery.trackingNumber);
-    return;
-  }
+      // Initialize month/date if not exists
+      if (!monthlyMap[month]) monthlyMap[month] = {};
+      monthlyMap[month][date] = (monthlyMap[month][date] || 0) + 1;
 
-  // Rest of your processing...
-  const month = dayjs(deliveryDate).format('MMMM');
-  const date = dayjs(deliveryDate).format('MMM DD');
-  // ... continue with your existing code
-});
+      // Normalize status values
+      const status = delivery.deliveryStatus.toLowerCase();
+      if (status.includes('deliver') || status.includes('complete')) {
+        statusMap.Delivered++;
+      } else if (status.includes('cancel')) {
+        statusMap.Cancelled++;
+      } else if (status.includes('transit') || status.includes('progress')) {
+        statusMap.in_transit++;
+      } else {
+        statusMap.Pending++;
+      }
+    });
 
     // Filter months with actual data and sort chronologically
     const monthOrder = [
@@ -91,7 +120,6 @@ deliveries.forEach((delivery: any) => {
       monthlyDataFormatted[month] = Object.entries(monthlyMap[month])
         .map(([date, count]) => ({ date, count }))
         .sort((a, b) => {
-          // Compare dates properly by parsing them
           const dateA = dayjs(a.date, 'MMM DD');
           const dateB = dayjs(b.date, 'MMM DD');
           return dateA.diff(dateB);
@@ -271,17 +299,24 @@ deliveries.forEach((delivery: any) => {
         <div className="mt-6">
           <h3 className="font-medium mb-3">Recent Deliveries</h3>
           <div className="space-y-2">
-            {deliveries.slice(0, 3).map((delivery: any) => (
-              <div key={delivery.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                <div>
-                  <p className="font-medium">{delivery.trackingNumber}</p>
-                  <p className="text-sm text-gray-500">
-                    {dayjs(delivery.createdAt).format('MMM D, YYYY • h:mm A')}
-                  </p>
+            {deliveries.slice(0, 3).map((delivery: any) => {
+              const deliveryDate = parseDeliveryDate(delivery.createdAt);
+              return (
+                <div key={delivery.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                  <div>
+                    <p className="font-medium">{delivery.trackingNumber}</p>
+                    {deliveryDate ? (
+                      <p className="text-sm text-gray-500">
+                        {dayjs(deliveryDate).format('MMM D, YYYY • h:mm A')}
+                      </p>
+                    ) : (
+                      <p className="text-sm text-gray-500">Date unavailable</p>
+                    )}
+                  </div>
+                  <StatusBadge status={delivery.deliveryStatus} />
                 </div>
-                <StatusBadge status={delivery.deliveryStatus} />
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       )}
