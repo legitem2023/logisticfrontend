@@ -2,7 +2,8 @@ import { Menu, X, Truck, User, Bell, Home as HomeIcon, ClipboardCheck, Bike, Bad
 import { useState } from "react";
 import Link from "next/link";
 import NotificationDropdown from "./NotificationDropdown";
-import { useSelector } from "react-redux";
+import { useSelector,useDispatch } from "react-redux";
+import { setActiveIndex } from '../../../Redux/activeIndexSlice';
 import { selectTempUserId } from "../../../Redux/tempUserSlice";
 import Image from "next/image";
 
@@ -12,6 +13,7 @@ export function SideBarMenu({ activeTab, setActiveTab, useRole, isUserActive }: 
   useRole: string;
   isUserActive: () => boolean;
 }) {
+  const dispatch = useDispatch()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const globalUserId = useSelector(selectTempUserId);
     const GlobalactiveIndex = useSelector((state: any) => state.activeIndex.value);
@@ -22,17 +24,20 @@ export function SideBarMenu({ activeTab, setActiveTab, useRole, isUserActive }: 
   // EXACTLY YOUR EXISTING tabItems CONFIG - NO CHANGES
   const tabItems = [
     {
+      id:0,
       label: 'Home',
       role: '',
       icon: <HomeIcon color="green" />
     },
     {
+      id:1,
       label: 'Chart',
       role: '',
       icon: <ChartBarIcon color="green" />
     },
     ...(isUserActive()
       ? [{
+          id:2,
           label: 'Logistics Panel',
           role: '',
           icon: <ClipboardCheck color="green" />
@@ -40,6 +45,7 @@ export function SideBarMenu({ activeTab, setActiveTab, useRole, isUserActive }: 
       : []),
     ...(isUserActive() && (useRole === 'Sender' || useRole === 'SENDER')
       ? [{
+          id:3,
           label: 'Create Delivery',
           role: 'Sender',
           icon: <Truck color="green" />
@@ -47,6 +53,7 @@ export function SideBarMenu({ activeTab, setActiveTab, useRole, isUserActive }: 
       : []),
     ...(isUserActive() && (useRole === 'Sender' || useRole === 'SENDER')
       ? [{
+          id:4,
           label: 'Wallet',
           role: 'Sender',
           icon: <WalletMinimal color="green" />
@@ -54,6 +61,7 @@ export function SideBarMenu({ activeTab, setActiveTab, useRole, isUserActive }: 
       : []),
     ...(isUserActive() && (useRole === 'Administrator' || useRole === 'ADMINISTRATOR')
       ? [{
+          id:5,
           label: 'Rider',
           role: '',
           icon: <Bike color="green" />
@@ -61,6 +69,7 @@ export function SideBarMenu({ activeTab, setActiveTab, useRole, isUserActive }: 
       : []),
     ...(isUserActive() && (useRole === 'Administrator' || useRole === 'ADMINISTRATOR')
       ? [{
+          id:6,
           label: 'Requested Deliveries',
           role: '',
           icon: <BadgeCheck color="green" />
@@ -68,6 +77,7 @@ export function SideBarMenu({ activeTab, setActiveTab, useRole, isUserActive }: 
       : []),
     ...(isUserActive() && (useRole === 'Administrator' || useRole === 'ADMINISTRATOR')
       ? [{
+          id:7,
           label: 'Vehicle Types',
           role: '',
           icon: <BadgeCheck color="green" />
@@ -75,18 +85,21 @@ export function SideBarMenu({ activeTab, setActiveTab, useRole, isUserActive }: 
       : []),
     ...(isUserActive()
       ? [{
+          id:8,
           label: 'Settings',
           role: '',
           icon: <Settings color="green" />
         }]
       : []),
     {
+      id:9,
       label: 'Help Center',
       role: '',
       icon: <HelpCircle color="green" />
     },
     ...(!isUserActive()
       ? [{
+          id:10,
           label: 'Signup',
           role: '',
           icon: <UserPlus color="green" />
@@ -94,6 +107,7 @@ export function SideBarMenu({ activeTab, setActiveTab, useRole, isUserActive }: 
       : []),
     ...(!isUserActive()
       ? [{
+          id:11,
           label: 'Login',
           role: '',
           icon: <LogIn color="green" />
@@ -192,7 +206,7 @@ export function SideBarMenu({ activeTab, setActiveTab, useRole, isUserActive }: 
               <button
                 key={tab.label}
                 onClick={() => {
-                  setActiveTab(tab.label);
+                  dispatch(setActiveIndex(tab.id));
                   setMobileMenuOpen(false);
                 }}
                 className={`flex items-center w-full px-4 py-3 rounded-lg text-base font-medium transition-all duration-200 ${
