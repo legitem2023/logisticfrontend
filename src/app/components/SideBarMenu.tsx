@@ -177,7 +177,7 @@ const tabItems = [
                   key={tab.id}
                   onClick={() => dispatch(setActiveIndex(tab.id))}
                   className={`relative px-5 py-2.5 rounded-lg text-sm font-medium transition-all duration-300 flex items-center ${
-                    activeTab === tab.label
+                    activeTab === tab.id
                       ? 'bg-white/10 backdrop-blur-md text-white shadow-inner'
                       : 'text-blue-100 hover:bg-white/5 hover:text-white'
                   }`}
