@@ -26,28 +26,13 @@ const tabItems = [
       id:0,
       label: 'Home',
       role: '',
-      icon: <Home color="green" />,
-      content: (
-        <div className="px-1 py-1 space-y-1">
-          <HomeDataCarousel items={mockItems} />
-          <LogisticsHomePage />
-        </div>
-      )
+      icon: <Home color="green" />
     },
         {
       id:1,
       label: 'Chart',
       role: '',
-      icon: <ChartBarIcon color="green" />,
-      content: useRole === 'Rider' || useRole === 'RIDER' ? (
-        <div className="px-1 py-1 space-y-1">
-          <RiderPerformanceChart />
-        </div>
-      ):(
-        <div className="px-1 py-1 space-y-1">
-          <RiderActivityChart />
-        </div>
-      ),
+      icon: <ChartBarIcon color="green" />
     },
     ...(isUserActive()
       ? [
@@ -55,16 +40,7 @@ const tabItems = [
             id:3,
             label: 'Logistics Panel',
             role: '',
-            icon: <ClipboardCheck color="green" />,
-            content: useRole === 'Rider' || useRole === 'RIDER' ? (
-                    <div className="px-1 py-1 space-y-1">
-                    <DriverDashboard />
-                    </div>
-                ):(
-                    <div className="px-1 py-1 space-y-1">
-                    <SenderDashboard />
-                    </div>
-                )
+            icon: <ClipboardCheck color="green" />
           },
         ]
       : []),
@@ -74,12 +50,7 @@ const tabItems = [
         id:4,
         label: 'Create Delivery',
         role: 'Sender',
-        icon: <Truck color="green" />,
-        content: (
-          <div className="px-1 py-1 space-y-1">
-            <LogisticsForm />
-          </div>
-        ),
+        icon: <Truck color="green" />
       },
     ]
   : []),
@@ -89,12 +60,7 @@ const tabItems = [
         id:5,
         label: 'Wallet',
         role: 'Sender',
-        icon: <WalletMinimal color="green" />,
-        content: (
-          <div className="px-1 py-1 space-y-1">
-            <ApiWallet/>
-          </div>
-        ),
+        icon: <WalletMinimal color="green" />
       },
     ]
   : []),
@@ -104,12 +70,7 @@ const tabItems = [
             id:6,
             label: 'Rider',
             role: '',
-            icon: <Bike color="green" />,
-            content: (
-              <div className="px-1 py-1 space-y-1">
-                <RiderList/>
-              </div>
-            ),
+            icon: <Bike color="green" />
           },
         ]
       : []),
@@ -119,12 +80,7 @@ const tabItems = [
             id:7,
             label: 'Requested Deliveries',
             role: '',
-            icon: <BadgeCheck color="green" />,
-            content: (
-              <div className="px-1 py-1 space-y-1">
-                <AdminDeliveriesTable />
-              </div>
-            ),
+            icon: <BadgeCheck color="green" />
           },
         ]
       : []),
@@ -134,12 +90,7 @@ const tabItems = [
             id:8,
             label: 'Vehicle Types',
             role: '',
-            icon: <BadgeCheck color="green" />,
-            content: (
-              <div className="px-1 py-1 space-y-1">
-                <VehicleTypes />
-              </div>
-            ),
+            icon: <BadgeCheck color="green" />
           },
         ]
       : []),
@@ -149,12 +100,7 @@ const tabItems = [
             id:9,
             label: 'Settings',
             role: '',
-            icon: <Settings color="green" />,
-            content: (
-              <div className="px-1 py-1 space-y-1">
-                <SettingsPage />
-              </div>
-            ),
+            icon: <Settings color="green" />
           },
         ]
       : []),
@@ -162,12 +108,7 @@ const tabItems = [
       id:10,
       label: 'Help Center',
       role: '',
-      icon: <HelpCircle color="green" />,
-      content: (
-        <div className="px-1 py-1 space-y-1">
-          <HelpPage />
-        </div>
-      ),
+      icon: <HelpCircle color="green" />
     },
     ...(!isUserActive()
       ? [
@@ -175,12 +116,7 @@ const tabItems = [
             id:11,
             label: 'Signup',
             role: '',
-            icon: <UserPlus color="green" />,
-            content: (
-              <div className="px-1 py-1 space-y-1">
-                <SignupCard />
-              </div>
-            ),
+            icon: <UserPlus color="green" />
           },
         ]
       : []),
@@ -190,12 +126,7 @@ const tabItems = [
             id:12,
             label: 'Login',
             role: '',
-            icon: <LogIn color="green" />,
-            content: (
-              <div className="px-1 py-1 space-y-1">
-                <LoginCard />
-              </div>
-            ),
+            icon: <LogIn color="green" />
           },
         ]
       : []),
