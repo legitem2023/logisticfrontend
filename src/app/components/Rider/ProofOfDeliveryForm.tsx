@@ -249,8 +249,8 @@ const [uploadFile] = useMutation(UPLOAD,{
     <div className="min-h-screen bg-[rgba(0,0,0,0.5] flex items-center justify-center">
       <div className="w-full max-w-4xl bg-white/90 backdrop-blur-lg shadow-2xl overflow-hidden">
         {/* Header Section */}
-        <div className="bg-gradient-to-r from-emerald-600 to-green-700 p-6 md:p-8 text-center relative overflow-hidden">
-          {/* Decorative elements */}
+        {/*<div className="bg-gradient-to-r from-emerald-600 to-green-700 p-6 md:p-8 text-center relative overflow-hidden">
+          
           <div className="absolute top-0 left-0 w-full h-full opacity-10">
             <div className="absolute -top-20 -left-20 w-60 h-60 rounded-full bg-white"></div>
             <div className="absolute -bottom-20 -right-20 w-60 h-60 rounded-full bg-white"></div>
@@ -263,7 +263,7 @@ const [uploadFile] = useMutation(UPLOAD,{
             Complete delivery details with photo evidence and recipient signature
           </p>
         </div>
-        
+        */}
         {/* Form Section */}
         <form onSubmit={handleSubmit} className="p-4 md:p-8">
           {/* Hidden input to store signature data */}
