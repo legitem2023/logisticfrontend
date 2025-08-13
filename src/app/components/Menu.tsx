@@ -184,8 +184,6 @@ export default function Menu() {
 
 
   const GlobalactiveIndex = useSelector((state: any) => state.activeIndex.value);
-const [activeTab, setActiveTab] = useState(0);
-// const activeContent = tabItems.find(tab => tab.label === activeTab)?.content;
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
      <SideBarMenu       
