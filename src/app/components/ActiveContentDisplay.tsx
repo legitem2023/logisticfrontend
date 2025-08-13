@@ -53,6 +53,7 @@ export function ActiveContentDisplay({ activeTab, useRole, isUserActive }: {
   
   const tabItems = [
     {
+      id:0,
       label: 'Home',
       role: '',
       icon: <Home color="green" />,
@@ -64,6 +65,7 @@ export function ActiveContentDisplay({ activeTab, useRole, isUserActive }: {
       )
     },
         {
+      id:1,
       label: 'Chart',
       role: '',
       icon: <ChartBarIcon color="green" />,
@@ -80,6 +82,7 @@ export function ActiveContentDisplay({ activeTab, useRole, isUserActive }: {
     ...(isUserActive()
       ? [
           {
+            id:3,
             label: 'Logistics Panel',
             role: '',
             icon: <ClipboardCheck color="green" />,
@@ -98,6 +101,7 @@ export function ActiveContentDisplay({ activeTab, useRole, isUserActive }: {
  ...(isUserActive() && (useRole === 'Sender' || useRole === 'SENDER')
   ? [
       {
+        id:4,
         label: 'Create Delivery',
         role: 'Sender',
         icon: <Truck color="green" />,
@@ -112,6 +116,7 @@ export function ActiveContentDisplay({ activeTab, useRole, isUserActive }: {
      ...(isUserActive() && (useRole === 'Sender' || useRole === 'SENDER')
   ? [
       {
+        id:5,
         label: 'Wallet',
         role: 'Sender',
         icon: <WalletMinimal color="green" />,
@@ -126,6 +131,7 @@ export function ActiveContentDisplay({ activeTab, useRole, isUserActive }: {
         ...(isUserActive() && (useRole === 'Administrator' || useRole === 'ADMINISTRATOR')
       ? [
           {
+            id:6,
             label: 'Rider',
             role: '',
             icon: <Bike color="green" />,
@@ -140,6 +146,7 @@ export function ActiveContentDisplay({ activeTab, useRole, isUserActive }: {
               ...(isUserActive() && (useRole === 'Administrator' || useRole === 'ADMINISTRATOR')
       ? [
           {
+            id:7,
             label: 'Requested Deliveries',
             role: '',
             icon: <BadgeCheck color="green" />,
@@ -154,6 +161,7 @@ export function ActiveContentDisplay({ activeTab, useRole, isUserActive }: {
     ...(isUserActive() && (useRole === 'Administrator' || useRole === 'ADMINISTRATOR')
       ? [
           {
+            id:8,
             label: 'Vehicle Types',
             role: '',
             icon: <BadgeCheck color="green" />,
@@ -168,6 +176,7 @@ export function ActiveContentDisplay({ activeTab, useRole, isUserActive }: {
       ...(isUserActive()
       ? [
           {
+            id:9,
             label: 'Settings',
             role: '',
             icon: <Settings color="green" />,
@@ -180,6 +189,7 @@ export function ActiveContentDisplay({ activeTab, useRole, isUserActive }: {
         ]
       : []),
     {
+      id:10,
       label: 'Help Center',
       role: '',
       icon: <HelpCircle color="green" />,
@@ -192,6 +202,7 @@ export function ActiveContentDisplay({ activeTab, useRole, isUserActive }: {
     ...(!isUserActive()
       ? [
           {
+            id:11,
             label: 'Signup',
             role: '',
             icon: <UserPlus color="green" />,
@@ -206,6 +217,7 @@ export function ActiveContentDisplay({ activeTab, useRole, isUserActive }: {
     ...(!isUserActive()
       ? [
           {
+            id:12,
             label: 'Login',
             role: '',
             icon: <LogIn color="green" />,
@@ -220,7 +232,7 @@ export function ActiveContentDisplay({ activeTab, useRole, isUserActive }: {
   ];
 
 
-  const activeTabData = tabItems.find(tab => tab.label === activeTab);
+  const activeTabData = tabItems.find(tab => tab.id === activeTab);
 
   return (
     <div className="flex-1 overflow-y-auto">
