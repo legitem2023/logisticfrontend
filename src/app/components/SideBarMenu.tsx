@@ -26,7 +26,7 @@ const tabItems = [
       id:0,
       label: 'Home',
       role: '',
-      icon: <Home color="green" />
+      icon: <HomeIcon color="green" />
     },
         {
       id:1,
