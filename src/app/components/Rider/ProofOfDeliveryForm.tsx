@@ -28,7 +28,7 @@ const [uploadFile] = useMutation(UPLOAD,{
   // File handling
   const [previewUrl, setPreviewUrl] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
-  const [useLoading,setLoading] = useState(true);
+  const [useLoading,setLoading] = useState(false);
   // Signature canvas
   const canvasRef = useRef(null);
   const [isDrawing, setIsDrawing] = useState(false);
