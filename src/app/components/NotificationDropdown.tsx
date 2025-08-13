@@ -66,7 +66,7 @@ export default function NotificationDropdown({ userId }: { userId: string | null
   const handleNotificationClick = (id: string) => {
     if (userId) {
       readNotification({ variables: { notificationId: id } })
-      dispatch(setActiveIndex(2))
+      dispatch(setActiveIndex(3))
     }
   }
 
