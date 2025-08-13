@@ -7,10 +7,13 @@ import { GETNOTIFICATION } from '../../../graphql/query';
 import { capitalize, formatDate } from "../../../utils/decryptToken";
 import { Badge } from './ui/Badge'
 import { READNOTIFICATION, DELETENOTIFICATION } from '../../../graphql/mutation';
+import { useSelector,useDispatch } from "react-redux";
+import { setActiveIndex } from '../../../Redux/activeIndexSlice';
 
 export default function NotificationDropdown({ userId }: { userId: string | null }) {
   const [open, setOpen] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
+  const dispatch = useDispatch()
 
   const { data, loading, error } = useQuery(GETNOTIFICATION, {
     variables: { getNotificationsId: userId },
@@ -63,6 +66,7 @@ export default function NotificationDropdown({ userId }: { userId: string | null
   const handleNotificationClick = (id: string) => {
     if (userId) {
       readNotification({ variables: { notificationId: id } })
+      dispatch(setActiveIndex(2))
     }
   }
 
