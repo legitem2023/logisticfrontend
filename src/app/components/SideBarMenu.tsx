@@ -14,7 +14,11 @@ export function SideBarMenu({ activeTab, setActiveTab, useRole, isUserActive }: 
 }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const globalUserId = useSelector(selectTempUserId);
+    const GlobalactiveIndex = useSelector((state: any) => state.activeIndex.value);
 
+  useEffect(() => {
+     window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [GlobalactiveIndex]);
   // EXACTLY YOUR EXISTING tabItems CONFIG - NO CHANGES
   const tabItems = [
     {
