@@ -7,9 +7,8 @@ import { setActiveIndex } from '../../../Redux/activeIndexSlice';
 import { selectTempUserId } from "../../../Redux/tempUserSlice";
 import Image from "next/image";
 
-export function SideBarMenu({ activeTab, setActiveTab, useRole, isUserActive }: {
+export function SideBarMenu({ activeTab, useRole, isUserActive }: {
   activeTab: string;
-  setActiveTab: (tab: string) => void;
   useRole: string;
   isUserActive: () => boolean;
 }) {
