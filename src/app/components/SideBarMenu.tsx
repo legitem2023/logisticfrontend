@@ -209,7 +209,7 @@ export function SideBarMenu({ activeTab, useRole, isUserActive }: {
                   setMobileMenuOpen(false);
                 }}
                 className={`flex items-center w-full px-4 py-3 rounded-lg text-base font-medium transition-all duration-200 ${
-                  activeTab === tab.label
+                  activeTab === tab.id
                     ? 'customgrad text-white shadow-md'
                     : 'text-gray-500 hover:bg-blue-700/20 hover:text-whiz-50" ref={dropdownRef}te'
                 }`}
