@@ -477,7 +477,7 @@ const [uploadFile] = useMutation(UPLOAD,{
               Reset Form
             </button>
             <button
-  disabled={useLoading}
+  disabled={useLoading?true:false}
   type="submit"
   className="px-6 py-3 bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white font-bold rounded-2xl shadow-lg transform transition hover:scale-[1.02] duration-300 flex items-center justify-center"
 >
