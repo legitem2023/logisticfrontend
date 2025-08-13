@@ -261,6 +261,7 @@ const RiderPerformanceChart = () => {
                 <div>
                   <p className="font-medium">{delivery.trackingNumber}</p>
                   <p className="text-sm text-gray-500">
+                    {delivery.createdAt}
                     {dayjs(delivery.createdAt).format('MMM D, YYYY • h:mm A')}
                   </p>
                 </div>
