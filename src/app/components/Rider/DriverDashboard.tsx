@@ -535,19 +535,18 @@ const tabs = [
       )}
       {showMap && selectedDelivery && (
         <div className="fixed h-[100vh] inset-0 z-50 flex items-end sm:items-center justify-center bg-black/50 flex flex-col">
-          
-           <div className="flex justify-between items-center p-4 border-b bg-white">
-            <h2 className="text-lg font-semibold text-gray-900">Map</h2>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setMap(false)}
-            >
-              <XIcon className="w-5 h-5" />
-            </Button>
-          </div>
-     
+             
           <div className="w-full h-[90vh] sm:max-w-md bg-white p-0 shadow-lg animate-slide-up overflow-y-auto">
+            <div className="flex justify-between items-center p-4 border-b bg-white">
+             <h2 className="text-lg font-semibold text-gray-900">Map</h2>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setMap(false)}
+              >
+              <XIcon className="w-5 h-5" />
+             </Button>
+           </div>
             <RiderMap
               deliveryId={selectedDelivery.id}
               senderId={selectedDelivery.sender.id}
