@@ -100,15 +100,6 @@ const HomeDataCarousel: FC<Props> = ({ items }) => {
         grabCursor
         centeredSlides={true}
         pagination={{ clickable: true, dynamicBullets: true }}
-        breakpoints={{
-          640: {
-            spaceBetween: 32
-          },
-          1024: {
-            slidesPerView: 1.1,
-            centeredSlides: true
-          }
-        }}
       >
         {items.map(item => (
           <SwiperSlide key={item.id} className="!w-full md:!w-[90%] lg:!w-[80%] xl:!w-[70%]">
