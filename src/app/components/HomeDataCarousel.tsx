@@ -99,12 +99,7 @@ const HomeDataCarousel: FC<Props> = ({ items }) => {
         loop={true}
         grabCursor
         centeredSlides={false}
-        pagination={{ 
-          clickable: true, 
-          dynamicBullets: true,
-          bulletClass: 'swiper-pagination-bullet !bg-white/80',
-          bulletActiveClass: 'swiper-pagination-bullet-active !bg-white'
-        }}
+        pagination={{ clickable: true, dynamicBullets: true }}
         breakpoints={{
           640: {
             spaceBetween: 32
