@@ -2,11 +2,8 @@
 
 import { useState, useMemo } from 'react';
 import { useQuery } from '@apollo/client';
-
 import { useSelector } from 'react-redux';
-
 import { selectTempUserId } from '../../../../Redux/tempUserSlice';
-
 import { DELIVERIES } from '../../../../graphql/query';
 import {
   ResponsiveContainer,
@@ -27,12 +24,14 @@ const barColors = ['#4ade80', '#60a5fa', '#fbbf24', '#f472b6'];
 const RiderPerformanceChart = () => {
   const globalUserId = useSelector(selectTempUserId);
 
-    const { data, loading, error } = useQuery(DELIVERIES, {
-    variables: { globalUserId },
+  const { data, loading, error } = useQuery(DELIVERIES, {
+    variables: { getRidersDeliveryId: globalUserId }, // Changed variable name to match query
   });
+  
   const [selectedMonth, setSelectedMonth] = useState<string>(dayjs().format('MMMM'));
 
-  const deliveries = data?.getRiderDeliveries ?? [];
+  // Changed from getRiderDeliveries to getRidersDelivery to match query response
+  const deliveries = data?.getRidersDelivery ?? [];
 
   // Process rider-specific data
   const { monthlyData, performanceStats, months } = useMemo(() => {
@@ -53,7 +52,14 @@ const RiderPerformanceChart = () => {
       if (!monthlyMap[month][date]) monthlyMap[month][date] = 0;
       monthlyMap[month][date] += 1;
 
-      statusMap[delivery.deliveryStatus as keyof typeof statusMap] += 1;
+      // Map the delivery status to our statusMap keys
+      let statusKey = delivery.deliveryStatus;
+      if (statusKey === 'completed') statusKey = 'Delivered';
+      if (statusKey === 'cancelled') statusKey = 'Cancelled';
+      
+      if (statusMap.hasOwnProperty(statusKey)) {
+        statusMap[statusKey as keyof typeof statusMap] += 1;
+      }
     });
 
     const monthlyDataFormatted: Record<string, { date: string; count: number }[]> = {};
@@ -82,14 +88,14 @@ const RiderPerformanceChart = () => {
           icon: <Bike className="w-5 h-5 text-blue-500" />,
         },
         {
+          label: 'Pending',
+          value: statusMap.Pending,
+          icon: <Clock className="w-5 h-5 text-yellow-500" />,
+        },
+        {
           label: 'Completion Rate',
           value: `${completionRate}%`,
           icon: <Award className="w-5 h-5 text-purple-500" />,
-        },
-        {
-          label: 'Avg. Time',
-          value: '45 min', // You would calculate this from your data
-          icon: <Clock className="w-5 h-5 text-yellow-500" />,
         },
       ],
       months: Object.keys(monthlyDataFormatted),
@@ -107,7 +113,7 @@ const RiderPerformanceChart = () => {
 
       {/* Performance Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-        {performanceStats.map((stat, index) => (
+        {performanceStats.map((stat) => (
           <div
             key={stat.label}
             className="bg-gray-50 p-4 rounded-lg border border-gray-200 flex items-center"
@@ -203,7 +209,7 @@ const RiderPerformanceChart = () => {
                 </p>
               </div>
               <span className={`px-2 py-1 text-xs rounded-full ${
-                delivery.deliveryStatus === 'Delivered' 
+                delivery.deliveryStatus === 'Delivered' || delivery.deliveryStatus === 'completed'
                   ? 'bg-green-100 text-green-800'
                   : delivery.deliveryStatus === 'in_transit'
                   ? 'bg-blue-100 text-blue-800'
