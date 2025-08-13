@@ -1,5 +1,5 @@
 import { Menu, X, Truck, User, Bell, Home as HomeIcon, ClipboardCheck, Bike, BadgeCheck, Settings, HelpCircle, UserPlus, LogIn, ChartBar as ChartBarIcon, WalletMinimal } from "lucide-react";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import Link from "next/link";
 import NotificationDropdown from "./NotificationDropdown";
 import { useSelector,useDispatch } from "react-redux";
