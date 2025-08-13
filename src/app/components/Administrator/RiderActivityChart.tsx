@@ -15,18 +15,43 @@ import {
   Cell,
 } from 'recharts';
 import { CheckCheck, Clock, XCircle, Loader, Info } from 'lucide-react';
-import dayjs from 'dayjs';
 
 const barColors = ['#4ade80', '#60a5fa', '#fbbf24', '#f472b6', '#a78bfa', '#34d399', '#f87171'];
 
+// Helper functions for timestamp formatting
+const formatTimestampToMonth = (timestamp: number) => {
+  const date = new Date(timestamp);
+  return date.toLocaleDateString('en-US', { month: 'long' });
+};
+
+const formatTimestampToDayMonth = (timestamp: number) => {
+  const date = new Date(timestamp);
+  return date.toLocaleDateString('en-US', { month: 'short', day: '2-digit' });
+};
+
+const formatTimestampToFullDate = (timestamp: number) => {
+  const date = new Date(timestamp);
+  return date.toLocaleDateString('en-US', { 
+    month: 'long', 
+    day: 'numeric', 
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+};
+
+const getCurrentMonth = () => {
+  return new Date().toLocaleDateString('en-US', { month: 'long' });
+};
+
 const RiderActivityChart = () => {
   const { data, loading, error } = useQuery(GETDELIVERIESADMIN);
-  const [selectedMonth, setSelectedMonth] = useState<string>(dayjs().format('MMMM'));
+  const [selectedMonth, setSelectedMonth] = useState<string>(getCurrentMonth());
   const [showInfo, setShowInfo] = useState(false);
 
   const deliveries = data?.getDeliveries ?? [];
 
-  // ⏳ Process data
+  // Process data
   const { allMonthlyData, statusSummary, months } = useMemo(() => {
     const statusMap: Record<string, number> = {
       Delivered: 0,
@@ -35,14 +60,14 @@ const RiderActivityChart = () => {
       in_transit: 0,
     };
 
-        
-
     const monthlyMap: Record<string, Record<string, number>> = {};
 
     deliveries.forEach((delivery: any) => {
-      const createdAt = dayjs(delivery.createdAt);
-      const month = createdAt.format('MMMM');
-      const date = createdAt.format('MMM DD');
+      const timestamp = parseInt(delivery.createdAt);
+      if (isNaN(timestamp)) return;
+
+      const month = formatTimestampToMonth(timestamp);
+      const date = formatTimestampToDayMonth(timestamp);
 
       if (!monthlyMap[month]) monthlyMap[month] = {};
       if (!monthlyMap[month][date]) monthlyMap[month][date] = 0;
@@ -291,7 +316,7 @@ const RiderActivityChart = () => {
               </div>
               <div>
                 <p className="font-medium">Last updated</p>
-                <p>{dayjs().format('MMMM D, YYYY [at] h:mm A')}</p>
+                <p>{formatTimestampToFullDate(Date.now())}</p>
               </div>
             </div>
           </div>
