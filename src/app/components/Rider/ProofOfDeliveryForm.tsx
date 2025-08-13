@@ -1,4 +1,4 @@
-// components/ProofOfDeliveryForm.jsx
+'use client';
 import { useState, useRef, useEffect } from 'react';
 import { useMutation } from "@apollo/client"; 
 import { UPLOAD } from "../../../../graphql/mutation"; 
