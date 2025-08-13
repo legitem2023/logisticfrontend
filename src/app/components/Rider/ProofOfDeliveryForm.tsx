@@ -479,8 +479,7 @@ const [uploadFile] = useMutation(UPLOAD,{
             <button
               type="submit"
               disabled={useLoading}
-              className="px-6 py-3 bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white font-bold rounded-2xl shadow-lg transform transition hover:scale-[1.02] duration-300 flex items-center justify-center"
-             >
+              className="px-6 py-3 bg-gradient-to-r from-emerald-600 to-green-600 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:from-emerald-600 disabled:hover:to-green-600 text-white font-bold rounded-2xl shadow-lg transform transition hover:scale-[1.02] duration-300 flex items-center justify-center">
   {useLoading ? (
     "Loading..."
   ) : (
