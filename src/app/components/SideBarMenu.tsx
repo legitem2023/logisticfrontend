@@ -78,7 +78,7 @@ const tabItems = [
       ? [
           {
             id:7,
-            label: 'Requested Deliveries',
+            label: 'Unassigned',
             role: '',
             icon: <BadgeCheck color="green" />
           },
@@ -90,7 +90,7 @@ const tabItems = [
             id:8,
             label: 'Vehicle Types',
             role: '',
-            icon: <BadgeCheck color="green" />
+            icon: <Truck color="green" />
           },
         ]
       : []),
