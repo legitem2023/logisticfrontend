@@ -42,9 +42,29 @@ const RiderPerformanceChart = () => {
     const monthlyMap: Record<string, Record<string, number>> = {};
 
     deliveries.forEach((delivery: any) => {
-      // Handle MongoDB timestamp (ISO string or Date object)
-      const deliveryDate = new Date(delivery.createdAt);
-      if (isNaN(deliveryDate.getTime())) return;
+      // Handle MongoDB timestamp (could be ISO string, Date object, or timestamp)
+      let deliveryDate;
+      
+      if (typeof delivery.createdAt === 'number') {
+        // Handle numeric timestamp (milliseconds since epoch)
+        deliveryDate = new Date(delivery.createdAt);
+      } else if (typeof delivery.createdAt === 'string') {
+        // Handle ISO string or other string format
+        deliveryDate = new Date(delivery.createdAt);
+      } else if (delivery.createdAt instanceof Date) {
+        // Already a Date object
+        deliveryDate = new Date(delivery.createdAt);
+      } else {
+        // Unknown format, skip this entry
+        console.warn('Unknown date format:', delivery.createdAt);
+        return;
+      }
+
+      // Validate the date
+      if (isNaN(deliveryDate.getTime())) {
+        console.warn('Invalid date:', delivery.createdAt);
+        return;
+      }
 
       const month = dayjs(deliveryDate).format('MMMM');
       const date = dayjs(deliveryDate).format('MMM DD');
@@ -55,11 +75,11 @@ const RiderPerformanceChart = () => {
 
       // Normalize status values
       const status = delivery.deliveryStatus.toLowerCase();
-      if (status.includes('deliver') || status.includes('complete')) {
+      if (status.includes('Delivered') || status.includes('completed')) {
         statusMap.Delivered++;
-      } else if (status.includes('cancel')) {
+      } else if (status.includes('Cancelled')) {
         statusMap.Cancelled++;
-      } else if (status.includes('transit') || status.includes('progress')) {
+      } else if (status.includes('in_transit') || status.includes('progress')) {
         statusMap.in_transit++;
       } else {
         statusMap.Pending++;
@@ -80,7 +100,12 @@ const RiderPerformanceChart = () => {
     availableMonths.forEach(month => {
       monthlyDataFormatted[month] = Object.entries(monthlyMap[month])
         .map(([date, count]) => ({ date, count }))
-        .sort((a, b) => dayjs(a.date).diff(dayjs(b.date)));
+        .sort((a, b) => {
+          // Compare dates properly by parsing them
+          const dateA = dayjs(a.date, 'MMM DD');
+          const dateB = dayjs(b.date, 'MMM DD');
+          return dateA.diff(dateB);
+        });
     });
 
     // Calculate metrics
@@ -261,7 +286,6 @@ const RiderPerformanceChart = () => {
                 <div>
                   <p className="font-medium">{delivery.trackingNumber}</p>
                   <p className="text-sm text-gray-500">
-                    {delivery.createdAt}
                     {dayjs(delivery.createdAt).format('MMM D, YYYY • h:mm A')}
                   </p>
                 </div>
