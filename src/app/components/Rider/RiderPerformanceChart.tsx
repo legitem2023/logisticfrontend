@@ -41,50 +41,40 @@ const RiderPerformanceChart = () => {
 
     const monthlyMap: Record<string, Record<string, number>> = {};
 
-    deliveries.forEach((delivery: any) => {
-      // Handle MongoDB timestamp (could be ISO string, Date object, or timestamp)
-      let deliveryDate;
-      
-      if (typeof delivery.createdAt === 'number') {
-        // Handle numeric timestamp (milliseconds since epoch)
-        deliveryDate = new Date(delivery.createdAt);
-      } else if (typeof delivery.createdAt === 'string') {
-        // Handle ISO string or other string format
-        deliveryDate = new Date(delivery.createdAt);
-      } else if (delivery.createdAt instanceof Date) {
-        // Already a Date object
-        deliveryDate = new Date(delivery.createdAt);
-      } else {
-        // Unknown format, skip this entry
-        console.warn('Unknown date format:', delivery.createdAt);
-        return;
-      }
 
-      // Validate the date
-      if (isNaN(deliveryDate.getTime())) {
-        console.warn('Invalid date:', delivery.createdAt);
-        return;
-      }
+deliveries.forEach((delivery: any) => {
+  // Handle timestamp conversion properly
+  let deliveryDate;
+  
+  if (typeof delivery.createdAt === 'number') {
+    // If timestamp is in seconds (like 1755099466), convert to milliseconds
+    if (delivery.createdAt < 10000000000) {
+      deliveryDate = new Date(delivery.createdAt * 1000);
+    } 
+    // If timestamp is already in milliseconds (like 1755099466902)
+    else {
+      deliveryDate = new Date(delivery.createdAt);
+    }
+  } 
+  else if (typeof delivery.createdAt === 'string') {
+    // Handle ISO strings or other string formats
+    deliveryDate = new Date(delivery.createdAt);
+  } 
+  else if (delivery.createdAt instanceof Date) {
+    deliveryDate = new Date(delivery.createdAt);
+  }
 
-      const month = dayjs(deliveryDate).format('MMMM');
-      const date = dayjs(deliveryDate).format('MMM DD');
+  // Validate the date - reject suspiciously old dates
+  if (!deliveryDate || isNaN(deliveryDate.getTime()) || deliveryDate.getFullYear() < 2000) {
+    console.warn('Invalid or pre-2000 date:', delivery.createdAt, 'for delivery:', delivery.trackingNumber);
+    return;
+  }
 
-      // Initialize month/date if not exists
-      if (!monthlyMap[month]) monthlyMap[month] = {};
-      monthlyMap[month][date] = (monthlyMap[month][date] || 0) + 1;
-
-      // Normalize status values
-      const status = delivery.deliveryStatus.toLowerCase();
-      if (status.includes('Delivered') || status.includes('completed')) {
-        statusMap.Delivered++;
-      } else if (status.includes('Cancelled')) {
-        statusMap.Cancelled++;
-      } else if (status.includes('in_transit') || status.includes('progress')) {
-        statusMap.in_transit++;
-      } else {
-        statusMap.Pending++;
-      }
-    });
+  // Rest of your processing...
+  const month = dayjs(deliveryDate).format('MMMM');
+  const date = dayjs(deliveryDate).format('MMM DD');
+  // ... continue with your existing code
+});
 
     // Filter months with actual data and sort chronologically
     const monthOrder = [
