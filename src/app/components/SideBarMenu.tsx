@@ -155,8 +155,8 @@ export function SideBarMenu({ activeTab, useRole, isUserActive }: {
             <nav className="hidden md:flex items-center space-x-1">
               {visibleTabs.map((tab) => (
                 <button
-                  key={tab.label}
-                  onClick={() => setActiveTab(tab.label)}
+                  key={tab.id}
+                  onClick={() => dispatch(setActiveIndex(tab.id))}
                   className={`relative px-5 py-2.5 rounded-lg text-sm font-medium transition-all duration-300 flex items-center ${
                     activeTab === tab.label
                       ? 'bg-white/10 backdrop-blur-md text-white shadow-inner'
