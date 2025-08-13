@@ -12,6 +12,7 @@ import { setActiveIndex } from '../../../Redux/activeIndexSlice';
 
 export default function NotificationDropdown({ userId }: { userId: string | null }) {
   const [open, setOpen] = useState(false)
+  const [isVisible, setIsVisible] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
   const dispatch = useDispatch()
 
@@ -57,6 +58,15 @@ export default function NotificationDropdown({ userId }: { userId: string | null
   useEffect(() => {
     if (!userId) setOpen(false)
   }, [userId])
+
+  useEffect(() => {
+    if (open) {
+      setIsVisible(true)
+    } else {
+      const timer = setTimeout(() => setIsVisible(false), 300)
+      return () => clearTimeout(timer)
+    }
+  }, [open])
 
   const notifications = data?.getNotifications || []
   const unreadNotifications = notifications.filter((notif: any) => !notif.isRead)
@@ -145,20 +155,28 @@ export default function NotificationDropdown({ userId }: { userId: string | null
           )}
         </button>
 
-        {open && (
+        {isVisible && (
           <>
             {/* Desktop */}
-            <div className="absolute right-0 mt-2 w-80 bg-white/60 backdrop-blur border border-gray-200 rounded-2xl shadow-2xl overflow-hidden hidden sm:block">
+            <div className={`absolute right-0 mt-2 w-80 bg-white/60 backdrop-blur border border-gray-200 rounded-2xl shadow-2xl overflow-hidden hidden sm:block transition-all duration-300 ease-in-out ${
+              open ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-[-10px]'
+            }`}>
               {dropdownContent}
             </div>
 
             {/* Mobile */}
-            <div className="fixed inset-0 z-50 sm:hidden flex flex-col justify-end">
+            <div className={`fixed inset-0 z-50 sm:hidden flex flex-col justify-end transition-all duration-300 ease-in-out ${
+              open ? 'opacity-100' : 'opacity-0'
+            }`}>
               <div
-                className="absolute inset-0 bg-[rgba(0,0,0,0.5)]"
+                className={`absolute inset-0 bg-[rgba(0,0,0,0.5)] transition-opacity duration-300 ${
+                  open ? 'opacity-100' : 'opacity-0'
+                }`}
                 onClick={() => setOpen(false)}
               />
-              <div className="relative bg-white/70 backdrop-blur-xl border-t border-gray-200 rounded-t-2xl shadow-2xl max-h-[76vh] min-h-[75vh] w-full overflow-y-auto">
+              <div className={`relative bg-white/70 backdrop-blur-xl border-t border-gray-200 rounded-t-2xl shadow-2xl max-h-[76vh] min-h-[75vh] w-full overflow-y-auto transition-transform duration-300 ${
+                open ? 'translate-y-0' : 'translate-y-full'
+              }`}>
                 <div className="flex justify-between items-center px-4 py-3 border-b border-gray-200">
                   <div className="text-lg font-semibold text-gray-800">
                     Notifications
@@ -178,4 +196,4 @@ export default function NotificationDropdown({ userId }: { userId: string | null
       </div>
     </div>
   )
-      }
+        }
