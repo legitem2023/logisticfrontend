@@ -8,7 +8,7 @@ import { selectTempUserId } from "../../../Redux/tempUserSlice";
 import Image from "next/image";
 
 export function SideBarMenu({ activeTab, useRole, isUserActive }: {
-  activeTab: string;
+  activeTab: number;
   useRole: string;
   isUserActive: () => boolean;
 }) {
