@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useQuery } from '@apollo/client';
 import { useSelector } from 'react-redux';
 import { selectTempUserId } from '../../../../Redux/tempUserSlice';
@@ -25,12 +25,12 @@ const RiderPerformanceChart = () => {
   const globalUserId = useSelector(selectTempUserId);
 
   const { data, loading, error } = useQuery(DELIVERIES, {
-    variables: { getRidersDeliveryId: globalUserId }, // Changed variable name to match query
+    variables: { getRidersDeliveryId: globalUserId },
   });
   
+  // Set default month to current month initially
   const [selectedMonth, setSelectedMonth] = useState<string>(dayjs().format('MMMM'));
 
-  // Changed from getRiderDeliveries to getRidersDelivery to match query response
   const deliveries = data?.getRidersDelivery ?? [];
 
   // Process rider-specific data
@@ -45,8 +45,12 @@ const RiderPerformanceChart = () => {
     const monthlyMap: Record<string, Record<string, number>> = {};
 
     deliveries.forEach((delivery: any) => {
-      const month = dayjs(delivery.createdAt).format('MMMM');
-      const date = dayjs(delivery.createdAt).format('MMM DD');
+      // Parse the date safely
+      const deliveryDate = new Date(delivery.createdAt);
+      if (isNaN(deliveryDate.getTime())) return;
+
+      const month = dayjs(deliveryDate).format('MMMM');
+      const date = dayjs(deliveryDate).format('MMM DD');
 
       if (!monthlyMap[month]) monthlyMap[month] = {};
       if (!monthlyMap[month][date]) monthlyMap[month][date] = 0;
@@ -62,12 +66,16 @@ const RiderPerformanceChart = () => {
       }
     });
 
+    // Only include months that have data
     const monthlyDataFormatted: Record<string, { date: string; count: number }[]> = {};
     for (const month in monthlyMap) {
-      monthlyDataFormatted[month] = Object.entries(monthlyMap[month]).map(([date, count]) => ({
-        date,
-        count,
-      }));
+      const daysWithData = Object.entries(monthlyMap[month]);
+      if (daysWithData.length > 0) {
+        monthlyDataFormatted[month] = daysWithData.map(([date, count]) => ({
+          date,
+          count,
+        }));
+      }
     }
 
     const completionRate = deliveries.length > 0 
@@ -98,9 +106,23 @@ const RiderPerformanceChart = () => {
           icon: <Award className="w-5 h-5 text-purple-500" />,
         },
       ],
-      months: Object.keys(monthlyDataFormatted),
+      months: Object.keys(monthlyDataFormatted).sort((a, b) => {
+        // Sort months chronologically
+        const monthsOrder = [
+          'January', 'February', 'March', 'April', 'May', 'June',
+          'July', 'August', 'September', 'October', 'November', 'December'
+        ];
+        return monthsOrder.indexOf(a) - monthsOrder.indexOf(b);
+      }),
     };
   }, [deliveries]);
+
+  // Ensure selected month exists in data
+  useEffect(() => {
+    if (months.length > 0 && !months.includes(selectedMonth)) {
+      setSelectedMonth(months[0]);
+    }
+  }, [months, selectedMonth]);
 
   const chartData = monthlyData[selectedMonth] || [];
 
@@ -129,25 +151,27 @@ const RiderPerformanceChart = () => {
         ))}
       </div>
 
-      {/* Month Selector */}
-      <div className="mb-4 flex items-center justify-between">
-        <h2 className="text-md font-semibold">Daily Deliveries</h2>
-        <div className="flex space-x-2">
-          {months.map((month) => (
-            <button
-              key={month}
-              onClick={() => setSelectedMonth(month)}
-              className={`px-3 py-1 text-sm rounded-md ${
-                selectedMonth === month
-                  ? 'bg-indigo-100 text-indigo-700'
-                  : 'text-gray-600 hover:bg-gray-100'
-              }`}
-            >
-              {month}
-            </button>
-          ))}
+      {/* Month Selector - Only show if we have multiple months */}
+      {months.length > 1 && (
+        <div className="mb-4 flex items-center justify-between">
+          <h2 className="text-md font-semibold">Daily Deliveries</h2>
+          <div className="flex space-x-2">
+            {months.map((month) => (
+              <button
+                key={month}
+                onClick={() => setSelectedMonth(month)}
+                className={`px-3 py-1 text-sm rounded-md ${
+                  selectedMonth === month
+                    ? 'bg-indigo-100 text-indigo-700'
+                    : 'text-gray-600 hover:bg-gray-100'
+                }`}
+              >
+                {month}
+              </button>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Chart */}
       <div className="bg-gray-50 p-4 rounded-lg">
