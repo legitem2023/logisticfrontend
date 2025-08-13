@@ -190,7 +190,6 @@ const [activeTab, setActiveTab] = useState(0);
     <div className="min-h-screen flex flex-col bg-gray-50">
      <SideBarMenu       
       activeTab={GlobalactiveIndex} 
-      setActiveTab={setActiveTab}
       useRole={useRole}
       isUserActive={isUserActive}/>
 
