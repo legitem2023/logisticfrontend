@@ -8,6 +8,9 @@ import LogisticsHomePage from './LogisticsHomePage';
 import DriverDashboard from './Rider/DriverDashboard';
 import SenderDashboard from './Sender/SenderDashboard';
 import RiderActivityChart from './Administrator/RiderActivityChart';
+
+import Accounts from './Administrator/Accounts';
+
 import LogisticsForm from './Sender/LogisticsForm';
 import SettingsPage from './SettingsPage';
 import HelpPage from './HelpPage';
@@ -137,7 +140,7 @@ export function ActiveContentDisplay({ activeTab, useRole, isUserActive }: {
             icon: <Bike color="green" />,
             content: (
               <div className="px-1 py-1 space-y-1">
-                <RiderList/>
+                <Accounts/>
               </div>
             ),
           },
