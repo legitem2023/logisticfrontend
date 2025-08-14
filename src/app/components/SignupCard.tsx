@@ -62,37 +62,37 @@ const SignupCard = () => {
   };
 
   if (loading) return (
-    <div className="flex justify-center items-center min-h-screen">
+    <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-green-50 to-green-100">
       <div className="animate-pulse flex flex-col items-center">
-        <div className="h-16 w-16 bg-gradient-to-r from-amber-500 to-amber-300 rounded-full mb-4"></div>
-        <p className="text-amber-600 font-medium">Loading luxury experience...</p>
+        <div className="h-16 w-16 bg-gradient-to-r from-green-600 to-green-400 rounded-full mb-4"></div>
+        <p className="text-green-700 font-medium">Loading driver registration...</p>
       </div>
     </div>
   );
   
   if (error) return (
-    <div className="max-w-xl mx-auto p-6 bg-rose-100 border-l-4 border-rose-500 text-rose-700">
+    <div className="max-w-xl mx-auto p-6 bg-red-100 border-l-4 border-red-500 text-red-700">
       <p>Error: {error.message}</p>
     </div>
   );
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-green-100 p-4">
       <div className="max-w-2xl w-full mx-auto transform transition-all duration-300 hover:scale-[1.005]">
-        <Card className="shadow-2xl border border-gray-200 rounded-xl overflow-hidden relative group">
+        <Card className="shadow-xl border border-green-100 rounded-xl overflow-hidden relative group bg-white">
           {/* Premium badge */}
-          <div className="absolute -top-2 -right-2 bg-amber-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg transform rotate-12 z-10">
-            PREMIUM
+          <div className="absolute -top-2 -right-2 bg-green-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg transform rotate-12 z-10">
+            PRO
           </div>
           
           {/* Glow effect */}
-          <div className="absolute inset-0 bg-gradient-to-r from-amber-400/10 to-amber-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl pointer-events-none"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-green-400/10 to-green-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl pointer-events-none"></div>
           
-          <CardHeader className="bg-gradient-to-r from-amber-600 to-amber-400 p-6 relative overflow-hidden">
+          <CardHeader className="bg-gradient-to-r from-green-800 to-green-600 p-6 relative overflow-hidden">
             {/* Subtle pattern */}
             <div className="absolute inset-0 opacity-10 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgdmlld0JveD0iMCAwIDYwIDYwIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC42Ij48cGF0aCBkPSJNMzYgMzRjMC0yLjIgMS44LTQgNC00czQgMS44IDQgNC0xLjggNC00IDQtNC0xLjgtNC00eiIvPjwvZz48L2c+PC9zdmc+')]"></div>
-            <h2 className="text-3xl font-bold text-white text-center relative z-10">Premium Driver Registration</h2>
-            <p className="text-amber-100 text-center mt-2 relative z-10">Join our exclusive network of professional drivers</p>
+            <h2 className="text-3xl font-bold text-white text-center relative z-10">Professional Driver Registration</h2>
+            <p className="text-green-100 text-center mt-2 relative z-10">Join our network of trusted drivers</p>
           </CardHeader>
           
           <CardContent className="p-8 bg-white">
@@ -100,15 +100,15 @@ const SignupCard = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Personal Information */}
                 <div className="space-y-4 relative">
-                  <div className="absolute -left-1 top-0 h-full w-1 bg-amber-400 rounded-full"></div>
-                  <h3 className="text-lg font-semibold text-amber-700 border-b border-amber-100 pb-2 flex items-center">
-                    <FiUser className="mr-2" /> Personal Information
+                  <div className="absolute -left-1 top-0 h-full w-1 bg-green-500 rounded-full"></div>
+                  <h3 className="text-lg font-semibold text-green-800 border-b border-green-100 pb-2 flex items-center">
+                    <FiUser className="mr-2 text-green-600" /> Personal Information
                   </h3>
                   
                   <div className="relative">
-                    <Label htmlFor="fullName" className="text-gray-600">Full Name</Label>
+                    <Label htmlFor="fullName" className="text-gray-700">Full Name</Label>
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none mt-6">
-                      <FiUser className="text-amber-500" />
+                      <FiUser className="text-green-600" />
                     </div>
                     <Input 
                       id="fullName" 
@@ -116,14 +116,14 @@ const SignupCard = () => {
                       value={form.fullName} 
                       onChange={handleChange} 
                       required 
-                      className="pl-10 border-gray-300 focus:border-amber-400 focus:ring-amber-300 transition-all duration-200"
+                      className="pl-10 border-gray-300 focus:border-green-500 focus:ring-green-400 transition-all duration-200"
                     />
                   </div>
                   
                   <div className="relative">
-                    <Label htmlFor="email" className="text-gray-600">Email</Label>
+                    <Label htmlFor="email" className="text-gray-700">Email</Label>
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none mt-6">
-                      <FiMail className="text-amber-500" />
+                      <FiMail className="text-green-600" />
                     </div>
                     <Input 
                       id="email" 
@@ -132,14 +132,14 @@ const SignupCard = () => {
                       value={form.email} 
                       onChange={handleChange} 
                       required 
-                      className="pl-10 border-gray-300 focus:border-amber-400 focus:ring-amber-300 transition-all duration-200"
+                      className="pl-10 border-gray-300 focus:border-green-500 focus:ring-green-400 transition-all duration-200"
                     />
                   </div>
                   
                   <div className="relative">
-                    <Label htmlFor="phone" className="text-gray-600">Phone Number</Label>
+                    <Label htmlFor="phone" className="text-gray-700">Phone Number</Label>
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none mt-6">
-                      <FiPhone className="text-amber-500" />
+                      <FiPhone className="text-green-600" />
                     </div>
                     <Input 
                       id="phone" 
@@ -148,14 +148,14 @@ const SignupCard = () => {
                       value={form.phone} 
                       onChange={handleChange} 
                       required 
-                      className="pl-10 border-gray-300 focus:border-amber-400 focus:ring-amber-300 transition-all duration-200"
+                      className="pl-10 border-gray-300 focus:border-green-500 focus:ring-green-400 transition-all duration-200"
                     />
                   </div>
                   
                   <div className="relative">
-                    <Label htmlFor="password" className="text-gray-600">Password</Label>
+                    <Label htmlFor="password" className="text-gray-700">Password</Label>
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none mt-6">
-                      <FiLock className="text-amber-500" />
+                      <FiLock className="text-green-600" />
                     </div>
                     <Input 
                       id="password" 
@@ -164,22 +164,22 @@ const SignupCard = () => {
                       value={form.password} 
                       onChange={handleChange} 
                       required 
-                      className="pl-10 border-gray-300 focus:border-amber-400 focus:ring-amber-300 transition-all duration-200"
+                      className="pl-10 border-gray-300 focus:border-green-500 focus:ring-green-400 transition-all duration-200"
                     />
                   </div>
                 </div>
                 
                 {/* Vehicle Information */}
                 <div className="space-y-4 relative">
-                  <div className="absolute -left-1 top-0 h-full w-1 bg-amber-400 rounded-full"></div>
-                  <h3 className="text-lg font-semibold text-amber-700 border-b border-amber-100 pb-2 flex items-center">
-                    <FiTruck className="mr-2" /> Vehicle Information
+                  <div className="absolute -left-1 top-0 h-full w-1 bg-green-500 rounded-full"></div>
+                  <h3 className="text-lg font-semibold text-green-800 border-b border-green-100 pb-2 flex items-center">
+                    <FiTruck className="mr-2 text-green-600" /> Vehicle Information
                   </h3>
                   
                   <div className="relative">
-                    <Label htmlFor="vehicleType" className="text-gray-600">Vehicle Type</Label>
+                    <Label htmlFor="vehicleType" className="text-gray-700">Vehicle Type</Label>
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none mt-6">
-                      <FiTruck className="text-amber-500" />
+                      <FiTruck className="text-green-600" />
                     </div>
                     <Select
                       id="vehicleType"
@@ -187,7 +187,7 @@ const SignupCard = () => {
                       value={form.vehicleType}
                       onChange={handleChange}
                       required
-                      className="pl-10 border-gray-300 focus:border-amber-400 focus:ring-amber-300 appearance-none transition-all duration-200"
+                      className="pl-10 border-gray-300 focus:border-green-500 focus:ring-green-400 appearance-none transition-all duration-200"
                     >
                       <option value="">Select a vehicle type</option>
                       {data.getVehicleTypes.map((vehicle: any, idx: number) => (
@@ -199,9 +199,9 @@ const SignupCard = () => {
                   </div>
                   
                   <div className="relative">
-                    <Label htmlFor="plateNumber" className="text-gray-600">Plate Number</Label>
+                    <Label htmlFor="plateNumber" className="text-gray-700">Plate Number</Label>
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none mt-6">
-                      <FiCreditCard className="text-amber-500" />
+                      <FiCreditCard className="text-green-600" />
                     </div>
                     <Input 
                       id="plateNumber" 
@@ -209,14 +209,14 @@ const SignupCard = () => {
                       value={form.plateNumber} 
                       onChange={handleChange} 
                       required 
-                      className="pl-10 border-gray-300 focus:border-amber-400 focus:ring-amber-300 transition-all duration-200"
+                      className="pl-10 border-gray-300 focus:border-green-500 focus:ring-green-400 transition-all duration-200"
                     />
                   </div>
                   
                   <div className="relative">
-                    <Label htmlFor="photo" className="text-gray-600">Profile Photo</Label>
+                    <Label htmlFor="photo" className="text-gray-700">Profile Photo</Label>
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none mt-6">
-                      <FiCamera className="text-amber-500" />
+                      <FiCamera className="text-green-600" />
                     </div>
                     <Input 
                       id="photo" 
@@ -224,14 +224,14 @@ const SignupCard = () => {
                       type="file" 
                       accept="image/*" 
                       onChange={handleChange} 
-                      className="pl-10 py-2 border-gray-300 focus:border-amber-400 focus:ring-amber-300 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-amber-50 file:text-amber-700 hover:file:bg-amber-100 transition-all duration-200"
+                      className="pl-10 py-2 border-gray-300 focus:border-green-500 focus:ring-green-400 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100 transition-all duration-200"
                     />
                   </div>
                   
                   <div className="relative">
-                    <Label htmlFor="license" className="text-gray-600">Drivers License</Label>
+                    <Label htmlFor="license" className="text-gray-700">Drivers License</Label>
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none mt-6">
-                      <FiFileText className="text-amber-500" />
+                      <FiFileText className="text-green-600" />
                     </div>
                     <Input 
                       id="license" 
@@ -239,7 +239,7 @@ const SignupCard = () => {
                       type="file" 
                       accept="image/*,application/pdf" 
                       onChange={handleChange} 
-                      className="pl-10 py-2 border-gray-300 focus:border-amber-400 focus:ring-amber-300 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-amber-50 file:text-amber-700 hover:file:bg-amber-100 transition-all duration-200"
+                      className="pl-10 py-2 border-gray-300 focus:border-green-500 focus:ring-green-400 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100 transition-all duration-200"
                     />
                   </div>
                 </div>
@@ -248,15 +248,15 @@ const SignupCard = () => {
               <div className="pt-4">
                 <Button 
                   type="submit" 
-                  className="w-full py-3 bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-700 hover:to-amber-600 text-white font-bold rounded-lg shadow-lg transition-all duration-300 hover:shadow-xl relative overflow-hidden group"
+                  className="w-full py-3 bg-gradient-to-r from-green-700 to-green-600 hover:from-green-800 hover:to-green-700 text-white font-bold rounded-lg shadow-lg transition-all duration-300 hover:shadow-xl relative overflow-hidden group"
                 >
-                  <span className="relative z-10">Join Premium Network</span>
-                  <span className="absolute inset-0 bg-gradient-to-r from-amber-700 to-amber-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+                  <span className="relative z-10">Complete Registration</span>
+                  <span className="absolute inset-0 bg-gradient-to-r from-green-800 to-green-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
                 </Button>
               </div>
               
               <p className="text-center text-gray-500 text-sm">
-                By registering, you agree to our <a href="#" className="text-amber-600 hover:underline">Terms of Service</a> and <a href="#" className="text-amber-600 hover:underline">Privacy Policy</a>
+                By registering, you agree to our <a href="#" className="text-green-600 hover:underline">Terms of Service</a> and <a href="#" className="text-green-600 hover:underline">Privacy Policy</a>
               </p>
             </form>
           </CardContent>
