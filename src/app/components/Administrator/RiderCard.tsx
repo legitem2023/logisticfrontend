@@ -12,31 +12,7 @@ import {
 } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 
-interface Rider {
-  id: string;
-  name: string;
-  email: string;
-  phoneNumber: string;
-  vehicleType: {
-    name: string;
-    maxCapacityKg: number;
-    maxVolumeM3: number;
-  };
-  licensePlate: string;
-  status: string;
-  currentLatitude?: number;
-  currentLongitude?: number;
-  lastUpdatedAt: string;
-  role: string;
-  image?: string;
-}
-
-interface RiderCardProps {
-  rider: Rider;
-  onViewDetails: (rider: Rider) => void;
-}
-
-const RiderCard = ({ rider, onViewDetails }: RiderCardProps) => {
+const RiderCard = ({ rider, onViewDetails }) => {
   const statusColors = {
     ACTIVE: 'green',
     INACTIVE: 'red',
@@ -89,7 +65,7 @@ const RiderCard = ({ rider, onViewDetails }: RiderCardProps) => {
       }
       actions={[
         <Button 
-          key="view-details" // Added key prop here
+          key={0}
           type="primary" 
           ghost 
           onClick={() => onViewDetails(rider)}
