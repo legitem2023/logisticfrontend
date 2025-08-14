@@ -16,6 +16,7 @@ const ProofOfDeliveryForm = ({data}:{data:ProofOfDeliveryFormProps}) => {
 const [uploadFile] = useMutation(UPLOAD,{
   onCompleted:(e) =>{
     setLoading(false);
+    refetch();
     showToast("Proof of delivery submitted successfully!",'success');
   }
 });
