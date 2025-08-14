@@ -7,9 +7,8 @@ import { showToast } from '../../../../utils/toastify';
 
 type ProofOfDeliveryFormProps = {
   data: { id: string };
-  refresh: () => ApolloQueryResult<any>
+  refresh: () => Promise<ApolloQueryResult<any>>; // Changed to return Promise
 };
-
 
 const ProofOfDeliveryForm = ({data,refresh}:ProofOfDeliveryFormProps) => {
   // Form state
