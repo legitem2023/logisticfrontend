@@ -91,7 +91,7 @@ const RiderCard = ({ rider, onViewDetails }) => {
           <div className="flex items-center gap-2">
             <Clock size={16} className="text-gray-500" />
             <span>
-              {formatDistanceToNow(new Date(rider.lastUpdatedAt), { addSuffix: true })}
+              {formatDistanceToNow(new Date(rider.lastUpdatedAt * 1000), { addSuffix: true })}
             </span>
           </div>
         </div>
