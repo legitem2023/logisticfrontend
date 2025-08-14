@@ -7,7 +7,11 @@ import { showToast } from '../../../../utils/toastify';
 type data ={
   id:string
 }
-const ProofOfDeliveryForm = ({data}:{data:data}) => {
+type ProofOfDeliveryFormProps = {
+  data: Data;
+  refetch: () => Promise<any>;  // Add refetch to props
+};
+const ProofOfDeliveryForm = ({data}:{data:ProofOfDeliveryFormProps}) => {
   // Form state
 const [uploadFile] = useMutation(UPLOAD,{
   onCompleted:(e) =>{
