@@ -9,7 +9,7 @@ import { showToast } from '../../../../utils/toastify';
 import { useSelector } from 'react-redux';
 import { selectTempUserId } from '../../../../Redux/tempUserSlice';
 
-import { CANCELEDDELIVERY,FINISHDELIVERY,SENDNOTIFICATION } from "../../../../graphql/mutation"; 
+import { SENDNOTIFICATION } from "../../../../graphql/mutation"; 
 
 //import { useSubscription } from '@apollo/client';
 import { LocationTracking } from '../../../../graphql/subscription'; // update with correct path
@@ -24,10 +24,6 @@ export default function RiderMap({ PickUpCoordinates,DropOffCoordinates,delivery
   const mapRef = useRef<L.Map | null>(null);
   const routingRef = useRef<L.Routing.Control | null>(null);
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
-  const [finishDelivery] = useMutation(FINISHDELIVERY,{
-   onCompleted: () => showToast("Delivery successfully completed", "success"),
-   onError: (e: any) => console.log('Finished Error', e)
-  })
   
 const [sendNotification] = useMutation(SENDNOTIFICATION,{
    onCompleted: () => showToast("Notification sent", "success"),
@@ -126,18 +122,7 @@ const { data: locationData } = useSubscription(LocationTracking, {
     };
   }, []);
 
-  const handleStatusChange = async (newStatus: typeof status) => {
-    setStatus(newStatus);
-    if(newStatus==='finished'){
-       await finishDelivery({
-         variables : {"deliveryId":deliveryId,
-                      "riderId": globalUserId 
-          }
-       })
-    }
-   // alert(`Delivery marked as: ${newStatus?.toUpperCase()}`);
-  };
-
+  
   return (
     <div className="relative w-full h-screen overflow-hidden">
       <div
@@ -164,17 +149,7 @@ const { data: locationData } = useSubscription(LocationTracking, {
         <div className="flex justify-between gap-3">
           <button
             className="flex-1 bg-yellow-600 hover:bg-green-700 text-white font-semibold py-2 rounded-xl shadow-lg transition-all focus:ring-2 focus:ring-green-300">
-            En Route to Pickup Location.
-          </button>
-          <button
-            className="flex-1 bg-yellow-600 hover:bg-green-700 text-white font-semibold py-2 rounded-xl shadow-lg transition-all focus:ring-2 focus:ring-green-300">
-            Arrived at Pickup Location
-          </button>
-          
-          <button
-            onClick={() => handleStatusChange('finished')}
-            className="flex-1 bg-green-600 hover:bg-green-700 text-white font-semibold py-2 rounded-xl shadow-lg transition-all focus:ring-2 focus:ring-green-300">
-            Finish
+            Failed Attemp
           </button>
         </div>
 
