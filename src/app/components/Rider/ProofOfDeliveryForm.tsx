@@ -7,17 +7,17 @@ import { showToast } from '../../../../utils/toastify';
 
 type ProofOfDeliveryFormProps = {
   data: { id: string };
-  refetch: () => ApolloQueryResult<any>
+  refresh: () => ApolloQueryResult<any>
 };
 
 
-const ProofOfDeliveryForm = ({data,refetch}:ProofOfDeliveryFormProps) => {
+const ProofOfDeliveryForm = ({data,refresh}:ProofOfDeliveryFormProps) => {
   // Form state
 const [uploadFile] = useMutation(UPLOAD, {
     onCompleted: async () => {
       setLoading(false);
       try {
-        await refetch();
+        await refresh();
         showToast("Proof of delivery submitted successfully!", 'success');
         setShowSuccess(true);
       } catch (error) {
