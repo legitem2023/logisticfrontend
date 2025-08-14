@@ -15,7 +15,7 @@ type data ={
 const PaymentComponent = ({data}:{data:data}) => {
     const [markPaid] = useMutation(MARKPAID,{
      onCompleted: async () => {
-       await refresh();
+       await data.refresh();
        console.log("Delivery marked as paid", "success");},
      onError: (e: any) => console.log('Finished Error', e)
     })
