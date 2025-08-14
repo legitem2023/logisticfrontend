@@ -10,7 +10,7 @@ import { VEHICLEQUERY } from "../../../graphql/query";
 import { CREATERIDER } from "../../../graphql/mutation";
 import { showToast } from "../../../utils/toastify";
 import { motion } from "framer-motion";
-import { FiUser, FiMail, FiPhone, FiLock, FiCar, FiCreditCard, FiCamera, FiFileText } from "react-icons/fi";
+import { FiUser, FiMail, FiPhone, FiLock, FiTruck, FiCreditCard, FiCamera, FiFileText } from "react-icons/fi";
 
 const SignupCard = () => {
   const { loading, error, data } = useQuery(VEHICLEQUERY);
@@ -178,7 +178,7 @@ const SignupCard = () => {
                 <div className="relative">
                   <Label htmlFor="vehicleType" className="text-gray-600">Vehicle Type</Label>
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none mt-6">
-                    <FiCar className="text-amber-500" />
+                    <FiTruck className="text-amber-500" />
                   </div>
                   <Select
                     id="vehicleType"
