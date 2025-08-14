@@ -7,7 +7,7 @@ import { showToast } from '../../../../utils/toastify';
 
 type ProofOfDeliveryFormProps = {
   data: { id: string };
-  refetch: () => Promise<void>; // Or ApolloQueryResult<YourDataType>
+  refetch: () => ApolloQueryResult<any>
 };
 
 
