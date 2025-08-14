@@ -1,5 +1,4 @@
 import React from 'react';
-import { Card, Avatar, Tag, Button, Divider, Tooltip } from 'antd';
 import { 
   User,
   Car,
@@ -14,110 +13,98 @@ import { formatDistanceToNow } from 'date-fns';
 
 const RiderCard = ({ rider, onViewDetails }) => {
   const statusColors = {
-    ACTIVE: 'green',
-    INACTIVE: 'red',
-    BUSY: 'orange',
-    OFFLINE: 'gray'
+    ACTIVE: 'bg-green-100 text-green-800',
+    INACTIVE: 'bg-red-100 text-red-800',
+    BUSY: 'bg-orange-100 text-orange-800',
+    OFFLINE: 'bg-gray-100 text-gray-800'
   };
 
   return (
-    <Card
-      hoverable
-      style={{ width: 320, borderRadius: 12, boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
-      cover={
-        <div style={{ 
-          height: 140, 
-          background: `linear-gradient(135deg, #1890ff 0%, #673ab7 100%)`,
-          position: 'relative',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center'
-        }}>
-          {rider.image ? (
-            <Avatar 
-              size={80} 
-              src={rider.image} 
-              style={{ border: '3px solid white' }} 
-            />
-          ) : (
-            <Avatar 
-              size={80} 
-              icon={<User size={32} />} 
-              style={{ 
-                backgroundColor: '#fff',
-                color: '#1890ff',
-                border: '3px solid white'
-              }} 
-            />
-          )}
-          <Tag 
-            color={statusColors[rider.status] || 'blue'} 
-            style={{ 
-              position: 'absolute', 
-              bottom: 16, 
-              right: 16,
-              fontWeight: 'bold'
-            }}
-          >
-            {rider.status}
-          </Tag>
-        </div>
-      }
-      actions={[
-        <Button 
-          key={0}
-          type="primary" 
-          ghost 
-          onClick={() => onViewDetails(rider)}
-          style={{ width: '90%', borderRadius: 6 }}
-          icon={<ChevronRight size={16} />}
-        >
-          View Details
-        </Button>
-      ]}
-    >
-      <div style={{ textAlign: 'center', marginBottom: 16 }}>
-        <h3 style={{ marginBottom: 4, fontSize: 18 }}>{rider.name}</h3>
-        <Tag icon={<BadgeInfo size={14} />} color="blue">{rider.role}</Tag>
-      </div>
-
-      <Divider style={{ margin: '12px 0' }} />
-
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <Mail size={16} color="#666" />
-          <span>{rider.email}</span>
-        </div>
-        
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <Phone size={16} color="#666" />
-          <span>{rider.phoneNumber}</span>
-        </div>
-        
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <Car size={16} color="#666" />
-          <Tooltip title={`Max ${rider.vehicleType.maxCapacityKg}kg · ${rider.vehicleType.maxVolumeM3}m³`}>
-            <span>
-              {rider.vehicleType.name} ({rider.licensePlate})
-            </span>
-          </Tooltip>
-        </div>
-        
-        {rider.currentLatitude && rider.currentLongitude && (
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <MapPin size={16} color="#666" />
-            <span>Location: {rider.currentLatitude.toFixed(4)}, {rider.currentLongitude.toFixed(4)}</span>
+    <div className="w-80 rounded-xl shadow-md overflow-hidden bg-white hover:shadow-lg transition-shadow">
+      {/* Card Header */}
+      <div 
+        className="h-36 relative flex justify-center items-center"
+        style={{ background: 'linear-gradient(135deg, #1890ff 0%, #673ab7 100%)' }}
+      >
+        {rider.image ? (
+          <img
+            src={rider.image}
+            alt={rider.name}
+            className="w-20 h-20 rounded-full object-cover border-4 border-white"
+          />
+        ) : (
+          <div className="w-20 h-20 rounded-full bg-white flex items-center justify-center text-blue-500 border-4 border-white">
+            <User size={32} />
           </div>
         )}
-        
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <Clock size={16} color="#666" />
-          <span>
-            Last updated: {formatDistanceToNow(new Date(rider.lastUpdatedAt), { addSuffix: true })}
+        <span 
+          className={`absolute bottom-4 right-4 px-3 py-1 rounded-full text-sm font-bold ${
+            statusColors[rider.status] || 'bg-blue-100 text-blue-800'
+          }`}
+        >
+          {rider.status}
+        </span>
+      </div>
+
+      {/* Card Content */}
+      <div className="p-5">
+        <div className="text-center mb-4">
+          <h3 className="text-lg font-semibold mb-1">{rider.name}</h3>
+          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+            <BadgeInfo size={14} className="mr-1" />
+            {rider.role}
           </span>
         </div>
+
+        <div className="h-px bg-gray-200 my-3"></div>
+
+        <div className="space-y-3 text-sm">
+          <div className="flex items-center gap-2">
+            <Mail size={16} className="text-gray-500" />
+            <span>{rider.email}</span>
+          </div>
+          
+          <div className="flex items-center gap-2">
+            <Phone size={16} className="text-gray-500" />
+            <span>{rider.phoneNumber}</span>
+          </div>
+          
+          <div className="flex items-start gap-2">
+            <Car size={16} className="text-gray-500 mt-0.5" />
+            <div>
+              <p>{rider.vehicleType.name} ({rider.licensePlate})</p>
+              <p className="text-xs text-gray-500">
+                Max {rider.vehicleType.maxCapacityKg}kg · {rider.vehicleType.maxVolumeM3}m³
+              </p>
+            </div>
+          </div>
+          
+          {rider.currentLatitude && rider.currentLongitude && (
+            <div className="flex items-center gap-2">
+              <MapPin size={16} className="text-gray-500" />
+              <span>
+                {rider.currentLatitude.toFixed(4)}, {rider.currentLongitude.toFixed(4)}
+              </span>
+            </div>
+          )}
+          
+          <div className="flex items-center gap-2">
+            <Clock size={16} className="text-gray-500" />
+            <span>
+              {formatDistanceToNow(new Date(rider.lastUpdatedAt), { addSuffix: true })}
+            </span>
+          </div>
+        </div>
+
+        <button
+          onClick={() => onViewDetails(rider)}
+          className="mt-4 w-full flex items-center justify-center gap-2 px-4 py-2 bg-white border border-blue-500 text-blue-500 rounded-lg hover:bg-blue-50 transition"
+        >
+          <ChevronRight size={16} />
+          View Details
+        </button>
       </div>
-    </Card>
+    </div>
   );
 };
 
