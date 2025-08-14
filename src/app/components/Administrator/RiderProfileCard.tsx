@@ -115,7 +115,7 @@ const RiderProfileCard = ({ rider, onViewDetails }) => {
         <div className="mt-6 flex justify-between items-center">
           <div className="flex items-center text-xs text-gray-500">
             <Calendar className="w-3 h-3 mr-1" />
-            Joined {format(new Date(rider.createdAt), 'MMM d, yyyy')}
+            Joined {format(new Date(rider.createdAt * 1000), 'MMM d, yyyy')}
           </div>
           <button
             onClick={() => onViewDetails(rider)}
