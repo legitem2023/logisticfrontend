@@ -1,6 +1,6 @@
 'use client';
 import { useState, useRef, useEffect } from 'react';
-import { useMutation } from "@apollo/client"; 
+import { useMutation , ApolloQueryResult } from "@apollo/client"; 
 import { UPLOAD } from "../../../../graphql/mutation"; 
 import { showToast } from '../../../../utils/toastify'; 
 
@@ -13,13 +13,22 @@ type ProofOfDeliveryFormProps = {
 
 const ProofOfDeliveryForm = ({data,refetch}:ProofOfDeliveryFormProps) => {
   // Form state
-const [uploadFile] = useMutation(UPLOAD,{
-  onCompleted:(e) =>{
-    setLoading(false);
-    refetch();
-    showToast("Proof of delivery submitted successfully!",'success');
-  }
-});
+const [uploadFile] = useMutation(UPLOAD, {
+    onCompleted: async () => {
+      setLoading(false);
+      try {
+        await refetch();
+        showToast("Proof of delivery submitted successfully!", 'success');
+        setShowSuccess(true);
+      } catch (error) {
+        showToast("Failed to refresh data", 'error');
+      }
+    },
+    onError: (error) => {
+      setLoading(false);
+      showToast(`Submission failed: ${error.message}`, 'error');
+    }
+  });
 
   
   const [formData, setFormData] = useState({
