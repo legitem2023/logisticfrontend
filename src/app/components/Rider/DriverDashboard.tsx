@@ -529,7 +529,7 @@ const tabs = [
               <XIcon className="w-5 h-5" />
             </Button>
           </div>
-           <PaymentComponent data={{id:deliveryId,base:selectedDelivery.baseRate,perKmRate:selectedDelivery.perKmRate,distance:selectedDelivery.distance}}/>
+           <PaymentComponent data={{id:deliveryId,base:selectedDelivery.baseRate,perKmRate:selectedDelivery.perKmRate,distance:selectedDelivery.distance,refresh:refetch}}/>
          </div>
        </div>
       )}
