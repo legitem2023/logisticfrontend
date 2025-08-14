@@ -23,8 +23,7 @@ const RiderCard = ({ rider, onViewDetails }) => {
     <div className="w-80 rounded-xl shadow-md overflow-hidden bg-white hover:shadow-lg transition-shadow">
       {/* Card Header */}
       <div 
-        className="h-36 relative flex justify-center items-center"
-        style={{ background: 'linear-gradient(135deg, #1890ff 0%, #673ab7 100%)' }}
+        className="h-36 relative flex justify-center items-center customgrad"
       >
         {rider.image ? (
           <img
