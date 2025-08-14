@@ -100,7 +100,7 @@ const SignupCard = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Personal Information */}
                 <div className="space-y-4 relative">
-                  <div className="absolute -left-1 top-0 h-full w-1 bg-green-500 rounded-full"></div>
+                  <div className="absolute -left-1 top-0 h-full w-1 rounded-full"></div>
                   <h3 className="text-lg font-semibold text-green-800 border-b border-green-100 pb-2 flex items-center">
                     <FiUser className="mr-2 text-green-600" /> Personal Information
                   </h3>
@@ -171,7 +171,7 @@ const SignupCard = () => {
                 
                 {/* Vehicle Information */}
                 <div className="space-y-4 relative">
-                  <div className="absolute -left-1 top-0 h-full w-1 bg-green-500 rounded-full"></div>
+                  <div className="absolute -left-1 top-0 h-full w-1 rounded-full"></div>
                   <h3 className="text-lg font-semibold text-green-800 border-b border-green-100 pb-2 flex items-center">
                     <FiTruck className="mr-2 text-green-600" /> Vehicle Information
                   </h3>
