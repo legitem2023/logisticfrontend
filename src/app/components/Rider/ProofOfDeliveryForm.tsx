@@ -4,14 +4,14 @@ import { useMutation } from "@apollo/client";
 import { UPLOAD } from "../../../../graphql/mutation"; 
 import { showToast } from '../../../../utils/toastify'; 
 
-type data ={
-  id:string
-}
+
 type ProofOfDeliveryFormProps = {
-  data: Data;
-  refetch: () => Promise<any>;  // Add refetch to props
+  data: { id: string };
+  refetch: () => Promise<void>; // Or ApolloQueryResult<YourDataType>
 };
-const ProofOfDeliveryForm = ({data}:{data:ProofOfDeliveryFormProps}) => {
+
+
+const ProofOfDeliveryForm = ({data,refetch}:ProofOfDeliveryFormProps) => {
   // Form state
 const [uploadFile] = useMutation(UPLOAD,{
   onCompleted:(e) =>{
