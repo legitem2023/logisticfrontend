@@ -1,14 +1,15 @@
 import React from 'react';
 import { Card, Avatar, Tag, Button, Divider, Tooltip } from 'antd';
 import { 
-  UserOutlined, 
-  CarOutlined, 
-  PhoneOutlined, 
-  MailOutlined, 
-  EnvironmentOutlined,
-  IdcardOutlined,
-  ClockCircleOutlined
-} from '@ant-design/icons';
+  User,
+  Car,
+  Phone,
+  Mail,
+  MapPin,
+  BadgeInfo,
+  Clock,
+  ChevronRight
+} from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 
 const RiderCard = ({ rider, onViewDetails }) => {
@@ -41,7 +42,7 @@ const RiderCard = ({ rider, onViewDetails }) => {
           ) : (
             <Avatar 
               size={80} 
-              icon={<UserOutlined />} 
+              icon={<User size={32} />} 
               style={{ 
                 backgroundColor: '#fff',
                 color: '#1890ff',
@@ -68,6 +69,7 @@ const RiderCard = ({ rider, onViewDetails }) => {
           ghost 
           onClick={() => onViewDetails(rider)}
           style={{ width: '90%', borderRadius: 6 }}
+          icon={<ChevronRight size={16} />}
         >
           View Details
         </Button>
@@ -75,24 +77,24 @@ const RiderCard = ({ rider, onViewDetails }) => {
     >
       <div style={{ textAlign: 'center', marginBottom: 16 }}>
         <h3 style={{ marginBottom: 4, fontSize: 18 }}>{rider.name}</h3>
-        <Tag icon={<IdcardOutlined />} color="blue">{rider.role}</Tag>
+        <Tag icon={<BadgeInfo size={14} />} color="blue">{rider.role}</Tag>
       </div>
 
       <Divider style={{ margin: '12px 0' }} />
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          <MailOutlined style={{ marginRight: 8, color: '#666' }} />
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <Mail size={16} color="#666" />
           <span>{rider.email}</span>
         </div>
         
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          <PhoneOutlined style={{ marginRight: 8, color: '#666' }} />
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <Phone size={16} color="#666" />
           <span>{rider.phoneNumber}</span>
         </div>
         
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          <CarOutlined style={{ marginRight: 8, color: '#666' }} />
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <Car size={16} color="#666" />
           <Tooltip title={`Max ${rider.vehicleType.maxCapacityKg}kg · ${rider.vehicleType.maxVolumeM3}m³`}>
             <span>
               {rider.vehicleType.name} ({rider.licensePlate})
@@ -101,14 +103,14 @@ const RiderCard = ({ rider, onViewDetails }) => {
         </div>
         
         {rider.currentLatitude && rider.currentLongitude && (
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <EnvironmentOutlined style={{ marginRight: 8, color: '#666' }} />
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <MapPin size={16} color="#666" />
             <span>Location: {rider.currentLatitude.toFixed(4)}, {rider.currentLongitude.toFixed(4)}</span>
           </div>
         )}
         
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          <ClockCircleOutlined style={{ marginRight: 8, color: '#666' }} />
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <Clock size={16} color="#666" />
           <span>
             Last updated: {formatDistanceToNow(new Date(rider.lastUpdatedAt), { addSuffix: true })}
           </span>
