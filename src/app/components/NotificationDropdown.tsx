@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react';
-import { useMutation, useQuery } from '@apollo/client';
+import { useMutation, useQuery, useSubscription } from '@apollo/client';
 import { Bell, Trash2 } from 'lucide-react';
 import { GETNOTIFICATION } from '../../../graphql/query';
 import { capitalize, formatDate } from "../../../utils/decryptToken";
@@ -9,6 +9,7 @@ import { Badge } from './ui/Badge'
 import { READNOTIFICATION, DELETENOTIFICATION } from '../../../graphql/mutation';
 import { useSelector,useDispatch } from "react-redux";
 import { setActiveIndex } from '../../../Redux/activeIndexSlice';
+import { NOTIFICATION } from '../../../graphql/subscription';
 
 export default function NotificationDropdown({ userId }: { userId: string | null }) {
   const [open, setOpen] = useState(false)
@@ -16,11 +17,37 @@ export default function NotificationDropdown({ userId }: { userId: string | null
   const dropdownRef = useRef<HTMLDivElement>(null)
   const dispatch = useDispatch()
 
-  const { data, loading, error } = useQuery(GETNOTIFICATION, {
+  const { data, loading, error, subscribeToMore } = useQuery(GETNOTIFICATION, {
     variables: { getNotificationsId: userId },
     skip: !userId,
     fetchPolicy: 'cache-and-network'
   })
+
+  // Setup the subscription
+  useEffect(() => {
+    if (!userId) return;
+
+    const unsubscribe = subscribeToMore({
+      document: NOTIFICATION,
+      variables: { userId },
+      updateQuery: (prev, { subscriptionData }) => {
+        if (!subscriptionData.data) return prev;
+        const newNotification = subscriptionData.data.notificationReceived;
+        
+        // Check if the notification already exists to prevent duplicates
+        if (prev.getNotifications.some((notif: any) => notif.id === newNotification.id)) {
+          return prev;
+        }
+        
+        return {
+          ...prev,
+          getNotifications: [newNotification, ...prev.getNotifications]
+        };
+      }
+    });
+
+    return () => unsubscribe();
+  }, [userId, subscribeToMore]);
 
   const [readNotification] = useMutation(READNOTIFICATION, {
     refetchQueries: userId ? [{
@@ -196,4 +223,4 @@ export default function NotificationDropdown({ userId }: { userId: string | null
       </div>
     </div>
   )
-        }
+          }
