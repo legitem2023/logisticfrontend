@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { FaMotorcycle, FaMoneyBillWave, FaReceipt, FaShieldAlt, FaCheckCircle } from 'react-icons/fa';
 import { ACCEPTDELIVERY, SKIPDELIVERY, CANCELEDDELIVERY,FINISHDELIVERY,SENDNOTIFICATION, MARKPAID } from "../../../../graphql/mutation"; 
-import { useMutation } from '@apollo/client';
+import { useMutation, ApolloQueryResult } from '@apollo/client';
 import { useSelector } from 'react-redux';
 import { selectTempUserId } from '../../../../Redux/tempUserSlice';
 
@@ -9,11 +9,14 @@ type data ={
   id:string;
   base:number;
   perKmRate:number;
-  distance:number
+  distance:number;
+  refresh: () => Promise<ApolloQueryResult<any>>; 
 }
 const PaymentComponent = ({data}:{data:data}) => {
     const [markPaid] = useMutation(MARKPAID,{
-     onCompleted: () => console.log("Delivery marked as paid", "success"),
+     onCompleted: async () => {
+       await refresh();
+       console.log("Delivery marked as paid", "success");},
      onError: (e: any) => console.log('Finished Error', e)
     })
     const globalUserId = useSelector(selectTempUserId);
