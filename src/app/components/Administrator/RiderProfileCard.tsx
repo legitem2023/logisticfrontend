@@ -1,15 +1,5 @@
 import React from 'react';
 import { 
-  Card, 
-  Avatar, 
-  Typography, 
-  Button, 
-  Badge, 
-  Space,
-  Descriptions,
-  Tag 
-} from 'antd';
-import { 
   User,
   Car,
   Phone,
@@ -21,104 +11,122 @@ import {
 } from 'lucide-react';
 import { format } from 'date-fns';
 
-const { Text, Title } = Typography;
-
 const RiderProfileCard = ({ rider, onViewDetails }) => {
-  const statusBadge = {
-    ACTIVE: { color: 'green', text: 'Active' },
-    INACTIVE: { color: 'red', text: 'Inactive' },
-    BUSY: { color: 'orange', text: 'On Delivery' },
-    OFFLINE: { color: 'gray', text: 'Offline' }
+  const statusColors = {
+    ACTIVE: 'bg-green-100 text-green-800 border-green-200',
+    INACTIVE: 'bg-red-100 text-red-800 border-red-200',
+    BUSY: 'bg-orange-100 text-orange-800 border-orange-200',
+    OFFLINE: 'bg-gray-100 text-gray-800 border-gray-200'
   };
 
-  const status = statusBadge[rider.status] || { color: 'blue', text: rider.status };
+  const status = statusColors[rider.status] || 'bg-blue-100 text-blue-800 border-blue-200';
 
   return (
-    <Card
-      style={{
-        width: '100%',
-        maxWidth: 360,
-        borderRadius: 16,
-        boxShadow: '0 8px 24px rgba(0,0,0,0.08)',
-        overflow: 'hidden'
-      }}
-    >
-      <div style={{
-        background: 'linear-gradient(135deg, #6a11cb 0%, #2575fc 100%)',
-        padding: 24,
-        textAlign: 'center',
-        margin: -24,
-        marginBottom: 16
-      }}>
-        <Badge 
-          dot 
-          color={status.color}
-          offset={[-10, 80]}
-        >
-          <Avatar 
-            size={90} 
-            src={rider.image} 
-            icon={!rider.image && <User size={32} />}
-            style={{ 
-              border: '4px solid rgba(255,255,255,0.3)',
-              backgroundColor: rider.image ? 'transparent' : '#fff',
-              color: '#6a11cb'
-            }}
-          />
-        </Badge>
-        <Title level={4} style={{ color: 'white', marginTop: 16, marginBottom: 0 }}>
-          {rider.name}
-        </Title>
-        <Text style={{ color: 'rgba(255,255,255,0.8)' }}>{rider.role}</Text>
+    <div className="w-full max-w-sm rounded-2xl shadow-lg overflow-hidden bg-white border border-gray-100">
+      {/* Header with Gradient Background */}
+      <div 
+        className="pt-8 pb-12 px-6 text-center relative"
+        style={{ background: 'linear-gradient(135deg, #6a11cb 0%, #2575fc 100%)' }}
+      >
+        {/* Avatar with Status Badge */}
+        <div className="relative inline-block">
+          {rider.image ? (
+            <img 
+              src={rider.image}
+              alt={rider.name}
+              className="w-24 h-24 rounded-full object-cover border-4 border-white/30"
+            />
+          ) : (
+            <div className="w-24 h-24 rounded-full bg-white flex items-center justify-center text-purple-600 border-4 border-white/30">
+              <User size={32} />
+            </div>
+          )}
+          {/* Status Badge */}
+          <span 
+            className={`absolute -bottom-2 -right-2 w-5 h-5 rounded-full border-2 border-white ${status.split(' ')[0]}`}
+          ></span>
+        </div>
+
+        <h3 className="text-xl font-semibold text-white mt-4 mb-1">{rider.name}</h3>
+        <p className="text-white/80">{rider.role}</p>
       </div>
 
-      <Descriptions column={1} size="small" style={{ marginBottom: 16 }}>
-        <Descriptions.Item label={<Space><Mail size={16} />Email</Space>}>
-          <Text copyable>{rider.email}</Text>
-        </Descriptions.Item>
-        <Descriptions.Item label={<Space><Phone size={16} />Phone</Space>}>
-          <Text copyable>{rider.phoneNumber}</Text>
-        </Descriptions.Item>
-        <Descriptions.Item label={<Space><Car size={16} />Vehicle</Space>}>
-          <Text strong>{rider.vehicleType.name}</Text>
-          <div style={{ marginTop: 4 }}>
-            <Text type="secondary">Plate: {rider.licensePlate}</Text>
+      {/* Content Area */}
+      <div className="p-6">
+        {/* Details Sections */}
+        <div className="space-y-5">
+          {/* Email */}
+          <div>
+            <div className="flex items-center text-sm font-medium text-gray-500 mb-1">
+              <Mail className="w-4 h-4 mr-2 text-blue-500" />
+              Email
+            </div>
+            <p className="text-gray-800">{rider.email}</p>
           </div>
-          <div style={{ marginTop: 4 }}>
-            <Text type="secondary">
-              Capacity: {rider.vehicleType.maxCapacityKg}kg · {rider.vehicleType.maxVolumeM3}m³
-            </Text>
-          </div>
-        </Descriptions.Item>
-        {rider.currentLatitude && rider.currentLongitude && (
-          <Descriptions.Item label={<Space><MapPin size={16} />Location</Space>}>
-            <Text>
-              {rider.currentLatitude.toFixed(4)}, {rider.currentLongitude.toFixed(4)}
-            </Text>
-          </Descriptions.Item>
-        )}
-        <Descriptions.Item label={<Space><Shield size={16} />Status</Space>}>
-          <Tag color={status.color}>{status.text}</Tag>
-        </Descriptions.Item>
-      </Descriptions>
 
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <Space>
-          <Calendar size={14} color="#999" />
-          <Text type="secondary" style={{ fontSize: 12 }}>
+          {/* Phone */}
+          <div>
+            <div className="flex items-center text-sm font-medium text-gray-500 mb-1">
+              <Phone className="w-4 h-4 mr-2 text-blue-500" />
+              Phone
+            </div>
+            <p className="text-gray-800">{rider.phoneNumber}</p>
+          </div>
+
+          {/* Vehicle */}
+          <div>
+            <div className="flex items-center text-sm font-medium text-gray-500 mb-1">
+              <Car className="w-4 h-4 mr-2 text-blue-500" />
+              Vehicle
+            </div>
+            <p className="font-semibold text-gray-800">{rider.vehicleType.name}</p>
+            <div className="text-sm text-gray-500 mt-1">
+              <p>Plate: {rider.licensePlate}</p>
+              <p>Capacity: {rider.vehicleType.maxCapacityKg}kg · {rider.vehicleType.maxVolumeM3}m³</p>
+            </div>
+          </div>
+
+          {/* Location */}
+          {rider.currentLatitude && rider.currentLongitude && (
+            <div>
+              <div className="flex items-center text-sm font-medium text-gray-500 mb-1">
+                <MapPin className="w-4 h-4 mr-2 text-blue-500" />
+                Location
+              </div>
+              <p className="text-gray-800">
+                {rider.currentLatitude.toFixed(4)}, {rider.currentLongitude.toFixed(4)}
+              </p>
+            </div>
+          )}
+
+          {/* Status */}
+          <div>
+            <div className="flex items-center text-sm font-medium text-gray-500 mb-1">
+              <Shield className="w-4 h-4 mr-2 text-blue-500" />
+              Status
+            </div>
+            <span className={`inline-block px-3 py-1 rounded-full text-xs font-medium ${status}`}>
+              {rider.status}
+            </span>
+          </div>
+        </div>
+
+        {/* Footer with Date and Button */}
+        <div className="mt-6 flex justify-between items-center">
+          <div className="flex items-center text-xs text-gray-500">
+            <Calendar className="w-3 h-3 mr-1" />
             Joined {format(new Date(rider.createdAt), 'MMM d, yyyy')}
-          </Text>
-        </Space>
-        <Button 
-          type="primary" 
-          onClick={() => onViewDetails(rider)}
-          shape="round"
-          icon={<ChevronRight size={16} />}
-        >
-          View Full Profile
-        </Button>
+          </div>
+          <button
+            onClick={() => onViewDetails(rider)}
+            className="flex items-center px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-full text-sm font-medium transition-colors"
+          >
+            View Full Profile
+            <ChevronRight className="w-4 h-4 ml-1" />
+          </button>
+        </div>
       </div>
-    </Card>
+    </div>
   );
 };
 
