@@ -512,7 +512,7 @@ const tabs = [
               <XIcon className="w-5 h-5" />
             </Button>
           </div>
-           <ProofOfDeliveryForm data={{id:deliveryId}} refetch={refetch}/>
+           <ProofOfDeliveryForm data={{id:deliveryId}} refresh={refetch}/>
          </div>
        </div>
       )}
