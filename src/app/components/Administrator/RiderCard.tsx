@@ -203,14 +203,17 @@ const RiderCard = ({ rider, onViewDetails, onSave }) => {
           <div className="flex items-center gap-2">
             <Clock size={16} className="text-emerald-600" />
             <span>
-              {editableData.lastUpdatedAt
+              {/*editableData.lastUpdatedAt
                 ? formatDistanceToNow(
                     editableData.lastUpdatedAt.toString().length === 10
                       ? editableData.lastUpdatedAt * 1000
                       : editableData.lastUpdatedAt,
                     { addSuffix: true }
                   )
-                : "No update time"}
+                : "No update time"*/}
+              {
+                editableData.lastUpdatedAt
+              }
             </span>
           </div>
         </div> {/* closes Info List */}
