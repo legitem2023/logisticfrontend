@@ -89,7 +89,9 @@ const RiderCard = ({ rider, onViewDetails, onSave }) => {
               className="text-lg font-semibold text-center border rounded px-2 py-1 w-full"
             />
           ) : (
-            <h3 className="text-xl font-bold text-slate-800">{editableData.name}</h3>
+            <h3 className="text-xl font-bold text-slate-800">
+              {editableData.name}
+            </h3>
           )}
           <span className="inline-flex items-center px-3 py-1 mt-2 rounded-full text-xs font-medium bg-green-100 text-green-800">
             <BadgeInfo size={14} className="mr-1" />
@@ -198,20 +200,20 @@ const RiderCard = ({ rider, onViewDetails, onSave }) => {
           )}
 
           {/* Last Updated */}
-<div className="flex items-center gap-2">
-  <Clock size={16} className="text-emerald-600" />
-  <span>
-    {editableData.lastUpdatedAt
-      ? formatDistanceToNow(
-          // Auto-detect seconds vs ms
-          editableData.lastUpdatedAt.toString().length === 10
-            ? editableData.lastUpdatedAt * 1000
-            : editableData.lastUpdatedAt,
-          { addSuffix: true }
-        )
-      : "No update time"}
-  </span>
-</div>
+          <div className="flex items-center gap-2">
+            <Clock size={16} className="text-emerald-600" />
+            <span>
+              {editableData.lastUpdatedAt
+                ? formatDistanceToNow(
+                    editableData.lastUpdatedAt.toString().length === 10
+                      ? editableData.lastUpdatedAt * 1000
+                      : editableData.lastUpdatedAt,
+                    { addSuffix: true }
+                  )
+                : "No update time"}
+            </span>
+          </div>
+        </div> {/* closes Info List */}
 
         {/* Buttons */}
         <div className="mt-6 flex gap-3">
