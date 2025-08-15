@@ -281,4 +281,4 @@ const RiderCard = ({ rider, onViewDetails, onSave }) => {
   );
 };
 
-export default RiderCard;
+export default React.memo(RiderCard);
