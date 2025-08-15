@@ -97,7 +97,7 @@ const handleFilter = ({ search, date }: { search: string; date: Date | null }) =
         
       );
     }
-
+}
   
   if (loading) return (
     <div className="flex justify-center items-center min-h-[300px]">
