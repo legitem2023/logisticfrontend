@@ -5,7 +5,7 @@ import { Input } from "./ui/Input";
 import { Label } from "./ui/Label";
 import { Card, CardContent, CardHeader } from "./ui/Card";
 import { useMutation } from "@apollo/client";
-import { CREATESENDER } from "../../../graphql/mutation";
+import { CREATERIDER } from "../../../graphql/mutation";
 import { showToast } from "../../../utils/toastify";
 import {
   FiUser,
@@ -18,7 +18,7 @@ import {
 } from "react-icons/fi";
 
 const SenderSignupForm = () => {
-  const [createSender] = useMutation(CREATESENDER, {
+  const [createSender] = useMutation(CREATERIDER, {
     onCompleted: (data) => {
       showToast(data, "success");
       console.log("Sender created:", data);
