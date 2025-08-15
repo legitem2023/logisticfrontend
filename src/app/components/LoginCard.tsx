@@ -58,42 +58,42 @@ export default function LoginCard() {
   }
 
   return (
-    <div className="flex justify-center items-center min-h-screen p-4">
-      <Card className="w-full max-w-md bg-white rounded-xl shadow-2xl overflow-hidden border-0">
-        <div className="bg-gradient-to-r from-darkgreen-800 to-green-600 p-1">
-          <div className="bg-white p-6">
+    <div className="flex justify-center items-center min-h-screen bg-gray-50 p-4">
+      <Card className="w-full max-w-md bg-white rounded-xl shadow-xl overflow-hidden border border-gray-100">
+        <div className="bg-gradient-to-r from-[#0a2e1d] to-[#1a4d2e] p-[1px]">
+          <div className="bg-white p-8">
             <CardHeader className="text-center">
-              <CardTitle className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-darkgreen-800 to-green-600">
+              <CardTitle className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#0a2e1d] to-[#1a4d2e]">
                 Welcome Back
               </CardTitle>
               <p className="text-gray-600 mt-2">Sign in to your account</p>
             </CardHeader>
 
-            <CardContent className="space-y-6">
+            <CardContent className="space-y-6 mt-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
                 <Input
                   type="email"
                   placeholder="Enter your email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
+                  className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#1a4d2e] focus:border-transparent transition-all"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Password</label>
                 <div className="relative">
                   <Input
                     type={showPassword ? "text" : "password"}
                     placeholder="Enter your password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all pr-10"
+                    className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#1a4d2e] focus:border-transparent transition-all pr-10"
                   />
                   <button
                     type="button"
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-green-700 transition-colors"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#1a4d2e] transition-colors"
                     onClick={togglePasswordVisibility}
                     aria-label={showPassword ? "Hide password" : "Show password"}
                   >
@@ -103,7 +103,7 @@ export default function LoginCard() {
               </div>
 
               <Button 
-                className="w-full py-3 bg-gradient-to-r from-darkgreen-700 to-green-600 hover:from-darkgreen-800 hover:to-green-700 text-white font-semibold rounded-lg shadow-lg transform hover:scale-[1.01] transition-transform"
+                className="w-full py-3 bg-gradient-to-r from-[#0a2e1d] to-[#1a4d2e] hover:from-[#09281a] hover:to-[#164328] text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all"
                 onClick={handleLogin} 
                 disabled={loading}
               >
@@ -124,17 +124,16 @@ export default function LoginCard() {
                 </div>
               )}
 
-              <div className="flex items-center gap-3">
-                <hr className="flex-grow border-gray-300" />
-                <span className="text-gray-500 text-sm font-medium">OR CONTINUE WITH</span>
-                <hr className="flex-grow border-gray-300" />
+              <div className="flex items-center gap-3 my-6">
+                <hr className="flex-grow border-gray-200" />
+                <span className="text-gray-400 text-xs font-medium uppercase tracking-wider">OR</span>
+                <hr className="flex-grow border-gray-200" />
               </div>
 
               <FacebookLoginButton />
-
-              <div className="text-center text-sm text-gray-600">
+              <div className="text-center text-sm text-gray-500 mt-6">
                 Dont have an account?{' '}
-                <a href="#" className="text-green-600 hover:text-green-800 font-medium transition-colors">
+                <a href="#" className="text-[#1a4d2e] hover:text-[#0a2e1d] font-medium transition-colors">
                   Sign up
                 </a>
               </div>
@@ -144,4 +143,4 @@ export default function LoginCard() {
       </Card>
     </div>
   )
-}
+        }
