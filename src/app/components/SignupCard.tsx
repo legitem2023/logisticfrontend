@@ -52,6 +52,8 @@ const SignupCard = () => {
       password: form.password,
       phoneNumber: form.phone,
       vehicleTypeId: form.vehicleType,
+      photo:form.photo,
+      license:form.license
     };
     
     createRider({
