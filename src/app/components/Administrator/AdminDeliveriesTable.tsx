@@ -57,7 +57,7 @@ const AdminDeliveriesTable = () => {
         
       );
     }
-  }
+  
     if (date) {
       const filterDate = new Date(date);
       filtered = filtered.filter(delivery => {
