@@ -8,7 +8,7 @@ export default function PrivacyPolicy() {
     <div className="min-h-screen bg-gradient-to-b from-white via-slate-50 to-slate-100 p-1">
       <div className="max-w-4xl mx-auto">
         <Card className="shadow-2xl border border-slate-200 bg-white/80 backdrop-blur-md">
-          <CardContent className="p-10 space-y-10">
+          <CardContent className="space-y-10">
             
             {/* Header */}
 <div className="bg-gradient-to-r from-emerald-600 to-green-600 shadow-md p-0 text-center text-white">
