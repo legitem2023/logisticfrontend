@@ -88,16 +88,6 @@ export default function SidebarLinks({
           })}
         </div>
       </aside>
-
-      {/* Main Content Area */}
-      <main
-        className={`flex-1 overflow-y-auto transition-all duration-300 p-0 ${
-          isMobileOpen ? 'opacity-60 pointer-events-none' : ''
-        }`}
-      >
-        {/* This is where page content will be rendered via Next.js routing */}
-      </main>
-
       {/* Mobile Backdrop */}
       {isMounted && isMobileOpen && (
         <div
