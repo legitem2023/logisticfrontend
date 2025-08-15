@@ -58,7 +58,7 @@ export default function LoginCard() {
   }
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-darkgreen-900 to-green-600 p-4">
+    <div className="flex justify-center items-center min-h-screen p-4">
       <Card className="w-full max-w-md bg-white rounded-xl shadow-2xl overflow-hidden border-0">
         <div className="bg-gradient-to-r from-darkgreen-800 to-green-600 p-1">
           <div className="bg-white p-6">
