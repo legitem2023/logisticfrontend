@@ -1,5 +1,38 @@
 import { gql } from "@apollo/client";
 
+export const ACCOUNTS = gql`
+query GetUsers {
+  getUsers {
+      id
+    name
+    email
+    phoneNumber
+    vehicleType {
+      id
+      name
+      maxCapacityKg
+      maxVolumeM3
+      description
+      createdAt
+      updatedAt
+      icon
+      cost
+    }
+    licensePlate
+    status
+    currentLatitude
+    currentLongitude
+    lastUpdatedAt
+    createdAt
+    updatedAt
+    role
+    image
+  }
+}
+`
+
+
+
 export const VEHICLEQUERY = gql`
 query GetVehicleTypes {
   getVehicleTypes {
