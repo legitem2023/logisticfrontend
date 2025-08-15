@@ -12,13 +12,13 @@ export default function SignupRoleSelector() {
       role: "Rider",
       icon: <FiTruck className="text-green-600 text-4xl" />,
       description: "Deliver packages and earn with flexible schedules.",
-      link: "/signup/rider",
+      link: "/Signup/Rider",
     },
     {
       role: "Sender",
       icon: <FiPackage className="text-green-600 text-4xl" />,
       description: "Send packages quickly and easily to anywhere.",
-      link: "/signup/sender",
+      link: "/Signup/Sender",
     },
   ];
 
