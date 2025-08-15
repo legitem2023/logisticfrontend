@@ -248,7 +248,7 @@ const SignupCard = () => {
 
                   <div className="relative">
                     <Label htmlFor="license" className="text-gray-700">
-                      Driver's License
+                      Drivers License
                     </Label>
                     <Input
                       id="license"
