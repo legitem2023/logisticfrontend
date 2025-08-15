@@ -6,7 +6,7 @@ import { Shield, Lock, FileText, Globe, User, Trash2 } from "lucide-react";
 export default function PrivacyPolicy() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-white via-slate-50 to-slate-100 p-1">
-      <div className="max-w-4xl mx-auto">
+      <div className=" mx-auto">
         <Card className="shadow-2xl border border-slate-200 bg-white/80 backdrop-blur-md">
           <CardContent className="space-y-10">
             
