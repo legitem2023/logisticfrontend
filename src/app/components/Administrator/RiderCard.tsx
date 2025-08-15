@@ -198,19 +198,20 @@ const RiderCard = ({ rider, onViewDetails, onSave }) => {
           )}
 
           {/* Last Updated */}
-          <div className="flex items-center gap-2">
-            <Clock size={16} className="text-emerald-600" />
-            <span>
-              {formatDistanceToNow(
-                new Date(editableData.lastUpdatedAt),
-                { addSuffix: true }
-              )}
-            </span>
-            {
-              editableData.lastUpdatedAt
-            }
-          </div>
-        </div>
+<div className="flex items-center gap-2">
+  <Clock size={16} className="text-emerald-600" />
+  <span>
+    {editableData.lastUpdatedAt
+      ? formatDistanceToNow(
+          // Auto-detect seconds vs ms
+          editableData.lastUpdatedAt.toString().length === 10
+            ? editableData.lastUpdatedAt * 1000
+            : editableData.lastUpdatedAt,
+          { addSuffix: true }
+        )
+      : "No update time"}
+  </span>
+</div>
 
         {/* Buttons */}
         <div className="mt-6 flex gap-3">
