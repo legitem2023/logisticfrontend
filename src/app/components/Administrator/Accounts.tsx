@@ -122,7 +122,8 @@ const Accounts = () => {
               key={rider.id}
               rider={rider}
               onViewDetails={() => setSelectedRider(rider)}
-            />
+              onSave={() => setSelectedRider(rider)}
+              />
           ))}
         </div>
       </div>
