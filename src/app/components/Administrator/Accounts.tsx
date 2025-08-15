@@ -12,7 +12,7 @@ import { RIDERS } from '../../../../graphql/query';
 import Image from "next/image";
 import RiderCard from './RiderCard'; // Import the card component
 import RiderProfileCard from './RiderProfileCard'; // Import the profile card component
-
+import FilterBar from "../Rider/Filterbar";
 type Rider = {
   id: string;
   name: string;
@@ -88,6 +88,17 @@ const Accounts = () => {
     );
   }, [baseRiders, subscriptionData]);
 
+const handleFilter = ({ search, date }: { search: string; date: Date | null }) => {
+    let filtered = [...baseRiders];
+
+    if (search) {
+      filtered = filtered.filter(delivery =>
+        delivery.name?.toLowerCase().includes(search.toLowerCase())
+        
+      );
+    }
+
+  
   if (loading) return (
     <div className="flex justify-center items-center min-h-[300px]">
       <div className="animate-pulse flex flex-col items-center">
@@ -115,7 +126,7 @@ const Accounts = () => {
   return (
     <>
       <div className="w-full max-w-5xl mx-auto p-1">
-        
+        <FilterBar onFilter={handleFilter} />
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {updatedRiders.map((rider: Rider) => (
             <RiderCard 
