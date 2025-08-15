@@ -41,7 +41,7 @@ const RiderCard = ({ rider, onViewDetails, onSave }) => {
   };
 
   return (
-    <div className="w-full sm:w-96 rounded-2xl shadow-2xl overflow-hidden border border-slate-200 bg-white/80 backdrop-blur-md transition-transform duration-300 hover:scale-[1.02]">
+    <div className="w-full sm:w-96 shadow-2xl overflow-hidden border border-slate-200 bg-white/80 backdrop-blur-md transition-transform duration-300">
       {/* Header */}
       <div className="h-40 relative flex flex-col items-center justify-center bg-gradient-to-r from-green-800 to-green-600">
         {/* Pattern overlay */}
