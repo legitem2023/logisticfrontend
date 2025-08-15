@@ -1,4 +1,4 @@
-import { Menu, X, Truck, User, Bell, Home as HomeIcon, ClipboardCheck, Bike, BadgeCheck, Settings, HelpCircle, UserPlus, LogIn, ChartBar as ChartBarIcon, WalletMinimal } from "lucide-react";
+import { Menu, X, Truck, User,Users, Bell, Home as HomeIcon, ClipboardCheck, Bike, BadgeCheck, Settings, HelpCircle, UserPlus, LogIn, ChartBar as ChartBarIcon, WalletMinimal } from "lucide-react";
 import { useState,useEffect } from "react";
 import Link from "next/link";
 import NotificationDropdown from "./NotificationDropdown";
@@ -68,9 +68,9 @@ export function SideBarMenu({ activeTab, useRole, isUserActive }: {
       ? [
           {
             id:6,
-            label: 'Rider',
+            label: 'Accounts',
             role: '',
-            icon: <Bike color="green" />
+            icon: <Users color="green" />
           },
         ]
       : []),
