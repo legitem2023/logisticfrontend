@@ -130,7 +130,7 @@ export default function LoginCard() {
                 <hr className="flex-grow border-gray-300" />
               </div>
 
-              <FacebookLoginButton className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg shadow transition-colors" />
+              <FacebookLoginButton />
 
               <div className="text-center text-sm text-gray-600">
                 Dont have an account?{' '}
