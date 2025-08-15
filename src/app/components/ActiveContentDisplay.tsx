@@ -28,6 +28,7 @@ import {
   HelpCircle,
   Truck,
   BadgeCheck,
+  Users,
   WalletMinimal,ChartBar,ChartBarIcon,
   HomeIcon
 } from "lucide-react";
@@ -135,9 +136,9 @@ export function ActiveContentDisplay({ activeTab, useRole, isUserActive }: {
       ? [
           {
             id:6,
-            label: 'Rider',
+            label: 'Users',
             role: '',
-            icon: <Bike color="green" />,
+            icon: <Users color="green" />,
             content: (
               <div className="px-1 py-1 space-y-1">
                 <Accounts/>
