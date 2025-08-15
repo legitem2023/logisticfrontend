@@ -60,7 +60,7 @@ export default function LoginCard() {
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-50 p-4">
       <Card className="w-full max-w-md bg-white rounded-xl shadow-xl overflow-hidden">
-        <div className="bg-gradient-to-r from-[#0a2e1d] to-[#1a4d2e] p-[1px]">
+        <div className="p-2">
           <div className="bg-white p-8">
             <CardHeader className="text-center">
               <CardTitle className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#0a2e1d] to-[#1a4d2e]">
