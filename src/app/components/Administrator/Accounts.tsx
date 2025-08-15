@@ -144,18 +144,7 @@ const Accounts = () => {
                 <X className="w-5 h-5 text-gray-600" />
               </button>
             </div>
-            
-            <RiderProfileCard 
-              rider={{
-                ...selectedRider,
-                // Ensure all required fields are passed
-                phoneNumber: selectedRider.phoneNumber || selectedRider.phone || '',
-                currentLatitude: selectedRider.location.latitude,
-                currentLongitude: selectedRider.location.longitude
-              }} 
-              onViewDetails={null}
-            />
-
+        
             {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row gap-3 pt-6">
               {selectedRider.phone && (
