@@ -62,7 +62,7 @@ export default function LoginCard() {
       <Card className="w-full max-w-md bg-white rounded-xl shadow-xl overflow-hidden">
         <div className="p-2">
           <div className="bg-white p-8">
-            <CardHeader className="text-center">
+            <CardHeader className="text-center customgrad">
               <CardTitle className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#0a2e1d] to-[#1a4d2e]">
                 Welcome Back
               </CardTitle>
