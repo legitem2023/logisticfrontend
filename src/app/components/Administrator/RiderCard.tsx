@@ -61,7 +61,7 @@ const RiderCard = ({ rider, onViewDetails, onSave }) => {
   const [editableData, setEditableData] = useState({ ...rider });
 
   const statusColors = {
-    active: "bg-green-100 text-green-800",
+    available: "bg-green-100 text-green-800",
     inactive: "bg-red-100 text-red-800",
     busy: "bg-orange-100 text-orange-800",
     offline: "bg-gray-100 text-gray-800",
