@@ -11,7 +11,7 @@ export default function PrivacyPolicy() {
           <CardContent className="p-10 space-y-10">
             
             {/* Header */}
-<div className="bg-gradient-to-r from-emerald-600 to-green-600 rounded-t-2xl shadow-md p-8 text-center text-white">
+<div className="bg-gradient-to-r from-emerald-600 to-green-600 shadow-md p-0 text-center text-white">
   <div className="flex justify-center mb-4">
     <Shield className="h-14 w-14 text-white drop-shadow-lg" />
   </div>
