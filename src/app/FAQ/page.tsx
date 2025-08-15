@@ -6,10 +6,10 @@ import SidebarLinks, { SidebarLink } from '../components/Partial/SidebarLinks';
 import Image from 'next/image';
 export default function page() {
  const links: SidebarLink[] = [
-  { label: 'Dashboard', href: '/', icon: <Home size={18} /> },
-  { label: 'Deliveries', href: '/deliveries', icon: <Truck size={18} /> },
-  { label: 'Packages', href: '/packages', icon: <Package size={18} /> },
-  { label: 'Settings', href: '/settings', icon: <Settings size={18} /> },
+  { label: 'Home', href: '/', icon: <Home size={18} /> },
+  { label: 'Contact', href: '/Contact', icon: <Truck size={18} /> },
+  { label: 'Privacy', href: '/Privacy', icon: <Package size={18} /> },
+  { label: 'FAQ', href: '/FAQ', icon: <Settings size={18} /> },
 ];
 
   
