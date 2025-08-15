@@ -5,7 +5,7 @@ import { Button } from "./ui/Button";
 import { Input } from "./ui/Input";
 import { Label } from "./ui/Label";
 import { Select } from "./ui/Select";
-import { FiUser, FiMail, FiPhone, FiBuilding, FiMessageSquare, FiChevronDown, FiPaperPlane } from "react-icons/fi";
+import { FiUser, FiMail, FiPhone, FiHome, FiMessageSquare, FiChevronDown, FiSend } from "react-icons/fi";
 
 const LogisticContactFormPage = () => {
   const [formData, setFormData] = useState({
@@ -128,7 +128,7 @@ const LogisticContactFormPage = () => {
                 <div className="relative">
                   <Label htmlFor="company" className="text-gray-700">Company Name</Label>
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none mt-6">
-                    <FiBuilding className="text-green-600" />
+                    <FiHome className="text-green-600" />
                   </div>
                   <Input
                     id="company"
@@ -199,7 +199,7 @@ const LogisticContactFormPage = () => {
                   </>
                 ) : (
                   <>
-                    Send Message <FiPaperPlane className="ml-2" />
+                    Send Message <FiSend className="ml-2" />
                   </>
                 )}
               </Button>
