@@ -55,7 +55,7 @@ const SignupCard = () => {
       photo:form.photo,
       license:form.license
     };
-    
+   console.log(input); 
     createRider({
       variables: {
         input: input
