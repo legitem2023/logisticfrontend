@@ -1,28 +1,37 @@
-import React, { useState } from 'react';
-import { 
-  User, Car, Phone, Mail, MapPin, BadgeInfo, Clock, ChevronRight, Edit3, Check
-} from 'lucide-react';
-import { formatDistanceToNow } from 'date-fns';
+import React, { useState } from "react";
+import {
+  User,
+  Car,
+  Phone,
+  Mail,
+  MapPin,
+  BadgeInfo,
+  Clock,
+  ChevronRight,
+  Edit3,
+  Check,
+} from "lucide-react";
+import { formatDistanceToNow } from "date-fns";
 
 const RiderCard = ({ rider, onViewDetails, onSave }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editableData, setEditableData] = useState({ ...rider });
 
   const statusColors = {
-    ACTIVE: 'bg-green-100 text-green-800',
-    INACTIVE: 'bg-red-100 text-red-800',
-    BUSY: 'bg-orange-100 text-orange-800',
-    OFFLINE: 'bg-gray-100 text-gray-800'
+    ACTIVE: "bg-green-100 text-green-800",
+    INACTIVE: "bg-red-100 text-red-800",
+    BUSY: "bg-orange-100 text-orange-800",
+    OFFLINE: "bg-gray-100 text-gray-800",
   };
 
   const handleChange = (field, value) => {
-    setEditableData(prev => ({ ...prev, [field]: value }));
+    setEditableData((prev) => ({ ...prev, [field]: value }));
   };
 
   const handleVehicleChange = (field, value) => {
-    setEditableData(prev => ({
+    setEditableData((prev) => ({
       ...prev,
-      vehicleType: { ...prev.vehicleType, [field]: value }
+      vehicleType: { ...prev.vehicleType, [field]: value },
     }));
   };
 
@@ -32,23 +41,28 @@ const RiderCard = ({ rider, onViewDetails, onSave }) => {
   };
 
   return (
-    <div className="w-full sm:w-80 rounded-xl shadow-md overflow-hidden bg-white hover:shadow-lg transition-shadow">
-      {/* Card Header */}
-      <div className="h-36 relative flex justify-center items-center customgrad">
+    <div className="w-full sm:w-96 rounded-2xl shadow-2xl overflow-hidden border border-slate-200 bg-white/80 backdrop-blur-md transition-transform duration-300 hover:scale-[1.02]">
+      {/* Header */}
+      <div className="h-40 relative flex flex-col items-center justify-center bg-gradient-to-r from-green-800 to-green-600">
+        {/* Pattern overlay */}
+        <div className="absolute inset-0 opacity-10 pointer-events-none bg-[url('data:image/svg+xml;base64,PHN2ZyB...')]"></div>
+
         {editableData.image ? (
           <img
             src={editableData.image}
             alt={editableData.name}
-            className="w-20 h-20 rounded-full object-cover border-4 border-white"
+            className="w-24 h-24 rounded-full object-cover border-4 border-white shadow-lg relative z-10"
           />
         ) : (
-          <div className="w-20 h-20 rounded-full bg-white flex items-center justify-center text-blue-500 border-4 border-white">
-            <User size={32} />
+          <div className="w-24 h-24 rounded-full bg-white flex items-center justify-center text-green-700 border-4 border-white shadow-lg relative z-10">
+            <User size={36} />
           </div>
         )}
-        <span 
-          className={`absolute bottom-4 right-4 px-3 py-1 rounded-full text-sm font-bold ${
-            statusColors[editableData.status] || 'bg-blue-100 text-blue-800'
+
+        {/* Status Badge */}
+        <span
+          className={`absolute bottom-3 right-3 px-3 py-1 rounded-full text-sm font-bold shadow-md ${
+            statusColors[editableData.status] || "bg-blue-100 text-blue-800"
           }`}
         >
           {editableData.status}
@@ -57,38 +71,39 @@ const RiderCard = ({ rider, onViewDetails, onSave }) => {
         {/* Edit Button */}
         <button
           onClick={() => setIsEditing(!isEditing)}
-          className="absolute top-3 right-3 bg-white p-1 rounded-full shadow hover:bg-gray-50"
+          className="absolute top-3 right-3 bg-white p-1 rounded-full shadow hover:bg-gray-50 transition"
         >
           {isEditing ? <Check size={18} /> : <Edit3 size={18} />}
         </button>
       </div>
 
-      {/* Card Content */}
-      <div className="p-5">
-        <div className="text-center mb-4">
+      {/* Body */}
+      <div className="p-6 space-y-4">
+        {/* Name & Role */}
+        <div className="text-center">
           {isEditing ? (
             <input
               type="text"
               value={editableData.name}
               onChange={(e) => handleChange("name", e.target.value)}
-              className="text-lg font-semibold mb-1 text-center border rounded px-2 py-1 w-full"
+              className="text-lg font-semibold text-center border rounded px-2 py-1 w-full"
             />
           ) : (
-            <h3 className="text-lg font-semibold mb-1">{editableData.name}</h3>
+            <h3 className="text-xl font-bold text-slate-800">{editableData.name}</h3>
           )}
-
-          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+          <span className="inline-flex items-center px-3 py-1 mt-2 rounded-full text-xs font-medium bg-green-100 text-green-800">
             <BadgeInfo size={14} className="mr-1" />
             {editableData.role}
           </span>
         </div>
 
-        <div className="h-px bg-gray-200 my-3"></div>
+        <div className="border-t border-slate-200"></div>
 
+        {/* Info List */}
         <div className="space-y-3 text-sm">
           {/* Email */}
           <div className="flex items-center gap-2">
-            <Mail size={16} className="text-gray-500" />
+            <Mail size={16} className="text-emerald-600" />
             {isEditing ? (
               <input
                 type="email"
@@ -100,10 +115,10 @@ const RiderCard = ({ rider, onViewDetails, onSave }) => {
               <span>{editableData.email}</span>
             )}
           </div>
-          
+
           {/* Phone */}
           <div className="flex items-center gap-2">
-            <Phone size={16} className="text-gray-500" />
+            <Phone size={16} className="text-emerald-600" />
             {isEditing ? (
               <input
                 type="tel"
@@ -115,10 +130,10 @@ const RiderCard = ({ rider, onViewDetails, onSave }) => {
               <span>{editableData.phoneNumber}</span>
             )}
           </div>
-          
+
           {/* Vehicle */}
           <div className="flex items-start gap-2">
-            <Car size={16} className="text-gray-500 mt-0.5" />
+            <Car size={16} className="text-emerald-600 mt-0.5" />
             <div className="w-full">
               {isEditing ? (
                 <>
@@ -140,14 +155,18 @@ const RiderCard = ({ rider, onViewDetails, onSave }) => {
                     <input
                       type="number"
                       value={editableData.vehicleType?.maxCapacityKg}
-                      onChange={(e) => handleVehicleChange("maxCapacityKg", e.target.value)}
+                      onChange={(e) =>
+                        handleVehicleChange("maxCapacityKg", e.target.value)
+                      }
                       className="border rounded px-2 py-1 w-1/2"
                       placeholder="Max kg"
                     />
                     <input
                       type="number"
                       value={editableData.vehicleType?.maxVolumeM3}
-                      onChange={(e) => handleVehicleChange("maxVolumeM3", e.target.value)}
+                      onChange={(e) =>
+                        handleVehicleChange("maxVolumeM3", e.target.value)
+                      }
                       className="border rounded px-2 py-1 w-1/2"
                       placeholder="Max m³"
                     />
@@ -155,39 +174,46 @@ const RiderCard = ({ rider, onViewDetails, onSave }) => {
                 </>
               ) : (
                 <>
-                  <p>{editableData.vehicleType?.name} ({editableData.licensePlate})</p>
-                  <p className="text-xs text-gray-500">
-                    Max {editableData.vehicleType?.maxCapacityKg}kg · {editableData.vehicleType?.maxVolumeM3}m³
+                  <p>
+                    {editableData.vehicleType?.name} ({editableData.licensePlate})
+                  </p>
+                  <p className="text-xs text-slate-500">
+                    Max {editableData.vehicleType?.maxCapacityKg}kg ·{" "}
+                    {editableData.vehicleType?.maxVolumeM3}m³
                   </p>
                 </>
               )}
             </div>
           </div>
-          
+
           {/* Location */}
           {editableData.currentLatitude && editableData.currentLongitude && (
             <div className="flex items-center gap-2">
-              <MapPin size={16} className="text-gray-500" />
+              <MapPin size={16} className="text-emerald-600" />
               <span>
-                {editableData.currentLatitude.toFixed(4)}, {editableData.currentLongitude.toFixed(4)}
+                {editableData.currentLatitude.toFixed(4)},{" "}
+                {editableData.currentLongitude.toFixed(4)}
               </span>
             </div>
           )}
-          
+
           {/* Last Updated */}
           <div className="flex items-center gap-2">
-            <Clock size={16} className="text-gray-500" />
+            <Clock size={16} className="text-emerald-600" />
             <span>
-              {formatDistanceToNow(new Date(editableData.lastUpdatedAt * 1000), { addSuffix: true })}
+              {formatDistanceToNow(
+                new Date(editableData.lastUpdatedAt * 1000),
+                { addSuffix: true }
+              )}
             </span>
           </div>
         </div>
 
         {/* Buttons */}
-        <div className="mt-4 flex gap-2">
+        <div className="mt-6 flex gap-3">
           <button
             onClick={() => onViewDetails(editableData)}
-            className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-white border border-blue-500 text-blue-500 rounded-lg hover:bg-blue-50 transition"
+            className="flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-xl border border-emerald-600 text-emerald-600 bg-white hover:bg-emerald-50 transition font-medium"
           >
             <ChevronRight size={16} />
             View Details
@@ -196,7 +222,7 @@ const RiderCard = ({ rider, onViewDetails, onSave }) => {
           {isEditing && (
             <button
               onClick={handleSave}
-              className="flex-1 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition"
+              className="flex-1 px-4 py-2 rounded-xl bg-emerald-600 text-white hover:bg-emerald-700 transition font-medium"
             >
               Save
             </button>
