@@ -14,12 +14,12 @@ import {
   CartesianGrid,
   Tooltip,
   Cell,
+  Legend,
 } from 'recharts';
-import { CheckCheck, Clock, Bike, Award } from 'lucide-react';
+import { CheckCheck, Clock, Bike, Award, Info } from 'lucide-react';
 
 const barColors = ['#4ade80', '#60a5fa', '#fbbf24', '#f472b6'];
 
-// Helper functions
 const formatTimestampToMonth = (timestamp: number) =>
   new Date(timestamp).toLocaleDateString('en-US', { month: 'long' });
 
@@ -46,6 +46,8 @@ const RiderPerformanceChart = () => {
   });
 
   const [selectedMonth, setSelectedMonth] = useState<string>(getCurrentMonth());
+  const [showInfo, setShowInfo] = useState(false);
+
   const deliveries = data?.getRidersDelivery ?? [];
 
   const { monthlyData, performanceStats, months } = useMemo(() => {
@@ -87,10 +89,10 @@ const RiderPerformanceChart = () => {
     return {
       monthlyData: monthlyDataFormatted,
       performanceStats: [
-        { label: 'Completed', value: statusMap.Delivered, icon: <CheckCheck className="w-5 h-5 text-green-500" /> },
-        { label: 'In Progress', value: statusMap.in_transit, icon: <Bike className="w-5 h-5 text-blue-500" /> },
-        { label: 'Pending', value: statusMap.Pending, icon: <Clock className="w-5 h-5 text-yellow-500" /> },
-        { label: 'Completion Rate', value: `${completionRate}%`, icon: <Award className="w-5 h-5 text-purple-500" /> },
+        { label: 'Completed', value: statusMap.Delivered, color: 'bg-green-100 text-green-700', icon: <CheckCheck className="w-5 h-5 text-green-600" />, description: 'Deliveries successfully completed' },
+        { label: 'In Progress', value: statusMap.in_transit, color: 'bg-blue-100 text-blue-700', icon: <Bike className="w-5 h-5 text-blue-500" />, description: 'Deliveries currently in transit' },
+        { label: 'Pending', value: statusMap.Pending, color: 'bg-yellow-100 text-yellow-700', icon: <Clock className="w-5 h-5 text-yellow-500" />, description: 'Awaiting assignment' },
+        { label: 'Completion Rate', value: `${completionRate}%`, color: 'bg-purple-100 text-purple-700', icon: <Award className="w-5 h-5 text-purple-500" />, description: 'Overall completion percentage' },
       ],
       months: Object.keys(monthlyDataFormatted),
     };
@@ -99,109 +101,142 @@ const RiderPerformanceChart = () => {
   const chartData = monthlyData[selectedMonth] || [];
 
   return (
-    <div className="w-full max-w-4xl mx-auto p-6 rounded-xl shadow-sm bg-gradient-to-br from-green-50 to-green-100">
-      {/* Header */}
-     <div className="mb-6 p-4 rounded-xl bg-gradient-to-r from-green-500 to-green-600 shadow-md">
-      <h1 className="text-xl font-bold text-white">My Delivery Performance</h1>
-      <p className="text-green-100">Track your delivery stats and progress</p>
-     </div>
-
-      {/* Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-        {performanceStats.map((stat) => (
-          <div
-            key={stat.label}
-            className="bg-white p-4 rounded-lg border border-green-100 flex items-center shadow-sm"
+    <div className="min-h-screen bg-gradient-to-br from-green-50 to-green-100 p-1">
+      <div className="w-full max-w-6xl mx-auto shadow-lg overflow-hidden">
+        {/* Header */}
+        <div className="bg-gradient-to-r from-green-800 to-green-600 p-6 relative">
+          <h1 className="text-3xl font-bold text-white">My Delivery Performance</h1>
+          <p className="text-green-100">Track your delivery stats and progress</p>
+          <button
+            onClick={() => setShowInfo(!showInfo)}
+            className="absolute top-6 right-6 p-2 rounded-full bg-white/20 hover:bg-white/30 transition-colors"
           >
-            <div className="mr-3 p-2 bg-green-50 rounded-full shadow">
-              {stat.icon}
-            </div>
-            <div>
-              <p className="text-sm text-gray-500">{stat.label}</p>
-              <p className="text-lg font-semibold">{stat.value}</p>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Month Selector */}
-      <div className="mb-4 flex items-center justify-between">
-        <h2 className="text-md font-semibold text-green-800">Daily Deliveries</h2>
-        <div className="flex space-x-2">
-          {months.map((month) => (
-            <button
-              key={month}
-              onClick={() => setSelectedMonth(month)}
-              className={`px-3 py-1 text-sm rounded-md transition ${
-                selectedMonth === month
-                  ? 'bg-green-200 text-green-800 font-semibold'
-                  : 'text-green-700 hover:bg-green-100'
-              }`}
-            >
-              {month}
-            </button>
-          ))}
+            <Info className="w-5 h-5 text-white" />
+          </button>
         </div>
-      </div>
 
-      {/* Chart */}
-      <div className="bg-white p-4 rounded-lg shadow-sm border border-green-100">
-        {loading ? (
-          <div className="flex justify-center items-center h-64">
-            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-green-500"></div>
-          </div>
-        ) : error ? (
-          <div className="text-center py-10 text-red-500">Failed to load delivery data</div>
-        ) : chartData.length === 0 ? (
-          <div className="text-center py-10 text-gray-500">No deliveries for {selectedMonth}</div>
-        ) : (
-          <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={chartData}>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} />
-              <XAxis dataKey="date" tick={{ fontSize: 12 }} axisLine={false} tickLine={false} />
-              <YAxis allowDecimals={false} axisLine={false} tickLine={false} />
-              <Tooltip />
-              <Bar dataKey="count" name="Deliveries" radius={[4, 4, 0, 0]}>
-                {chartData.map((_, index) => (
-                  <Cell key={`cell-${index}`} fill={barColors[index % barColors.length]} />
-                ))}
-              </Bar>
-            </BarChart>
-          </ResponsiveContainer>
-        )}
-      </div>
+        <div className="p-6 bg-white">
+          {showInfo && (
+            <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+              <h3 className="font-medium text-green-800 mb-2">About this dashboard</h3>
+              <p className="text-sm text-green-700">
+                This section shows your delivery statistics, completion rate, and recent activities.
+              </p>
+            </div>
+          )}
 
-      {/* Recent Deliveries */}
-      <div className="mt-6">
-        <h3 className="font-medium mb-3 text-green-800">Recent Deliveries</h3>
-        <div className="space-y-2">
-          {deliveries.slice(0, 3).map((delivery: any) => {
-            const timestamp = parseInt(delivery.createdAt);
-            return (
+          {/* Stats */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+            {performanceStats.map((stat) => (
               <div
-                key={delivery.id}
-                className="flex items-center justify-between p-3 bg-white rounded-lg border border-green-100 shadow-sm"
+                key={stat.label}
+                className={`rounded-2xl p-5 shadow-sm flex items-center justify-between ${stat.color} hover:shadow-md transition-shadow`}
               >
                 <div>
-                  <p className="font-medium">{delivery.trackingNumber}</p>
-                  <p className="text-sm text-gray-500">
-                    {formatTimestampToDateTime(timestamp)}
-                  </p>
+                  <p className="text-sm font-medium">{stat.label}</p>
+                  <p className="text-2xl font-bold">{stat.value}</p>
+                  <p className="text-xs mt-1 opacity-80">{stat.description}</p>
                 </div>
-                <span
-                  className={`px-2 py-1 text-xs rounded-full ${
-                    delivery.deliveryStatus === 'Delivered' || delivery.deliveryStatus === 'completed'
-                      ? 'bg-green-100 text-green-800'
-                      : delivery.deliveryStatus === 'in_transit'
-                      ? 'bg-blue-100 text-blue-800'
-                      : 'bg-yellow-100 text-yellow-800'
-                  }`}
-                >
-                  {delivery.deliveryStatus}
-                </span>
+                <div className="p-3 rounded-full bg-white bg-opacity-50">
+                  {stat.icon}
+                </div>
               </div>
-            );
-          })}
+            ))}
+          </div>
+
+          {/* Month Selector */}
+          <div className="mb-6">
+            <div className="flex justify-between items-center mb-3">
+              <h2 className="text-lg font-semibold text-gray-700">Daily Deliveries</h2>
+              <p className="text-sm text-gray-500">
+                Showing data for: <span className="font-medium">{selectedMonth}</span>
+              </p>
+            </div>
+            <div className="overflow-x-auto border-b border-gray-200">
+              <div className="flex space-x-2 whitespace-nowrap px-1 pb-1">
+                {months.map((month) => (
+                  <button
+                    key={month}
+                    onClick={() => setSelectedMonth(month)}
+                    className={`py-2 px-4 border-b-2 font-medium text-sm transition-all duration-200 ${
+                      selectedMonth === month
+                        ? 'border-green-500 text-green-600 bg-green-50 rounded-t-md'
+                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    }`}
+                  >
+                    {month}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Chart */}
+          <div className="bg-white p-6 rounded-2xl shadow-md border border-gray-100">
+            {loading ? (
+              <div className="flex flex-col items-center justify-center h-64">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-500 mb-4"></div>
+                <p className="text-gray-500">Loading delivery data...</p>
+              </div>
+            ) : error ? (
+              <div className="bg-red-50 p-4 rounded-lg border border-red-200">
+                <p className="text-red-600 font-medium">Error loading data</p>
+              </div>
+            ) : chartData.length === 0 ? (
+              <div className="flex flex-col items-center justify-center h-64">
+                <p className="text-gray-400">No deliveries for {selectedMonth}</p>
+              </div>
+            ) : (
+              <ResponsiveContainer width="100%" height={400}>
+                <BarChart data={chartData}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
+                  <XAxis dataKey="date" tick={{ fontSize: 12 }} axisLine={false} tickLine={false} />
+                  <YAxis allowDecimals={false} axisLine={false} tickLine={false} />
+                  <Tooltip />
+                  <Legend />
+                  <Bar dataKey="count" name="Deliveries" radius={[4, 4, 0, 0]}>
+                    {chartData.map((_, index) => (
+                      <Cell key={`cell-${index}`} fill={barColors[index % barColors.length]} />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            )}
+          </div>
+
+          {/* Recent Deliveries */}
+          <div className="mt-8">
+            <h3 className="font-medium mb-3 text-green-800">Recent Deliveries</h3>
+            <div className="space-y-2">
+              {deliveries.slice(0, 3).map((delivery: any) => {
+                const timestamp = parseInt(delivery.createdAt);
+                return (
+                  <div
+                    key={delivery.id}
+                    className="flex items-center justify-between p-4 bg-white rounded-lg border border-green-100 shadow-sm"
+                  >
+                    <div>
+                      <p className="font-medium">{delivery.trackingNumber}</p>
+                      <p className="text-sm text-gray-500">
+                        {formatTimestampToDateTime(timestamp)}
+                      </p>
+                    </div>
+                    <span
+                      className={`px-2 py-1 text-xs rounded-full ${
+                        delivery.deliveryStatus === 'Delivered' || delivery.deliveryStatus === 'completed'
+                          ? 'bg-green-100 text-green-800'
+                          : delivery.deliveryStatus === 'in_transit'
+                          ? 'bg-blue-100 text-blue-800'
+                          : 'bg-yellow-100 text-yellow-800'
+                      }`}
+                    >
+                      {delivery.deliveryStatus}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
         </div>
       </div>
     </div>
