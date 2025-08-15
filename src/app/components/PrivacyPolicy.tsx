@@ -1,6 +1,6 @@
 'use client';
 
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent } from "./ui/Card";
 import { Shield, Lock, FileText, Globe, User, Trash2 } from "lucide-react";
 
 export default function PrivacyPolicy() {
