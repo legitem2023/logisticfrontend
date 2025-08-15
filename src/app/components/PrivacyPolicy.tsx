@@ -11,16 +11,16 @@ export default function PrivacyPolicy() {
           <CardContent className="space-y-10">
             
             {/* Header */}
-<div className="bg-gradient-to-r from-emerald-600 to-green-600 shadow-md p-0 text-center text-white">
-  <div className="flex justify-center mb-4">
-    <Shield className="h-14 w-14 text-white drop-shadow-lg" />
-  </div>
-  <h1 className="text-3xl font-extrabold drop-shadow-sm">Privacy Policy</h1>
+          <CardHeader className="bg-gradient-to-r from-green-800 to-green-600 p-6 relative overflow-hidden">
+            {/* Subtle pattern */}
+            <div className="absolute inset-0 opacity-10 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgdmlld0JveD0iMCAwIDYwIDYwIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC42Ij48cGF0aCBkPSJNMzYgMzRjMC0yLjIgMS44LTQgNC00czQgMS44IDQgNC0xLjggNC00IDQtNC0xLjgtNC00eiIvPjwvZz48L2c+PC9zdmc+')]"></div>
+            <h1 className="text-3xl font-extrabold drop-shadow-sm">Privacy Policy</h1>
   <p className="mt-2 text-emerald-100 text-lg">
     Your privacy is our priority — here’s how we protect your information.
   </p>
-</div>
+          </CardHeader>
 
+            
             {/* Section 1 */}
             <section className="space-y-2">
               <h2 className="flex items-center gap-2 text-2xl font-semibold text-slate-800">
