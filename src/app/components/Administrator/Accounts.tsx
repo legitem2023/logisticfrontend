@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 import { gql, useQuery, useSubscription } from '@apollo/client';
 import { LocationTracking } from '../../../../graphql/subscription';
-import { RIDERS } from '../../../../graphql/query';
+import { ACCOUNTS } from '../../../../graphql/query';
 import Image from "next/image";
 import RiderCard from './RiderCard'; // Import the card component
 import RiderProfileCard from './RiderProfileCard'; // Import the profile card component
@@ -42,10 +42,10 @@ type Rider = {
 const Accounts = () => {
   const [selectedRider, setSelectedRider] = useState<Rider | null>(null);
 
-  const { loading, error, data } = useQuery(RIDERS);
+  const { loading, error, data } = useQuery(ACCOUNTS);
   const { data: subscriptionData } = useSubscription(LocationTracking);
 
-  const baseRiders: Rider[] = useMemo(() => data?.getRiders?.map((r: any) => ({
+  const baseRiders: Rider[] = useMemo(() => data?.getUsers?.map((r: any) => ({
     id: r.id,
     name: r.name,
     email: r.email,
