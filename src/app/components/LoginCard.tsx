@@ -59,7 +59,7 @@ export default function LoginCard() {
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-50 p-4">
-      <Card className="w-full max-w-md bg-white rounded-xl shadow-xl overflow-hidden border border-gray-100">
+      <Card className="w-full max-w-md bg-white rounded-xl shadow-xl overflow-hidden border">
         <div className="bg-gradient-to-r from-[#0a2e1d] to-[#1a4d2e] p-[1px]">
           <div className="bg-white p-8">
             <CardHeader className="text-center">
@@ -103,7 +103,7 @@ export default function LoginCard() {
               </div>
 
               <Button 
-                className="w-full py-3 bg-gradient-to-r from-[#0a2e1d] to-[#1a4d2e] hover:from-[#09281a] hover:to-[#164328] text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all"
+                className="w-full py-3 customgrad hover:from-[#09281a] hover:to-[#164328] text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all"
                 onClick={handleLogin} 
                 disabled={loading}
               >
