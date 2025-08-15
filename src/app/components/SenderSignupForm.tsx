@@ -59,7 +59,7 @@ const SenderSignupForm = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-green-100 p-0">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-green-100 p-1">
       <div className="max-w-2xl w-full mx-auto transform transition-all duration-300">
         <Card className="shadow-xl border border-green-100 overflow-hidden relative group bg-white">
           {/* Premium badge */}
