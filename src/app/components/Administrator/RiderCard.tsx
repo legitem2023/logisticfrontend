@@ -13,6 +13,49 @@ import {
 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 
+// Safely convert many timestamp shapes to a valid Date or return null
+function toValidDate(input) {
+  // allow 0 epoch, reject other falsy
+  if ((input === null || input === undefined || input === "") && input !== 0) return null;
+
+  // Date instance
+  if (input instanceof Date) {
+    return isNaN(input.getTime()) ? null : input;
+  }
+
+  // Firebase Timestamp-like { seconds, nanoseconds } or object with toDate()
+  if (typeof input === "object") {
+    if (typeof input?.toDate === "function") {
+      const d = input.toDate();
+      return isNaN(d.getTime()) ? null : d;
+    }
+    if (typeof input?.seconds === "number") {
+      const ms = input.seconds * 1000 + (input.nanoseconds ? input.nanoseconds / 1e6 : 0);
+      const d = new Date(ms);
+      return isNaN(d.getTime()) ? null : d;
+    }
+  }
+
+  // Number or numeric string
+  if (typeof input === "number" || (typeof input === "string" && input.trim() !== "")) {
+    const num = Number(input);
+    if (!Number.isNaN(num)) {
+      // Heuristic: < 1e12 -> seconds, else milliseconds
+      const ms = num < 1e12 ? num * 1000 : num;
+      const d = new Date(ms);
+      return isNaN(d.getTime()) ? null : d;
+    }
+  }
+
+  // ISO date string
+  if (typeof input === "string") {
+    const d = new Date(input);
+    return isNaN(d.getTime()) ? null : d;
+  }
+
+  return null;
+}
+
 const RiderCard = ({ rider, onViewDetails, onSave }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editableData, setEditableData] = useState({ ...rider });
@@ -40,12 +83,14 @@ const RiderCard = ({ rider, onViewDetails, onSave }) => {
     if (onSave) onSave(editableData);
   };
 
+  const lastUpdatedDate = toValidDate(editableData.lastUpdatedAt);
+
   return (
     <div className="w-full sm:w-96 shadow-2xl overflow-hidden border border-slate-200 bg-white/80 backdrop-blur-md transition-transform duration-300">
       {/* Header */}
       <div className="h-40 relative flex flex-col items-center justify-center bg-gradient-to-r from-green-800 to-green-600">
-        {/* Pattern overlay */}
-        <div className="absolute inset-0 opacity-10 pointer-events-none bg-[url('data:image/svg+xml;base64,PHN2ZyB...')]"></div>
+        {/* Pattern overlay (optional) */}
+        <div className="absolute inset-0 opacity-10 pointer-events-none"></div>
 
         {editableData.image ? (
           <img
@@ -84,18 +129,18 @@ const RiderCard = ({ rider, onViewDetails, onSave }) => {
           {isEditing ? (
             <input
               type="text"
-              value={editableData.name}
+              value={editableData.name || ""}
               onChange={(e) => handleChange("name", e.target.value)}
               className="text-lg font-semibold text-center border rounded px-2 py-1 w-full"
             />
           ) : (
             <h3 className="text-xl font-bold text-slate-800">
-              {editableData.name}
+              {editableData.name || "Unnamed Rider"}
             </h3>
           )}
           <span className="inline-flex items-center px-3 py-1 mt-2 rounded-full text-xs font-medium bg-green-100 text-green-800">
             <BadgeInfo size={14} className="mr-1" />
-            {editableData.role}
+            {editableData.role || "Rider"}
           </span>
         </div>
 
@@ -109,12 +154,12 @@ const RiderCard = ({ rider, onViewDetails, onSave }) => {
             {isEditing ? (
               <input
                 type="email"
-                value={editableData.email}
+                value={editableData.email || ""}
                 onChange={(e) => handleChange("email", e.target.value)}
                 className="border rounded px-2 py-1 w-full"
               />
             ) : (
-              <span>{editableData.email}</span>
+              <span>{editableData.email || "No email"}</span>
             )}
           </div>
 
@@ -124,12 +169,12 @@ const RiderCard = ({ rider, onViewDetails, onSave }) => {
             {isEditing ? (
               <input
                 type="tel"
-                value={editableData.phoneNumber}
+                value={editableData.phoneNumber || ""}
                 onChange={(e) => handleChange("phoneNumber", e.target.value)}
                 className="border rounded px-2 py-1 w-full"
               />
             ) : (
-              <span>{editableData.phoneNumber}</span>
+              <span>{editableData.phoneNumber || "No phone"}</span>
             )}
           </div>
 
@@ -141,14 +186,14 @@ const RiderCard = ({ rider, onViewDetails, onSave }) => {
                 <>
                   <input
                     type="text"
-                    value={editableData.vehicleType?.name}
+                    value={editableData.vehicleType?.name || ""}
                     onChange={(e) => handleVehicleChange("name", e.target.value)}
                     className="border rounded px-2 py-1 mb-1 w-full"
                     placeholder="Vehicle Type"
                   />
                   <input
                     type="text"
-                    value={editableData.licensePlate}
+                    value={editableData.licensePlate || ""}
                     onChange={(e) => handleChange("licensePlate", e.target.value)}
                     className="border rounded px-2 py-1 mb-1 w-full"
                     placeholder="License Plate"
@@ -156,7 +201,7 @@ const RiderCard = ({ rider, onViewDetails, onSave }) => {
                   <div className="flex gap-2">
                     <input
                       type="number"
-                      value={editableData.vehicleType?.maxCapacityKg}
+                      value={editableData.vehicleType?.maxCapacityKg ?? ""}
                       onChange={(e) =>
                         handleVehicleChange("maxCapacityKg", e.target.value)
                       }
@@ -165,7 +210,7 @@ const RiderCard = ({ rider, onViewDetails, onSave }) => {
                     />
                     <input
                       type="number"
-                      value={editableData.vehicleType?.maxVolumeM3}
+                      value={editableData.vehicleType?.maxVolumeM3 ?? ""}
                       onChange={(e) =>
                         handleVehicleChange("maxVolumeM3", e.target.value)
                       }
@@ -177,11 +222,12 @@ const RiderCard = ({ rider, onViewDetails, onSave }) => {
               ) : (
                 <>
                   <p>
-                    {editableData.vehicleType?.name} ({editableData.licensePlate})
+                    {(editableData.vehicleType?.name || "Vehicle") +
+                      (editableData.licensePlate ? ` (${editableData.licensePlate})` : "")}
                   </p>
                   <p className="text-xs text-slate-500">
-                    Max {editableData.vehicleType?.maxCapacityKg}kg ·{" "}
-                    {editableData.vehicleType?.maxVolumeM3}m³
+                    Max {editableData.vehicleType?.maxCapacityKg ?? "—"}kg ·{" "}
+                    {editableData.vehicleType?.maxVolumeM3 ?? "—"}m³
                   </p>
                 </>
               )}
@@ -189,31 +235,24 @@ const RiderCard = ({ rider, onViewDetails, onSave }) => {
           </div>
 
           {/* Location */}
-          {editableData.currentLatitude && editableData.currentLongitude && (
-            <div className="flex items-center gap-2">
-              <MapPin size={16} className="text-emerald-600" />
-              <span>
-                {editableData.currentLatitude.toFixed(4)},{" "}
-                {editableData.currentLongitude.toFixed(4)}
-              </span>
-            </div>
-          )}
+          {editableData.currentLatitude != null &&
+            editableData.currentLongitude != null && (
+              <div className="flex items-center gap-2">
+                <MapPin size={16} className="text-emerald-600" />
+                <span>
+                  {Number(editableData.currentLatitude).toFixed(4)},{" "}
+                  {Number(editableData.currentLongitude).toFixed(4)}
+                </span>
+              </div>
+            )}
 
           {/* Last Updated */}
           <div className="flex items-center gap-2">
             <Clock size={16} className="text-emerald-600" />
             <span>
-              {editableData.lastUpdatedAt && !isNaN(Number(editableData.lastUpdatedAt)) 
-  ? formatDistanceToNow(
-      editableData.lastUpdatedAt.toString().length === 10
-        ? editableData.lastUpdatedAt * 1000
-        : editableData.lastUpdatedAt,
-      { addSuffix: true }
-    )
-  : "No update time"}
-              {
-                editableData.lastUpdatedAt
-              }
+              {lastUpdatedDate
+                ? formatDistanceToNow(lastUpdatedDate, { addSuffix: true })
+                : "No update time"}
             </span>
           </div>
         </div> {/* closes Info List */}
@@ -221,7 +260,7 @@ const RiderCard = ({ rider, onViewDetails, onSave }) => {
         {/* Buttons */}
         <div className="mt-6 flex gap-3">
           <button
-            onClick={() => onViewDetails(editableData)}
+            onClick={() => onViewDetails?.(editableData)}
             className="flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-xl border border-emerald-600 text-emerald-600 bg-white hover:bg-emerald-50 transition font-medium"
           >
             <ChevronRight size={16} />
