@@ -48,7 +48,7 @@ const LogisticContactFormPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-green-100 p-6">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-green-100 p-1">
       <Card className="max-w-4xl w-full shadow-xl border border-green-100 overflow-hidden relative bg-white">
         {/* PRO Badge */}
         <div className="absolute -top-2 -right-2 bg-green-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg transform rotate-12 z-10">
