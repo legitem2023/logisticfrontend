@@ -5,7 +5,7 @@ import { Shield, Lock, FileText, Globe, User, Trash2 } from "lucide-react";
 
 export default function PrivacyPolicy() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white via-slate-50 to-slate-100 py-12 px-4">
+    <div className="min-h-screen bg-gradient-to-b from-white via-slate-50 to-slate-100 p-1">
       <div className="max-w-4xl mx-auto">
         <Card className="shadow-2xl border border-slate-200 bg-white/80 backdrop-blur-md rounded-2xl overflow-hidden">
           {/* Header */}
@@ -23,7 +23,7 @@ export default function PrivacyPolicy() {
             </div>
           </CardHeader>
 
-          <CardContent className="px-8 py-10 space-y-10">
+          <CardContent className="px-4 py-6 space-y-10">
             {[
               {
                 icon: <User className="h-6 w-6 text-emerald-600" />,
