@@ -136,8 +136,8 @@ const RiderActivityChart = () => {
   const chartData = allMonthlyData[selectedMonth] || [];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-green-100 p-6">
-      <div className="w-full max-w-6xl mx-auto rounded-3xl shadow-lg overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 to-green-100 p-1">
+      <div className="w-full max-w-6xl mx-auto  shadow-lg overflow-hidden">
         {/* Premium Green Header */}
         <div className="bg-gradient-to-r from-green-800 to-green-600 p-6 relative">
           <h1 className="text-3xl font-bold text-white">Delivery Analytics Dashboard</h1>
