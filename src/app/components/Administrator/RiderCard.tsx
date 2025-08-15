@@ -1,17 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { 
-  User,
-  Car,
-  Phone,
-  Mail,
-  MapPin,
-  BadgeInfo,
-  Clock,
-  ChevronRight
+  User, Car, Phone, Mail, MapPin, BadgeInfo, Clock, ChevronRight, Edit3, Check
 } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 
-const RiderCard = ({ rider, onViewDetails }) => {
+const RiderCard = ({ rider, onViewDetails, onSave }) => {
+  const [isEditing, setIsEditing] = useState(false);
+  const [editableData, setEditableData] = useState({ ...rider });
+
   const statusColors = {
     ACTIVE: 'bg-green-100 text-green-800',
     INACTIVE: 'bg-red-100 text-red-800',
@@ -19,16 +15,23 @@ const RiderCard = ({ rider, onViewDetails }) => {
     OFFLINE: 'bg-gray-100 text-gray-800'
   };
 
+  const handleChange = (field, value) => {
+    setEditableData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleSave = () => {
+    setIsEditing(false);
+    if (onSave) onSave(editableData);
+  };
+
   return (
-    <div className="w-80 rounded-xl shadow-md overflow-hidden bg-white hover:shadow-lg transition-shadow">
+    <div className="w-full sm:w-80 rounded-xl shadow-md overflow-hidden bg-white hover:shadow-lg transition-shadow">
       {/* Card Header */}
-      <div 
-        className="h-36 relative flex justify-center items-center customgrad"
-      >
-        {rider.image ? (
+      <div className="h-36 relative flex justify-center items-center customgrad">
+        {editableData.image ? (
           <img
-            src={rider.image}
-            alt={rider.name}
+            src={editableData.image}
+            alt={editableData.name}
             className="w-20 h-20 rounded-full object-cover border-4 border-white"
           />
         ) : (
@@ -38,20 +41,38 @@ const RiderCard = ({ rider, onViewDetails }) => {
         )}
         <span 
           className={`absolute bottom-4 right-4 px-3 py-1 rounded-full text-sm font-bold ${
-            statusColors[rider.status] || 'bg-blue-100 text-blue-800'
+            statusColors[editableData.status] || 'bg-blue-100 text-blue-800'
           }`}
         >
-          {rider.status}
+          {editableData.status}
         </span>
+
+        {/* Edit Button */}
+        <button
+          onClick={() => setIsEditing(!isEditing)}
+          className="absolute top-3 right-3 bg-white p-1 rounded-full shadow hover:bg-gray-50"
+        >
+          {isEditing ? <Check size={18} /> : <Edit3 size={18} />}
+        </button>
       </div>
 
       {/* Card Content */}
       <div className="p-5">
         <div className="text-center mb-4">
-          <h3 className="text-lg font-semibold mb-1">{rider.name}</h3>
+          {isEditing ? (
+            <input
+              type="text"
+              value={editableData.name}
+              onChange={(e) => handleChange("name", e.target.value)}
+              className="text-lg font-semibold mb-1 text-center border rounded px-2 py-1 w-full"
+            />
+          ) : (
+            <h3 className="text-lg font-semibold mb-1">{editableData.name}</h3>
+          )}
+
           <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
             <BadgeInfo size={14} className="mr-1" />
-            {rider.role}
+            {editableData.role}
           </span>
         </div>
 
@@ -60,29 +81,49 @@ const RiderCard = ({ rider, onViewDetails }) => {
         <div className="space-y-3 text-sm">
           <div className="flex items-center gap-2">
             <Mail size={16} className="text-gray-500" />
-            <span>{rider.email}</span>
+            {isEditing ? (
+              <input
+                type="email"
+                value={editableData.email}
+                onChange={(e) => handleChange("email", e.target.value)}
+                className="border rounded px-2 py-1 w-full"
+              />
+            ) : (
+              <span>{editableData.email}</span>
+            )}
           </div>
           
           <div className="flex items-center gap-2">
             <Phone size={16} className="text-gray-500" />
-            <span>{rider.phoneNumber}</span>
+            {isEditing ? (
+              <input
+                type="tel"
+                value={editableData.phoneNumber}
+                onChange={(e) => handleChange("phoneNumber", e.target.value)}
+                className="border rounded px-2 py-1 w-full"
+              />
+            ) : (
+              <span>{editableData.phoneNumber}</span>
+            )}
           </div>
           
           <div className="flex items-start gap-2">
             <Car size={16} className="text-gray-500 mt-0.5" />
             <div>
-              <p>{rider.vehicleType.name} ({rider.licensePlate})</p>
+              <p>
+                {editableData.vehicleType?.name} ({editableData.licensePlate})
+              </p>
               <p className="text-xs text-gray-500">
-                Max {rider.vehicleType.maxCapacityKg}kg · {rider.vehicleType.maxVolumeM3}m³
+                Max {editableData.vehicleType?.maxCapacityKg}kg · {editableData.vehicleType?.maxVolumeM3}m³
               </p>
             </div>
           </div>
           
-          {rider.currentLatitude && rider.currentLongitude && (
+          {editableData.currentLatitude && editableData.currentLongitude && (
             <div className="flex items-center gap-2">
               <MapPin size={16} className="text-gray-500" />
               <span>
-                {rider.currentLatitude.toFixed(4)}, {rider.currentLongitude.toFixed(4)}
+                {editableData.currentLatitude.toFixed(4)}, {editableData.currentLongitude.toFixed(4)}
               </span>
             </div>
           )}
@@ -90,18 +131,29 @@ const RiderCard = ({ rider, onViewDetails }) => {
           <div className="flex items-center gap-2">
             <Clock size={16} className="text-gray-500" />
             <span>
-              {formatDistanceToNow(new Date(rider.lastUpdatedAt * 1000), { addSuffix: true })}
+              {formatDistanceToNow(new Date(editableData.lastUpdatedAt * 1000), { addSuffix: true })}
             </span>
           </div>
         </div>
 
-        <button
-          onClick={() => onViewDetails(rider)}
-          className="mt-4 w-full flex items-center justify-center gap-2 px-4 py-2 bg-white border border-blue-500 text-blue-500 rounded-lg hover:bg-blue-50 transition"
-        >
-          <ChevronRight size={16} />
-          View Details
-        </button>
+        <div className="mt-4 flex gap-2">
+          <button
+            onClick={() => onViewDetails(editableData)}
+            className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-white border border-blue-500 text-blue-500 rounded-lg hover:bg-blue-50 transition"
+          >
+            <ChevronRight size={16} />
+            View Details
+          </button>
+
+          {isEditing && (
+            <button
+              onClick={handleSave}
+              className="flex-1 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition"
+            >
+              Save
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );
