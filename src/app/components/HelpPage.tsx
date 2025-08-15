@@ -17,7 +17,7 @@ export default function HelpPage() {
         <CardContent className="space-y-4 text-lg text-gray-700 leading-relaxed">
           <p>
             Welcome to the Logistics App! This system helps you manage and track deliveries in real time. 
-            Whether you're a sender, receiver, or rider, here’s how everything works.
+            Whether youre a sender, receiver, or rider, heres how everything works.
           </p>
         </CardContent>
       </Card>
@@ -59,7 +59,7 @@ export default function HelpPage() {
         </CardHeader>
         <CardContent className="text-gray-700 text-base leading-relaxed">
           <p>
-            Our system updates the rider’s GPS location live on the map. 
+            Our system updates the riders GPS location live on the map. 
             You can track your delivery progress in your dashboard or delivery details page.
           </p>
         </CardContent>
