@@ -11,17 +11,15 @@ export default function PrivacyPolicy() {
           <CardContent className="p-10 space-y-10">
             
             {/* Header */}
-            <div className="text-center space-y-4">
-              <div className="flex justify-center">
-                <Shield className="h-16 w-16 text-emerald-600 drop-shadow-md" />
-              </div>
-              <h1 className="text-4xl font-extrabold bg-gradient-to-r from-emerald-600 to-green-500 bg-clip-text text-transparent">
-                Privacy Policy
-              </h1>
-              <p className="text-slate-600 text-lg max-w-2xl mx-auto">
-                Your privacy is our priority — here’s how we protect and handle your information.
-              </p>
-            </div>
+<div className="bg-gradient-to-r from-emerald-600 to-green-600 rounded-t-2xl shadow-md p-8 text-center text-white">
+  <div className="flex justify-center mb-4">
+    <Shield className="h-14 w-14 text-white drop-shadow-lg" />
+  </div>
+  <h1 className="text-3xl font-extrabold drop-shadow-sm">Privacy Policy</h1>
+  <p className="mt-2 text-emerald-100 text-lg">
+    Your privacy is our priority — here’s how we protect your information.
+  </p>
+</div>
 
             {/* Section 1 */}
             <section className="space-y-2">
