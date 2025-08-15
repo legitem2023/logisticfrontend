@@ -202,7 +202,7 @@ const RiderCard = ({ rider, onViewDetails, onSave }) => {
             <Clock size={16} className="text-emerald-600" />
             <span>
               {formatDistanceToNow(
-                new Date(editableData.lastUpdatedAt * 1000),
+                new Date(editableData.lastUpdatedAt),
                 { addSuffix: true }
               )}
             </span>
