@@ -13,64 +13,49 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  Legend,
   Cell,
 } from 'recharts';
-import { CheckCheck, Clock, XCircle, Bike, Award } from 'lucide-react';
+import { CheckCheck, Clock, Bike, Award } from 'lucide-react';
 
 const barColors = ['#4ade80', '#60a5fa', '#fbbf24', '#f472b6'];
 
-// Helper functions to format timestamps
-const formatTimestampToMonth = (timestamp: number) => {
-  const date = new Date(timestamp);
-  return date.toLocaleDateString('en-US', { month: 'long' });
-};
+// Helper functions
+const formatTimestampToMonth = (timestamp: number) =>
+  new Date(timestamp).toLocaleDateString('en-US', { month: 'long' });
 
-const formatTimestampToDayMonth = (timestamp: number) => {
-  const date = new Date(timestamp);
-  return date.toLocaleDateString('en-US', { month: 'short', day: '2-digit' });
-};
+const formatTimestampToDayMonth = (timestamp: number) =>
+  new Date(timestamp).toLocaleDateString('en-US', { month: 'short', day: '2-digit' });
 
-const formatTimestampToDateTime = (timestamp: number) => {
-  const date = new Date(timestamp);
-  return date.toLocaleDateString('en-US', { 
-    month: 'short', 
-    day: 'numeric', 
-    hour: '2-digit', 
-    minute: '2-digit' 
-  }).replace(',', ' •');
-};
+const formatTimestampToDateTime = (timestamp: number) =>
+  new Date(timestamp)
+    .toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    })
+    .replace(',', ' •');
 
-const getCurrentMonth = () => {
-  return new Date().toLocaleDateString('en-US', { month: 'long' });
-};
+const getCurrentMonth = () =>
+  new Date().toLocaleDateString('en-US', { month: 'long' });
 
 const RiderPerformanceChart = () => {
   const globalUserId = useSelector(selectTempUserId);
-
   const { data, loading, error } = useQuery(DELIVERIES, {
     variables: { getRidersDeliveryId: globalUserId },
   });
-  
-  const [selectedMonth, setSelectedMonth] = useState<string>(getCurrentMonth());
 
+  const [selectedMonth, setSelectedMonth] = useState<string>(getCurrentMonth());
   const deliveries = data?.getRidersDelivery ?? [];
 
-  // Process rider-specific data
   const { monthlyData, performanceStats, months } = useMemo(() => {
-    const statusMap = {
-      Delivered: 0,
-      Pending: 0,
-      Cancelled: 0,
-      in_transit: 0,
-    };
-
+    const statusMap = { Delivered: 0, Pending: 0, Cancelled: 0, in_transit: 0 };
     const monthlyMap: Record<string, Record<string, number>> = {};
 
     deliveries.forEach((delivery: any) => {
       const timestamp = parseInt(delivery.createdAt);
-      if (isNaN(timestamp)) return; // Skip invalid timestamps
-      
+      if (isNaN(timestamp)) return;
+
       const month = formatTimestampToMonth(timestamp);
       const date = formatTimestampToDayMonth(timestamp);
 
@@ -81,7 +66,7 @@ const RiderPerformanceChart = () => {
       let statusKey = delivery.deliveryStatus;
       if (statusKey === 'completed') statusKey = 'Delivered';
       if (statusKey === 'cancelled') statusKey = 'Cancelled';
-      
+
       if (statusMap.hasOwnProperty(statusKey)) {
         statusMap[statusKey as keyof typeof statusMap] += 1;
       }
@@ -95,33 +80,17 @@ const RiderPerformanceChart = () => {
       }));
     }
 
-    const completionRate = deliveries.length > 0 
-      ? Math.round((statusMap.Delivered / deliveries.length) * 100) 
+    const completionRate = deliveries.length
+      ? Math.round((statusMap.Delivered / deliveries.length) * 100)
       : 0;
 
     return {
       monthlyData: monthlyDataFormatted,
       performanceStats: [
-        {
-          label: 'Completed',
-          value: statusMap.Delivered,
-          icon: <CheckCheck className="w-5 h-5 text-green-500" />,
-        },
-        {
-          label: 'In Progress',
-          value: statusMap.in_transit,
-          icon: <Bike className="w-5 h-5 text-blue-500" />,
-        },
-        {
-          label: 'Pending',
-          value: statusMap.Pending,
-          icon: <Clock className="w-5 h-5 text-yellow-500" />,
-        },
-        {
-          label: 'Completion Rate',
-          value: `${completionRate}%`,
-          icon: <Award className="w-5 h-5 text-purple-500" />,
-        },
+        { label: 'Completed', value: statusMap.Delivered, icon: <CheckCheck className="w-5 h-5 text-green-500" /> },
+        { label: 'In Progress', value: statusMap.in_transit, icon: <Bike className="w-5 h-5 text-blue-500" /> },
+        { label: 'Pending', value: statusMap.Pending, icon: <Clock className="w-5 h-5 text-yellow-500" /> },
+        { label: 'Completion Rate', value: `${completionRate}%`, icon: <Award className="w-5 h-5 text-purple-500" /> },
       ],
       months: Object.keys(monthlyDataFormatted),
     };
@@ -130,19 +99,21 @@ const RiderPerformanceChart = () => {
   const chartData = monthlyData[selectedMonth] || [];
 
   return (
-    <div className="w-full max-w-4xl mx-auto p-6 bg-white rounded-xl shadow-sm">
-      <div className="mb-6">
-        <h1 className="text-xl font-bold text-gray-800">My Delivery Performance</h1>
-        <p className="text-gray-600">Track your delivery stats and progress</p>
+    <div className="w-full max-w-4xl mx-auto p-6 rounded-xl shadow-sm bg-gradient-to-br from-green-50 to-green-100">
+      {/* Header */}
+      <div className="mb-6 border-b border-green-200 pb-3">
+        <h1 className="text-xl font-bold text-green-800">My Delivery Performance</h1>
+        <p className="text-green-600">Track your delivery stats and progress</p>
       </div>
 
+      {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
         {performanceStats.map((stat) => (
           <div
             key={stat.label}
-            className="bg-gray-50 p-4 rounded-lg border border-gray-200 flex items-center"
+            className="bg-white p-4 rounded-lg border border-green-100 flex items-center shadow-sm"
           >
-            <div className="mr-3 p-2 bg-white rounded-full shadow-sm">
+            <div className="mr-3 p-2 bg-green-50 rounded-full shadow">
               {stat.icon}
             </div>
             <div>
@@ -153,17 +124,18 @@ const RiderPerformanceChart = () => {
         ))}
       </div>
 
+      {/* Month Selector */}
       <div className="mb-4 flex items-center justify-between">
-        <h2 className="text-md font-semibold">Daily Deliveries</h2>
+        <h2 className="text-md font-semibold text-green-800">Daily Deliveries</h2>
         <div className="flex space-x-2">
           {months.map((month) => (
             <button
               key={month}
               onClick={() => setSelectedMonth(month)}
-              className={`px-3 py-1 text-sm rounded-md ${
+              className={`px-3 py-1 text-sm rounded-md transition ${
                 selectedMonth === month
-                  ? 'bg-indigo-100 text-indigo-700'
-                  : 'text-gray-600 hover:bg-gray-100'
+                  ? 'bg-green-200 text-green-800 font-semibold'
+                  : 'text-green-700 hover:bg-green-100'
               }`}
             >
               {month}
@@ -172,45 +144,26 @@ const RiderPerformanceChart = () => {
         </div>
       </div>
 
-      <div className="bg-gray-50 p-4 rounded-lg">
+      {/* Chart */}
+      <div className="bg-white p-4 rounded-lg shadow-sm border border-green-100">
         {loading ? (
           <div className="flex justify-center items-center h-64">
-            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-indigo-500"></div>
+            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-green-500"></div>
           </div>
         ) : error ? (
-          <div className="text-center py-10 text-red-500">
-            Failed to load delivery data
-          </div>
+          <div className="text-center py-10 text-red-500">Failed to load delivery data</div>
         ) : chartData.length === 0 ? (
-          <div className="text-center py-10 text-gray-500">
-            No deliveries for {selectedMonth}
-          </div>
+          <div className="text-center py-10 text-gray-500">No deliveries for {selectedMonth}</div>
         ) : (
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={chartData}>
               <CartesianGrid strokeDasharray="3 3" vertical={false} />
-              <XAxis 
-                dataKey="date" 
-                tick={{ fontSize: 12 }}
-                axisLine={false}
-                tickLine={false}
-              />
-              <YAxis 
-                allowDecimals={false}
-                axisLine={false}
-                tickLine={false}
-              />
+              <XAxis dataKey="date" tick={{ fontSize: 12 }} axisLine={false} tickLine={false} />
+              <YAxis allowDecimals={false} axisLine={false} tickLine={false} />
               <Tooltip />
-              <Bar 
-                dataKey="count" 
-                name="Deliveries"
-                radius={[4, 4, 0, 0]}
-              >
+              <Bar dataKey="count" name="Deliveries" radius={[4, 4, 0, 0]}>
                 {chartData.map((_, index) => (
-                  <Cell 
-                    key={`cell-${index}`} 
-                    fill={barColors[index % barColors.length]} 
-                  />
+                  <Cell key={`cell-${index}`} fill={barColors[index % barColors.length]} />
                 ))}
               </Bar>
             </BarChart>
@@ -218,26 +171,32 @@ const RiderPerformanceChart = () => {
         )}
       </div>
 
+      {/* Recent Deliveries */}
       <div className="mt-6">
-        <h3 className="font-medium mb-3">Recent Deliveries</h3>
+        <h3 className="font-medium mb-3 text-green-800">Recent Deliveries</h3>
         <div className="space-y-2">
           {deliveries.slice(0, 3).map((delivery: any) => {
             const timestamp = parseInt(delivery.createdAt);
             return (
-              <div key={delivery.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+              <div
+                key={delivery.id}
+                className="flex items-center justify-between p-3 bg-white rounded-lg border border-green-100 shadow-sm"
+              >
                 <div>
                   <p className="font-medium">{delivery.trackingNumber}</p>
                   <p className="text-sm text-gray-500">
                     {formatTimestampToDateTime(timestamp)}
                   </p>
                 </div>
-                <span className={`px-2 py-1 text-xs rounded-full ${
-                  delivery.deliveryStatus === 'Delivered' || delivery.deliveryStatus === 'completed'
-                    ? 'bg-green-100 text-green-800'
-                    : delivery.deliveryStatus === 'in_transit'
-                    ? 'bg-blue-100 text-blue-800'
-                    : 'bg-yellow-100 text-yellow-800'
-                }`}>
+                <span
+                  className={`px-2 py-1 text-xs rounded-full ${
+                    delivery.deliveryStatus === 'Delivered' || delivery.deliveryStatus === 'completed'
+                      ? 'bg-green-100 text-green-800'
+                      : delivery.deliveryStatus === 'in_transit'
+                      ? 'bg-blue-100 text-blue-800'
+                      : 'bg-yellow-100 text-yellow-800'
+                  }`}
+                >
                   {delivery.deliveryStatus}
                 </span>
               </div>
