@@ -15,7 +15,7 @@ import LogisticsForm from './Sender/LogisticsForm';
 import SettingsPage from './SettingsPage';
 import HelpPage from './HelpPage';
 import LoginCard from './LoginCard';
-import SignupCard from './SignupCard';
+import SignupRoleSelector from './SignupRoleSelector';
 import { mockItems } from './json/mockItems';
 import dynamic from 'next/dynamic';
 import {
@@ -211,7 +211,7 @@ export function ActiveContentDisplay({ activeTab, useRole, isUserActive }: {
             icon: <UserPlus color="green" />,
             content: (
               <div className="px-1 py-1 space-y-1">
-                <SignupCard />
+                <SignupRoleSelector />
               </div>
             ),
           },
