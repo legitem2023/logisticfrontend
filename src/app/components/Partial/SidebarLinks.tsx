@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, ReactNode } from 'react';
 import { Menu, X } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 
 export type SidebarLink = {
@@ -73,25 +74,43 @@ export default function SidebarLinks({
           md:translate-x-0 md:static
         `}
       >
-        <div className="h-full w-full customgrad shadow-2xl border-r border-blue-400/20 p-4 rounded-tr-2xl rounded-br-2xl overflow-y-auto flex flex-col gap-2">
-          {links.map((link, i) => {
-            const isActive = pathname === link.href;
-            return (
-              <Link
-                key={i}
-                href={link.href}
-                onClick={() => setIsMobileOpen(false)}
-                className={`relative flex items-center gap-3 px-5 py-2.5 rounded-lg text-sm font-medium transition-all duration-300
-                  ${isActive
-                    ? `${gradientClass} text-white shadow-inner`
-                    : 'text-blue-100 hover:bg-white/5 hover:text-white'}
-                `}
-              >
-                {link.icon}
-                <span>{link.label}</span>
-              </Link>
-            );
-          })}
+        <div className="h-full w-full customgrad shadow-2xl border-r border-blue-400/20 p-4 rounded-tr-2xl rounded-br-2xl overflow-y-auto flex flex-col gap-4">
+          {/* Logo */}
+          <div className="flex items-center justify-center mb-4">
+            <Link href="/" className="flex items-center group">
+              <div className="relative h-14 w-14 transition-transform duration-300 group-hover:rotate-6">
+                <Image
+                  src="/Motogo.svg"
+                  alt="MotoGo Logo"
+                  fill
+                  className="object-contain drop-shadow-lg"
+                  priority
+                />
+              </div>
+            </Link>
+          </div>
+
+          {/* Links */}
+          <nav className="flex flex-col gap-2">
+            {links.map((link, i) => {
+              const isActive = pathname === link.href;
+              return (
+                <Link
+                  key={i}
+                  href={link.href}
+                  onClick={() => setIsMobileOpen(false)}
+                  className={`relative flex items-center gap-3 px-5 py-2.5 rounded-lg text-sm font-medium transition-all duration-300
+                    ${isActive
+                      ? `${gradientClass} text-white shadow-inner`
+                      : 'text-blue-100 hover:bg-white/5 hover:text-white'}
+                  `}
+                >
+                  {link.icon}
+                  <span>{link.label}</span>
+                </Link>
+              );
+            })}
+          </nav>
         </div>
       </aside>
 
