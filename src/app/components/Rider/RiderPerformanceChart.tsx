@@ -101,10 +101,10 @@ const RiderPerformanceChart = () => {
   return (
     <div className="w-full max-w-4xl mx-auto p-6 rounded-xl shadow-sm bg-gradient-to-br from-green-50 to-green-100">
       {/* Header */}
-      <div className="mb-6 border-b border-green-200 pb-3">
-        <h1 className="text-xl font-bold text-green-800">My Delivery Performance</h1>
-        <p className="text-green-600">Track your delivery stats and progress</p>
-      </div>
+     <div className="mb-6 p-4 rounded-xl bg-gradient-to-r from-green-500 to-green-600 shadow-md">
+      <h1 className="text-xl font-bold text-white">My Delivery Performance</h1>
+      <p className="text-green-100">Track your delivery stats and progress</p>
+     </div>
 
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
