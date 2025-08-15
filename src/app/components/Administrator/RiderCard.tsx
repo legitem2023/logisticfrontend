@@ -206,6 +206,9 @@ const RiderCard = ({ rider, onViewDetails, onSave }) => {
                 { addSuffix: true }
               )}
             </span>
+            {
+              editableData.lastUpdatedAt
+            }
           </div>
         </div>
 
