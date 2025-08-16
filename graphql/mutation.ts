@@ -232,3 +232,29 @@ mutation MarkPaid($deliveryId: String!, $riderId: String!, $code: String) {
   }
 }
 `
+
+export const INSERTPICKUPPROOF = gql`
+mutation InsertPickupProof($input: ProofOfPickupInput) {
+  insertPickupProof(input: $input) {
+    statusText
+  }
+}
+`
+// {
+//   "input": {
+//     "customerName": null,
+//     "customerSignature": null,
+//     "id": null,
+//     "numberOfPackages": null,
+//     "otpCode": null,
+//     "packageCondition": null,
+//     "pickupAddress": null,
+//     "pickupDateTime": null,
+//     "pickupLatitude": null,
+//     "pickupLongitude": null,
+//     "proofPhotoUrl": null,
+//     "remarks": null,
+//     "riderId": null,
+//     "status": null
+//   }
+// }
