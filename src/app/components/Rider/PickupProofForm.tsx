@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useMutation } from '@apollo/client';
-import { INSERTPICKUPPROOF } from '../../../../graphql/mutations';
+import { INSERTPICKUPPROOF } from '../../../../graphql/mutation';
 import { Camera, Edit2, CheckCircle, Trash2, X } from 'lucide-react';
 
 const packageConditions = [
