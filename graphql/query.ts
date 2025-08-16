@@ -32,7 +32,37 @@ query GetUsers {
 }
 `
 
-
+export const ACCOUNT = gql`
+query GetUser($getRidersId: String) {
+  getUser(id:$getRidersId) {
+      id
+    name
+    email
+    phoneNumber
+    vehicleType {
+      id
+      name
+      maxCapacityKg
+      maxVolumeM3
+      description
+      createdAt
+      updatedAt
+      icon
+      cost
+    }
+    licensePlate
+    license
+    status
+    currentLatitude
+    currentLongitude
+    lastUpdatedAt
+    createdAt
+    updatedAt
+    role
+    image
+  }
+}
+`
 
 export const VEHICLEQUERY = gql`
 query GetVehicleTypes {
