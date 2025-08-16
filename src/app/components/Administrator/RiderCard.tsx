@@ -15,15 +15,8 @@ import { formatDistanceToNow } from "date-fns";
 
 // Safely convert many timestamp shapes to a valid Date or return null
 function toValidDate(input) {
-  // allow 0 epoch, reject other falsy
   if ((input === null || input === undefined || input === "") && input !== 0) return null;
-
-  // Date instance
-  if (input instanceof Date) {
-    return isNaN(input.getTime()) ? null : input;
-  }
-
-  // Firebase Timestamp-like { seconds, nanoseconds } or object with toDate()
+  if (input instanceof Date) return isNaN(input.getTime()) ? null : input;
   if (typeof input === "object") {
     if (typeof input?.toDate === "function") {
       const d = input.toDate();
@@ -35,24 +28,18 @@ function toValidDate(input) {
       return isNaN(d.getTime()) ? null : d;
     }
   }
-
-  // Number or numeric string
   if (typeof input === "number" || (typeof input === "string" && input.trim() !== "")) {
     const num = Number(input);
     if (!Number.isNaN(num)) {
-      // Heuristic: < 1e12 -> seconds, else milliseconds
       const ms = num < 1e12 ? num * 1000 : num;
       const d = new Date(ms);
       return isNaN(d.getTime()) ? null : d;
     }
   }
-
-  // ISO date string
   if (typeof input === "string") {
     const d = new Date(input);
     return isNaN(d.getTime()) ? null : d;
   }
-
   return null;
 }
 
@@ -89,10 +76,8 @@ const RiderCard = ({ rider, onViewDetails, onSave }) => {
     <div className="w-full sm:w-96 shadow-2xl overflow-hidden border border-slate-200 bg-white/80 backdrop-blur-md transition-transform duration-300">
       {/* Header */}
       <div className="h-40 relative flex flex-col items-center justify-center bg-gradient-to-r from-green-800 to-green-600">
-        {/* Pattern overlay (optional) */}
         <div className="absolute inset-0 opacity-10 pointer-events-none">
-        {/* Pattern */}
-          <div className="absolute inset-0 opacity-10 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSIjZmZmIiBmaWxsLW9wYWNpdHk9IjAuNiI+PHBhdGggZD0iTTM2IDM0QzM2IDMxLjggMzcuOCAzMCA0MCAzMFM0NCAzMS44IDQ0IDM0QzQ0IDM2LjIgNDIuMiAzOCA0MCAzOFM0MCAzNi4yIDQwIDM0WiIvPjwvZz48L3N2Zz4=')]"></div>  
+          <div className="absolute inset-0 opacity-10 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSIjZmZmIiBmaWxsLW9wYWNpdHk9IjAuNiI+PHBhdGggZD0iTTM2IDM0QzM2IDMxLjggMzcuOCAzMCA0MCAzMFM0NCAzMS44IDQ0IDM0QzQ0IDM2LjIgNDIuMiAzOCA0MCAzOFM0MCAzNi4yIDQwIDM0WiIvPjwvZz48L3N2Zz4=')]"></div>
         </div>
 
         {editableData.image ? (
@@ -107,7 +92,6 @@ const RiderCard = ({ rider, onViewDetails, onSave }) => {
           </div>
         )}
 
-        {/* Status Badge */}
         <span
           className={`absolute bottom-3 right-3 px-3 py-1 rounded-full text-sm font-bold shadow-md ${
             statusColors[editableData.status] || "bg-blue-100 text-blue-800"
@@ -116,7 +100,6 @@ const RiderCard = ({ rider, onViewDetails, onSave }) => {
           {editableData.status}
         </span>
 
-        {/* Edit Button */}
         <button
           onClick={() => setIsEditing(!isEditing)}
           className="absolute top-3 right-3 bg-white p-1 rounded-full shadow hover:bg-gray-50 transition"
@@ -127,7 +110,6 @@ const RiderCard = ({ rider, onViewDetails, onSave }) => {
 
       {/* Body */}
       <div className="p-6 space-y-4">
-        {/* Name & Role */}
         <div className="text-center">
           {isEditing ? (
             <input
@@ -149,9 +131,7 @@ const RiderCard = ({ rider, onViewDetails, onSave }) => {
 
         <div className="border-t border-slate-200"></div>
 
-        {/* Info List */}
         <div className="space-y-3 text-sm">
-          {/* Email */}
           <div className="flex items-center gap-2">
             <Mail size={16} className="text-emerald-600" />
             {isEditing ? (
@@ -166,7 +146,6 @@ const RiderCard = ({ rider, onViewDetails, onSave }) => {
             )}
           </div>
 
-          {/* Phone */}
           <div className="flex items-center gap-2">
             <Phone size={16} className="text-emerald-600" />
             {isEditing ? (
@@ -181,7 +160,6 @@ const RiderCard = ({ rider, onViewDetails, onSave }) => {
             )}
           </div>
 
-          {/* Vehicle */}
           <div className="flex items-start gap-2">
             <Car size={16} className="text-emerald-600 mt-0.5" />
             <div className="w-full">
@@ -205,18 +183,14 @@ const RiderCard = ({ rider, onViewDetails, onSave }) => {
                     <input
                       type="number"
                       value={editableData.vehicleType?.maxCapacityKg ?? ""}
-                      onChange={(e) =>
-                        handleVehicleChange("maxCapacityKg", e.target.value)
-                      }
+                      onChange={(e) => handleVehicleChange("maxCapacityKg", e.target.value)}
                       className="border rounded px-2 py-1 w-1/2"
                       placeholder="Max kg"
                     />
                     <input
                       type="number"
                       value={editableData.vehicleType?.maxVolumeM3 ?? ""}
-                      onChange={(e) =>
-                        handleVehicleChange("maxVolumeM3", e.target.value)
-                      }
+                      onChange={(e) => handleVehicleChange("maxVolumeM3", e.target.value)}
                       className="border rounded px-2 py-1 w-1/2"
                       placeholder="Max m³"
                     />
@@ -237,7 +211,6 @@ const RiderCard = ({ rider, onViewDetails, onSave }) => {
             </div>
           </div>
 
-          {/* Location */}
           {editableData.currentLatitude != null &&
             editableData.currentLongitude != null && (
               <div className="flex items-center gap-2">
@@ -249,7 +222,6 @@ const RiderCard = ({ rider, onViewDetails, onSave }) => {
               </div>
             )}
 
-          {/* Last Updated */}
           <div className="flex items-center gap-2">
             <Clock size={16} className="text-emerald-600" />
             <span>
@@ -258,7 +230,33 @@ const RiderCard = ({ rider, onViewDetails, onSave }) => {
                 : "No update time"}
             </span>
           </div>
-        </div> {/* closes Info List */}
+        </div>
+
+        {/* License Image */}
+        <div className="mt-4">
+          <p className="text-xs text-slate-500 font-medium mb-2">Driver’s License</p>
+          {editableData.license ? (
+            <div className="relative group rounded-xl overflow-hidden shadow-md border border-slate-200">
+              <img
+                src={editableData.license}
+                alt="License"
+                className="w-full h-48 object-cover transform group-hover:scale-105 transition duration-300"
+              />
+            </div>
+          ) : isEditing ? (
+            <input
+              type="text"
+              value={editableData.license || ""}
+              onChange={(e) => handleChange("license", e.target.value)}
+              placeholder="Paste license image URL"
+              className="border rounded px-2 py-1 w-full"
+            />
+          ) : (
+            <div className="w-full h-48 flex items-center justify-center border border-dashed border-slate-300 rounded-xl text-slate-400">
+              No license image
+            </div>
+          )}
+        </div>
 
         {/* Buttons */}
         <div className="mt-6 flex gap-3">
