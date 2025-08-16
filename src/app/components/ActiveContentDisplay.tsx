@@ -233,6 +233,21 @@ export function ActiveContentDisplay({ activeTab, useRole, isUserActive }: {
           },
         ]
       : []),
+    ...(isUserActive()
+      ? [
+          {
+            id:13,
+            label: '',
+            role: '',
+            icon: <LogIn color="green" />,
+            content: (
+              <div className="px-1 py-1 space-y-1">
+                <Profile/>
+              </div>
+            ),
+          },
+        ]
+      : []),
   ];
 
 
