@@ -27,8 +27,8 @@ export default function Profile() {
             <RiderCard 
               key={rider.id}
               rider={rider}
-              onViewDetails={() => setSelectedRider(rider)}
-              onSave={() => setSelectedRider(rider)}
+              onViewDetails={() => {}}
+              onSave={() => {}}
               />
           ))}       
     </div>
