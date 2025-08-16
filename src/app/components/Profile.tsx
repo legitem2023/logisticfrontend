@@ -23,7 +23,7 @@ export default function Profile() {
 
   return ( 
     <div className="min-h-screen bg-gray-50 flex flex-col md:flex-row"> 
-       {data?.getRidersDelivery.map((rider: Rider) => (
+       {data?.getRidersDelivery.map((rider: any) => (
             <RiderCard 
               key={rider.id}
               rider={rider}
