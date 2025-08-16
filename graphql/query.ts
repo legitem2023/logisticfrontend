@@ -34,7 +34,7 @@ query GetUsers {
 
 export const ACCOUNT = gql`
 query GetUser($getRidersId: String) {
-  getUser(id:$getRidersId) {
+  getUser(id: $getRidersId) {
       id
     name
     email
