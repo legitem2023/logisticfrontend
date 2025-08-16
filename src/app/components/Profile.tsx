@@ -18,9 +18,9 @@ export default function Profile() {
   const { data, loading, refetch } = useQuery(ACCOUNT, { 
     variables: { id: globalUserId }
   });
-  console.log(data);
+  
   if (loading || !data) return;
-   
+   console.log(data);
   return ( 
     <div className="min-h-screen bg-gray-50 flex flex-col md:flex-row"> 
        {data?.getUser.map((rider: any) => (
