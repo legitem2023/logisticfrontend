@@ -522,7 +522,7 @@ const LogisticsForm = () => {
           {/* Vehicle Selection */}
           <div className="bg-gray-50 p-5 rounded-xl mb-6 border border-gray-200">
             <h2 className="text-lg font-semibold mb-4 flex items-center">
-              <Truck className="h-5 w-5 mr-2 text-gray-700" />
+              <Truck className="h-5 w-5 mr-2 text-gray-900" />
               Vehicle Type
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -555,9 +555,9 @@ const LogisticsForm = () => {
                       </div>
                       <div className="flex-1">
                         <p className="text-base font-semibold">{vehicle.name}</p>
-                        <p className="text-sm text-gray-500">{vehicle.description}</p>
+                        <p className="text-sm text-gray-900">{vehicle.description}</p>
                       </div>
-                      <div className="text-sm font-bold text-gray-700">₱ {vehicle.cost}</div>
+                      <div className="text-sm font-bold text-gray-900">₱ {vehicle.cost}</div>
                     </div>
 
                     {/* Toggle Additional Services Button */}
