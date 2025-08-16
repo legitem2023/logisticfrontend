@@ -90,7 +90,10 @@ const RiderCard = ({ rider, onViewDetails, onSave }) => {
       {/* Header */}
       <div className="h-40 relative flex flex-col items-center justify-center bg-gradient-to-r from-green-800 to-green-600">
         {/* Pattern overlay (optional) */}
-        <div className="absolute inset-0 opacity-10 pointer-events-none"></div>
+        <div className="absolute inset-0 opacity-10 pointer-events-none">
+        {/* Pattern */}
+          <div className="absolute inset-0 opacity-10 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSIjZmZmIiBmaWxsLW9wYWNpdHk9IjAuNiI+PHBhdGggZD0iTTM2IDM0QzM2IDMxLjggMzcuOCAzMCA0MCAzMFM0NCAzMS44IDQ0IDM0QzQ0IDM2LjIgNDIuMiAzOCA0MCAzOFM0MCAzNi4yIDQwIDM0WiIvPjwvZz48L3N2Zz4=')]"></div>  
+        </div>
 
         {editableData.image ? (
           <img
