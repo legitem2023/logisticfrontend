@@ -93,6 +93,19 @@ const LogisticsForm = () => {
     { id: 'Polling', name: 'Scheduled Elite', icon: Move, time: 'Multi-day', price: '8' }
   ];
 
+  // Add the missing handlePickupChange function
+  const handlePickupChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPickup({...pickup, [e.target.name]: e.target.value});
+  };
+
+  // Add the missing handleDropoffChange function
+  const handleDropoffChange = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
+    const updatedDropoffs = [...dropoffs];
+    updatedDropoffs[index] = {...updatedDropoffs[index], [e.target.name]: e.target.value};
+    setDropoffs(updatedDropoffs);
+  };
+
+  
   const validateForm = () => {
     if (!pickup.address || !pickup.houseNumber || !pickup.contact || !pickup.name) {
       showToast("Please complete all pickup details", 'warning');
