@@ -132,7 +132,7 @@ const PickupProofForm = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-white to-green-50 p-1">
       <div className="max-w-3xl mx-auto">
-        <div className="bg-white rounded-xl shadow-2xl overflow-hidden border border-green-100">
+        <div className="bg-white shadow-2xl overflow-hidden border border-green-100">
           {/* Header */}
           <div className="bg-gradient-to-r from-green-800 to-green-600 p-6 text-center">
             <h2 className="text-2xl font-bold text-white">Proof of Pickup</h2>
