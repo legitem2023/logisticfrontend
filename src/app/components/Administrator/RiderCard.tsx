@@ -71,7 +71,7 @@ const RiderCard = ({ rider, onViewDetails, onSave }) => {
   };
 
   const lastUpdatedDate = toValidDate(editableData.lastUpdatedAt);
-
+console.log(editableData);
   return (
     <div className="w-full sm:w-96 shadow-2xl overflow-hidden border border-slate-200 bg-white/80 backdrop-blur-md transition-transform duration-300">
       {/* Header */}
