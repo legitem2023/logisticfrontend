@@ -6,6 +6,7 @@ import { selectTempUserId } from '../../../Redux/tempUserSlice';
 import { showToast } from '../../../utils/toastify'; 
 import { useMutation, useQuery } from "@apollo/client"; 
 import { DELIVERIES } from "../../../graphql/query"; 
+import RiderCard from './Administrator/RiderCard'; // Import the card component
 
 import dynamic from "next/dynamic"; 
 
@@ -18,20 +19,18 @@ export default function Profile() {
     variables: { getRidersDeliveryId: globalUserId }, 
     skip: !globalUserId, 
   });
-
-  
-  
-
-  
-  
-  
   if (loading || !data) return;
 
-  
   return ( 
     <div className="min-h-screen bg-gray-50 flex flex-col md:flex-row"> 
-      
-              
+       {data?.getRidersDelivery.map((rider: Rider) => (
+            <RiderCard 
+              key={rider.id}
+              rider={rider}
+              onViewDetails={() => setSelectedRider(rider)}
+              onSave={() => setSelectedRider(rider)}
+              />
+          ))}       
     </div>
   );
 }
