@@ -226,13 +226,12 @@ export function SideBarMenu({ activeTab, useRole, isUserActive }: {
                   <p className="text-sm font-medium text-gray-900 truncate">
                     {useRole || 'User'}
                   </p>
-                  <Link 
-                    href="/profile" 
+                  <span 
                     className="text-xs text-blue-600 hover:underline"
-                    onClick={() => setMobileMenuOpen(false)}
+                    onClick={() => dispatch(setActiveIndex(13))}
                   >
                     View Profile
-                  </Link>
+                  </span>
                 </div>
               </div>
             </div>
