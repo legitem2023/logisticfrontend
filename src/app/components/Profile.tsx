@@ -1,36 +1,37 @@
 'use client';
-import Image from 'next/image';
-import { useState, useEffect, useMemo } from "react"; 
 import { useSelector } from 'react-redux';
 import { selectTempUserId } from '../../../Redux/tempUserSlice';
-import { showToast } from '../../../utils/toastify'; 
-import { useMutation, useQuery } from "@apollo/client"; 
-import { DELIVERIES,ACCOUNT } from "../../../graphql/query"; 
-import RiderCard from './Administrator/RiderCard'; // Import the card component
-
-import dynamic from "next/dynamic"; 
-
+import { useQuery } from "@apollo/client"; 
+import { ACCOUNT } from "../../../graphql/query"; 
+import RiderCard from './Administrator/RiderCard'; 
 
 export default function Profile() { 
-  
   const globalUserId = useSelector(selectTempUserId);
   const GlobalactiveIndex = useSelector((state: any) => state.activeIndex.value);
-  const { data, loading, refetch } = useQuery(ACCOUNT, { 
-    variables: { id: globalUserId }
+
+  const { data, loading, error } = useQuery(ACCOUNT, { 
+    variables: { id: globalUserId },
+    skip: !globalUserId, // don't run until we have an ID
   });
-  
-  if (loading || !data) return;
-   console.log(data);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) {
+    console.error(error);
+    return <p>Error loading user</p>;
+  }
+
+  const rider = data?.getUser;
+
+  if (!rider) return <p>No user found</p>;
+
   return ( 
     <div className="min-h-screen bg-gray-50 flex flex-col md:flex-row"> 
-       {data?.getUser.map((rider: any) => (
-            <RiderCard 
-              key={rider.id}
-              rider={rider}
-              onViewDetails={() => {}}
-              onSave={() => {}}
-              />
-          ))}       
+      <RiderCard 
+        key={rider.id}
+        rider={rider}
+        onViewDetails={() => {}}
+        onSave={() => {}}
+      />
     </div>
   );
 }
