@@ -19,6 +19,7 @@ query GetUsers {
       cost
     }
     licensePlate
+    license
     status
     currentLatitude
     currentLongitude
