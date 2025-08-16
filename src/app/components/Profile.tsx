@@ -20,7 +20,7 @@ export default function Profile() {
     skip: !globalUserId, 
   });
   if (loading || !data) return;
-
+   console.log(data);
   return ( 
     <div className="min-h-screen bg-gray-50 flex flex-col md:flex-row"> 
        {data?.getUser.map((rider: any) => (
