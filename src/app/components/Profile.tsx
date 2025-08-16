@@ -2,10 +2,10 @@
 import Image from 'next/image';
 import { useState, useEffect, useMemo } from "react"; 
 import { useSelector } from 'react-redux';
-import { selectTempUserId } from '../../../../Redux/tempUserSlice';
-import { showToast } from '../../../../utils/toastify'; 
+import { selectTempUserId } from '../../../Redux/tempUserSlice';
+import { showToast } from '../../../utils/toastify'; 
 import { useMutation, useQuery } from "@apollo/client"; 
-import { DELIVERIES } from "../../../../graphql/query"; 
+import { DELIVERIES } from "../../../graphql/query"; 
 
 import dynamic from "next/dynamic"; 
 
