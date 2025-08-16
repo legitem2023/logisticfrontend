@@ -1,8 +1,10 @@
-import { Menu, X, Truck, User,Users, Bell, Home as HomeIcon, ClipboardCheck, Bike, BadgeCheck, Settings, HelpCircle, UserPlus, LogIn, ChartBar as ChartBarIcon, WalletMinimal } from "lucide-react";
-import { useState,useEffect } from "react";
+'use client';
+
+import { Menu, X, Truck, User, Users, Bell, Home as HomeIcon, ClipboardCheck, Bike, BadgeCheck, Settings, HelpCircle, UserPlus, LogIn, ChartBar as ChartBarIcon, WalletMinimal } from "lucide-react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import NotificationDropdown from "./NotificationDropdown";
-import { useSelector,useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { setActiveIndex } from '../../../Redux/activeIndexSlice';
 import { selectTempUserId } from "../../../Redux/tempUserSlice";
 import Image from "next/image";
@@ -213,7 +215,30 @@ export function SideBarMenu({ activeTab, useRole, isUserActive }: {
         <div className={`lg:hidden fixed top-0 left-0 h-full w-64 bg-white/70 backdrop-blur-md shadow-xl z-30 rounded-tr-2xl rounded-br-2xl transform transition-all duration-300 ease-in-out ${
           mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
         }`}>
-          <div className="mt-4 px-4 space-y-1 overflow-y-auto max-h-[calc(100vh-120px)]">
+          {/* Profile Section at the top of mobile menu */}
+          {isUserActive() && (
+            <div className="px-4 py-6 border-b border-gray-200/50">
+              <div className="flex items-center space-x-3">
+                <div className="relative h-10 w-10 rounded-full bg-gray-200 overflow-hidden">
+                  <User className="h-6 w-6 text-gray-600 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-gray-900 truncate">
+                    {useRole || 'User'}
+                  </p>
+                  <Link 
+                    href="/profile" 
+                    className="text-xs text-blue-600 hover:underline"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    View Profile
+                  </Link>
+                </div>
+              </div>
+            </div>
+          )}
+
+          <div className="mt-2 px-4 space-y-1 overflow-y-auto max-h-[calc(100vh-120px)]">
             {visibleTabs.map((tab) => (
               <button
                 key={tab.label}
@@ -224,7 +249,7 @@ export function SideBarMenu({ activeTab, useRole, isUserActive }: {
                 className={`flex items-center w-full px-4 py-3 rounded-lg text-base font-medium transition-all duration-200 ${
                   activeTab === tab.id
                     ? 'customgrad text-white shadow-md'
-                    : 'text-gray-500 hover:bg-blue-700/20 hover:text-whiz-50" ref={dropdownRef}te'
+                    : 'text-gray-500 hover:bg-blue-700/20 hover:text-white'
                 }`}
               >
                 <span className="mr-3">{tab.icon}</span>
@@ -236,4 +261,4 @@ export function SideBarMenu({ activeTab, useRole, isUserActive }: {
       </header>
     </>
   );
-  }
+      }
