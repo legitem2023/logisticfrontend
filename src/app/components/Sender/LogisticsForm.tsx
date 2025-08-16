@@ -184,7 +184,7 @@ const LogisticsForm = () => {
     setSendLoading(true);
     try {
       for (const [i, dropoff] of dropoffs.entries()) {
-        const { eta } = calculateEta(distances[i], selectedService);
+        const { eta } = calculateEta(parseFloat(distances[i]), selectedService);
         await createDelivery({
           variables: {
             input: {
