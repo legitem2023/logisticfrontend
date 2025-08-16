@@ -1,6 +1,8 @@
 'use client';
 import Image from 'next/image';
 import ProofOfDeliveryForm from './ProofOfDeliveryForm';
+import PickupProofForm from './PickupProofForm';
+
 import PaymentComponent from './PaymentComponent';
 import { useState, useEffect, useMemo } from "react"; 
 import 'react-datepicker/dist/react-datepicker.css';
@@ -39,6 +41,8 @@ export default function DriverDashboard() {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   // const [filteredDeliveries, setFilteredDeliveries] = useState([]);
   const [showProof, setProof] = useState(false);
+
+  const [showPickupProof, setPickupProof] = useState(false);
 
   const [showPayment,setPayment]= useState(false);
   const [deliveryId,setdeliveryId] = useState();
@@ -270,6 +274,27 @@ const tabs = [
                       >
                         <Compass className="w-4 h-4 mr-1" /> {delivery.deliveryStatus === "Pending" ? "Accept Delivery" : "Track"}
                       </Button>
+
+                     <Collapsible 
+                        title={'Pickup Proof'}
+                        defaultOpen={false}>
+                            <div className="flex justify-end">
+                              <button 
+                               onClick={() => {
+                               
+                               setPickupProof(true);
+                               }}
+                               className="flex items-center gap-2 px-4 py-2 m-2 bg-gradient-to-r from-amber-500 to-amber-600 text-white rounded-lg shadow hover:shadow-lg transition-all duration-300 transform hover:-translate-y-0.5 focus:ring-2 focus:ring-amber-300 focus:ring-opacity-50">
+                               <Plus className="text-white" size={18} />
+                               <span className="font-semibold">Add Pickup Proof</span>
+                              </button>
+                              
+                          </div>
+                        
+                           
+                      </Collapsible>
+
+                      
                       <Collapsible 
                         title={'Payment'}
                         defaultOpen={false}>
@@ -516,6 +541,30 @@ const tabs = [
          </div>
        </div>
       )}
+
+
+    {showPickupProof && (
+       <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40 backdrop-blur-sm transition-all">
+         
+         <div className="w-full h-[90vh] bg-white p-0 shadow-lg animate-slide-up overflow-y-auto">
+         <div className="flex justify-between items-center p-4 border-b bg-white">
+            <h2 className="text-lg font-semibold text-gray-900">Delivery Proof</h2>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setPickupProof(false)}
+            >
+              <XIcon className="w-5 h-5" />
+            </Button>
+          </div>
+           <PickupProofForm/>
+         </div>
+       </div>
+      )}
+
+
+
+      
       {showPayment &&(
        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40 backdrop-blur-sm transition-all">    
          <div className="w-full h-[90vh] bg-white p-0 shadow-lg animate-slide-up overflow-y-auto">
