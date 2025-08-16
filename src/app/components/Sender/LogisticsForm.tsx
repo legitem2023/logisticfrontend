@@ -463,7 +463,7 @@ const LogisticsForm = () => {
               className="w-full text-left p-4 border-2 border-dashed border-green-300 rounded-xl mb-3 hover:bg-green-100 flex items-center"
             >
               {pickup.address ? (
-                <span className="truncate flex-1">{pickup.address}</span>
+                <span className="text-green-500 truncate flex-1">{pickup.address}</span>
               ) : (
                 <span className="text-green-500 flex-1">Enter pickup address</span>
               )}
@@ -497,7 +497,7 @@ const LogisticsForm = () => {
                     className="flex-1 text-left p-4 border-2 border-dashed border-orange-300 rounded-xl hover:bg-orange-100 flex items-center max-w-[100%] w-[auto]"
                   >
                     {dropoff.address ? (
-                      <span className="truncate flex-1">{dropoff.address}</span>
+                      <span className="text-orange-500 truncate flex-1">{dropoff.address}</span>
                     ) : (
                       <span className="text-orange-500 flex-1">Enter drop-off address #{index + 1}</span>
                     )}
