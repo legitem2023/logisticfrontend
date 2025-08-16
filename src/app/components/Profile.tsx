@@ -16,7 +16,7 @@ export default function Profile() {
   const globalUserId = useSelector(selectTempUserId);
   const GlobalactiveIndex = useSelector((state: any) => state.activeIndex.value);
   const { data, loading, refetch } = useQuery(ACCOUNT, { 
-    variables: { getRidersId: globalUserId }
+    variables: { id: globalUserId }
   });
   console.log(data);
   if (loading || !data) return;
