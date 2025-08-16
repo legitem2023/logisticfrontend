@@ -631,7 +631,7 @@ const LogisticsForm = () => {
       {/* Location Details Slide-up Panel */}
       {activeLocation && (
         <div className="fixed inset-0 z-50 flex items-end md:items-center justify-end md:justify-center bg-black/40 backdrop-blur-sm transition-opacity duration-300">
-          <div className="bg-white/90 backdrop-blur-lg w-full max-w-md rounded-t-3xl md:rounded-3xl shadow-2xl animate-slide-up md:animate-scale-in fixed top-0 h-auto flex flex-col overflow-hidden border border-gray-200">
+          <div className="bg-white/90 backdrop-blur-lg w-full max-w-md rounded-t-3xl md:rounded-3xl shadow-2xl animate-slide-up md:animate-scale-in fixed bottom-0 h-auto flex flex-col overflow-hidden border border-gray-200">
             <div className="p-5 border-b border-gray-200 bg-white/80 backdrop-blur-lg">
               <div className="flex justify-between items-center">
                 <h2 className="text-xl font-semibold flex items-center text-gray-800">
