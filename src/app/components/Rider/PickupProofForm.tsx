@@ -30,22 +30,81 @@ const PickupProofForm = () => {
 
   const [isSignatureEmpty, setIsSignatureEmpty] = useState(true);
   const [isDrawing, setIsDrawing] = useState(false);
+  const [signatureSaved, setSignatureSaved] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const signatureCanvasRef = useRef(null);
   const fileInputRef = useRef(null);
-  const [canvasContext, setCanvasContext] = useState(null);
+  const [ctx, setCtx] = useState(null);
 
   const [insertPickupProof, { loading, error }] = useMutation(INSERTPICKUPPROOF);
 
+  // Initialize canvas context with high resolution
   useEffect(() => {
-    if (signatureCanvasRef.current) {
-      const canvas = signatureCanvasRef.current;
-      const ctx = canvas.getContext('2d');
-      ctx.strokeStyle = '#006341';
-      ctx.lineWidth = 2;
-      setCanvasContext(ctx);
-    }
+    const canvas = signatureCanvasRef.current;
+    if (!canvas) return;
+    
+    // Get the display size (CSS pixels)
+    const displayWidth = canvas.clientWidth;
+    const displayHeight = canvas.clientHeight;
+    
+    // Set internal resolution 5x higher
+    const scale = 5;
+    canvas.width = displayWidth * scale;
+    canvas.height = displayHeight * scale;
+    
+    const context = canvas.getContext('2d');
+    
+    // Scale context to match CSS size
+    context.scale(scale, scale);
+    
+    // Set up canvas properties
+    context.lineJoin = 'round';
+    context.lineCap = 'round';
+    context.lineWidth = 3;
+    context.strokeStyle = '#2e8b57';
+    
+    setCtx(context);
+    
+    // Handle window resize to maintain high resolution
+    const handleResize = () => {
+      const displayWidth = canvas.clientWidth;
+      const displayHeight = canvas.clientHeight;
+      canvas.width = displayWidth * scale;
+      canvas.height = displayHeight * scale;
+      context.scale(scale, scale);
+      context.lineJoin = 'round';
+      context.lineCap = 'round';
+      context.lineWidth = 3;
+      context.strokeStyle = '#2e8b57';
+    };
+    
+    window.addEventListener('resize', handleResize);
+    
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
   }, []);
+
+  // Get coordinates from both mouse and touch events
+  const getCoordinates = (e) => {
+    const canvas = signatureCanvasRef.current;
+    const rect = canvas.getBoundingClientRect();
+    
+    // For touch events
+    if (e.touches && e.touches[0]) {
+      return {
+        x: e.touches[0].clientX - rect.left,
+        y: e.touches[0].clientY - rect.top
+      };
+    } 
+    // For mouse events
+    else {
+      return {
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top
+      };
+    }
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -69,49 +128,73 @@ const PickupProofForm = () => {
     }
   };
 
+  // Handle signature drawing
   const startDrawing = (e) => {
+    if (!ctx) return;
+    
+    // Prevent scrolling on mobile
+    if (e.touches) {
+      e.preventDefault();
+    }
+    
+    const { x, y } = getCoordinates(e);
+    
+    ctx.beginPath();
+    ctx.moveTo(x, y);
     setIsDrawing(true);
-    const canvas = signatureCanvasRef.current;
-    const rect = canvas.getBoundingClientRect();
-    canvasContext.beginPath();
-    canvasContext.moveTo(
-      e.clientX - rect.left,
-      e.clientY - rect.top
-    );
   };
 
   const draw = (e) => {
-    if (!isDrawing) return;
-    const canvas = signatureCanvasRef.current;
-    const rect = canvas.getBoundingClientRect();
-    canvasContext.lineTo(
-      e.clientX - rect.left,
-      e.clientY - rect.top
-    );
-    canvasContext.stroke();
+    if (!isDrawing || !ctx) return;
+    
+    // Prevent scrolling on mobile
+    if (e.touches) {
+      e.preventDefault();
+    }
+    
+    const { x, y } = getCoordinates(e);
+    
+    ctx.lineTo(x, y);
+    ctx.stroke();
     setIsSignatureEmpty(false);
   };
 
   const stopDrawing = () => {
+    if (!ctx) return;
+    ctx.closePath();
     setIsDrawing(false);
-    if (!isSignatureEmpty) {
-      const canvas = signatureCanvasRef.current;
-      const signatureData = canvas.toDataURL();
-      setFormData(prev => ({
-        ...prev,
-        customerSignature: signatureData
-      }));
-    }
   };
 
-  const clearSignature = () => {
+  // Save signature to form data
+  const saveSignature = () => {
     const canvas = signatureCanvasRef.current;
-    canvasContext.clearRect(0, 0, canvas.width, canvas.height);
-    setIsSignatureEmpty(true);
+    const dataUrl = canvas.toDataURL();
+    
+    setFormData(prev => ({
+      ...prev,
+      customerSignature: dataUrl
+    }));
+    setSignatureSaved(true);
+    
+    setTimeout(() => {
+      setSignatureSaved(false);
+    }, 2000);
+  };
+
+  // Clear signature
+  const clearSignature = () => {
+    if (!ctx) return;
+    
+    const canvas = signatureCanvasRef.current;
+    const displayWidth = canvas.clientWidth;
+    const displayHeight = canvas.clientHeight;
+    
+    ctx.clearRect(0, 0, displayWidth * 5, displayHeight * 5);
     setFormData(prev => ({
       ...prev,
       customerSignature: null
     }));
+    setIsSignatureEmpty(true);
   };
 
   const handleSubmit = async (e) => {
@@ -166,37 +249,43 @@ const PickupProofForm = () => {
               <div>
                 <label className="block text-sm font-medium text-green-700 mb-1">
                   Customer Signature
+                  {signatureSaved && (
+                    <span className="ml-2 text-green-600 text-sm flex items-center">
+                      <CheckCircle className="h-4 w-4 mr-1" />
+                      Saved
+                    </span>
+                  )}
                 </label>
-                <div 
-                  className="relative w-full h-40 border-2 border-dashed border-green-200 rounded-lg bg-green-50 hover:bg-green-100 transition cursor-pointer"
-                  onClick={() => document.getElementById('signatureCanvas').focus()}
-                >
+                <div className="border-2 border-green-300 rounded-2xl bg-white p-4 shadow-inner">
                   <canvas
-                    id="signatureCanvas"
                     ref={signatureCanvasRef}
-                    width="100%"
-                    height="100%"
-                    className="absolute inset-0 w-full h-full"
+                    className="w-full h-[150px] border border-gray-200 rounded-lg bg-gray-50 cursor-crosshair touch-none"
                     onMouseDown={startDrawing}
                     onMouseMove={draw}
                     onMouseUp={stopDrawing}
                     onMouseLeave={stopDrawing}
+                    onTouchStart={startDrawing}
+                    onTouchMove={draw}
+                    onTouchEnd={stopDrawing}
                   />
-                  {isSignatureEmpty && (
-                    <div className="absolute inset-0 flex items-center justify-center text-green-400">
-                      <Edit2 className="mr-2" />
-                      <span>Sign here</span>
-                    </div>
-                  )}
-                  {!isSignatureEmpty && (
+                  <div className="flex justify-between mt-3">
                     <button
                       type="button"
                       onClick={clearSignature}
-                      className="absolute bottom-2 right-2 p-1 bg-white rounded-full shadow text-green-600 hover:text-green-800 transition"
+                      className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg text-gray-700 font-medium transition flex items-center shadow-sm"
                     >
-                      <Trash2 size={16} />
+                      <Trash2 className="h-5 w-5 mr-1" />
+                      Clear
                     </button>
-                  )}
+                    <button
+                      type="button"
+                      onClick={saveSignature}
+                      className="px-4 py-2 bg-green-600 hover:bg-green-700 rounded-lg text-white font-medium transition flex items-center shadow-md"
+                    >
+                      <CheckCircle className="h-5 w-5 mr-1" />
+                      Save Signature
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
