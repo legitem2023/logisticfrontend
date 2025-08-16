@@ -18,6 +18,8 @@ import {
 import LogisticFormLoading from '../Loadings/LogisticFormLoading';
 import ClassicConfirmForm from './ClassicConfirmForm';
 
+type DeliveryType = 'Priority' | 'Regular' | 'Polling';
+
 interface Location {
   address: string;
   houseNumber: string;
@@ -37,20 +39,36 @@ interface VehicleType {
 }
 
 interface Service {
-  id: string;
+  id: DeliveryType;
   name: string;
   icon: any;
   time: string;
   price: string;
 }
 
+interface Suggestion {
+  display_name: string;
+  lat: string;
+  lon: string;
+}
+
 const LogisticsForm = () => {
   const dispatch = useDispatch();
   const { loading, error, data } = useQuery(VEHICLEQUERY);
-  const [createDelivery] = useMutation(CREATEDELIVERY);
-  const globalUserId = useSelector(selectTempUserId);
+  const [createDelivery] = useMutation(CREATEDELIVERY, {
+    onCompleted: () => {
+      showToast("Delivery created", 'success');
+      setSendLoading(false);
+      dispatch(setActiveIndex(3));
+    },
+    onError: (error) => {
+      console.error('Delivery creation error:', error);
+      showToast("Failed to create delivery", 'error');
+      setSendLoading(false);
+    }
+  });
 
-  // Premium state management
+  const globalUserId = useSelector(selectTempUserId);
   const [selectedVehicle, setSelectedVehicle] = useState<VehicleType | null>(null);
   const [expandedVehicle, setExpandedVehicle] = useState<string | null>(null);
   const [pickup, setPickup] = useState<Location>({
@@ -60,8 +78,8 @@ const LogisticsForm = () => {
     address: '', houseNumber: '', contact: '', name: '', lat: null, lng: null
   }]);
   const [activeLocation, setActiveLocation] = useState<{ type: 'pickup' | 'dropoff', index: number | null } | null>(null);
-  const [selectedService, setSelectedService] = useState<Service['id']>('Priority');
-  const [suggestions, setSuggestions] = useState<any[]>([]);
+  const [selectedService, setSelectedService] = useState<DeliveryType>('Priority');
+  const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [sendLoading, setSendLoading] = useState(false);
   const [distances, setDistances] = useState<number[]>([]);
@@ -69,14 +87,12 @@ const LogisticsForm = () => {
   const inputRef = useRef<HTMLInputElement>(null);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Luxury services data
   const premiumServices: Service[] = [
     { id: 'Priority', name: 'Executive Priority', icon: Rocket, time: '1-3 hours', price: '15' },
     { id: 'Regular', name: 'Premium Standard', icon: Clock, time: 'Same day', price: '10' },
     { id: 'Polling', name: 'Scheduled Elite', icon: Move, time: 'Multi-day', price: '8' }
   ];
 
-  // Enhanced validation
   const validateForm = () => {
     if (!pickup.address || !pickup.houseNumber || !pickup.contact || !pickup.name) {
       showToast("Please complete all pickup details", 'warning');
@@ -96,7 +112,6 @@ const LogisticsForm = () => {
     return true;
   };
 
-  // Premium geocoding with error handling
   const geocodeAddress = async (query: string) => {
     if (!query || query.length < 3) return [];
     
@@ -106,30 +121,26 @@ const LogisticsForm = () => {
         `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=5`
       );
       if (!response.ok) throw new Error('Geocoding failed');
-      return response.json();
+      return await response.json();
     } catch (error) {
-      showToast("Address lookup service unavailable", 'error');
+      console.error('Geocoding error:', error);
       return [];
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Debounced search with premium UX
   const handleAddressSearch = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    const location = activeLocation;
 
-    // Update state
-    if (location?.type === 'pickup') {
+    if (activeLocation?.type === 'pickup') {
       setPickup({...pickup, address: value});
-    } else if (location?.index !== null) {
+    } else if (activeLocation?.index !== null) {
       const updated = [...dropoffs];
-      updated[location.index].address = value;
+      updated[activeLocation.index].address = value;
       setDropoffs(updated);
     }
 
-    // Debounce
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
     timeoutRef.current = setTimeout(async () => {
       if (value.length > 2) setSuggestions(await geocodeAddress(value));
@@ -137,10 +148,28 @@ const LogisticsForm = () => {
     }, 500);
   };
 
-  // Luxury location management
-  const addDropoff = () => setDropoffs([...dropoffs, {
-    address: '', houseNumber: '', contact: '', name: '', lat: null, lng: null
-  }]);
+  const selectSuggestion = (suggestion: Suggestion) => {
+    const location = {
+      address: suggestion.display_name,
+      lat: parseFloat(suggestion.lat),
+      lng: parseFloat(suggestion.lon)
+    };
+
+    if (activeLocation?.type === 'pickup') {
+      setPickup({...pickup, ...location});
+    } else if (activeLocation?.index !== null) {
+      const updated = [...dropoffs];
+      updated[activeLocation.index] = {...updated[activeLocation.index], ...location};
+      setDropoffs(updated);
+    }
+    setSuggestions([]);
+  };
+
+  const addDropoff = () => {
+    setDropoffs([...dropoffs, {
+      address: '', houseNumber: '', contact: '', name: '', lat: null, lng: null
+    }]);
+  };
 
   const removeDropoff = (index: number) => {
     if (dropoffs.length > 1) {
@@ -148,7 +177,16 @@ const LogisticsForm = () => {
     }
   };
 
-  // Premium calculation effects
+  const openLocationDetails = (type: 'pickup' | 'dropoff', index: number | null = null) => {
+    setActiveLocation({ type, index });
+    setSuggestions([]);
+  };
+
+  const closeLocationDetails = () => {
+    setActiveLocation(null);
+    setSuggestions([]);
+  };
+
   useEffect(() => {
     const calculateDistances = async () => {
       if (pickup.lat && pickup.lng) {
@@ -173,18 +211,17 @@ const LogisticsForm = () => {
     calculateDistances();
   }, [pickup.lat, pickup.lng, dropoffs]);
 
-  // Executive submit handler
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (validateForm()) setShowDetails(true);
   };
 
-  // Platinum order confirmation
   const confirmOrder = async (driverDetails: any) => {
     setSendLoading(true);
     try {
       for (const [i, dropoff] of dropoffs.entries()) {
         const { eta } = calculateEta(parseFloat(distances[i].toFixed(2)), selectedService);
+        
         await createDelivery({
           variables: {
             input: {
@@ -210,12 +247,8 @@ const LogisticsForm = () => {
           }
         });
       }
-      showToast("Your premium delivery has been scheduled", 'success');
-      dispatch(setActiveIndex(3));
     } catch (error) {
-      showToast("Failed to create delivery", 'error');
-    } finally {
-      setSendLoading(false);
+      console.error('Error creating deliveries:', error);
     }
   };
 
@@ -228,7 +261,6 @@ const LogisticsForm = () => {
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
-      {/* Premium Header */}
       <div className="bg-gradient-to-r from-indigo-900 to-purple-800 rounded-2xl shadow-2xl overflow-hidden mb-10">
         <div className="p-8 md:p-12 text-white">
           <div className="flex items-center mb-4">
@@ -243,10 +275,8 @@ const LogisticsForm = () => {
         </div>
       </div>
 
-      {/* Luxury Form Container */}
       <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
         <form onSubmit={handleSubmit} className="p-6">
-          {/* Pickup Section */}
           <div className="bg-indigo-50 p-6 rounded-xl mb-8 border border-indigo-100">
             <h2 className="text-xl font-semibold mb-4 flex items-center text-indigo-800">
               <MapPin className="h-6 w-6 mr-2 text-indigo-600" />
@@ -254,7 +284,7 @@ const LogisticsForm = () => {
             </h2>
             <button
               type="button"
-              onClick={() => setActiveLocation({ type: 'pickup', index: null })}
+              onClick={() => openLocationDetails('pickup')}
               className={`w-full text-left p-5 rounded-xl mb-3 transition-all duration-300 ${pickup.address ? 'bg-white border-2 border-indigo-300 shadow-sm' : 'bg-indigo-100 border-2 border-dashed border-indigo-300 hover:bg-indigo-200'}`}
             >
               <div className="flex items-center">
@@ -269,7 +299,6 @@ const LogisticsForm = () => {
             </button>
           </div>
 
-          {/* Dropoff Sections */}
           <div className="bg-amber-50 p-6 rounded-xl mb-8 border border-amber-100">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-semibold flex items-center text-amber-800">
@@ -291,7 +320,7 @@ const LogisticsForm = () => {
                 <div className="flex items-center">
                   <button
                     type="button"
-                    onClick={() => setActiveLocation({ type: 'dropoff', index })}
+                    onClick={() => openLocationDetails('dropoff', index)}
                     className={`flex-1 text-left p-5 rounded-xl transition-all duration-300 ${dropoff.address ? 'bg-white border-2 border-amber-300 shadow-sm' : 'bg-amber-100 border-2 border-dashed border-amber-300 hover:bg-amber-200'}`}
                   >
                     <div className="flex items-center">
@@ -318,7 +347,6 @@ const LogisticsForm = () => {
             ))}
           </div>
 
-          {/* Luxury Vehicle Selection */}
           <div className="bg-slate-50 p-6 rounded-xl mb-8 border border-slate-200">
             <h2 className="text-xl font-semibold mb-6 flex items-center text-slate-800">
               <Truck className="h-6 w-6 mr-2 text-slate-600" />
@@ -390,7 +418,6 @@ const LogisticsForm = () => {
             </div>
           </div>
 
-          {/* Premium Service Selection */}
           <div className="bg-slate-50 p-6 rounded-xl mb-8 border border-slate-200">
             <h2 className="text-xl font-semibold mb-6 flex items-center text-slate-800">
               <Clock className="h-6 w-6 mr-2 text-slate-600" />
@@ -417,7 +444,6 @@ const LogisticsForm = () => {
             </div>
           </div>
 
-          {/* Platinum Submit Button */}
           <button
             type="submit"
             disabled={sendLoading}
@@ -438,7 +464,6 @@ const LogisticsForm = () => {
         </form>
       </div>
 
-      {/* Luxury Location Panel */}
       {activeLocation && (
         <div className="fixed inset-0 z-50 flex items-end md:items-center justify-center bg-black/50 backdrop-blur-sm transition-opacity">
           <div className="w-full max-w-md bg-white rounded-t-2xl md:rounded-2xl shadow-2xl animate-slide-up md:animate-scale-in max-h-[90vh] flex flex-col">
@@ -466,7 +491,6 @@ const LogisticsForm = () => {
               </div>
             </div>
             <div className="p-6 overflow-y-auto flex-grow">
-              {/* Address Search */}
               <div className="mb-6">
                 <label className="block text-sm font-medium text-slate-700 mb-2 flex items-center">
                   <LocateFixed className="h-4 w-4 mr-2 text-indigo-500" />
@@ -501,18 +525,7 @@ const LogisticsForm = () => {
                     {suggestions.map((suggestion, index) => (
                       <div
                         key={index}
-                        onClick={() => {
-                          const location = {
-                            formatted_address: suggestion.display_name,
-                            geometry: {
-                              location: {
-                                lat: parseFloat(suggestion.lat),
-                                lng: parseFloat(suggestion.lon)
-                              }
-                            }
-                          };
-                          selectSuggestion(location);
-                        }}
+                        onClick={() => selectSuggestion(suggestion)}
                         className="p-3 hover:bg-slate-50 cursor-pointer border-b border-slate-100 last:border-none flex items-start"
                       >
                         <MapPin className="h-4 w-4 text-indigo-500 mr-2 mt-0.5 flex-shrink-0" />
@@ -523,7 +536,6 @@ const LogisticsForm = () => {
                 )}
               </div>
 
-              {/* Details Form */}
               <div className="space-y-6">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
@@ -616,7 +628,6 @@ const LogisticsForm = () => {
         </div>
       )}
 
-      {/* Platinum Confirmation Modal */}
       {showDetails && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
           <div className="w-full max-w-2xl bg-white rounded-2xl shadow-2xl overflow-hidden mx-4 max-h-[90vh] flex flex-col">
@@ -651,9 +662,9 @@ const LogisticsForm = () => {
                     baseRate: selectedVehicle?.cost || 0,
                     perKmRate: selectedVehicle?.perKmRate || 0,
                     serviceFee: premiumServices.find(s => s.id === selectedService)?.price || '0',
-                    total: null, // Will be calculated
+                    total: null,
                   },
-                  service: premiumServices.find(s => s.id === selectedService)?.name || '',
+                  service: selectedService,
                   vehicle: selectedVehicle?.name || ''
                 }}
                 onConfirm={confirmOrder}
