@@ -3,22 +3,36 @@ import { Icon } from '@iconify/react';
 import { showToast } from '../../../../utils/toastify';
 import { getDistanceInKm } from '../../../../utils/getDistanceInKm';
 import { calculateEta } from '../../../../utils/calculateEta';
+
 import { useState, useEffect, useRef } from 'react';
 import { useMutation, useQuery } from '@apollo/client';
 import { VEHICLEQUERY } from '../../../../graphql/query';
 import { CREATEDELIVERY } from '../../../../graphql/mutation';
+import Cookies from "js-cookie";
+import LogisticFormLoading from '../Loadings/LogisticFormLoading';
 import { useSelector, useDispatch } from "react-redux";
 import { selectTempUserId } from '../../../../Redux/tempUserSlice';
 import { setActiveIndex } from '../../../../Redux/activeIndexSlice';
-import {
-  Home, MapPin, Truck, Rocket, Clock, Move,
-  User, Phone, PlusCircle, X, CheckCircle2,
-  Loader2, Package, LocateFixed, Route, ChevronDown, ChevronUp
-} from 'lucide-react';
-import LogisticFormLoading from '../Loadings/LogisticFormLoading';
-import ClassicConfirmForm from './ClassicConfirmForm';
 
-type DeliveryType = 'Priority' | 'Regular' | 'Polling';
+import {
+  Home,
+  MapPin,
+  Truck,
+  Rocket,
+  Clock,
+  Move,
+  User,
+  Phone,
+  PlusCircle,
+  X,
+  CheckCircle2,
+  Loader2,
+  Package,
+  LocateFixed,
+  Route
+} from 'lucide-react';
+import { decryptToken } from '../../../../utils/decryptToken';
+import ClassicConfirmForm from './ClassicConfirmForm';
 
 interface Location {
   address: string;
@@ -29,167 +43,122 @@ interface Location {
   lng: number | null;
 }
 
-interface VehicleType {
-  id: string;
-  name: string;
-  description: string;
-  icon: string;
-  cost: number;
-  perKmRate: number;
-}
-
-interface Service {
-  id: DeliveryType;
-  name: string;
-  icon: any;
-  time: string;
-  price: string;
+interface ActiveLocation {
+  type: 'pickup' | 'dropoff';
+  index: number | null;
 }
 
 interface Suggestion {
-  display_name: string;
-  lat: string;
-  lon: string;
+  formatted_address: string;
+  geometry: {
+    location: {
+      lat: number;
+      lng: number;
+    }
+  }
 }
 
 const LogisticsForm = () => {
   const dispatch = useDispatch();
   const { loading, error, data } = useQuery(VEHICLEQUERY);
+
   const [createDelivery] = useMutation(CREATEDELIVERY, {
-    onCompleted: () => {
+    onCompleted: (data) => {
       showToast("Delivery created", 'success');
-      setSendLoading(false);
+      setsendLoading(false);
       dispatch(setActiveIndex(3));
     },
     onError: (error) => {
       console.error('Delivery creation error:', error);
       showToast("Failed to create delivery", 'error');
-      setSendLoading(false);
+      setsendLoading(false);
     }
   });
 
+  const [selected, setSelected] = useState<string>('bike');
+  const [useID, setID] = useState<string | undefined>();
   const globalUserId = useSelector(selectTempUserId);
-  const [selectedVehicle, setSelectedVehicle] = useState<VehicleType | null>(null);
-  const [expandedVehicle, setExpandedVehicle] = useState<string | null>(null);
-  const [pickup, setPickup] = useState<Location>({
-    address: '', houseNumber: '', contact: '', name: '', lat: null, lng: null
-  });
-  const [dropoffs, setDropoffs] = useState<Location[]>([{
-    address: '', houseNumber: '', contact: '', name: '', lat: null, lng: null
-  }]);
-  const [activeLocation, setActiveLocation] = useState<{ type: 'pickup' | 'dropoff', index: number | null } | null>(null);
-  const [selectedService, setSelectedService] = useState<DeliveryType>('Priority');
-  const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [sendLoading, setSendLoading] = useState(false);
-  const [distances, setDistances] = useState<number[]>([]);
-  const [showDetails, setShowDetails] = useState(false);
-  const inputRef = useRef<HTMLInputElement>(null);
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const [expandedDetails, setExpandedDetails] = useState<string | null>(null);
 
-  const premiumServices: Service[] = [
-    { id: 'Priority', name: 'Executive Priority', icon: Rocket, time: '1-3 hours', price: '15' },
-    { id: 'Regular', name: 'Premium Standard', icon: Clock, time: 'Same day', price: '10' },
-    { id: 'Polling', name: 'Scheduled Elite', icon: Move, time: 'Multi-day', price: '8' }
-  ];
+  const deliveryDetails = useSelector((state: any) => state.delivery);
+  const [sendLoading, setsendLoading] = useState(false);
 
-  // Add the missing handlePickupChange function
-  const handlePickupChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPickup({...pickup, [e.target.name]: e.target.value});
+  const toggleDetails = (vehicleId: string) => {
+    setExpandedDetails(prev => (prev === vehicleId ? null : vehicleId));
   };
 
-  // Add the missing handleDropoffChange function
+  // State management
+  const [pickup, setPickup] = useState<Location>({
+    address: '',
+    houseNumber: '',
+    contact: '',
+    name: '',
+    lat: null,
+    lng: null
+  });
+
+  const [dropoffs, setDropoffs] = useState<Location[]>([{
+    address: '',
+    houseNumber: '',
+    contact: '',
+    name: '',
+    lat: null,
+    lng: null
+  }]);
+
+  const [activeLocation, setActiveLocation] = useState<ActiveLocation | null>(null);
+  const [useDistance, setDistance] = useState<number>(0);
+  const [selectedVehicle, setSelectedVehicle] = useState<string>('Car');
+  const [selectedService, setSelectedService] = useState<string>('Regular');
+  const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [showSuccess, setShowSuccess] = useState<boolean>(false);
+  const [mapPreview, setMapPreview] = useState<string | null>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const [showDetails, setShowDetails] = useState<boolean>(false);
+  const [useBaseCost, setBaseCost] = useState<number | null>(null);
+  const [usePerKmCost, setPerKmCost] = useState<number | null>(null);
+  const [distances, setDistances] = useState<number[]>([]);
+  const [vehicleName, setvehicleName] = useState<string[]>([]);
+
+  const closeDetails = () => {
+    setShowDetails(false);
+  };
+
+  // Handle input changes
+  const handlePickupChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPickup({ ...pickup, [e.target.name]: e.target.value });
+  };
+
   const handleDropoffChange = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
     const updatedDropoffs = [...dropoffs];
-    updatedDropoffs[index] = {...updatedDropoffs[index], [e.target.name]: e.target.value};
+    updatedDropoffs[index] = {
+      ...updatedDropoffs[index],
+      [e.target.name]: e.target.value
+    };
     setDropoffs(updatedDropoffs);
   };
 
-  
-  const validateForm = () => {
-    if (!pickup.address || !pickup.houseNumber || !pickup.contact || !pickup.name) {
-      showToast("Please complete all pickup details", 'warning');
-      return false;
-    }
-
-    if (dropoffs.some(d => !d.address || !d.houseNumber || !d.contact || !d.name)) {
-      showToast("Please complete all drop-off details", 'warning');
-      return false;
-    }
-
-    if (!selectedVehicle) {
-      showToast("Please select a vehicle", 'warning');
-      return false;
-    }
-
-    return true;
-  };
-
-  const geocodeAddress = async (query: string) => {
-    if (!query || query.length < 3) return [];
-    
-    setIsLoading(true);
-    try {
-      const response = await fetch(
-        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=5`
-      );
-      if (!response.ok) throw new Error('Geocoding failed');
-      return await response.json();
-    } catch (error) {
-      console.error('Geocoding error:', error);
-      return [];
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleAddressSearch = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-
-    if (activeLocation?.type === 'pickup') {
-      setPickup({...pickup, address: value});
-    } else if (activeLocation?.index !== null) {
-      const updated = [...dropoffs];
-      updated[activeLocation.index].address = value;
-      setDropoffs(updated);
-    }
-
-    if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    timeoutRef.current = setTimeout(async () => {
-      if (value.length > 2) setSuggestions(await geocodeAddress(value));
-      else setSuggestions([]);
-    }, 500);
-  };
-
-  const selectSuggestion = (suggestion: Suggestion) => {
-    const location = {
-      address: suggestion.display_name,
-      lat: parseFloat(suggestion.lat),
-      lng: parseFloat(suggestion.lon)
-    };
-
-    if (activeLocation?.type === 'pickup') {
-      setPickup({...pickup, ...location});
-    } else if (activeLocation?.index !== null) {
-      const updated = [...dropoffs];
-      updated[activeLocation.index] = {...updated[activeLocation.index], ...location};
-      setDropoffs(updated);
-    }
-    setSuggestions([]);
-  };
-
+  // Location management
   const addDropoff = () => {
     setDropoffs([...dropoffs, {
-      address: '', houseNumber: '', contact: '', name: '', lat: null, lng: null
+      address: '',
+      houseNumber: '',
+      contact: '',
+      name: '',
+      lat: null,
+      lng: null
     }]);
   };
 
   const removeDropoff = (index: number) => {
-    if (dropoffs.length > 1) {
-      setDropoffs(dropoffs.filter((_, i) => i !== index));
-    }
+    if (dropoffs.length <= 1) return;
+    const updatedDropoffs = dropoffs.filter((_, i) => i !== index);
+    setDropoffs(updatedDropoffs);
   };
 
+  // Open/close location details
   const openLocationDetails = (type: 'pickup' | 'dropoff', index: number | null = null) => {
     setActiveLocation({ type, index });
     setSuggestions([]);
@@ -200,157 +169,347 @@ const LogisticsForm = () => {
     setSuggestions([]);
   };
 
+  // Geocoding function using OpenStreetMap Nominatim
+  const geocodeAddress = async (query: string) => {
+    if (!query || query.length < 3) {
+      setSuggestions([]);
+      return [];
+    }
+
+    setIsLoading(true);
+    try {
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=5`
+      );
+
+      if (!response.ok) {
+        throw new Error('Geocoding failed');
+      }
+
+      const data = await response.json();
+
+      return data.map((result: any) => ({
+        formatted_address: result.display_name,
+        geometry: {
+          location: {
+            lat: parseFloat(result.lat),
+            lng: parseFloat(result.lon)
+          }
+        }
+      }));
+    } catch (error) {
+      console.error('Geocoding error:', error);
+      return [];
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Debounced address search
+  const handleAddressSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+
+    if (activeLocation?.type === 'pickup') {
+      setPickup({ ...pickup, address: value });
+    } else if (activeLocation?.index !== null) {
+      const updatedDropoffs = [...dropoffs];
+      updatedDropoffs[activeLocation.index].address = value;
+      setDropoffs(updatedDropoffs);
+    }
+
+    // Clear previous timeout
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+
+    // Set new timeout for debounce
+    timeoutRef.current = setTimeout(async () => {
+      if (value.length > 2) {
+        const results = await geocodeAddress(value);
+        setSuggestions(results);
+      } else {
+        setSuggestions([]);
+      }
+    }, 500);
+  };
+
+  const vehicleDetails = (id: string, data: any) => {
+    setSelected(id);
+    setBaseCost(data.cost);
+    setPerKmCost(data.perKmRate);
+    setvehicleName(data.name);
+  }
+
+  // Select a suggestion
+  const selectSuggestion = (suggestion: Suggestion) => {
+    const address = suggestion.formatted_address;
+
+    if (activeLocation?.type === 'pickup') {
+      setPickup({
+        ...pickup,
+        address,
+        lat: suggestion.geometry.location.lat,
+        lng: suggestion.geometry.location.lng
+      });
+    } else if (activeLocation?.index !== null) {
+      const updatedDropoffs = [...dropoffs];
+      updatedDropoffs[activeLocation.index] = {
+        ...updatedDropoffs[activeLocation.index],
+        address,
+        lat: suggestion.geometry.location.lat,
+        lng: suggestion.geometry.location.lng
+      };
+      setDropoffs(updatedDropoffs);
+    }
+
+    setSuggestions([]);
+  };
+
+  // Generate map preview URL
+  useEffect(() => {
+    if (pickup.lat && pickup.lng && dropoffs[0].lat && dropoffs[0].lng) {
+      const markers = [
+        `color:blue|label:P|${pickup.lat},${pickup.lng}`,
+        ...dropoffs.map((dropoff, i) => `color:red|label:${i + 1}|${dropoff.lat},${dropoff.lng}`)
+      ].join('&');
+
+      const url = `https://www.openstreetmap.org/export/embed.html?bbox=${
+        Math.min(pickup.lng, ...dropoffs.map(d => d.lng || 0)) - 0.1
+        },${
+        Math.min(pickup.lat, ...dropoffs.map(d => d.lat || 0)) - 0.1
+        },${
+        Math.max(pickup.lng, ...dropoffs.map(d => d.lng || 0)) + 0.1
+        },${
+        Math.max(pickup.lat, ...dropoffs.map(d => d.lat || 0)) + 0.1
+        }&markers=${markers}`;
+
+      setMapPreview(url);
+    }
+  }, [pickup, dropoffs]);
+
   useEffect(() => {
     const calculateDistances = async () => {
       if (pickup.lat && pickup.lng) {
-        const calculated = await Promise.all(
-          dropoffs.map(async dropoff => {
+        const calculatedDistances = await Promise.all(
+          dropoffs.map(async (dropoff) => {
             if (dropoff.lat && dropoff.lng) {
               try {
                 return await getDistanceInKm(
-                  { lat: pickup.lat!, lng: pickup.lng! },
+                  { lat: pickup.lat, lng: pickup.lng },
                   { lat: dropoff.lat, lng: dropoff.lng }
                 );
-              } catch {
+              } catch (error) {
+                console.error('Error calculating distance:', error);
                 return 0;
               }
             }
             return 0;
           })
         );
-        setDistances(calculated);
+        setDistances(calculatedDistances);
       }
     };
+
     calculateDistances();
   }, [pickup.lat, pickup.lng, dropoffs]);
 
+  const validatePickup = (pickup: Location) => {
+    if (!pickup || typeof pickup !== 'object') {
+      showToast("Pickup data is missing or invalid", 'warning');
+      return false;
+    }
+
+    if (!pickup.address) {
+      showToast("Please enter a pickup address", 'warning');
+      return false;
+    }
+
+    if (!pickup.houseNumber) {
+      showToast("Please enter a house number", 'warning');
+      return false;
+    }
+
+    if (!pickup.contact) {
+      showToast("Please enter a contact number", 'warning');
+      return false;
+    }
+
+    if (!pickup.name) {
+      showToast("Please enter the sender's name", 'warning');
+      return false;
+    }
+
+    if (typeof pickup.lat !== 'number') {
+      showToast("Pickup latitude is missing or invalid", 'warning');
+      return false;
+    }
+
+    if (typeof pickup.lng !== 'number') {
+      showToast("Pickup longitude is missing or invalid", 'warning');
+      return false;
+    }
+
+    return true;
+  };
+
+  const validateDropoffs = (dropoffs: Location[]) => {
+    for (const [index, dropoff] of dropoffs.entries()) {
+      if (!dropoff.address) {
+        showToast(`Please enter a dropoff address for location #${index + 1}`, 'warning');
+        return false;
+      }
+    }
+    return true;
+  };
+
+  const validateVehicle = (selectedVehicle: string) => {
+    if (!selectedVehicle) {
+      showToast('Please select a vehicle type', 'warning');
+      return false;
+    }
+    return true;
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (validateForm()) setShowDetails(true);
-  };
+    if (!validatePickup(pickup)) return;
+    if (!validateDropoffs(dropoffs)) return;
+    if (!validateVehicle(selectedVehicle)) return;
+    setShowDetails(true);
+  }
 
-  const confirmOrder = async (driverDetails: any) => {
-    setSendLoading(true);
-    try {
-      for (const [i, dropoff] of dropoffs.entries()) {
-        const { eta } = calculateEta(parseFloat(distances[i].toFixed(2)), selectedService);
-        
-        await createDelivery({
-          variables: {
-            input: {
-              assignedRiderId: null,
-              deliveryFee: selectedVehicle?.cost,
-              deliveryType: selectedService,
-              dropoffAddress: dropoff.address,
-              dropoffLatitude: dropoff.lat,
-              dropoffLongitude: dropoff.lng,
-              estimatedDeliveryTime: eta,
-              paymentMethod: "Cash",
-              paymentStatus: "Unpaid",
-              pickupAddress: pickup.address,
-              pickupLatitude: pickup.lat,
-              pickupLongitude: pickup.lng,
-              recipientName: dropoff.name,
-              recipientPhone: dropoff.contact,
-              senderId: globalUserId,
-              baseRate: selectedVehicle?.cost || 0,
-              distance: distances[i],
-              perKmRate: selectedVehicle?.perKmRate || 0
-            }
-          }
-        });
+  const confirmCommand = async (selectedDriver: any) => {
+    const conf = confirm("Are you sure you want to place your order?");
+    if (conf) {
+      setsendLoading(true);
+      const today = new Date();
+      const isoDateString = new Date(
+        Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate())
+      ).toISOString();
+
+      try {
+        for (const [i, dropoff] of dropoffs.entries()) {
+          const { eta } = calculateEta(parseFloat(distances[i].toFixed(2)), "Priority");
+
+          const input = {
+            assignedRiderId: null,
+            deliveryFee: selectedDriver.cost,
+            deliveryType: selectedService,
+            dropoffAddress: dropoff.address,
+            dropoffLatitude: dropoff.lat,
+            dropoffLongitude: dropoff.lng,
+            estimatedDeliveryTime: eta,
+            paymentMethod: "Cash",
+            paymentStatus: "Unpaid",
+            pickupAddress: pickup.address,
+            pickupLatitude: pickup.lat,
+            pickupLongitude: pickup.lng,
+            recipientName: dropoff.name,
+            recipientPhone: dropoff.contact,
+            senderId: globalUserId,
+            baseRate: parseFloat(useBaseCost?.toString() || '0'),
+            distance: parseFloat(distances[i].toFixed(2)),
+            perKmRate: parseFloat(usePerKmCost?.toString() || '0')
+          };
+
+          await createDelivery({ variables: { input } });
+        }
+      } catch (error) {
+        console.error('Error creating deliveries:', error);
+        showToast('Failed to create some deliveries', 'error');
+      } finally {
+        setsendLoading(false);
       }
-    } catch (error) {
-      console.error('Error creating deliveries:', error);
     }
-  };
+  }
+
+  // Focus input when panel opens
+  useEffect(() => {
+    if (activeLocation && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [activeLocation]);
+
+  // Service data
+  const services = [
+    { id: 'Priority', name: 'Priority', icon: Rocket, time: '1-3 hours', price: '10' },
+    { id: 'Regular', name: 'Regular', icon: Clock, time: 'Same day', price: '5' },
+    { id: 'Polling', name: 'Polling', icon: Move, time: 'Multi-day', price: '5' }
+  ];
 
   if (loading) return <LogisticFormLoading />;
-  if (error) return (
-    <div className="bg-rose-100 border-l-4 border-rose-500 text-rose-700 p-4 rounded-lg shadow-lg max-w-2xl mx-auto mt-10">
-      <p>Error loading service options: {error.message}</p>
-    </div>
-  );
+  if (error) return <p>Error: {error.message}</p>;
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-8">
-      <div className="bg-gradient-to-r from-indigo-900 to-purple-800 rounded-2xl shadow-2xl overflow-hidden mb-10">
-        <div className="p-8 md:p-12 text-white">
-          <div className="flex items-center mb-4">
-            <Truck className="h-10 w-10 mr-3 text-amber-300" />
-            <h1 className="text-3xl md:text-4xl font-bold">
-              Elite<span className="text-amber-300">Express</span> Logistics
-            </h1>
-          </div>
-          <p className="text-lg text-indigo-100 max-w-2xl">
-            Premium delivery services with white-glove treatment and real-time tracking
-          </p>
+    <div className="w-[100%] mx-auto">
+      <div className="bg-white shadow-xl overflow-hidden">
+        <div className="bg-green-600 customgrad p-6 text-white">
+          <h1 className="text-2xl md:text-3xl font-bold flex items-center">
+            <Truck className="h-8 w-8 mr-3" />
+            Express Delivery Service
+          </h1>
+          <p className="mt-2 opacity-90">Fast and reliable logistics solutions</p>
         </div>
-      </div>
 
-      <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
-        <form onSubmit={handleSubmit} className="p-6">
-          <div className="bg-indigo-50 p-6 rounded-xl mb-8 border border-indigo-100">
-            <h2 className="text-xl font-semibold mb-4 flex items-center text-indigo-800">
-              <MapPin className="h-6 w-6 mr-2 text-indigo-600" />
-              Executive Pickup Location
+        <form onSubmit={handleSubmit} className="p-2">
+          <div className="bg-green-50 p-5 rounded-xl mb-6 border border-green-100">
+            <h2 className="text-lg font-semibold mb-3 flex items-center text-green-800">
+              <MapPin className="h-5 w-5 mr-2" />
+              Pickup Location
             </h2>
             <button
               type="button"
               onClick={() => openLocationDetails('pickup')}
-              className={`w-full text-left p-5 rounded-xl mb-3 transition-all duration-300 ${pickup.address ? 'bg-white border-2 border-indigo-300 shadow-sm' : 'bg-indigo-100 border-2 border-dashed border-indigo-300 hover:bg-indigo-200'}`}
+              className="w-full text-left p-4 border-2 border-dashed border-green-300 rounded-xl mb-3 hover:bg-green-100 flex items-center"
             >
-              <div className="flex items-center">
-                <Home className="h-5 w-5 mr-3 text-indigo-500 flex-shrink-0" />
-                {pickup.address ? (
-                  <div className="truncate flex-1">{pickup.address}</div>
-                ) : (
-                  <div className="text-indigo-600 flex-1">Enter premium pickup location</div>
-                )}
-                <ChevronDown className="h-5 w-5 text-indigo-400 ml-2" />
-              </div>
+              {pickup.address ? (
+                <span className="truncate flex-1">{pickup.address}</span>
+              ) : (
+                <span className="text-green-500 flex-1">Enter pickup address</span>
+              )}
+              <Home className="h-5 w-5 text-green-500 ml-2" />
             </button>
           </div>
 
-          <div className="bg-amber-50 p-6 rounded-xl mb-8 border border-amber-100">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-semibold flex items-center text-amber-800">
-                <Package className="h-6 w-6 mr-2 text-amber-600" />
-                Platinum Drop-off Locations
+          {/* Dropoff Sections */}
+          <div className="bg-orange-50 p-5 rounded-xl mb-6 border border-orange-100">
+            <div className="flex justify-between items-center mb-3">
+              <h2 className="text-lg font-semibold flex items-center text-orange-800">
+                <MapPin className="h-5 w-5 mr-2" />
+                Drop-off Locations
               </h2>
               <button
                 type="button"
                 onClick={addDropoff}
-                className="bg-amber-500 hover:bg-amber-600 text-white px-4 py-2 rounded-lg flex items-center transition-colors shadow-md hover:shadow-lg"
+                className="bg-orange-500 text-white px-3 py-1 rounded-lg text-sm flex items-center hover:bg-orange-600 transition-colors"
               >
-                <PlusCircle className="h-5 w-5 mr-2" />
-                Add Destination
+                <PlusCircle className="h-4 w-4 mr-1" />
+                Add Dropoff
               </button>
             </div>
 
             {dropoffs.map((dropoff, index) => (
-              <div key={index} className="mb-4 last:mb-0 group">
+              <div key={index} className="mb-3 last:mb-0">
                 <div className="flex items-center">
                   <button
                     type="button"
                     onClick={() => openLocationDetails('dropoff', index)}
-                    className={`flex-1 text-left p-5 rounded-xl transition-all duration-300 ${dropoff.address ? 'bg-white border-2 border-amber-300 shadow-sm' : 'bg-amber-100 border-2 border-dashed border-amber-300 hover:bg-amber-200'}`}
+                    className="flex-1 text-left p-4 border-2 border-dashed border-orange-300 rounded-xl hover:bg-orange-100 flex items-center max-w-[100%] w-[auto]"
                   >
-                    <div className="flex items-center">
-                      <MapPin className="h-5 w-5 mr-3 text-amber-500 flex-shrink-0" />
-                      {dropoff.address ? (
-                        <div className="truncate flex-1">{dropoff.address}</div>
-                      ) : (
-                        <div className="text-amber-600 flex-1">Destination #{index + 1}</div>
-                      )}
-                      <ChevronDown className="h-5 w-5 text-amber-400 ml-2" />
+                    {dropoff.address ? (
+                      <span className="truncate flex-1">{dropoff.address}</span>
+                    ) : (
+                      <span className="text-orange-500 flex-1">Enter drop-off address #{index + 1}</span>
+                    )}
+                    <div className="bg-orange-100 text-orange-800 rounded-full px-2 py-1 text-xs ml-2">
+                      #{index + 1}
                     </div>
                   </button>
                   {dropoffs.length > 1 && (
                     <button
                       type="button"
                       onClick={() => removeDropoff(index)}
-                      className="ml-3 p-2 text-rose-500 hover:text-rose-700 rounded-full hover:bg-rose-50 transition-colors"
+                      className="ml-[-20px] text-red-500 hover:text-red-700 p-2 rounded-full hover:bg-red-50"
                     >
                       <X className="h-5 w-5" />
                     </button>
@@ -360,154 +519,140 @@ const LogisticsForm = () => {
             ))}
           </div>
 
-          <div className="bg-slate-50 p-6 rounded-xl mb-8 border border-slate-200">
-            <h2 className="text-xl font-semibold mb-6 flex items-center text-slate-800">
-              <Truck className="h-6 w-6 mr-2 text-slate-600" />
-              Concierge Fleet Selection
+          {/* Vehicle Selection */}
+          <div className="bg-gray-50 p-5 rounded-xl mb-6 border border-gray-200">
+            <h2 className="text-lg font-semibold mb-4 flex items-center">
+              <Truck className="h-5 w-5 mr-2 text-gray-700" />
+              Vehicle Type
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {data.getVehicleTypes.map((vehicle: VehicleType) => (
-                <div
-                  key={vehicle.id}
-                  onClick={() => setSelectedVehicle(vehicle)}
-                  className={`relative overflow-hidden rounded-xl border-2 transition-all duration-300 cursor-pointer ${selectedVehicle?.id === vehicle.id ? 'border-indigo-500 ring-2 ring-indigo-200' : 'border-slate-200 hover:border-slate-300'}`}
-                >
-                  <div className="p-5 flex items-start">
-                    <div className="bg-indigo-100 p-3 rounded-lg mr-4">
-                      <Icon icon={vehicle.icon} className="h-8 w-8 text-indigo-600" />
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="font-bold text-lg text-slate-800">{vehicle.name}</h3>
-                      <p className="text-sm text-slate-500 mt-1">{vehicle.description}</p>
-                      <div className="mt-3 flex justify-between items-center">
-                        <span className="text-sm font-medium text-slate-600">Base: ₱{vehicle.cost}</span>
-                        <span className="text-sm font-medium text-slate-600">+ ₱{vehicle.perKmRate}/km</span>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {data.getVehicleTypes.map((vehicle: any) => {
+                const isSelected = selected === vehicle.id;
+                const showDetailss = expandedDetails === vehicle.id;
+                return (
+                  <div key={vehicle.id} className={`border-2 rounded-xl overflow-hidden ${
+                    isSelected
+                      ? 'border-green-500'
+                      : 'border-gray-200'
+                    }`}>
+                    <div
+                      onClick={() => vehicleDetails(vehicle.id, vehicle)}
+                      className={`relative w-full text-left p-4 flex items-center gap-4 cursor-pointer transition ${
+                        isSelected
+                          ? 'border-green-800 bg-green-50'
+                          : 'border-gray-200 bg-white hover:bg-gray-50'
+                        }`}
+                    >
+                      {/* Check icon */}
+                      {isSelected && (
+                        <div className="absolute top-1 right-1 w-6 h-6 rounded-full bg-green-500 text-white flex items-center justify-center">
+                          <Icon icon="mdi:check" className="text-sm" />
+                        </div>
+                      )}
+
+                      <div>
+                        <Icon icon={vehicle.icon} style={{ height: '40px', width: '40px' }} />
                       </div>
+                      <div className="flex-1">
+                        <p className="text-base font-semibold">{vehicle.name}</p>
+                        <p className="text-sm text-gray-500">{vehicle.description}</p>
+                      </div>
+                      <div className="text-sm font-bold text-gray-700">₱ {vehicle.cost}</div>
                     </div>
-                  </div>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setExpandedVehicle(expandedVehicle === vehicle.id ? null : vehicle.id);
-                    }}
-                    className="w-full px-4 py-3 border-t border-slate-100 bg-slate-50 hover:bg-slate-100 text-sm font-medium text-indigo-600 flex items-center justify-center transition-colors"
-                  >
-                    {expandedVehicle === vehicle.id ? (
-                      <>
-                        <span>Hide Features</span>
-                        <ChevronUp className="h-4 w-4 ml-2" />
-                      </>
-                    ) : (
-                      <>
-                        <span>View Features</span>
-                        <ChevronDown className="h-4 w-4 ml-2" />
-                      </>
+
+                    {/* Toggle Additional Services Button */}
+                    <button
+                      onClick={() => { toggleDetails(vehicle.id) }}
+                      type="button"
+                      className="w-full px-4 py-2 text-sm text-left bg-gray-50 hover:bg-gray-100 border-t border-gray-200 text-green-700 font-medium"
+                    >
+                      {showDetailss ? 'Hide Additional Services' : 'Show Additional Services'}
+                    </button>
+
+                    {/* Collapsible Section */}
+                    {showDetailss && (
+                      <div className="p-4 bg-green-50 text-sm text-gray-700 space-y-2">
+                        <p><strong>Additional Services:</strong></p>
+                        <ul className="list-disc list-inside space-y-1">
+                          <li>Loading assistance</li>
+                          <li>Packaging materials</li>
+                          <li>Insurance options</li>
+                          <li>Driver tracking</li>
+                        </ul>
+                      </div>
                     )}
-                  </button>
-                  {expandedVehicle === vehicle.id && (
-                    <div className="p-4 bg-slate-50 border-t border-slate-100">
-                      <ul className="space-y-2 text-sm text-slate-600">
-                        <li className="flex items-center">
-                          <CheckCircle2 className="h-4 w-4 text-emerald-500 mr-2" />
-                          Real-time GPS tracking
-                        </li>
-                        <li className="flex items-center">
-                          <CheckCircle2 className="h-4 w-4 text-emerald-500 mr-2" />
-                          Temperature control
-                        </li>
-                        <li className="flex items-center">
-                          <CheckCircle2 className="h-4 w-4 text-emerald-500 mr-2" />
-                          Premium insurance
-                        </li>
-                        <li className="flex items-center">
-                          <CheckCircle2 className="h-4 w-4 text-emerald-500 mr-2" />
-                          Dedicated concierge
-                        </li>
-                      </ul>
-                    </div>
-                  )}
-                </div>
-              ))}
+                  </div>
+                );
+              })}
             </div>
           </div>
 
-          <div className="bg-slate-50 p-6 rounded-xl mb-8 border border-slate-200">
-            <h2 className="text-xl font-semibold mb-6 flex items-center text-slate-800">
-              <Clock className="h-6 w-6 mr-2 text-slate-600" />
-              Priority Service Tier
+          {/* Service Selection */}
+          <div className="bg-gray-50 p-5 rounded-xl mb-8 border border-gray-200">
+            <h2 className="text-lg font-semibold mb-4 flex items-center">
+              <Clock className="h-5 w-5 mr-2 text-gray-700" />
+              Delivery Option
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {premiumServices.map((service) => (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {services.map((service) => (
                 <div
                   key={service.id}
                   onClick={() => setSelectedService(service.id)}
-                  className={`p-6 rounded-xl border-2 transition-all duration-300 cursor-pointer ${selectedService === service.id ? 'border-purple-500 bg-purple-50 shadow-md' : 'border-slate-200 hover:border-slate-300 bg-white'}`}
+                  className={`p-4 rounded-xl border-2 cursor-pointer transition-all ${
+                    selectedService === service.id
+                      ? 'border-green-500 bg-green-50 shadow-sm'
+                      : 'border-gray-200 hover:bg-gray-100'
+                    }`}
                 >
-                  <div className="flex items-center mb-4">
-                    <service.icon className={`h-8 w-8 mr-3 ${selectedService === service.id ? 'text-purple-600' : 'text-slate-500'}`} />
-                    <h3 className="font-bold text-lg">{service.name}</h3>
+                  <div className="flex items-center mb-2">
+                    <service.icon className={`h-6 w-6 mr-2 ${
+                      selectedService === service.id ? 'text-green-600' : 'text-gray-600'
+                      }`} />
+                    <span className="font-medium">{service.name}</span>
                   </div>
-                  <p className="text-sm text-slate-600 mb-3">{service.time} delivery window</p>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm font-medium text-slate-500">Additional fee</span>
-                    <span className="text-lg font-bold text-purple-600">₱{service.price}</span>
-                  </div>
+                  <div className="text-sm text-gray-600 mt-1">Delivery: {service.time}</div>
+                  <div className="text-sm font-medium mt-2">₱{service.price}</div>
                 </div>
               ))}
             </div>
           </div>
 
+          {/* Submit Button */}
           <button
             type="submit"
-            disabled={sendLoading}
-            className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white py-4 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center font-bold text-lg disabled:opacity-70 disabled:cursor-not-allowed"
+            className="w-full customgrad text-white py-3 px-4 rounded-xl hover:bg-green-700 transition-colors flex items-center justify-center font-medium text-lg"
           >
-            {sendLoading ? (
-              <>
-                <Loader2 className="h-5 w-5 mr-2 animate-spin" />
-                Processing...
-              </>
-            ) : (
-              <>
-                <Truck className="h-6 w-6 mr-3" />
-                Schedule Premium Delivery
-              </>
-            )}
+            <Truck className="h-5 w-5 mr-2" />
+            Schedule Delivery
           </button>
         </form>
       </div>
 
+      {/* Location Details Slide-up Panel */}
       {activeLocation && (
-        <div className="fixed inset-0 z-50 flex items-end md:items-center justify-center bg-black/50 backdrop-blur-sm transition-opacity">
-          <div className="w-full max-w-md bg-white rounded-t-2xl md:rounded-2xl shadow-2xl animate-slide-up md:animate-scale-in max-h-[90vh] flex flex-col">
-            <div className="p-6 border-b border-slate-200 sticky top-0 bg-white z-10">
+        <div className="fixed inset-0 z-50 flex items-end md:items-center justify-end md:justify-center bg-black/40 backdrop-blur-sm transition-opacity duration-300">
+          <div className="bg-white/90 backdrop-blur-lg w-full max-w-md rounded-t-3xl md:rounded-3xl shadow-2xl animate-slide-up md:animate-scale-in fixed top-0 h-full flex flex-col overflow-hidden border border-gray-200">
+            <div className="p-5 border-b border-gray-200 bg-white/80 backdrop-blur-lg">
               <div className="flex justify-between items-center">
-                <h2 className="text-xl font-bold text-slate-800 flex items-center">
-                  {activeLocation.type === 'pickup' ? (
-                    <>
-                      <Home className="h-5 w-5 mr-2 text-indigo-500" />
-                      Premium Pickup Details
-                    </>
-                  ) : (
-                    <>
-                      <Package className="h-5 w-5 mr-2 text-amber-500" />
-                      Platinum Drop-off #{activeLocation.index! + 1}
-                    </>
-                  )}
+                <h2 className="text-xl font-semibold flex items-center text-gray-800">
+                  {activeLocation.type === 'pickup'
+                    ? <><Home className="h-5 w-5 mr-2 text-green-500" /> Pickup Details</>
+                    : <><MapPin className="h-5 w-5 mr-2 text-orange-500" /> Drop-off #{activeLocation.index! + 1} Details</>}
                 </h2>
                 <button
-                  onClick={() => setActiveLocation(null)}
-                  className="p-2 rounded-full hover:bg-slate-100 text-slate-500 hover:text-slate-700 transition"
+                  onClick={closeLocationDetails}
+                  className="text-gray-500 hover:text-gray-700 p-2 rounded-full hover:bg-gray-200 transition"
                 >
                   <X className="h-5 w-5" />
                 </button>
               </div>
             </div>
-            <div className="p-6 overflow-y-auto flex-grow">
-              <div className="mb-6">
-                <label className="block text-sm font-medium text-slate-700 mb-2 flex items-center">
-                  <LocateFixed className="h-4 w-4 mr-2 text-indigo-500" />
-                  Premium Location Search
+            <div className="p-5 overflow-y-auto flex-grow space-y-6 bg-white/70 backdrop-blur-md">
+              {/* Full Address */}
+              <div>
+                <label className="block text-sm font-medium mb-2 flex items-center text-gray-700">
+                  <MapPin className="h-4 w-4 mr-1 text-gray-500" />
+                  Full Address
                 </label>
                 <div className="relative">
                   <input
@@ -520,167 +665,177 @@ const LogisticsForm = () => {
                         : dropoffs[activeLocation.index!].address
                     }
                     onChange={handleAddressSearch}
-                    className="w-full p-4 pl-12 border border-slate-300 rounded-xl shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
-                    placeholder="Search luxury location..."
+                    className="w-full p-3 border border-gray-300 rounded-xl pl-10 shadow-sm focus:ring-2 focus:ring-blue-400 transition"
+                    placeholder="Search address..."
                   />
-                  <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400">
+                  <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
                     <MapPin className="h-5 w-5" />
                   </div>
                 </div>
+
                 {isLoading && (
-                  <div className="mt-2 text-sm text-slate-500 flex items-center">
-                    <Loader2 className="animate-spin h-4 w-4 mr-2 text-indigo-500" />
-                    Searching premium locations...
+                  <div className="mt-2 text-sm text-gray-500 flex items-center">
+                    <Loader2 className="animate-spin h-4 w-4 mr-2 text-blue-500" />
+                    Searching...
                   </div>
                 )}
+
                 {suggestions.length > 0 && (
-                  <div className="mt-2 border border-slate-200 rounded-xl overflow-hidden shadow-lg">
+                  <div className="absolute left-0 right-0 mx-2 mt-2 border border-gray-200 rounded-xl overflow-hidden z-50 shadow-lg bg-white">
                     {suggestions.map((suggestion, index) => (
                       <div
                         key={index}
                         onClick={() => selectSuggestion(suggestion)}
-                        className="p-3 hover:bg-slate-50 cursor-pointer border-b border-slate-100 last:border-none flex items-start"
+                        className="p-3 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-none flex items-start"
                       >
-                        <MapPin className="h-4 w-4 text-indigo-500 mr-2 mt-0.5 flex-shrink-0" />
-                        <span className="text-slate-700">{suggestion.display_name}</span>
+                        <MapPin className="h-4 w-4 text-blue-500 mr-2 mt-0.5 flex-shrink-0" />
+                        <span className="truncate text-gray-800">{suggestion.formatted_address}</span>
                       </div>
                     ))}
                   </div>
                 )}
               </div>
 
-              <div className="space-y-6">
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-2">
-                      Suite/Unit #
-                    </label>
-                    <div className="relative">
-                      <input
-                        type="text"
-                        name="houseNumber"
-                        value={
-                          activeLocation.type === 'pickup'
-                            ? pickup.houseNumber
-                            : dropoffs[activeLocation.index!].houseNumber
-                        }
-                        onChange={(e) =>
-                          activeLocation.type === 'pickup'
-                            ? handlePickupChange(e)
-                            : handleDropoffChange(activeLocation.index!, e)
-                        }
-                        className="w-full p-4 pl-11 border border-slate-300 rounded-xl shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
-                        placeholder="Building/Suite"
-                      />
-                      <Home className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400 h-5 w-5" />
-                    </div>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-2">
-                      Contact Number
-                    </label>
-                    <div className="relative">
-                      <input
-                        type="tel"
-                        name="contact"
-                        value={
-                          activeLocation.type === 'pickup'
-                            ? pickup.contact
-                            : dropoffs[activeLocation.index!].contact
-                        }
-                        onChange={(e) =>
-                          activeLocation.type === 'pickup'
-                            ? handlePickupChange(e)
-                            : handleDropoffChange(activeLocation.index!, e)
-                        }
-                        className="w-full p-4 pl-11 border border-slate-300 rounded-xl shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
-                        placeholder="+1 (___) ___ ____"
-                      />
-                      <Phone className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400 h-5 w-5" />
-                    </div>
-                  </div>
-                </div>
-
+              {/* House Number & Contact */}
+              <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">
-                    {activeLocation.type === 'pickup' ? 'Your Name' : 'Recipient Name'}
+                  <label className="block text-sm font-medium mb-2 flex items-center text-gray-700">
+                    <Home className="h-4 w-4 mr-1 text-gray-500" />
+                    House Number
                   </label>
                   <div className="relative">
                     <input
                       type="text"
-                      name="name"
+                      name="houseNumber"
                       value={
                         activeLocation.type === 'pickup'
-                          ? pickup.name
-                          : dropoffs[activeLocation.index!].name
+                          ? pickup.houseNumber
+                          : dropoffs[activeLocation.index!].houseNumber
                       }
                       onChange={(e) =>
                         activeLocation.type === 'pickup'
                           ? handlePickupChange(e)
                           : handleDropoffChange(activeLocation.index!, e)
                       }
-                      className="w-full p-4 pl-11 border border-slate-300 rounded-xl shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
-                      placeholder="Full name"
+                      className="w-full p-3 border border-gray-300 rounded-xl pl-10 shadow-sm focus:ring-2 focus:ring-blue-400 transition"
+                      placeholder="No."
                     />
-                    <User className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400 h-5 w-5" />
+                    <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                      <Home className="h-5 w-5" />
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium mb-2 flex items-center text-gray-700">
+                    <Phone className="h-4 w-4 mr-1 text-gray-500" />
+                    Contact Number
+                  </label>
+                  <div className="relative">
+                    <input
+                      type="tel"
+                      name="contact"
+                      value={
+                        activeLocation.type === 'pickup'
+                          ? pickup.contact
+                          : dropoffs[activeLocation.index!].contact
+                      }
+                      onChange={(e) =>
+                        activeLocation.type === 'pickup'
+                          ? handlePickupChange(e)
+                          : handleDropoffChange(activeLocation.index!, e)
+                      }
+                      className="w-full p-3 border border-gray-300 rounded-xl pl-10 shadow-sm focus:ring-2 focus:ring-blue-400 transition"
+                      placeholder="Phone number"
+                    />
+                    <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                      <Phone className="h-5 w-5" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Recipient Name */}
+              <div>
+                <label className="block text-sm font-medium mb-2 flex items-center text-gray-700">
+                  <User className="h-4 w-4 mr-1 text-gray-500" />
+                  Recipient Name
+                </label>
+                <div className="relative">
+                  <input
+                    type="text"
+                    name="name"
+                    value={
+                      activeLocation.type === 'pickup'
+                        ? pickup.name
+                        : dropoffs[activeLocation.index!].name
+                    }
+                    onChange={(e) =>
+                      activeLocation.type === 'pickup'
+                        ? handlePickupChange(e)
+                        : handleDropoffChange(activeLocation.index!, e)
+                    }
+                    className="w-full p-3 border border-gray-300 rounded-xl pl-10 shadow-sm focus:ring-2 focus:ring-blue-400 transition"
+                    placeholder="Full name"
+                  />
+                  <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                    <User className="h-5 w-5" />
                   </div>
                 </div>
               </div>
             </div>
-            <div className="p-6 border-t border-slate-200 sticky bottom-0 bg-white">
+
+            {/* Footer Save Button */}
+            <div className="p-5 border-t border-gray-200 bg-white/80 backdrop-blur-lg">
               <button
                 type="button"
-                onClick={() => setActiveLocation(null)}
-                className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white py-3 px-4 rounded-xl shadow-md hover:shadow-lg transition font-semibold flex items-center justify-center"
+                onClick={closeLocationDetails}
+                className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 px-4 rounded-xl shadow-md hover:shadow-lg hover:from-blue-700 hover:to-indigo-700 transition font-semibold flex items-center justify-center"
               >
                 <CheckCircle2 className="h-5 w-5 mr-2" />
-                Save Luxury Details
+                Save Details
               </button>
             </div>
           </div>
         </div>
       )}
 
+      {/* Success Message */}
+      {showSuccess && (
+        <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg animate-fade-in-up z-50 flex items-center">
+          <CheckCircle2 className="h-6 w-6 mr-2" />
+          Delivery scheduled successfully!
+        </div>
+      )}
+
       {showDetails && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-          <div className="w-full max-w-2xl bg-white rounded-2xl shadow-2xl overflow-hidden mx-4 max-h-[90vh] flex flex-col">
-            <div className="p-6 border-b border-slate-200 sticky top-0 bg-white z-10">
-              <div className="flex justify-between items-center">
-                <h2 className="text-2xl font-bold text-slate-800">
-                  Elite Delivery Confirmation
-                </h2>
-                <button
-                  onClick={() => setShowDetails(false)}
-                  className="p-2 rounded-full hover:bg-slate-100 text-slate-500 hover:text-slate-700 transition"
-                >
-                  <X className="h-5 w-5" />
-                </button>
-              </div>
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/50 ">
+          <div className="w-full max-h-[90vh] sm:max-w-md bg-white rounded-t-2xl sm:rounded-2xl p-4 shadow-lg animate-slide-up overflow-y-auto">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-lg sm:text-xl font-semibold">Delivery Details</h2>
+              <button onClick={closeDetails} className="p-1 rounded hover:bg-gray-100 transition">
+                <X className="w-5 h-5 text-gray-600" />
+              </button>
             </div>
-            <div className="p-6 overflow-y-auto flex-grow">
+            <div className="space-y-2 text-sm sm:text-base text-gray-700">
               <ClassicConfirmForm
                 order={{
-                  sender: {
-                    name: pickup.name,
-                    address: pickup.address,
-                    contact: pickup.contact
-                  },
-                  recipients: dropoffs.map((dropoff, i) => ({
-                    name: dropoff.name,
-                    address: dropoff.address,
-                    contact: dropoff.contact,
-                    distanceKm: distances[i]?.toFixed(2) || '0.00',
+                  sender: { name: pickup.name, address: pickup.address },
+                  recipients: dropoffs.map((r: any, i: number) => ({
+                    name: r.name,
+                    address: r.address,
+                    contact: r.contact,
+                    distanceKm: distances[i].toFixed(2),
                   })),
                   billing: {
-                    baseRate: selectedVehicle?.cost || 0,
-                    perKmRate: selectedVehicle?.perKmRate || 0,
-                    serviceFee: premiumServices.find(s => s.id === selectedService)?.price || '0',
+                    baseRate: parseFloat(useBaseCost?.toString() || '0'),
+                    perKmRate: parseFloat(usePerKmCost?.toString() || '0'),
                     total: null,
                   },
-                  service: selectedService,
-                  vehicle: selectedVehicle?.name || ''
                 }}
-                onConfirm={confirmOrder}
+                onConfirm={(driverId) => {
+                  confirmCommand(driverId);
+                }}
                 onLoading={sendLoading}
               />
             </div>
