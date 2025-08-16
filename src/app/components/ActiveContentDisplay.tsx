@@ -10,7 +10,7 @@ import SenderDashboard from './Sender/SenderDashboard';
 import RiderActivityChart from './Administrator/RiderActivityChart';
 
 import Accounts from './Administrator/Accounts';
-
+import Profile from './Profile';
 import LogisticsForm from './Sender/LogisticsForm';
 import SettingsPage from './SettingsPage';
 import HelpPage from './HelpPage';
