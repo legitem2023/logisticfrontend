@@ -16,11 +16,11 @@ export default function Profile() {
   const globalUserId = useSelector(selectTempUserId);
   const GlobalactiveIndex = useSelector((state: any) => state.activeIndex.value);
   const { data, loading, refetch } = useQuery(ACCOUNT, { 
-    variables: { getRidersId: globalUserId }, 
-    skip: !globalUserId, 
+    variables: { getRidersId: globalUserId }
   });
+  console.log(data);
   if (loading || !data) return;
-   console.log(data);
+   
   return ( 
     <div className="min-h-screen bg-gray-50 flex flex-col md:flex-row"> 
        {data?.getUser.map((rider: any) => (
