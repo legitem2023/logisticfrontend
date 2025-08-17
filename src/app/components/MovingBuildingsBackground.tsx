@@ -6,16 +6,9 @@ interface Building {
   x: number;
   width: number;
   height: number;
+  speed: number; // Movement speed (farther buildings move slower)
   windows: { x: number; y: number }[];
   color: string;
-}
-
-interface Star {
-  x: number;
-  y: number;
-  radius: number;
-  opacity: number;
-  speed: number;
 }
 
 export default function MovingBuildingsBackground() {
@@ -25,10 +18,10 @@ export default function MovingBuildingsBackground() {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    // Initialize canvas
+    // Set canvas dimensions
     const resizeCanvas = () => {
       canvas.width = window.innerWidth;
-      canvas.height = 250; // Header height
+      canvas.height = 300; // Adjust height as needed
     };
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
@@ -36,146 +29,113 @@ export default function MovingBuildingsBackground() {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    // City generation
+    // Create buildings with different layers for parallax effect
     const createBuildings = (): Building[] => {
       const buildings: Building[] = [];
-      const buildingCount = 15 + Math.floor(Math.random() * 10);
-      let currentX = 0;
+      const layers = 3; // Number of depth layers
+      const buildingsPerLayer = 8;
 
-      for (let i = 0; i < buildingCount; i++) {
-        const width = 50 + Math.random() * 120;
-        const height = 100 + Math.random() * 150;
-        const windowRows = Math.floor(height / 30);
-        const windowCols = Math.floor(width / 20);
-        const windows = [];
+      for (let layer = 0; layer < layers; layer++) {
+        const layerScale = 0.5 + (layer * 0.2); // Farther buildings are smaller
+        const layerSpeed = 0.2 + (layer * 0.1); // Farther buildings move slower
+        
+        for (let i = 0; i < buildingsPerLayer; i++) {
+          const width = (80 + Math.random() * 120) * layerScale;
+          const height = (150 + Math.random() * 200) * layerScale;
+          const x = (canvas.width / buildingsPerLayer) * i + Math.random() * 100;
 
-        for (let row = 0; row < windowRows; row++) {
-          for (let col = 0; col < windowCols; col++) {
-            if (Math.random() > 0.7) { // 30% chance of window
-              windows.push({
-                x: col * 20 + 10,
-                y: row * 30 + 15
-              });
+          // Create windows
+          const windowRows = Math.floor(height / 25);
+          const windowCols = Math.floor(width / 15);
+          const windows = [];
+
+          for (let row = 0; row < windowRows; row++) {
+            for (let col = 0; col < windowCols; col++) {
+              if (Math.random() > 0.7) { // 30% chance of window
+                windows.push({
+                  x: col * 15 + 8,
+                  y: row * 25 + 10
+                });
+              }
             }
           }
+
+          buildings.push({
+            x,
+            width,
+            height,
+            speed: layerSpeed,
+            windows,
+            color: `hsl(210, 60%, ${20 + layer * 10}%)` // Darker for farther buildings
+          });
         }
-
-        buildings.push({
-          x: currentX,
-          width,
-          height,
-          windows,
-          color: `hsl(${200 + Math.random() * 40}, 70%, ${20 + Math.random() * 15}%)`
-        });
-
-        currentX += width + (Math.random() * 30);
       }
 
       return buildings;
     };
 
-    const createStars = (): Star[] => {
-      const stars: Star[] = [];
-      for (let i = 0; i < 100; i++) {
-        stars.push({
-          x: Math.random() * canvas.width,
-          y: Math.random() * (canvas.height * 0.4),
-          radius: Math.random() * 1.5,
-          opacity: Math.random() * 0.8 + 0.2,
-          speed: Math.random() * 0.02
-        });
-      }
-      return stars;
-    };
+    let buildings = createBuildings();
+    let animationId: number;
+    let lastTime = 0;
 
-    // Drawing functions
-    const drawSky = (time: number) => {
-      const dawnProgress = (Math.sin(time * 0.3) + 1) / 2; // 0-1 loop
-      
-      const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-      gradient.addColorStop(0, `hsl(240, 70%, ${10 + dawnProgress * 10}%)`);
-      gradient.addColorStop(1, `hsl(${300 + dawnProgress * 60}, 80%, ${20 + dawnProgress * 30}%)`);
-      
-      ctx.fillStyle = gradient;
+    const animate = (timestamp: number) => {
+      if (!lastTime) lastTime = timestamp;
+      const deltaTime = timestamp - lastTime;
+      lastTime = timestamp;
+
+      // Clear canvas
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Draw gradient sky
+      const skyGradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+      skyGradient.addColorStop(0, '#00111c');
+      skyGradient.addColorStop(1, '#00334d');
+      ctx.fillStyle = skyGradient;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
-    };
 
-    const drawBuildings = (buildings: Building[]) => {
+      // Draw and update buildings
       buildings.forEach(building => {
+        // Move building
+        building.x -= building.speed * (deltaTime / 16);
+        
+        // If building moved off screen, recycle it to the right
+        if (building.x + building.width < 0) {
+          building.x = canvas.width + Math.random() * 200;
+        }
+
+        // Draw building
         ctx.fillStyle = building.color;
         ctx.fillRect(building.x, canvas.height - building.height, building.width, building.height);
-      });
-    };
 
-    const drawWindows = (buildings: Building[], time: number) => {
-      buildings.forEach(building => {
+        // Draw windows
         building.windows.forEach(window => {
-          // Random flicker effect
-          const isLightOn = Math.random() > 0.1 || Math.sin(time * 2 + window.x) > 0.7;
-          
+          const isLightOn = Math.random() > 0.2; // 80% chance of light being on
           if (isLightOn) {
-            ctx.fillStyle = `hsla(60, 100%, 80%, ${0.7 + Math.sin(time * 5 + window.x) * 0.3})`;
+            ctx.fillStyle = `hsla(45, 100%, 70%, ${0.6 + Math.random() * 0.4})`;
             ctx.fillRect(
-              building.x + window.x - 3,
-              canvas.height - building.height + window.y - 3,
-              6,
-              6
+              building.x + window.x - 4,
+              canvas.height - building.height + window.y - 4,
+              8,
+              8
             );
           }
         });
       });
+
+      // Draw distant fog effect
+      const fogGradient = ctx.createLinearGradient(0, canvas.height * 0.7, 0, canvas.height);
+      fogGradient.addColorStop(0, 'rgba(0, 20, 40, 0)');
+      fogGradient.addColorStop(1, 'rgba(0, 20, 40, 0.7)');
+      ctx.fillStyle = fogGradient;
+      ctx.fillRect(0, canvas.height * 0.7, canvas.width, canvas.height * 0.3);
+
+      animationId = requestAnimationFrame(animate);
     };
 
-    const drawStars = (stars: Star[], time: number) => {
-      ctx.fillStyle = 'white';
-      stars.forEach(star => {
-        const twinkle = Math.sin(time * star.speed) * 0.5 + 0.5;
-        ctx.globalAlpha = star.opacity * twinkle;
-        ctx.beginPath();
-        ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
-        ctx.fill();
-      });
-      ctx.globalAlpha = 1;
-    };
-
-    const drawLightRays = (time: number) => {
-      const dawnProgress = (Math.sin(time * 0.3) + 1) / 2;
-      if (dawnProgress > 0.5) {
-        const gradient = ctx.createLinearGradient(
-          canvas.width * 0.7, 0,
-          canvas.width * 0.7 + 200, 0
-        );
-        gradient.addColorStop(0, `hsla(40, 100%, 70%, ${(dawnProgress - 0.5) * 0.4})`);
-        gradient.addColorStop(1, 'hsla(40, 100%, 70%, 0)');
-        
-        ctx.fillStyle = gradient;
-        ctx.fillRect(canvas.width * 0.7, 0, 200, canvas.height * 0.3);
-      }
-    };
-
-    // Initialize elements
-    const buildings = createBuildings();
-    const stars = createStars();
-    let animationFrameId: number;
-    let startTime: number | null = null;
-
-    const animate = (timestamp: number) => {
-      if (!startTime) startTime = timestamp;
-      const elapsedTime = (timestamp - startTime) / 1000; // Convert to seconds
-
-      drawSky(elapsedTime);
-      drawStars(stars, elapsedTime);
-      drawBuildings(buildings);
-      drawWindows(buildings, elapsedTime);
-      drawLightRays(elapsedTime);
-
-      animationFrameId = requestAnimationFrame(animate);
-    };
-
-    animationFrameId = requestAnimationFrame(animate);
+    animationId = requestAnimationFrame(animate);
 
     return () => {
-      cancelAnimationFrame(animationFrameId);
+      cancelAnimationFrame(animationId);
       window.removeEventListener('resize', resizeCanvas);
     };
   }, []);
@@ -183,8 +143,8 @@ export default function MovingBuildingsBackground() {
   return (
     <canvas 
       ref={canvasRef}
-      className="w-full h-[250px] bg-black"
-      aria-label="Animated cityscape header"
+      className="w-full h-[300px] pointer-events-none"
+      aria-label="Moving cityscape background"
     />
   );
           }
