@@ -52,7 +52,7 @@ const SenderSignupForm = () => {
           email: form.email,
           phoneNumber: form.phone,
           password: form.password,
-          pickupAddress: form.pickupAddress
+          address: form.pickupAddress
         },
       },
     });
