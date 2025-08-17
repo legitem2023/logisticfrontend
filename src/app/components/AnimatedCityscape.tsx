@@ -13,7 +13,7 @@ export default function AnimatedCityScape({
   return (
     <div
       className={clsx(
-        "relative w-full aspect-[3/1] overflow-hidden",
+        "relative w-full overflow-hidden aspect-[3/1]",
         "bg-gradient-to-b from-green-950 via-green-900 to-green-800",
         className
       )}
@@ -38,34 +38,34 @@ export default function AnimatedCityScape({
 
       {/* FAR skyline */}
       <ParallaxStrip
-        className="bottom-[20%] opacity-40"
+        className="bottom-14 opacity-40"
         speedClass="animate-[scrollX_70s_linear_infinite]"
         buildingTone="from-green-800 to-green-700"
-        heights={[70, 90, 80, 100]}
+        heights={[30, 40, 35, 45]} // shrunk
         detailLevel="far"
       />
 
       {/* MID skyline */}
       <ParallaxStrip
-        className="bottom-[12%] opacity-70"
+        className="bottom-8 opacity-70"
         speedClass="animate-[scrollX_45s_linear_infinite]"
         buildingTone="from-green-900 to-green-800"
-        heights={[110, 130, 120, 140]}
+        heights={[50, 60, 55, 65]} // shrunk
         detailLevel="mid"
       />
 
       {/* NEAR skyline */}
       <ParallaxStrip
-        className="bottom-[5%] opacity-100"
+        className="bottom-2 opacity-100"
         speedClass="animate-[scrollX_25s_linear_infinite]"
         buildingTone="from-green-950 to-green-900"
-        heights={[160, 190, 170, 200]}
+        heights={[70, 85, 75, 90]} // shrunk
         hasAntennas
         detailLevel="near"
       />
 
       {/* Ground */}
-      <div className="absolute bottom-0 left-0 right-0 h-[12%] bg-gradient-to-b from-green-950 to-black" />
+      <div className="absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-b from-green-950 to-black" />
 
       {/* Content overlay */}
       <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
@@ -114,7 +114,7 @@ function ParallaxStrip({
 }) {
   return (
     <div className={clsx("absolute left-0 right-0", className)}>
-      <div className={clsx("flex w-[200%] gap-8", speedClass)}>
+      <div className={clsx("flex w-[200%] gap-6", speedClass)}>
         <BuildingsRow
           buildingTone={buildingTone}
           heights={heights}
@@ -144,27 +144,27 @@ function BuildingsRow({
   detailLevel: "far" | "mid" | "near";
 }) {
   return (
-    <div className="flex w-1/2 items-end gap-8 px-6">
+    <div className="flex w-1/2 items-end gap-6 px-4">
       {heights.map((h, i) => (
         <div key={`${h}-${i}`} className="relative flex items-end">
           {/* Building */}
           <div
             className={clsx(
-              "relative w-14 rounded-t-sm bg-gradient-to-b shadow-md overflow-hidden",
+              "relative w-10 rounded-t-sm bg-gradient-to-b shadow-md overflow-hidden", // narrower
               buildingTone
             )}
             style={{ height: `${h}px` }}
           >
             {/* Windows */}
             {detailLevel === "near" ? (
-              <div className="absolute inset-0 grid grid-cols-2 gap-1 p-1">
-                {Array.from({ length: Math.floor(h / 15) * 2 }).map((_, w) => (
+              <div className="absolute inset-0 grid grid-cols-2 gap-0.5 p-1">
+                {Array.from({ length: Math.floor(h / 12) * 2 }).map((_, w) => (
                   <div
                     key={w}
                     className={clsx(
-                      "h-2 w-4 rounded-sm",
+                      "h-1.5 w-3",
                       Math.random() > 0.6
-                        ? "bg-yellow-300 shadow-[0_0_6px_rgba(255,255,200,0.8)]"
+                        ? "bg-yellow-300 shadow-[0_0_4px_rgba(255,255,200,0.8)]"
                         : "bg-transparent"
                     )}
                   />
@@ -175,7 +175,7 @@ function BuildingsRow({
                 className="absolute inset-0 opacity-20"
                 style={{
                   backgroundImage:
-                    "repeating-linear-gradient(transparent, transparent 18px, rgba(255,255,200,0.4) 18px, rgba(255,255,200,0.4) 20px)",
+                    "repeating-linear-gradient(transparent, transparent 12px, rgba(255,255,200,0.3) 12px, rgba(255,255,200,0.3) 14px)",
                 }}
               />
             )}
@@ -183,12 +183,12 @@ function BuildingsRow({
 
           {/* Antennas */}
           {hasAntennas && i % 2 === 0 && (
-            <div className="absolute -top-6 left-1/2 h-6 w-[2px] -translate-x-1/2 bg-green-300/70">
-              <div className="absolute -top-1 left-1/2 h-2 w-2 -translate-x-1/2 rounded-full bg-green-200/90" />
+            <div className="absolute -top-4 left-1/2 h-4 w-[2px] -translate-x-1/2 bg-green-300/70">
+              <div className="absolute -top-1 left-1/2 h-1.5 w-1.5 -translate-x-1/2 rounded-full bg-green-200/90" />
             </div>
           )}
         </div>
       ))}
     </div>
   );
-                      }
+            }
