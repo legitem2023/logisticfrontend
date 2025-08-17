@@ -14,7 +14,7 @@ export default function AnimatedCityScape({
     <div
       className={clsx(
         "relative w-full overflow-hidden aspect-[3/1]",
-        "bg-gradient-to-b from-green-950 via-green-900 to-green-800",
+        "bg-gradient-to-b from-green-950 via-green-900 to-lime-800",
         className
       )}
     >
