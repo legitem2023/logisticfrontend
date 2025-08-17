@@ -114,6 +114,31 @@ body {
     left: 100%;
   }
 }
+
+@keyframes moveCity {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+.animate-cityscape {
+  animation: moveCity linear infinite;
+}
+
+@keyframes flicker {
+  0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+    opacity: 1;
+  }
+  20%, 22%, 24%, 55% {
+    opacity: 0.3;
+  }
+}
+.animate-flicker {
+  animation: flicker 4s infinite alternate;
+}
+
 @media only screen and (max-width : 1080px) {
   .Account {
     display:flex;
