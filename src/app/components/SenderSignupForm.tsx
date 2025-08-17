@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader } from "./ui/Card";
 import { useMutation } from "@apollo/client";
 import AnimatedCityscape from './AnimatedCityscape';
 
-import { CREATERIDER } from "../../../graphql/mutation";
+import { CREATESENDER } from "../../../graphql/mutation";
 import { showToast } from "../../../utils/toastify";
 import {
   FiUser,
@@ -20,7 +20,7 @@ import {
 } from "react-icons/fi";
 
 const SenderSignupForm = () => {
-  const [createSender] = useMutation(CREATERIDER, {
+  const [createSender] = useMutation(CREATESENDER, {
     onCompleted: (data) => {
       showToast(data, "success");
       console.log("Sender created:", data);
@@ -35,8 +35,7 @@ const SenderSignupForm = () => {
     email: "",
     phone: "",
     password: "",
-    pickupAddress: "",
-    companyName: "",
+    pickupAddress: ""
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -53,8 +52,7 @@ const SenderSignupForm = () => {
           email: form.email,
           phoneNumber: form.phone,
           password: form.password,
-          pickupAddress: form.pickupAddress,
-          companyName: form.companyName || null,
+          pickupAddress: form.pickupAddress
         },
       },
     });
