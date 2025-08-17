@@ -160,20 +160,6 @@ const SenderSignupForm = () => {
                       />
                     </div>
                   </div>
-
-                  <div>
-                    <Label htmlFor="companyName">Company Name (Optional)</Label>
-                    <div className="relative">
-                      <FiBriefcase className="absolute left-3 top-1/2 -translate-y-1/2 text-green-600" />
-                      <Input
-                        id="companyName"
-                        name="companyName"
-                        value={form.companyName}
-                        onChange={handleChange}
-                        className="pl-10"
-                      />
-                    </div>
-                  </div>
                 </div>
               </div>
 
