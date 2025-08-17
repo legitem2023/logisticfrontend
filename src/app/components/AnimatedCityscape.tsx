@@ -1,55 +1,127 @@
 "use client";
+
 import React from "react";
 import clsx from "clsx";
 
-export default function AnimatedCityscape() {
+export default function AnimatedCityScape({
+  className,
+  children,
+}: {
+  className?: string;
+  children?: React.ReactNode;
+}) {
   return (
-    <div className="relative w-full aspect-[3/1] overflow-hidden bg-gradient-to-b from-[#001a00] via-[#003300] to-[#004d00]">
-      {/* Stars */}
+    <div
+      className={clsx(
+        "relative w-full overflow-hidden",
+        "bg-gradient-to-b from-green-950 via-green-900 to-green-800",
+        "h-[320px] md:h-[420px]",
+        className
+      )}
+    >
+      {/* STAR FIELD */}
       <div className="absolute inset-0">
-        {Array.from({ length: 80 }).map((_, i) => (
+        {Array.from({ length: 40 }).map((_, i) => (
           <div
             key={i}
             className="absolute rounded-full bg-white"
             style={{
               top: `${Math.random() * 100}%`,
               left: `${Math.random() * 100}%`,
-              width: `${Math.random() * 2 + 1}px`,
-              height: `${Math.random() * 2 + 1}px`,
+              width: "2px",
+              height: "2px",
               opacity: Math.random() * 0.8 + 0.2,
+              animation: `twinkle ${2 + Math.random() * 3}s infinite alternate`,
             }}
           />
         ))}
       </div>
 
-      {/* City Layers */}
-      <CityLayer speed={10} buildingTone="from-green-900 to-green-800" heights={[50, 60, 55, 70, 65, 75]} />
-      <CityLayer speed={20} buildingTone="from-green-700 to-green-600" heights={[80, 100, 90, 110, 95, 105]} />
-      <CityLayer speed={35} buildingTone="from-green-500 to-green-400" heights={[160, 200, 180, 220, 190, 210]} near />
+      {/* FAR skyline */}
+      <ParallaxStrip
+        className="bottom-28 opacity-40"
+        speedClass="animate-[scrollX_70s_linear_infinite]"
+        buildingTone="from-green-800 to-green-700"
+        heights={[70, 90, 80, 100]}
+      />
+
+      {/* MID skyline */}
+      <ParallaxStrip
+        className="bottom-16 opacity-70"
+        speedClass="animate-[scrollX_45s_linear_infinite]"
+        buildingTone="from-green-900 to-green-800"
+        heights={[110, 130, 120, 140]}
+      />
+
+      {/* NEAR skyline */}
+      <ParallaxStrip
+        className="bottom-6 opacity-100"
+        speedClass="animate-[scrollX_25s_linear_infinite]"
+        buildingTone="from-green-950 to-green-900"
+        heights={[160, 190, 170, 200]}
+        hasAntennas
+      />
+
+      {/* Ground */}
+      <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-b from-green-950 to-black" />
+
+      {/* Content overlay */}
+      <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+        <div className="pointer-events-auto rounded-2xl bg-white/10 px-6 py-3 backdrop-blur-sm text-white">
+          {children}
+        </div>
+      </div>
+
+      {/* Keyframes */}
+      <style jsx global>{`
+        @keyframes scrollX {
+          from {
+            transform: translateX(0);
+          }
+          to {
+            transform: translateX(-50%);
+          }
+        }
+        @keyframes twinkle {
+          from {
+            opacity: 0.2;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+      `}</style>
     </div>
   );
 }
 
-function CityLayer({
-  speed,
+function ParallaxStrip({
+  className,
+  speedClass,
   buildingTone,
   heights,
-  near,
+  hasAntennas = false,
 }: {
-  speed: number;
+  className?: string;
+  speedClass: string;
   buildingTone: string;
   heights: number[];
-  near?: boolean;
+  hasAntennas?: boolean;
 }) {
   return (
-    <div
-      className="absolute bottom-0 flex animate-cityscape"
-      style={{
-        animationDuration: `${speed}s`,
-      }}
-    >
-      <BuildingsRow buildingTone={buildingTone} heights={heights} near={near} />
-      <BuildingsRow buildingTone={buildingTone} heights={heights} near={near} />
+    <div className={clsx("absolute left-0 right-0", className)}>
+      <div className={clsx("flex w-[200%] gap-8", speedClass)}>
+        <BuildingsRow
+          buildingTone={buildingTone}
+          heights={heights}
+          hasAntennas={hasAntennas}
+        />
+        <BuildingsRow
+          buildingTone={buildingTone}
+          heights={heights}
+          hasAntennas={hasAntennas}
+        />
+      </div>
     </div>
   );
 }
@@ -57,51 +129,44 @@ function CityLayer({
 function BuildingsRow({
   buildingTone,
   heights,
-  near,
+  hasAntennas,
 }: {
   buildingTone: string;
   heights: number[];
-  near?: boolean;
+  hasAntennas?: boolean;
 }) {
   return (
-    <div className="flex w-screen items-end gap-10 px-8">
+    <div className="flex w-full items-end aspect-[3/1]">
       {heights.map((h, i) => (
         <div key={`${h}-${i}`} className="relative flex items-end">
           {/* Building */}
           <div
             className={clsx(
-              "relative w-16 rounded-t-sm bg-gradient-to-b shadow-md overflow-hidden",
+              "relative w-14 bg-gradient-to-b shadow-md",
               buildingTone
             )}
             style={{ height: `${h}px` }}
           >
             {/* Windows */}
-            {near ? (
-              <div className="absolute inset-0 grid grid-cols-3 gap-1 p-1">
-                {Array.from({ length: Math.floor(h / 12) * 3 }).map((_, w) => (
-                  <div
-                    key={w}
-                    className={clsx(
-                      "h-2 w-4 rounded-sm",
-                      Math.random() > 0.6
-                        ? "bg-yellow-300 shadow-[0_0_6px_rgba(255,255,200,0.8)] animate-flicker"
-                        : "bg-transparent"
-                    )}
-                  />
-                ))}
-              </div>
-            ) : (
-              <div
-                className="absolute inset-0 opacity-20"
-                style={{
-                  backgroundImage:
-                    "repeating-linear-gradient(transparent, transparent 18px, rgba(255,255,200,0.3) 18px, rgba(255,255,200,0.3) 20px)",
-                }}
-              />
-            )}
+            <div
+              className="absolute inset-0"
+              style={{
+                backgroundImage:
+                  "repeating-linear-gradient(transparent, transparent 18px, rgba(255,255,200,0.8) 18px, rgba(255,255,200,0.8) 20px)",
+                backgroundSize: "100% 20px",
+                opacity: 0.2,
+              }}
+            />
           </div>
+
+          {/* Antennas */}
+          {hasAntennas && i % 2 === 0 && (
+            <div className="absolute -top-6 left-1/2 h-6 w-[2px] -translate-x-1/2 bg-green-300/70">
+              <div className="absolute -top-1 left-1/2 h-2 w-2 -translate-x-1/2 rounded-full bg-green-200/90" />
+            </div>
+          )}
         </div>
       ))}
     </div>
   );
-                      }
+}
