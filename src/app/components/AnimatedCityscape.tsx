@@ -27,8 +27,8 @@ export default function AnimatedCityScape({
             style={{
               top: `${Math.random() * 100}%`,
               left: `${Math.random() * 100}%`,
-              width: "2px",
-              height: "2px",
+              width: "1px",
+              height: "1px",
               opacity: Math.random() * 0.8 + 0.2,
               animation: `twinkle ${2 + Math.random() * 3}s infinite alternate`,
             }}
