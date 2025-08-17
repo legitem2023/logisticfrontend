@@ -1,4 +1,3 @@
-// components/CityscapeHeader.tsx
 "use client";
 
 import { useEffect, useRef } from 'react';
@@ -19,7 +18,7 @@ interface Star {
   speed: number;
 }
 
-export default function MovingBuildingsBackground {
+export default function MovingBuildingsBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -188,4 +187,4 @@ export default function MovingBuildingsBackground {
       aria-label="Animated cityscape header"
     />
   );
-                }
+          }
