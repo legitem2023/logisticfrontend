@@ -13,11 +13,14 @@ export default function AnimatedCityScape({
   return (
     <div
       className={clsx(
-        "backdrop-filter backdrop-blur-sm relative w-[100%] overflow-hidden aspect-[3/1]",
+        "relative w-[100%] overflow-hidden aspect-[3/1]",
         "bg-gradient-to-b from-emerald-950 via-emerald-800 to-emerald-700",
         className
       )}
     >
+      {/* Blur overlay (only visible on xs) */}
+      <div className="absolute inset-0 backdrop-blur-sm xs:block hidden bg-black/10 z-10 pointer-events-none"></div>
+
       {/* STAR FIELD */}
       <div className="absolute inset-0">
         {Array.from({ length: 40 }).map((_, i) => (
@@ -36,16 +39,16 @@ export default function AnimatedCityScape({
         ))}
       </div>
 
-
-    {/* GLOWING MOON - Added this section */}
+      {/* GLOWING MOON */}
       <div className="absolute top-6 right-6 w-12 h-12">
         <div className="absolute inset-0 rounded-full bg-gradient-to-b from-zinc-100 to-zinc-300"></div>
-        <div className="absolute inset-0 rounded-full bg-zinc-200/30 animate-ping" style={{ animationDuration: '5s' }}></div>
+        <div
+          className="absolute inset-0 rounded-full bg-zinc-200/30 animate-ping"
+          style={{ animationDuration: "5s" }}
+        ></div>
         <div className="absolute inset-0 rounded-full shadow-[0_0_25px_10px_rgba(255,255,200,0.4)]"></div>
       </div>
 
-
-      
       {/* FAR skyline */}
       <ParallaxStrip
         className="bottom-2 opacity-100"
@@ -74,18 +77,27 @@ export default function AnimatedCityScape({
         detailLevel="near"
       />
 
-      {/* Moving Trees - both sides */}
+      {/* Moving Trees */}
       <div className="absolute bottom-4 left-0 right-0 h-8">
-        {/* Left side trees - 30% faster than near buildings (25s * 0.7 = 17.5s) */}
-        <div className={clsx("absolute left-0 top-0 w-full", "animate-[scrollX_5s_linear_infinite]")}>
+        {/* Left trees */}
+        <div
+          className={clsx(
+            "absolute left-0 top-0 w-full",
+            "animate-[scrollX_5s_linear_infinite]"
+          )}
+        >
           <div className="flex w-[200%]">
             <TreeRow side="left" />
             <TreeRow side="left" />
           </div>
         </div>
-        
-        {/* Right side trees - same speed as left */}
-        <div className={clsx("absolute left-0 top-0 w-full", "animate-[scrollX_5s_linear_infinite]")}>
+        {/* Right trees */}
+        <div
+          className={clsx(
+            "absolute left-0 top-0 w-full",
+            "animate-[scrollX_5s_linear_infinite]"
+          )}
+        >
           <div className="flex w-[200%]">
             <TreeRow side="right" />
             <TreeRow side="right" />
@@ -97,7 +109,7 @@ export default function AnimatedCityScape({
       <div className="absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-b from-green-950 to-black" />
 
       {/* Content overlay */}
-      <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+      <div className="pointer-events-none absolute inset-0 flex items-center justify-center z-20">
         <div className="pointer-events-auto px-6 py-3 text-white">
           {children}
         </div>
@@ -176,22 +188,19 @@ function BuildingsRow({
     <div className="flex w-1/2 items-end gap-6 px-4">
       {heights.map((h, i) => (
         <div key={`${h}-${i}`} className="relative flex items-end">
-          {/* Building */}
           <div
             className={clsx(
-              "relative w-10 rounded-t-sm bg-gradient-to-b shadow-md overflow-hidden", // narrower
+              "relative w-10 rounded-t-sm bg-gradient-to-b shadow-md overflow-hidden",
               buildingTone
             )}
             style={{ height: `${h}px` }}
           >
-            {/* Windows - all layers use individual windows with weaker light */}
             <div className="absolute inset-0 grid grid-cols-3 gap-0.8 p-1">
               {Array.from({ length: Math.floor(h / 12) * 3 }).map((_, w) => (
                 <div
                   key={w}
                   className={clsx(
                     "h-2 w-2",
-                    // Weaker light for all windows
                     Math.random() > 0.6
                       ? "bg-yellow-500 opacity-100 shadow-[0_0_2px_rgba(255,255,200,0.9)]"
                       : "bg-emerald-900"
@@ -201,7 +210,6 @@ function BuildingsRow({
             </div>
           </div>
 
-          {/* Antennas */}
           {hasAntennas && i % 2 === 0 && (
             <div className="absolute -top-4 left-1/2 h-4 w-[2px] -translate-x-1/2 bg-green-300/70">
               <div className="absolute -top-1 left-1/2 h-1.5 w-1.5 -translate-x-1/2 rounded-full bg-green-200/90" />
@@ -213,7 +221,6 @@ function BuildingsRow({
   );
 }
 
-// Tree component with dark green colors
 function Tree() {
   return (
     <div className="relative w-1 h-6">
@@ -223,13 +230,14 @@ function Tree() {
   );
 }
 
-// Tree row component
 function TreeRow({ side }: { side: "left" | "right" }) {
   return (
-    <div className={clsx(
-      "w-1/2 flex items-end",
-      side === "left" ? "justify-start pl-4" : "justify-end pr-4"
-    )}>
+    <div
+      className={clsx(
+        "w-1/2 flex items-end",
+        side === "left" ? "justify-start pl-4" : "justify-end pr-4"
+      )}
+    >
       <div className="flex space-x-4">
         {Array.from({ length: 10 }).map((_, i) => (
           <Tree key={i} />
@@ -237,4 +245,4 @@ function TreeRow({ side }: { side: "left" | "right" }) {
       </div>
     </div>
   );
-                      }
+      }
