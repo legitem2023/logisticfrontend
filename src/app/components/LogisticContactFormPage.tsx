@@ -6,6 +6,7 @@ import { Input } from "./ui/Input";
 import { Label } from "./ui/Label";
 import { Select } from "./ui/Select";
 import { FiUser, FiMail, FiPhone, FiHome, FiMessageSquare, FiChevronDown, FiSend } from "react-icons/fi";
+import AnimatedCityscape from './AnimatedCityscape';
 
 const LogisticContactFormPage = () => {
   const [formData, setFormData] = useState({
@@ -56,12 +57,13 @@ const LogisticContactFormPage = () => {
         </div>
 
         {/* Header */}
-        <CardHeader className="bg-gradient-to-r from-green-800 to-green-600 p-6 relative overflow-hidden">
+        <CardHeader className="bg-gradient-to-r from-green-800 to-green-600 p-0 relative overflow-hidden">
           {/* Pattern */}
-          <div className="absolute inset-0 opacity-10 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSIjZmZmIiBmaWxsLW9wYWNpdHk9IjAuNiI+PHBhdGggZD0iTTM2IDM0QzM2IDMxLjggMzcuOCAzMCA0MCAzMFM0NCAzMS44IDQ0IDM0QzQ0IDM2LjIgNDIuMiAzOCA0MCAzOFM0MCAzNi4yIDQwIDM0WiIvPjwvZz48L3N2Zz4=')]"></div>
-          <CardTitle className="text-3xl font-bold text-white text-center relative z-10">Contact Our Logistics Team</CardTitle>
-          <p className="text-green-100 text-center mt-2 relative z-10">We’re here to help you move forward</p>
-        </CardHeader>
+          <AnimatedCityscape>
+            <CardTitle className="text-2xl font-bold text-white text-center relative z-10">Contact Our Logistics Team</CardTitle>
+            <p className="text-green-100 text-center mt-2 relative z-10">We’re here to help you move forward</p>
+          </AnimatedCityscape>
+          </CardHeader>
 
         <CardContent className="p-8">
           {submitSuccess ? (
