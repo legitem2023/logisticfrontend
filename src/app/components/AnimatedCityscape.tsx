@@ -183,7 +183,7 @@ function BuildingsRow({
                     "h-2 w-2",
                     // Weaker light for all windows
                     Math.random() > 0.6
-                      ? "bg-yellow-600 opacity-60 shadow-[0_0_2px_rgba(255,255,200,0.4)]"
+                      ? "bg-yellow-500 opacity-100 shadow-[0_0_2px_rgba(255,255,200,0.9)]"
                       : "bg-emerald-900"
                   )}
                 />
