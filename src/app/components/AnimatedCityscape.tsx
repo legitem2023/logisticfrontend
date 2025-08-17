@@ -65,7 +65,7 @@ export default function AnimatedCityScape({
       />
 
       {/* Moving Trees - both sides */}
-      <div className="absolute bottom-6 left-0 right-0 h-8">
+      <div className="absolute bottom-1 left-0 right-0 h-8">
         {/* Left side trees - 30% faster than near buildings (25s * 0.7 = 17.5s) */}
         <div className={clsx("absolute left-0 top-0 w-full", "animate-[scrollX_17.5s_linear_infinite]")}>
           <div className="flex w-[200%]">
