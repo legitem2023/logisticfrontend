@@ -174,30 +174,21 @@ function BuildingsRow({
             )}
             style={{ height: `${h}px` }}
           >
-            {/* Windows */}
-            {detailLevel === "near" ? (
-              <div className="absolute inset-0 grid grid-cols-3 gap-0.8 p-1">
-                {Array.from({ length: Math.floor(h / 12) * 3 }).map((_, w) => (
-                  <div
-                    key={w}
-                    className={clsx(
-                      "h-2 w-2",
-                      Math.random() > 0.6
-                        ? "bg-yellow-500 shadow-[0_0_4px_rgba(255,255,200,0.8)]"
-                        : "bg-emerald-900"
-                    )}
-                  />
-                ))}
-              </div>
-            ) : (
-              <div
-                className="absolute inset-0 opacity-20"
-                style={{
-                  backgroundImage:
-                    "repeating-linear-gradient(transparent, transparent 12px, rgba(255,255,200,0.3) 12px, rgba(255,255,200,0.3) 14px)",
-                }}
-              />
-            )}
+            {/* Windows - all layers use individual windows with weaker light */}
+            <div className="absolute inset-0 grid grid-cols-3 gap-0.8 p-1">
+              {Array.from({ length: Math.floor(h / 12) * 3 }).map((_, w) => (
+                <div
+                  key={w}
+                  className={clsx(
+                    "h-2 w-2",
+                    // Weaker light for all windows
+                    Math.random() > 0.6
+                      ? "bg-yellow-600 opacity-60 shadow-[0_0_2px_rgba(255,255,200,0.4)]"
+                      : "bg-emerald-900"
+                  )}
+                />
+              ))}
+            </div>
           </div>
 
           {/* Antennas */}
@@ -216,7 +207,7 @@ function BuildingsRow({
 function Tree() {
   return (
     <div className="relative w-1 h-6">
-      <div className="absolute bottom-0 left-0.5 w-0.5 h-1.5 bg-lime-950"></div>
+      <div className="absolute bottom-0 left-1 w-0.5 h-1.5 bg-lime-950"></div>
       <div className="absolute bottom-1.5 left-0 w-3 h-3 rounded-full bg-lime-950"></div>
     </div>
   );
