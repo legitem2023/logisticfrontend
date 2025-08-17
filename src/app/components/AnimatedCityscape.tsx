@@ -3,7 +3,7 @@
 import React from "react";
 import clsx from "clsx";
 
-export default function AnimatedCityscape({
+export default function AnimatedCityScape({
   className,
   children,
 }: {
@@ -19,7 +19,25 @@ export default function AnimatedCityscape({
         className
       )}
     >
-      {/* FAR skyline (very faint, fewer buildings) */}
+      {/* STAR FIELD */}
+      <div className="absolute inset-0">
+        {Array.from({ length: 40 }).map((_, i) => (
+          <div
+            key={i}
+            className="absolute rounded-full bg-white"
+            style={{
+              top: `${Math.random() * 100}%`,
+              left: `${Math.random() * 100}%`,
+              width: "2px",
+              height: "2px",
+              opacity: Math.random() * 0.8 + 0.2,
+              animation: `twinkle ${2 + Math.random() * 3}s infinite alternate`,
+            }}
+          />
+        ))}
+      </div>
+
+      {/* FAR skyline */}
       <ParallaxStrip
         className="bottom-28 opacity-40"
         speedClass="animate-[scrollX_70s_linear_infinite]"
@@ -35,7 +53,7 @@ export default function AnimatedCityscape({
         heights={[110, 130, 120, 140]}
       />
 
-      {/* NEAR skyline (darkest, fewer but taller) */}
+      {/* NEAR skyline */}
       <ParallaxStrip
         className="bottom-6 opacity-100"
         speedClass="animate-[scrollX_25s_linear_infinite]"
@@ -54,6 +72,7 @@ export default function AnimatedCityscape({
         </div>
       </div>
 
+      {/* Keyframes */}
       <style jsx global>{`
         @keyframes scrollX {
           from {
@@ -61,6 +80,14 @@ export default function AnimatedCityscape({
           }
           to {
             transform: translateX(-50%);
+          }
+        }
+        @keyframes twinkle {
+          from {
+            opacity: 0.2;
+          }
+          to {
+            opacity: 1;
           }
         }
       `}</style>
@@ -112,13 +139,27 @@ function BuildingsRow({
     <div className="flex w-1/2 items-end gap-8 px-6">
       {heights.map((h, i) => (
         <div key={`${h}-${i}`} className="relative flex items-end">
+          {/* Building */}
           <div
             className={clsx(
               "relative w-14 rounded-t-sm bg-gradient-to-b shadow-md",
               buildingTone
             )}
             style={{ height: `${h}px` }}
-          />
+          >
+            {/* Windows */}
+            <div
+              className="absolute inset-0"
+              style={{
+                backgroundImage:
+                  "repeating-linear-gradient(transparent, transparent 18px, rgba(255,255,200,0.8) 18px, rgba(255,255,200,0.8) 20px)",
+                backgroundSize: "100% 20px",
+                opacity: 0.2,
+              }}
+            />
+          </div>
+
+          {/* Antennas */}
           {hasAntennas && i % 2 === 0 && (
             <div className="absolute -top-6 left-1/2 h-6 w-[2px] -translate-x-1/2 bg-green-300/70">
               <div className="absolute -top-1 left-1/2 h-2 w-2 -translate-x-1/2 rounded-full bg-green-200/90" />
