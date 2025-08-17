@@ -64,14 +64,8 @@ const SenderSignupForm = () => {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-green-100 p-1">
       <div className="max-w-2xl w-full mx-auto transform transition-all duration-300">
         <Card className="shadow-xl border border-green-100 overflow-hidden relative group bg-white">
-          {/* Premium badge */}
-          <div className="absolute -top-2 -right-2 bg-green-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg transform rotate-12 z-10">
-            PRO
-          </div>
-
-          {/* Glow effect */}
-          <div className="absolute inset-0 bg-gradient-to-r from-green-400/10 to-green-600/10 opacity-0 transition-opacity duration-500 rounded-xl pointer-events-none"></div>
-
+        
+          
           <CardHeader className="bg-gradient-to-r from-green-800 to-green-600 p-0 relative overflow-hidden">
            <AnimatedCityscape>
             <h2 className="text-2xl font-bold text-white text-center relative z-10">
