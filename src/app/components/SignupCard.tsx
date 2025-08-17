@@ -7,6 +7,8 @@ import { Card, CardContent, CardHeader } from "./ui/Card";
 import { Select } from "./ui/Select";
 import { useMutation, useQuery } from "@apollo/client";
 import { VEHICLEQUERY } from "../../../graphql/query";
+import AnimatedCityscape from './AnimatedCityscape';
+
 import { CREATERIDER } from "../../../graphql/mutation";
 import { showToast } from "../../../utils/toastify";
 import {
@@ -111,13 +113,15 @@ const SignupCard = () => {
           </div>
 
           {/* Header */}
-          <CardHeader className="bg-gradient-to-r from-green-800 to-green-600 p-6 relative overflow-hidden">
-            <h2 className="text-3xl font-bold text-white text-center relative z-10">
+          <CardHeader className="bg-gradient-to-r from-green-800 to-green-600 p-0 relative overflow-hidden">
+            <AnimatedCityscape>
+            <h2 className="text-2xl font-bold text-white text-center relative z-10">
               Professional Driver Registration
             </h2>
             <p className="text-green-100 text-center mt-2 relative z-10">
               Join our network of trusted drivers
             </p>
+              </AnimatedCityscape>
           </CardHeader>
 
           <CardContent className="p-8 bg-white">
