@@ -36,6 +36,16 @@ export default function AnimatedCityScape({
         ))}
       </div>
 
+
+    {/* GLOWING MOON - Added this section */}
+      <div className="absolute top-6 right-6 w-12 h-12">
+        <div className="absolute inset-0 rounded-full bg-gradient-to-b from-yellow-100 to-yellow-300"></div>
+        <div className="absolute inset-0 rounded-full bg-yellow-200/30 animate-ping" style={{ animationDuration: '5s' }}></div>
+        <div className="absolute inset-0 rounded-full shadow-[0_0_25px_10px_rgba(255,255,200,0.4)]"></div>
+      </div>
+
+
+      
       {/* FAR skyline */}
       <ParallaxStrip
         className="bottom-2 opacity-100"
