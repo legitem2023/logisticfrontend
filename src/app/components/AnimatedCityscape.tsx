@@ -38,7 +38,7 @@ export default function AnimatedCityScape({
 
       {/* FAR skyline */}
       <ParallaxStrip
-        className="bottom-14 opacity-40"
+        className="bottom-2 opacity-100"
         speedClass="animate-[scrollX_70s_linear_infinite]"
         buildingTone="from-green-800 to-green-700"
         heights={[30, 40, 35, 45]} // shrunk
@@ -47,7 +47,7 @@ export default function AnimatedCityScape({
 
       {/* MID skyline */}
       <ParallaxStrip
-        className="bottom-8 opacity-70"
+        className="bottom-2 opacity-100"
         speedClass="animate-[scrollX_45s_linear_infinite]"
         buildingTone="from-green-900 to-green-800"
         heights={[50, 60, 55, 65]} // shrunk
