@@ -5,6 +5,8 @@ import { Input } from "./ui/Input";
 import { Label } from "./ui/Label";
 import { Card, CardContent, CardHeader } from "./ui/Card";
 import { useMutation } from "@apollo/client";
+import AnimatedCityscape from './AnimatedCityscape';
+
 import { CREATERIDER } from "../../../graphql/mutation";
 import { showToast } from "../../../utils/toastify";
 import {
@@ -70,13 +72,15 @@ const SenderSignupForm = () => {
           {/* Glow effect */}
           <div className="absolute inset-0 bg-gradient-to-r from-green-400/10 to-green-600/10 opacity-0 transition-opacity duration-500 rounded-xl pointer-events-none"></div>
 
-          <CardHeader className="bg-gradient-to-r from-green-800 to-green-600 p-6 relative overflow-hidden">
-            <h2 className="text-3xl font-bold text-white text-center relative z-10">
+          <CardHeader className="bg-gradient-to-r from-green-800 to-green-600 p-0 relative overflow-hidden">
+           <AnimatedCityscape>
+            <h2 className="text-2xl font-bold text-white text-center relative z-10">
               Sender Registration
             </h2>
             <p className="text-green-100 text-center mt-2 relative z-10">
               Start shipping with ease
             </p>
+             </AnimatedCityscape>
           </CardHeader>
 
           <CardContent className="p-8 bg-white">
