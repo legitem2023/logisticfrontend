@@ -3,7 +3,7 @@ import { Icon } from '@iconify/react';
 import { showToast } from '../../../../utils/toastify';
 import { getDistanceInKm } from '../../../../utils/getDistanceInKm';
 import { calculateEta } from '../../../../utils/calculateEta';
-
+import AnimatedCityscape from '../AnimatedCityscape';
 import { useState, useEffect, useRef } from 'react';
 import { useMutation, useQuery } from '@apollo/client';
 import { VEHICLEQUERY } from '../../../../graphql/query';
@@ -457,12 +457,14 @@ const LogisticsForm = () => {
   return (
     <div className="w-[100%] mx-auto">
       <div className="bg-white shadow-xl overflow-hidden">
-        <div className="bg-green-600 customgrad p-6 text-white">
+        <div className="bg-green-600 customgrad text-white">
+          <AnimatedCityscape>
           <h1 className="text-2xl md:text-3xl font-bold flex items-center">
             <Truck className="h-8 w-8 mr-3" />
             Express Delivery Service
           </h1>
           <p className="mt-2 opacity-90">Fast and reliable logistics solutions</p>
+          </AnimatedCityscape>
         </div>
 
         <form onSubmit={handleSubmit} className="p-2">
