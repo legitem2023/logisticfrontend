@@ -59,14 +59,11 @@ export default function LoginCard() {
           {/* Pattern */}
           {/* <div className="absolute inset-0 opacity-10 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSIjZmZmIiBmaWxsLW9wYWNpdHk9IjAuNiI+PHBhdGggZD0iTTM2IDM0QzM2IDMxLjggMzcuOCAzMCA0MCAzMFM0NCAzMS44IDQ0IDM0QzQ0IDM2LjIgNDIuMiAzOCA0MCAzOFM0MCAzNi4yIDQwIDM0WiIvPjwvZz48L3N2Zz4=')]"></div>
           */}
-<AnimatedCityscape/>
-
-          
-      
+      <AnimatedCityscape>
           <CardTitle className="text-3xl font-bold text-white text-center relative z-10">Welcome Back</CardTitle>
           <p className="text-green-100 text-center mt-2 relative z-10">Sign in to your account</p>
-        </CardHeader>
-
+          </CardHeader>
+      </AnimatedCityscape>
         {/* Form */}
         <CardContent className="p-8 space-y-6">
           {/* Email */}
