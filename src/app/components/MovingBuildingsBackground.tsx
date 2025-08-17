@@ -1,7 +1,7 @@
 import React from 'react';
 
 const MovingBuildingsBackground = () => {
-  // Generate building data with premium color scheme
+  // Generate building data with adjusted color scheme
   const generateBuildings = (count, sizeRange, speedRange, heightRange, distance) => {
     return Array.from({ length: count }).map((_, i) => ({
       id: i,
@@ -9,54 +9,58 @@ const MovingBuildingsBackground = () => {
       height: `${heightRange.min + Math.random() * heightRange.range}%`,
       speed: speedRange.min + Math.random() * speedRange.range,
       delay: Math.random() * 10,
-      color: `hsl(${120 + Math.random() * 30}, ${60 + Math.random() * 20}%, ${15 + Math.random() * 10}%)`,
+      // Lighter color scheme based on distance
+      color: `hsl(${120 + Math.random() * 30}, ${50 + Math.random() * 20}%, ${
+        distance === 'close' ? 40 + Math.random() * 20 : 
+        distance === 'medium' ? 30 + Math.random() * 15 : 
+        20 + Math.random() * 10}%)`,
       windowColor: Math.random() > 0.7 ? 'bg-amber-200' : 'bg-green-900/50',
       windows: Math.floor(3 + Math.random() * 5),
       distance: distance,
-      startPos: Math.random() * 100
+      startPos: Math.random() * 120 - 20 // Some buildings start partially offscreen
     }));
   };
 
-  // Three layers of buildings with distance-based properties
-  const fastBuildings = generateBuildings(12, {min: 3, range: 5}, {min: 2, range: 3}, {min: 30, range: 50}, 'close');
-  const mediumBuildings = generateBuildings(10, {min: 5, range: 8}, {min: 1, range: 1.5}, {min: 40, range: 60}, 'medium');
-  const slowBuildings = generateBuildings(6, {min: 8, range: 12}, {min: 0.5, range: 0.7}, {min: 50, range: 70}, 'far');
+  // Three layers of buildings with adjusted parameters
+  const fastBuildings = generateBuildings(8, {min: 5, range: 8}, {min: 3, range: 2}, {min: 60, range: 15}, 'close');
+  const mediumBuildings = generateBuildings(6, {min: 7, range: 10}, {min: 5, range: 3}, {min: 50, range: 20}, 'medium');
+  const slowBuildings = generateBuildings(4, {min: 10, range: 15}, {min: 8, range: 4}, {min: 40, range: 25}, 'far');
 
   return (
-    <div className="absolute top-0 left-0 w-full h-64 overflow-hidden bg-gradient-to-b from-green-900 to-green-700 perspective-1000">
+    <div className="absolute top-0 left-0 w-full h-full overflow-hidden bg-gradient-to-b from-green-900 to-green-700">
       {/* Animated gradient overlay */}
       <div className="absolute inset-0 bg-gradient-to-r from-green-900/30 via-green-800/10 to-green-900/30 animate-pulse-slow"></div>
       
       {/* Buildings container */}
       <div className="absolute bottom-0 left-0 w-full h-full">
-        {/* Fast buildings (closest) */}
+        {/* Slow buildings (farthest) */}
         <div className="absolute bottom-0 left-0 w-full h-full">
-          {fastBuildings.map((building) => (
+          {slowBuildings.map((building) => (
             <div
-              key={`fast-${building.id}`}
+              key={`slow-${building.id}`}
               className="absolute bottom-0 h-full origin-bottom"
               style={{
                 left: `${building.startPos}%`,
                 width: building.width,
-                transform: `translateX(${building.startPos}%) scale(${building.distance === 'close' ? 1 : building.distance === 'medium' ? 0.8 : 0.6})`,
                 animation: `moveBuilding ${building.speed}s linear infinite`,
                 animationDelay: `${building.delay}s`,
-                zIndex: building.distance === 'close' ? 30 : building.distance === 'medium' ? 20 : 10
+                zIndex: 10,
+                height: `${building.height}%`
               }}
             >
               <div
                 className="w-full h-full relative"
                 style={{
-                  height: building.height,
+                  height: '100%',
                   backgroundColor: building.color,
-                  boxShadow: 'inset 0 -5px 10px rgba(0,0,0,0.3)',
-                  transform: `scaleX(${Math.random() > 0.5 ? 1 : -1})` // Random mirroring for variety
+                  boxShadow: 'inset 0 -15px 20px rgba(0,0,0,0.3)',
+                  transform: `scaleX(${Math.random() > 0.5 ? 1 : -1})`
                 }}
               >
-                <div className="absolute inset-0 grid grid-cols-3 gap-1 p-1">
+                <div className="absolute inset-0 grid grid-cols-4 gap-1 p-2">
                   {Array.from({ length: building.windows * 8 }).map((_, i) => (
                     <div
-                      key={`window-fast-${building.id}-${i}`}
+                      key={`window-slow-${building.id}-${i}`}
                       className={`h-2 ${building.windowColor}`}
                     />
                   ))}
@@ -75,23 +79,23 @@ const MovingBuildingsBackground = () => {
               style={{
                 left: `${building.startPos}%`,
                 width: building.width,
-                transform: `translateX(${building.startPos}%) scale(${building.distance === 'close' ? 1 : building.distance === 'medium' ? 0.8 : 0.6})`,
                 animation: `moveBuilding ${building.speed}s linear infinite`,
                 animationDelay: `${building.delay}s`,
-                zIndex: building.distance === 'close' ? 30 : building.distance === 'medium' ? 20 : 10
+                zIndex: 20,
+                height: `${building.height}%`
               }}
             >
               <div
                 className="w-full h-full relative"
                 style={{
-                  height: building.height,
+                  height: '100%',
                   backgroundColor: building.color,
                   boxShadow: 'inset 0 -10px 15px rgba(0,0,0,0.3)',
                   transform: `scaleX(${Math.random() > 0.5 ? 1 : -1})`
                 }}
               >
                 <div className="absolute inset-0 grid grid-cols-4 gap-1 p-2">
-                  {Array.from({ length: building.windows * 12 }).map((_, i) => (
+                  {Array.from({ length: building.windows * 10 }).map((_, i) => (
                     <div
                       key={`window-medium-${building.id}-${i}`}
                       className={`h-3 ${building.windowColor}`}
@@ -103,34 +107,34 @@ const MovingBuildingsBackground = () => {
           ))}
         </div>
 
-        {/* Slow buildings (farthest) */}
+        {/* Fast buildings (closest) - now 3/4 of screen height */}
         <div className="absolute bottom-0 left-0 w-full h-full">
-          {slowBuildings.map((building) => (
+          {fastBuildings.map((building) => (
             <div
-              key={`slow-${building.id}`}
+              key={`fast-${building.id}`}
               className="absolute bottom-0 h-full origin-bottom"
               style={{
                 left: `${building.startPos}%`,
                 width: building.width,
-                transform: `translateX(${building.startPos}%) scale(${building.distance === 'close' ? 1 : building.distance === 'medium' ? 0.8 : 0.6})`,
                 animation: `moveBuilding ${building.speed}s linear infinite`,
                 animationDelay: `${building.delay}s`,
-                zIndex: building.distance === 'close' ? 30 : building.distance === 'medium' ? 20 : 10
+                zIndex: 30,
+                height: `${building.height}%`
               }}
             >
               <div
                 className="w-full h-full relative"
                 style={{
-                  height: building.height,
+                  height: '75%', // 3/4 of screen height
                   backgroundColor: building.color,
-                  boxShadow: 'inset 0 -15px 20px rgba(0,0,0,0.3)',
+                  boxShadow: 'inset 0 -5px 10px rgba(0,0,0,0.3)',
                   transform: `scaleX(${Math.random() > 0.5 ? 1 : -1})`
                 }}
               >
-                <div className="absolute inset-0 grid grid-cols-5 gap-2 p-3">
-                  {Array.from({ length: building.windows * 15 }).map((_, i) => (
+                <div className="absolute inset-0 grid grid-cols-5 gap-1 p-2">
+                  {Array.from({ length: building.windows * 12 }).map((_, i) => (
                     <div
-                      key={`window-slow-${building.id}-${i}`}
+                      key={`window-fast-${building.id}-${i}`}
                       className={`h-4 ${building.windowColor}`}
                     />
                   ))}
@@ -142,13 +146,14 @@ const MovingBuildingsBackground = () => {
       </div>
 
       {/* Road lines for better motion perception */}
-      <div className="absolute bottom-0 left-0 w-full h-4 flex items-center">
-        <div className="absolute bottom-0 left-0 w-full h-1 bg-yellow-300 animate-road-line"></div>
+      <div className="absolute bottom-0 left-0 w-full h-6 flex items-center">
+        <div className="absolute bottom-1 left-0 w-full h-1 bg-yellow-300 animate-road-line"></div>
+        <div className="absolute bottom-3 left-0 w-full h-1 bg-yellow-300 animate-road-line" style={{ animationDelay: '0.25s' }}></div>
       </div>
 
-      {/* Glowing elements for premium feel */}
+      {/* Glowing elements */}
       <div className="absolute inset-0 overflow-hidden">
-        {Array.from({ length: 8 }).map((_, i) => (
+        {Array.from({ length: 5 }).map((_, i) => (
           <div
             key={`glow-${i}`}
             className="absolute rounded-full bg-amber-200/20 blur-md"
@@ -167,24 +172,24 @@ const MovingBuildingsBackground = () => {
       <style jsx global>{`
         @keyframes moveBuilding {
           0% {
-            transform: translateX(100vw) scale(var(--building-scale, 1));
+            transform: translateX(100vw);
           }
           100% {
-            transform: translateX(-30vw) scale(var(--building-scale, 1));
+            transform: translateX(-30vw);
           }
         }
         
         @keyframes road-line {
           0% {
-            transform: translateX(0) scaleX(0.5);
+            transform: translateX(0);
           }
           100% {
-            transform: translateX(-100%) scaleX(0.5);
+            transform: translateX(-100%);
           }
         }
         
         .animate-road-line {
-          animation: road-line 0.5s linear infinite;
+          animation: road-line 0.8s linear infinite;
         }
         
         @keyframes pulse-slow {
@@ -209,10 +214,6 @@ const MovingBuildingsBackground = () => {
         
         .animate-pulse-slow {
           animation: pulse-slow 8s ease-in-out infinite;
-        }
-        
-        .perspective-1000 {
-          perspective: 1000px;
         }
       `}</style>
     </div>
