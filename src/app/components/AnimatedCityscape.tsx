@@ -43,6 +43,7 @@ export default function AnimatedCityScape({
         speedClass="animate-[scrollX_70s_linear_infinite]"
         buildingTone="from-green-800 to-green-700"
         heights={[70, 90, 80, 100]}
+        detailLevel="far"
       />
 
       {/* MID skyline */}
@@ -51,6 +52,7 @@ export default function AnimatedCityScape({
         speedClass="animate-[scrollX_45s_linear_infinite]"
         buildingTone="from-green-900 to-green-800"
         heights={[110, 130, 120, 140]}
+        detailLevel="mid"
       />
 
       {/* NEAR skyline */}
@@ -60,6 +62,7 @@ export default function AnimatedCityScape({
         buildingTone="from-green-950 to-green-900"
         heights={[160, 190, 170, 200]}
         hasAntennas
+        detailLevel="near"
       />
 
       {/* Ground */}
@@ -101,12 +104,14 @@ function ParallaxStrip({
   buildingTone,
   heights,
   hasAntennas = false,
+  detailLevel,
 }: {
   className?: string;
   speedClass: string;
   buildingTone: string;
   heights: number[];
   hasAntennas?: boolean;
+  detailLevel: "far" | "mid" | "near";
 }) {
   return (
     <div className={clsx("absolute left-0 right-0", className)}>
@@ -115,11 +120,13 @@ function ParallaxStrip({
           buildingTone={buildingTone}
           heights={heights}
           hasAntennas={hasAntennas}
+          detailLevel={detailLevel}
         />
         <BuildingsRow
           buildingTone={buildingTone}
           heights={heights}
           hasAntennas={hasAntennas}
+          detailLevel={detailLevel}
         />
       </div>
     </div>
@@ -130,33 +137,49 @@ function BuildingsRow({
   buildingTone,
   heights,
   hasAntennas,
+  detailLevel,
 }: {
   buildingTone: string;
   heights: number[];
   hasAntennas?: boolean;
+  detailLevel: "far" | "mid" | "near";
 }) {
   return (
-    <div className="flex w-full items-end aspect-[3/1]">
+    <div className="flex w-1/2 items-end gap-8 px-6">
       {heights.map((h, i) => (
         <div key={`${h}-${i}`} className="relative flex items-end">
           {/* Building */}
           <div
             className={clsx(
-              "relative w-14 bg-gradient-to-b shadow-md",
+              "relative w-14 rounded-t-sm bg-gradient-to-b shadow-md overflow-hidden",
               buildingTone
             )}
             style={{ height: `${h}px` }}
           >
             {/* Windows */}
-            <div
-              className="absolute inset-0"
-              style={{
-                backgroundImage:
-                  "repeating-linear-gradient(transparent, transparent 18px, rgba(255,255,200,0.8) 18px, rgba(255,255,200,0.8) 20px)",
-                backgroundSize: "100% 20px",
-                opacity: 0.2,
-              }}
-            />
+            {detailLevel === "near" ? (
+              <div className="absolute inset-0 grid grid-cols-2 gap-1 p-1">
+                {Array.from({ length: Math.floor(h / 15) * 2 }).map((_, w) => (
+                  <div
+                    key={w}
+                    className={clsx(
+                      "h-2 w-4 rounded-sm",
+                      Math.random() > 0.6
+                        ? "bg-yellow-300 shadow-[0_0_6px_rgba(255,255,200,0.8)]"
+                        : "bg-transparent"
+                    )}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div
+                className="absolute inset-0 opacity-20"
+                style={{
+                  backgroundImage:
+                    "repeating-linear-gradient(transparent, transparent 18px, rgba(255,255,200,0.4) 18px, rgba(255,255,200,0.4) 20px)",
+                }}
+              />
+            )}
           </div>
 
           {/* Antennas */}
