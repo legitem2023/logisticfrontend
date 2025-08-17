@@ -59,7 +59,7 @@ export default function AnimatedCityScape({
         className="bottom-2 opacity-100"
         speedClass="animate-[scrollX_25s_linear_infinite]"
         buildingTone="from-green-950 to-green-900"
-        heights={[70, 85, 75, 90]} // shrunk
+        heights={[60, 75, 65, 90]} // shrunk
         hasAntennas
         detailLevel="near"
       />
@@ -69,7 +69,7 @@ export default function AnimatedCityScape({
 
       {/* Content overlay */}
       <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-        <div className="pointer-events-auto rounded-2xl bg-white/10 px-6 py-3 text-white">
+        <div className="pointer-events-auto px-6 py-3 text-white">
           {children}
         </div>
       </div>
