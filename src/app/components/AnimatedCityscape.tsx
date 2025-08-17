@@ -7,6 +7,11 @@ const AnimatedCityscape = ({ theme = 'night', speed = 1 }: { theme?: 'night' | '
   const starsRef = useRef<HTMLDivElement>(null);
   const carsRef = useRef<(HTMLDivElement | null)[]>([]);
 
+  // Initialize carsRef with null values
+  useEffect(() => {
+    carsRef.current = carsRef.current.slice(0, 8).map((_, i) => carsRef.current[i] || null);
+  }, []);
+
   // Set up animations
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -143,7 +148,11 @@ const AnimatedCityscape = ({ theme = 'night', speed = 1 }: { theme?: 'night' | '
       cars.push(
         <div
           key={`car-${i}`}
-          ref={el => carsRef.current[i] = el}
+          ref={(el) => {
+            if (el) {
+              carsRef.current[i] = el;
+            }
+          }}
           className="car absolute rounded z-20"
           style={{
             bottom: `${Math.random() * 30 + 10}px`,
