@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
+import AnimatedCityscape from './AnimatedCityscape';
 
 export default function LogisticsFAQPage() {
   const [activeCategory, setActiveCategory] = useState('all');
@@ -47,11 +48,12 @@ export default function LogisticsFAQPage() {
       <div className="max-w-5xl mx-auto shadow-xl border border-green-100 overflow-hidden">
         
         {/* Header */}
-        <div className="bg-gradient-to-r from-green-800 to-green-600 p-8 relative">
+        <div className="bg-gradient-to-r from-green-800 to-green-600 p-0 relative">
           {/* Pattern overlay */}
-          <div className="absolute inset-0 opacity-10 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGc+PHJlY3Qgd2lkdGg9IjYwIiBoZWlnaHQ9IjYwIiBmaWxsPSIjZmZmIi8+PC9nPjwvc3ZnPg==')]"></div>
-          <h2 className="text-3xl font-bold text-white text-center relative z-10">Logistics FAQ</h2>
+          <AnimatedCityscape>
+          <h2 className="text-2xl font-bold text-white text-center relative z-10">Frequently Asked Questions</h2>
           <p className="text-green-100 text-center mt-2 relative z-10">Find quick answers to our most common questions</p>
+          </AnimatedCityscape>
         </div>
 
         <div className="p-8 bg-white">
