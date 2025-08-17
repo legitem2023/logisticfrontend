@@ -1,164 +1,191 @@
-import React from 'react';
+// components/CityscapeHeader.tsx
+"use client";
 
-const MovingBuildingsBackground = () => {
-  // Building generator with better distance parameters
-  const generateBuildings = (count, layer) => {
-    const layers = {
-      far: {
-        width: () => `${4 + Math.random() * 8}%`,
-        height: () => `${30 + Math.random() * 30}%`,
-        speed: 30 + Math.random() * 20,
-        lightness: 20 + Math.random() * 10,
-        windows: 2 + Math.floor(Math.random() * 3)
-      },
-      mid: {
-        width: () => `${6 + Math.random() * 10}%`,
-        height: () => `${50 + Math.random() * 30}%`,
-        speed: 15 + Math.random() * 10,
-        lightness: 30 + Math.random() * 15,
-        windows: 3 + Math.floor(Math.random() * 4)
-      },
-      near: {
-        width: () => `${8 + Math.random() * 12}%`,
-        height: () => `${70 + Math.random() * 20}%`,
-        speed: 8 + Math.random() * 5,
-        lightness: 40 + Math.random() * 20,
-        windows: 4 + Math.floor(Math.random() * 5)
+import { useEffect, useRef } from 'react';
+
+interface Building {
+  x: number;
+  width: number;
+  height: number;
+  windows: { x: number; y: number }[];
+  color: string;
+}
+
+interface Star {
+  x: number;
+  y: number;
+  radius: number;
+  opacity: number;
+  speed: number;
+}
+
+export default function MovingBuildingsBackground {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    // Initialize canvas
+    const resizeCanvas = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = 250; // Header height
+    };
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    // City generation
+    const createBuildings = (): Building[] => {
+      const buildings: Building[] = [];
+      const buildingCount = 15 + Math.floor(Math.random() * 10);
+      let currentX = 0;
+
+      for (let i = 0; i < buildingCount; i++) {
+        const width = 50 + Math.random() * 120;
+        const height = 100 + Math.random() * 150;
+        const windowRows = Math.floor(height / 30);
+        const windowCols = Math.floor(width / 20);
+        const windows = [];
+
+        for (let row = 0; row < windowRows; row++) {
+          for (let col = 0; col < windowCols; col++) {
+            if (Math.random() > 0.7) { // 30% chance of window
+              windows.push({
+                x: col * 20 + 10,
+                y: row * 30 + 15
+              });
+            }
+          }
+        }
+
+        buildings.push({
+          x: currentX,
+          width,
+          height,
+          windows,
+          color: `hsl(${200 + Math.random() * 40}, 70%, ${20 + Math.random() * 15}%)`
+        });
+
+        currentX += width + (Math.random() * 30);
+      }
+
+      return buildings;
+    };
+
+    const createStars = (): Star[] => {
+      const stars: Star[] = [];
+      for (let i = 0; i < 100; i++) {
+        stars.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * (canvas.height * 0.4),
+          radius: Math.random() * 1.5,
+          opacity: Math.random() * 0.8 + 0.2,
+          speed: Math.random() * 0.02
+        });
+      }
+      return stars;
+    };
+
+    // Drawing functions
+    const drawSky = (time: number) => {
+      const dawnProgress = (Math.sin(time * 0.3) + 1) / 2; // 0-1 loop
+      
+      const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+      gradient.addColorStop(0, `hsl(240, 70%, ${10 + dawnProgress * 10}%)`);
+      gradient.addColorStop(1, `hsl(${300 + dawnProgress * 60}, 80%, ${20 + dawnProgress * 30}%)`);
+      
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+    };
+
+    const drawBuildings = (buildings: Building[]) => {
+      buildings.forEach(building => {
+        ctx.fillStyle = building.color;
+        ctx.fillRect(building.x, canvas.height - building.height, building.width, building.height);
+      });
+    };
+
+    const drawWindows = (buildings: Building[], time: number) => {
+      buildings.forEach(building => {
+        building.windows.forEach(window => {
+          // Random flicker effect
+          const isLightOn = Math.random() > 0.1 || Math.sin(time * 2 + window.x) > 0.7;
+          
+          if (isLightOn) {
+            ctx.fillStyle = `hsla(60, 100%, 80%, ${0.7 + Math.sin(time * 5 + window.x) * 0.3})`;
+            ctx.fillRect(
+              building.x + window.x - 3,
+              canvas.height - building.height + window.y - 3,
+              6,
+              6
+            );
+          }
+        });
+      });
+    };
+
+    const drawStars = (stars: Star[], time: number) => {
+      ctx.fillStyle = 'white';
+      stars.forEach(star => {
+        const twinkle = Math.sin(time * star.speed) * 0.5 + 0.5;
+        ctx.globalAlpha = star.opacity * twinkle;
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+        ctx.fill();
+      });
+      ctx.globalAlpha = 1;
+    };
+
+    const drawLightRays = (time: number) => {
+      const dawnProgress = (Math.sin(time * 0.3) + 1) / 2;
+      if (dawnProgress > 0.5) {
+        const gradient = ctx.createLinearGradient(
+          canvas.width * 0.7, 0,
+          canvas.width * 0.7 + 200, 0
+        );
+        gradient.addColorStop(0, `hsla(40, 100%, 70%, ${(dawnProgress - 0.5) * 0.4})`);
+        gradient.addColorStop(1, 'hsla(40, 100%, 70%, 0)');
+        
+        ctx.fillStyle = gradient;
+        ctx.fillRect(canvas.width * 0.7, 0, 200, canvas.height * 0.3);
       }
     };
 
-    return Array.from({ length: count }).map((_, i) => {
-      const config = layers[layer];
-      return {
-        id: i,
-        width: config.width(),
-        height: config.height(),
-        speed: config.speed,
-        lightness: config.lightness,
-        windows: config.windows,
-        position: Math.random() * 120 - 10,
-        hue: 120 + Math.random() * 30,
-        saturation: 50 + Math.random() * 20
-      };
-    });
-  };
+    // Initialize elements
+    const buildings = createBuildings();
+    const stars = createStars();
+    let animationFrameId: number;
+    let startTime: number | null = null;
 
-  const farBuildings = generateBuildings(6, 'far');
-  const midBuildings = generateBuildings(5, 'mid');
-  const nearBuildings = generateBuildings(4, 'near');
+    const animate = (timestamp: number) => {
+      if (!startTime) startTime = timestamp;
+      const elapsedTime = (timestamp - startTime) / 1000; // Convert to seconds
+
+      drawSky(elapsedTime);
+      drawStars(stars, elapsedTime);
+      drawBuildings(buildings);
+      drawWindows(buildings, elapsedTime);
+      drawLightRays(elapsedTime);
+
+      animationFrameId = requestAnimationFrame(animate);
+    };
+
+    animationFrameId = requestAnimationFrame(animate);
+
+    return () => {
+      cancelAnimationFrame(animationFrameId);
+      window.removeEventListener('resize', resizeCanvas);
+    };
+  }, []);
 
   return (
-    <div className="absolute top-0 left-0 w-full h-full overflow-hidden bg-gradient-to-b from-green-900 to-green-700">
-      {/* Sky gradient */}
-      <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-green-900/80 to-green-700/50"></div>
-      
-      {/* Buildings */}
-      <div className="absolute bottom-0 left-0 w-full h-full">
-        {/* Far buildings */}
-        {farBuildings.map((building) => (
-          <div
-            key={`far-${building.id}`}
-            className="absolute bottom-0 bg-green-800 border-t-4 border-green-900"
-            style={{
-              left: `${building.position}%`,
-              width: building.width,
-              height: building.height,
-              backgroundColor: `hsl(${building.hue}, ${building.saturation}%, ${building.lightness}%)`,
-              animation: `moveRight ${building.speed}s linear infinite`,
-              animationDelay: `${Math.random() * 10}s`,
-              zIndex: 10,
-              boxShadow: 'inset -5px 0 10px rgba(0,0,0,0.3)'
-            }}
-          >
-            <div className="absolute inset-0 grid grid-cols-3 gap-1 p-1">
-              {Array.from({ length: building.windows }).map((_, i) => (
-                <div 
-                  key={`window-far-${i}`}
-                  className={`h-2 ${Math.random() > 0.7 ? 'bg-amber-200' : 'bg-green-900/50'}`}
-                />
-              ))}
-            </div>
-          </div>
-        ))}
-
-        {/* Mid-distance buildings */}
-        {midBuildings.map((building) => (
-          <div
-            key={`mid-${building.id}`}
-            className="absolute bottom-0 bg-green-700 border-t-4 border-green-800"
-            style={{
-              left: `${building.position}%`,
-              width: building.width,
-              height: building.height,
-              backgroundColor: `hsl(${building.hue}, ${building.saturation}%, ${building.lightness}%)`,
-              animation: `moveRight ${building.speed}s linear infinite`,
-              animationDelay: `${Math.random() * 10}s`,
-              zIndex: 20,
-              boxShadow: 'inset -8px 0 15px rgba(0,0,0,0.3)'
-            }}
-          >
-            <div className="absolute inset-0 grid grid-cols-4 gap-1 p-2">
-              {Array.from({ length: building.windows }).map((_, i) => (
-                <div 
-                  key={`window-mid-${i}`}
-                  className={`h-3 ${Math.random() > 0.7 ? 'bg-amber-200' : 'bg-green-900/50'}`}
-                />
-              ))}
-            </div>
-          </div>
-        ))}
-
-        {/* Near buildings */}
-        {nearBuildings.map((building) => (
-          <div
-            key={`near-${building.id}`}
-            className="absolute bottom-0 bg-green-600 border-t-4 border-green-700"
-            style={{
-              left: `${building.position}%`,
-              width: building.width,
-              height: building.height,
-              backgroundColor: `hsl(${building.hue}, ${building.saturation}%, ${building.lightness}%)`,
-              animation: `moveRight ${building.speed}s linear infinite`,
-              animationDelay: `${Math.random() * 10}s`,
-              zIndex: 30,
-              boxShadow: 'inset -10px 0 20px rgba(0,0,0,0.3)'
-            }}
-          >
-            <div className="absolute inset-0 grid grid-cols-5 gap-2 p-2">
-              {Array.from({ length: building.windows }).map((_, i) => (
-                <div 
-                  key={`window-near-${i}`}
-                  className={`h-4 ${Math.random() > 0.7 ? 'bg-amber-200' : 'bg-green-900/50'}`}
-                />
-              ))}
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Ground plane */}
-      <div className="absolute bottom-0 left-0 w-full h-16 bg-gradient-to-t from-green-900 to-green-800 z-40"></div>
-
-      {/* Road markings */}
-      <div className="absolute bottom-12 left-0 w-full h-1 bg-yellow-400 animate-road-line z-40"></div>
-      <div className="absolute bottom-10 left-0 w-full h-1 bg-yellow-400 animate-road-line z-40" style={{ animationDelay: '0.3s' }}></div>
-
-      {/* Animation styles */}
-      <style jsx global>{`
-        @keyframes moveRight {
-          0% { transform: translateX(100vw); }
-          100% { transform: translateX(-30vw); }
-        }
-        @keyframes road-line {
-          0% { transform: translateX(0); }
-          100% { transform: translateX(-100%); }
-        }
-        .animate-road-line {
-          animation: road-line 1s linear infinite;
-        }
-      `}</style>
-    </div>
+    <canvas 
+      ref={canvasRef}
+      className="w-full h-[250px] bg-black"
+      aria-label="Animated cityscape header"
+    />
   );
-};
-
-export default MovingBuildingsBackground;
+                }
