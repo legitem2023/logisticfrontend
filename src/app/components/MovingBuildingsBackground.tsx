@@ -1,219 +1,160 @@
 import React from 'react';
 
 const MovingBuildingsBackground = () => {
-  // Generate building data with adjusted color scheme
-  const generateBuildings = (count, sizeRange, speedRange, heightRange, distance) => {
-    return Array.from({ length: count }).map((_, i) => ({
-      id: i,
-      width: `${sizeRange.min + Math.random() * sizeRange.range}%`,
-      height: `${heightRange.min + Math.random() * heightRange.range}%`,
-      speed: speedRange.min + Math.random() * speedRange.range,
-      delay: Math.random() * 10,
-      // Lighter color scheme based on distance
-      color: `hsl(${120 + Math.random() * 30}, ${50 + Math.random() * 20}%, ${
-        distance === 'close' ? 40 + Math.random() * 20 : 
-        distance === 'medium' ? 30 + Math.random() * 15 : 
-        20 + Math.random() * 10}%)`,
-      windowColor: Math.random() > 0.7 ? 'bg-amber-200' : 'bg-green-900/50',
-      windows: Math.floor(3 + Math.random() * 5),
-      distance: distance,
-      startPos: Math.random() * 120 - 20 // Some buildings start partially offscreen
-    }));
+  // Building generator with better distance parameters
+  const generateBuildings = (count, layer) => {
+    const layers = {
+      far: {
+        width: () => `${4 + Math.random() * 8}%`,
+        height: () => `${30 + Math.random() * 30}%`,
+        speed: 30 + Math.random() * 20,
+        lightness: 20 + Math.random() * 10,
+        windows: 2 + Math.floor(Math.random() * 3)
+      },
+      mid: {
+        width: () => `${6 + Math.random() * 10}%`,
+        height: () => `${50 + Math.random() * 30}%`,
+        speed: 15 + Math.random() * 10,
+        lightness: 30 + Math.random() * 15,
+        windows: 3 + Math.floor(Math.random() * 4)
+      },
+      near: {
+        width: () => `${8 + Math.random() * 12}%`,
+        height: () => `${70 + Math.random() * 20}%`,
+        speed: 8 + Math.random() * 5,
+        lightness: 40 + Math.random() * 20,
+        windows: 4 + Math.floor(Math.random() * 5)
+      }
+    };
+
+    return Array.from({ length: count }).map((_, i) => {
+      const config = layers[layer];
+      return {
+        id: i,
+        width: config.width(),
+        height: config.height(),
+        speed: config.speed,
+        lightness: config.lightness,
+        windows: config.windows,
+        position: Math.random() * 120 - 10,
+        hue: 120 + Math.random() * 30,
+        saturation: 50 + Math.random() * 20
+      };
+    });
   };
 
-  // Three layers of buildings with adjusted parameters
-  const fastBuildings = generateBuildings(8, {min: 5, range: 8}, {min: 3, range: 2}, {min: 60, range: 15}, 'close');
-  const mediumBuildings = generateBuildings(6, {min: 7, range: 10}, {min: 5, range: 3}, {min: 50, range: 20}, 'medium');
-  const slowBuildings = generateBuildings(4, {min: 10, range: 15}, {min: 8, range: 4}, {min: 40, range: 25}, 'far');
+  const farBuildings = generateBuildings(6, 'far');
+  const midBuildings = generateBuildings(5, 'mid');
+  const nearBuildings = generateBuildings(4, 'near');
 
   return (
     <div className="absolute top-0 left-0 w-full h-full overflow-hidden bg-gradient-to-b from-green-900 to-green-700">
-      {/* Animated gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-r from-green-900/30 via-green-800/10 to-green-900/30 animate-pulse-slow"></div>
+      {/* Sky gradient */}
+      <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-green-900/80 to-green-700/50"></div>
       
-      {/* Buildings container */}
+      {/* Buildings */}
       <div className="absolute bottom-0 left-0 w-full h-full">
-        {/* Slow buildings (farthest) */}
-        <div className="absolute bottom-0 left-0 w-full h-full">
-          {slowBuildings.map((building) => (
-            <div
-              key={`slow-${building.id}`}
-              className="absolute bottom-0 h-full origin-bottom"
-              style={{
-                left: `${building.startPos}%`,
-                width: building.width,
-                animation: `moveBuilding ${building.speed}s linear infinite`,
-                animationDelay: `${building.delay}s`,
-                zIndex: 10,
-                height: `${building.height}%`
-              }}
-            >
-              <div
-                className="w-full h-full relative"
-                style={{
-                  height: '100%',
-                  backgroundColor: building.color,
-                  boxShadow: 'inset 0 -15px 20px rgba(0,0,0,0.3)',
-                  transform: `scaleX(${Math.random() > 0.5 ? 1 : -1})`
-                }}
-              >
-                <div className="absolute inset-0 grid grid-cols-4 gap-1 p-2">
-                  {Array.from({ length: building.windows * 8 }).map((_, i) => (
-                    <div
-                      key={`window-slow-${building.id}-${i}`}
-                      className={`h-2 ${building.windowColor}`}
-                    />
-                  ))}
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Medium buildings */}
-        <div className="absolute bottom-0 left-0 w-full h-full">
-          {mediumBuildings.map((building) => (
-            <div
-              key={`medium-${building.id}`}
-              className="absolute bottom-0 h-full origin-bottom"
-              style={{
-                left: `${building.startPos}%`,
-                width: building.width,
-                animation: `moveBuilding ${building.speed}s linear infinite`,
-                animationDelay: `${building.delay}s`,
-                zIndex: 20,
-                height: `${building.height}%`
-              }}
-            >
-              <div
-                className="w-full h-full relative"
-                style={{
-                  height: '100%',
-                  backgroundColor: building.color,
-                  boxShadow: 'inset 0 -10px 15px rgba(0,0,0,0.3)',
-                  transform: `scaleX(${Math.random() > 0.5 ? 1 : -1})`
-                }}
-              >
-                <div className="absolute inset-0 grid grid-cols-4 gap-1 p-2">
-                  {Array.from({ length: building.windows * 10 }).map((_, i) => (
-                    <div
-                      key={`window-medium-${building.id}-${i}`}
-                      className={`h-3 ${building.windowColor}`}
-                    />
-                  ))}
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Fast buildings (closest) - now 3/4 of screen height */}
-        <div className="absolute bottom-0 left-0 w-full h-full">
-          {fastBuildings.map((building) => (
-            <div
-              key={`fast-${building.id}`}
-              className="absolute bottom-0 h-full origin-bottom"
-              style={{
-                left: `${building.startPos}%`,
-                width: building.width,
-                animation: `moveBuilding ${building.speed}s linear infinite`,
-                animationDelay: `${building.delay}s`,
-                zIndex: 30,
-                height: `${building.height}%`
-              }}
-            >
-              <div
-                className="w-full h-full relative"
-                style={{
-                  height: '75%', // 3/4 of screen height
-                  backgroundColor: building.color,
-                  boxShadow: 'inset 0 -5px 10px rgba(0,0,0,0.3)',
-                  transform: `scaleX(${Math.random() > 0.5 ? 1 : -1})`
-                }}
-              >
-                <div className="absolute inset-0 grid grid-cols-5 gap-1 p-2">
-                  {Array.from({ length: building.windows * 12 }).map((_, i) => (
-                    <div
-                      key={`window-fast-${building.id}-${i}`}
-                      className={`h-4 ${building.windowColor}`}
-                    />
-                  ))}
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Road lines for better motion perception */}
-      <div className="absolute bottom-0 left-0 w-full h-6 flex items-center">
-        <div className="absolute bottom-1 left-0 w-full h-1 bg-yellow-300 animate-road-line"></div>
-        <div className="absolute bottom-3 left-0 w-full h-1 bg-yellow-300 animate-road-line" style={{ animationDelay: '0.25s' }}></div>
-      </div>
-
-      {/* Glowing elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        {Array.from({ length: 5 }).map((_, i) => (
+        {/* Far buildings */}
+        {farBuildings.map((building) => (
           <div
-            key={`glow-${i}`}
-            className="absolute rounded-full bg-amber-200/20 blur-md"
+            key={`far-${building.id}`}
+            className="absolute bottom-0 bg-green-800 border-t-4 border-green-900"
             style={{
-              width: `${20 + Math.random() * 50}px`,
-              height: `${20 + Math.random() * 50}px`,
-              top: `${Math.random() * 100}%`,
-              left: `${Math.random() * 100}%`,
-              animation: `pulse ${5 + Math.random() * 10}s infinite alternate`
+              left: `${building.position}%`,
+              width: building.width,
+              height: building.height,
+              backgroundColor: `hsl(${building.hue}, ${building.saturation}%, ${building.lightness}%)`,
+              animation: `moveRight ${building.speed}s linear infinite`,
+              animationDelay: `${Math.random() * 10}s`,
+              zIndex: 10,
+              boxShadow: 'inset -5px 0 10px rgba(0,0,0,0.3)'
             }}
-          />
+          >
+            <div className="absolute inset-0 grid grid-cols-3 gap-1 p-1">
+              {Array.from({ length: building.windows }).map((_, i) => (
+                <div 
+                  key={`window-far-${i}`}
+                  className={`h-2 ${Math.random() > 0.7 ? 'bg-amber-200' : 'bg-green-900/50'}`}
+                />
+              ))}
+            </div>
+          </div>
+        ))}
+
+        {/* Mid-distance buildings */}
+        {midBuildings.map((building) => (
+          <div
+            key={`mid-${building.id}`}
+            className="absolute bottom-0 bg-green-700 border-t-4 border-green-800"
+            style={{
+              left: `${building.position}%`,
+              width: building.width,
+              height: building.height,
+              backgroundColor: `hsl(${building.hue}, ${building.saturation}%, ${building.lightness}%)`,
+              animation: `moveRight ${building.speed}s linear infinite`,
+              animationDelay: `${Math.random() * 10}s`,
+              zIndex: 20,
+              boxShadow: 'inset -8px 0 15px rgba(0,0,0,0.3)'
+            }}
+          >
+            <div className="absolute inset-0 grid grid-cols-4 gap-1 p-2">
+              {Array.from({ length: building.windows }).map((_, i) => (
+                <div 
+                  key={`window-mid-${i}`}
+                  className={`h-3 ${Math.random() > 0.7 ? 'bg-amber-200' : 'bg-green-900/50'}`}
+                />
+              ))}
+            </div>
+          </div>
+        ))}
+
+        {/* Near buildings */}
+        {nearBuildings.map((building) => (
+          <div
+            key={`near-${building.id}`}
+            className="absolute bottom-0 bg-green-600 border-t-4 border-green-700"
+            style={{
+              left: `${building.position}%`,
+              width: building.width,
+              height: building.height,
+              backgroundColor: `hsl(${building.hue}, ${building.saturation}%, ${building.lightness}%)`,
+              animation: `moveRight ${building.speed}s linear infinite`,
+              animationDelay: `${Math.random() * 10}s`,
+              zIndex: 30,
+              boxShadow: 'inset -10px 0 20px rgba(0,0,0,0.3)'
+            }}
+          >
+            <div className="absolute inset-0 grid grid-cols-5 gap-2 p-2">
+              {Array.from({ length: building.windows }).map((_, i) => (
+                <div 
+                  key={`window-near-${i}`}
+                  className={`h-4 ${Math.random() > 0.7 ? 'bg-amber-200' : 'bg-green-900/50'}`}
+                />
+              ))}
+            </div>
+          </div>
         ))}
       </div>
 
-      {/* Animation keyframes */}
+      {/* Ground plane */}
+      <div className="absolute bottom-0 left-0 w-full h-16 bg-gradient-to-t from-green-900 to-green-800 z-40"></div>
+
+      {/* Road markings */}
+      <div className="absolute bottom-12 left-0 w-full h-1 bg-yellow-400 animate-road-line z-40"></div>
+      <div className="absolute bottom-10 left-0 w-full h-1 bg-yellow-400 animate-road-line z-40" style={{ animationDelay: '0.3s' }}></div>
+
+      {/* Animation styles */}
       <style jsx global>{`
-        @keyframes moveBuilding {
-          0% {
-            transform: translateX(100vw);
-          }
-          100% {
-            transform: translateX(-30vw);
-          }
+        @keyframes moveRight {
+          0% { transform: translateX(100vw); }
+          100% { transform: translateX(-30vw); }
         }
-        
         @keyframes road-line {
-          0% {
-            transform: translateX(0);
-          }
-          100% {
-            transform: translateX(-100%);
-          }
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-100%); }
         }
-        
         .animate-road-line {
-          animation: road-line 0.8s linear infinite;
-        }
-        
-        @keyframes pulse-slow {
-          0%, 100% {
-            opacity: 0.8;
-          }
-          50% {
-            opacity: 0.3;
-          }
-        }
-        
-        @keyframes pulse {
-          0% {
-            opacity: 0.2;
-            transform: scale(0.8);
-          }
-          100% {
-            opacity: 0.5;
-            transform: scale(1.2);
-          }
-        }
-        
-        .animate-pulse-slow {
-          animation: pulse-slow 8s ease-in-out infinite;
+          animation: road-line 1s linear infinite;
         }
       `}</style>
     </div>
