@@ -5,6 +5,8 @@ import { useQuery } from '@apollo/client';
 import { useSelector } from 'react-redux';
 import { selectTempUserId } from '../../../../Redux/tempUserSlice';
 import { DELIVERIES } from '../../../../graphql/query';
+import AnimatedCityscape from '../AnimatedCityscape';
+
 import {
   ResponsiveContainer,
   BarChart,
@@ -104,8 +106,9 @@ const RiderPerformanceChart = () => {
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-green-100 p-1">
       <div className="w-full max-w-6xl mx-auto shadow-lg overflow-hidden">
         {/* Header */}
-        <div className="bg-gradient-to-r from-green-800 to-green-600 p-6 relative">
-          <h1 className="text-3xl font-bold text-white">My Delivery Performance</h1>
+        <div className="bg-gradient-to-r from-green-800 to-green-600 relative">
+         <AnimatedCityscape>
+          <h1 className="text-2xl font-bold text-white">My Delivery Performance</h1>
           <p className="text-green-100">Track your delivery stats and progress</p>
           <button
             onClick={() => setShowInfo(!showInfo)}
@@ -113,6 +116,7 @@ const RiderPerformanceChart = () => {
           >
             <Info className="w-5 h-5 text-white" />
           </button>
+           </AnimatedCityscape>
         </div>
 
         <div className="p-6 bg-white">
