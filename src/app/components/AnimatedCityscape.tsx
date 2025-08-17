@@ -13,9 +13,8 @@ export default function AnimatedCityScape({
   return (
     <div
       className={clsx(
-        "relative w-full overflow-hidden",
+        "relative w-full aspect-[3/1] overflow-hidden",
         "bg-gradient-to-b from-green-950 via-green-900 to-green-800",
-        "h-[320px] md:h-[420px]",
         className
       )}
     >
@@ -39,7 +38,7 @@ export default function AnimatedCityScape({
 
       {/* FAR skyline */}
       <ParallaxStrip
-        className="bottom-28 opacity-40"
+        className="bottom-[20%] opacity-40"
         speedClass="animate-[scrollX_70s_linear_infinite]"
         buildingTone="from-green-800 to-green-700"
         heights={[70, 90, 80, 100]}
@@ -48,7 +47,7 @@ export default function AnimatedCityScape({
 
       {/* MID skyline */}
       <ParallaxStrip
-        className="bottom-16 opacity-70"
+        className="bottom-[12%] opacity-70"
         speedClass="animate-[scrollX_45s_linear_infinite]"
         buildingTone="from-green-900 to-green-800"
         heights={[110, 130, 120, 140]}
@@ -57,7 +56,7 @@ export default function AnimatedCityScape({
 
       {/* NEAR skyline */}
       <ParallaxStrip
-        className="bottom-6 opacity-100"
+        className="bottom-[5%] opacity-100"
         speedClass="animate-[scrollX_25s_linear_infinite]"
         buildingTone="from-green-950 to-green-900"
         heights={[160, 190, 170, 200]}
@@ -66,7 +65,7 @@ export default function AnimatedCityScape({
       />
 
       {/* Ground */}
-      <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-b from-green-950 to-black" />
+      <div className="absolute bottom-0 left-0 right-0 h-[12%] bg-gradient-to-b from-green-950 to-black" />
 
       {/* Content overlay */}
       <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
@@ -192,4 +191,4 @@ function BuildingsRow({
       ))}
     </div>
   );
-}
+                      }
