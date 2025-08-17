@@ -62,8 +62,9 @@ export default function LoginCard() {
       <AnimatedCityscape>
           <CardTitle className="text-3xl font-bold text-white text-center relative z-10">Welcome Back</CardTitle>
           <p className="text-green-100 text-center mt-2 relative z-10">Sign in to your account</p>
-          </CardHeader>
-      </AnimatedCityscape>
+       </AnimatedCityscape>   
+         </CardHeader>
+      
         {/* Form */}
         <CardContent className="p-8 space-y-6">
           {/* Email */}
