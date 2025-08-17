@@ -12,7 +12,7 @@ import { LOGIN } from '../../../graphql/mutation'
 import { showToast } from '../../../utils/toastify'
 import { Eye, EyeOff } from 'lucide-react'
 import { FiMail, FiLock } from 'react-icons/fi'
-
+import MovingBuildingsBackground from './MovingBuildingsBackground';
 export default function LoginCard() {
   const router = useRouter()
   const [email, setEmail] = useState('')
@@ -53,7 +53,7 @@ export default function LoginCard() {
         <div className="absolute -top-2 -right-2 bg-green-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg transform rotate-12 z-10">
           PRO
         </div>
-
+        <MovingBuildingsBackground/>
         {/* Header */}
         <CardHeader className="bg-gradient-to-r from-green-800 to-green-600 p-6 relative overflow-hidden">
           {/* Pattern */}
