@@ -69,7 +69,7 @@ export default function AnimatedCityScape({
 
       {/* Content overlay */}
       <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-        <div className="pointer-events-auto rounded-2xl bg-white/10 px-6 py-3 backdrop-blur-sm text-white">
+        <div className="pointer-events-auto rounded-2xl bg-white/10 px-6 py-3 text-white">
           {children}
         </div>
       </div>
