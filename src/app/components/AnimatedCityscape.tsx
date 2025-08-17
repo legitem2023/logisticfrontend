@@ -64,23 +64,22 @@ export default function AnimatedCityScape({
         detailLevel="near"
       />
 
-      {/* Trees along the road */}
-      <div className="absolute bottom-6 left-0 right-0 h-8 flex justify-between items-end px-4">
-        <div className="flex space-x-4">
-          {Array.from({ length: 10 }).map((_, i) => (
-            <div key={i} className="relative w-1 h-6">
-              <div className="absolute bottom-0 left-0.5 w-0.5 h-1.5 bg-green-900"></div>
-              <div className="absolute bottom-1.5 left-0 w-2 h-2 rounded-full bg-green-800"></div>
-            </div>
-          ))}
+      {/* Moving Trees - both sides */}
+      <div className="absolute bottom-6 left-0 right-0 h-8">
+        {/* Left side trees - 30% faster than near buildings (25s * 0.7 = 17.5s) */}
+        <div className={clsx("absolute left-0 top-0 w-full", "animate-[scrollX_17.5s_linear_infinite]")}>
+          <div className="flex w-[200%]">
+            <TreeRow side="left" />
+            <TreeRow side="left" />
+          </div>
         </div>
-        <div className="flex space-x-4">
-          {Array.from({ length: 10 }).map((_, i) => (
-            <div key={i} className="relative w-1 h-6">
-              <div className="absolute bottom-0 left-0.5 w-0.5 h-1.5 bg-green-900"></div>
-              <div className="absolute bottom-1.5 left-0 w-2 h-2 rounded-full bg-green-800"></div>
-            </div>
-          ))}
+        
+        {/* Right side trees - same speed as left */}
+        <div className={clsx("absolute left-0 top-0 w-full", "animate-[scrollX_17.5s_linear_infinite]")}>
+          <div className="flex w-[200%]">
+            <TreeRow side="right" />
+            <TreeRow side="right" />
+          </div>
         </div>
       </div>
 
@@ -184,7 +183,7 @@ function BuildingsRow({
                     className={clsx(
                       "h-2 w-2",
                       Math.random() > 0.6
-                        ? "bg-yellow-300 shadow-[0_0_4px_rgba(255,255,200,0.8)]"
+                        ? "bg-yellow-500 shadow-[0_0_4px_rgba(255,255,200,0.8)]"
                         : "bg-emerald-900"
                     )}
                   />
@@ -211,4 +210,30 @@ function BuildingsRow({
       ))}
     </div>
   );
-      }
+}
+
+// Tree component with dark green colors
+function Tree() {
+  return (
+    <div className="relative w-1 h-6">
+      <div className="absolute bottom-0 left-0.5 w-0.5 h-1.5 bg-green-900"></div>
+      <div className="absolute bottom-1.5 left-0 w-2 h-2 rounded-full bg-green-800"></div>
+    </div>
+  );
+}
+
+// Tree row component
+function TreeRow({ side }: { side: "left" | "right" }) {
+  return (
+    <div className={clsx(
+      "w-1/2 flex items-end",
+      side === "left" ? "justify-start pl-4" : "justify-end pr-4"
+    )}>
+      <div className="flex space-x-4">
+        {Array.from({ length: 10 }).map((_, i) => (
+          <Tree key={i} />
+        ))}
+      </div>
+    </div>
+  );
+                      }
