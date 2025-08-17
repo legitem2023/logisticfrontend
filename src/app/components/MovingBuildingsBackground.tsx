@@ -2,7 +2,7 @@ import React from 'react';
 
 const MovingBuildingsBackground = () => {
   return (
-    <div className="absolute inset-0 -z-10 overflow-hidden">
+    <div className="absolute inset-0 -z-10 overflow-hidden w-full h-full">
       {/* Animated Buildings Container */}
       <div className="absolute bottom-0 left-0 w-full h-3/4 flex items-end">
         {/* Building columns - each will move at different speeds */}
