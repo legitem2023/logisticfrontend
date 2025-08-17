@@ -2,6 +2,8 @@
 
 import { useState, useMemo } from 'react';
 import { useQuery } from '@apollo/client';
+import AnimatedCityscape from '../AnimatedCityscape';
+
 import { GETDELIVERIESADMIN } from '../../../../graphql/query';
 import {
   ResponsiveContainer,
@@ -139,8 +141,9 @@ const RiderActivityChart = () => {
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-green-100 p-1">
       <div className="w-full max-w-6xl mx-auto  shadow-lg overflow-hidden">
         {/* Premium Green Header */}
-        <div className="bg-gradient-to-r from-green-800 to-green-600 p-6 relative">
-          <h1 className="text-3xl font-bold text-white">Delivery Analytics Dashboard</h1>
+        <div className="bg-gradient-to-r from-green-800 to-green-600 relative">
+          <AnimatedCityscape>
+          <h1 className="text-2xl font-bold text-white">Delivery Analytics Dashboard</h1>
           <p className="text-green-100">Track and analyze rider delivery performance</p>
           <button 
             onClick={() => setShowInfo(!showInfo)}
@@ -148,6 +151,7 @@ const RiderActivityChart = () => {
           >
             <Info className="w-5 h-5 text-white" />
           </button>
+         </AnimatedCityscape>
         </div>
 
         {/* Main Content */}
