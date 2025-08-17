@@ -2,6 +2,7 @@
 
 import { Card, CardContent, CardHeader } from "./ui/Card";
 import { Shield, Lock, FileText, Globe, User, Trash2 } from "lucide-react";
+import AnimatedCityscape from './AnimatedCityscape';
 
 export default function PrivacyPolicy() {
   return (
@@ -9,18 +10,17 @@ export default function PrivacyPolicy() {
       <div className="max-w-4xl mx-auto">
         <Card className="shadow-2xl border border-slate-200 bg-white/80 backdrop-blur-md overflow-hidden">
           {/* Header */}
-          <CardHeader className="relative bg-gradient-to-r from-green-800 to-green-600 px-8 py-10 text-white">
+          <CardHeader className="relative bg-gradient-to-r from-green-800 to-green-600 p-0 text-white">
             {/* Pattern overlay */}
-            <div className="absolute inset-0 opacity-10 pointer-events-none bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgdmlld0JveD0iMCAwIDYwIDYwIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC42Ij48cGF0aCBkPSJNMzYgMzRjMC0yLjIgMS44LTQgNC00czQgMS44IDQgNC0xLjggNC00IDQtNC0xLjgtNC00eiIvPjwvZz48L2c+PC9zdmc+')]"></div>
-            <div className="relative z-10">
-              <h1 className="text-4xl font-extrabold tracking-tight drop-shadow-lg">
+            <AnimatedCityscape>
+              <h1 className="text-2xl font-extrabold tracking-tight drop-shadow-lg">
                 Privacy Policy
               </h1>
               <p className="mt-3 text-emerald-100 text-lg max-w-2xl leading-relaxed">
                 Your privacy is our priority — here’s how we protect your
                 information.
               </p>
-            </div>
+              </AnimatedCityscape>
           </CardHeader>
 
           <CardContent className="px-4 py-6 space-y-10">
