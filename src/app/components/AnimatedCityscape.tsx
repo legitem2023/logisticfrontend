@@ -162,7 +162,7 @@ function BuildingsRow({
                   <div
                     key={w}
                     className={clsx(
-                      "h-1.5 w-3",
+                      "h-1.5 w-2",
                       Math.random() > 0.6
                         ? "bg-yellow-300 shadow-[0_0_4px_rgba(255,255,200,0.8)]"
                         : "bg-transparent"
