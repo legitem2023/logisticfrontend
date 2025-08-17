@@ -158,7 +158,7 @@ function BuildingsRow({
             {/* Windows */}
             {detailLevel === "near" ? (
               <div className="absolute inset-0 grid grid-cols-2 gap-0.5 p-1">
-                {Array.from({ length: Math.floor(h / 12) * 2 }).map((_, w) => (
+                {Array.from({ length: Math.floor(h / 12) * 3 }).map((_, w) => (
                   <div
                     key={w}
                     className={clsx(
