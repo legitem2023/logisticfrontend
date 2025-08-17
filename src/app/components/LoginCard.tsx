@@ -48,12 +48,6 @@ export default function LoginCard() {
   return (
     <div className="flex justify-center min-h-screen bg-gradient-to-br from-green-50 to-green-100 p-1">
       <Card className="w-full max-w-md shadow-xl border border-green-100 overflow-hidden relative bg-white">
-        
-        {/* Premium badge */}
-        <div className="absolute -top-2 -right-2 bg-green-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg transform rotate-12 z-10">
-          PRO
-        </div>
-        
         {/* Header */}
         <CardHeader className="bg-gradient-to-r from-green-800 to-green-600 relative overflow-hidden">
           {/* Pattern */}
