@@ -207,19 +207,28 @@ const PickupProofForm = ({data,refresh}:PickupProofFormProps) => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      await insertPickupProof({
-        variables: {
-          input: formData
-        }
-      });
-      setSubmitSuccess(true);
-      setTimeout(() => setSubmitSuccess(false), 3000);
-    } catch (err) {
-      console.error('Submission error:', err);
-    }
-  };
+  e.preventDefault();
+
+  try {
+    const formattedData = {
+      ...formData,
+      pickupDateTime: formData.pickupDateTime
+        ? new Date(formData.pickupDateTime).toISOString()
+        : null,
+    };
+
+    await insertPickupProof({
+      variables: {
+        input: formattedData,
+      },
+    });
+
+    setSubmitSuccess(true);
+    setTimeout(() => setSubmitSuccess(false), 3000);
+  } catch (err) {
+    console.error('Submission error:', err);
+  }
+};
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-white to-green-50 p-1">
