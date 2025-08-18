@@ -94,8 +94,8 @@ export default function SenderShipmentHistory({ status }: any) {
   // Calculate pagination
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentDeliveries = originalDeliveries.slice(indexOfFirstItem, indexOfLastItem);
-  const totalPages = Math.ceil(originalDeliveries.length / itemsPerPage);
+  const currentDeliveries = filteredDeliveries.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(filteredDeliveries.length / itemsPerPage);
 
   // Handle page change
   const handlePageChange = (newPage: number) => {
