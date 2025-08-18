@@ -50,7 +50,7 @@ export default function SenderShipmentHistory({ status }: any) {
 
   const globalUserId = useSelector(selectTempUserId);
   const { data, loading } = useQuery(GETDISPATCH, {
-    variables: { getNotificationsId: globalUserId }
+    variables: { id: globalUserId }
   });
 
   useEffect(() => {
