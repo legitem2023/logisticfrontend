@@ -172,7 +172,7 @@ const AnimatedCityScape = ({
         /* Motorcycle overtake animation */
         @keyframes overtake {
           0% {
-            left: 30%;
+            left: 20%;
     
           }
           30% {
@@ -188,7 +188,7 @@ const AnimatedCityScape = ({
             
           }
           100% {
-            left: 30%;
+            left: 20%;
             
           }
         }
