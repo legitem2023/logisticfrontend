@@ -199,7 +199,7 @@ export function SideBarMenu({ activeTab, useRole, isUserActive }: {
               {/* Mobile Menu Button - Shown on screens smaller than lg */}
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="lg:hidden p-2 rounded-xl backdrop-blur bg-white/40 border border-gray-200 shadow-lg hover:bg-white/60 transition"
+                className="lg:hidden p-2 z-70 rounded-xl backdrop-blur bg-white/40 border border-gray-200 shadow-lg hover:bg-white/60 transition"
               >
                 {mobileMenuOpen ? (
                   <X className="h-5 w-5" />
