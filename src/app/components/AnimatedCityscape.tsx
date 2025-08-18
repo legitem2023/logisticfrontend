@@ -24,7 +24,7 @@ const AnimatedCityScape = ({
       )}
     >
       {/* Blur overlay (only visible on xs) */}
-      <div className="absolute inset-0 backdrop-blur-xs bg-black/10 z-30 pointer-events-none"></div>
+      <div className="absolute inset-0 backdrop-blur-xs bg-black/10 pointer-events-none"></div>
 
       {/* STAR FIELD */}
       <div className="absolute inset-0">
@@ -115,13 +115,13 @@ const AnimatedCityScape = ({
       </div>
 
       {/* Delivery Truck - Positioned at 45% left */}
-      <div className="absolute bottom-4 left-[25%] z-10">
+      <div className="absolute bottom-4 left-[25%]">
         <DeliveryTruck className="h-16 w-16" />
       </div>
 
       {/* Motorcycle - Animated to overtake the truck */}
       <div 
-        className="absolute z-20 animate-overtake"
+        className="absolute animate-overtake"
         style={{ 
           bottom: '0.7rem', // Positioned slightly lower than truck
           animation: 'overtake 8s infinite linear'
