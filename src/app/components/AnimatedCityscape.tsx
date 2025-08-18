@@ -118,12 +118,12 @@ const AnimatedCityScape = ({
       <div className="absolute bottom-4 left-0 right-0 z-10 flex justify-center">
         <div className="relative flex items-end">
           {/* Motorcycle (in front) */}
-          <div className="relative z-20 mr-[-24px] translate-y-[-4px]">
-            <EmojioneMotorcycle className="h-12 w-12 transform scale-x-[-1]" />
+          <div className="relative z-20  translate-y-[-2px]">
+            <EmojioneMotorcycle className="h-12 w-12 transform scale-x-[-1] left-[45%]" />
           </div>
           {/* Delivery truck (behind) */}
           <div className="relative z-10">
-            <DeliveryTruck className="h-16 w-16" />
+            <DeliveryTruck className="h-16 w-16 left-[25%]" />
           </div>
         </div>
       </div>
