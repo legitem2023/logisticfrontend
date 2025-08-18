@@ -181,7 +181,7 @@ function DeliveryTruck({ className, ...props }: SVGProps<SVGSVGElement>) {
         <path fill="#e3e3e3" d="M15.1 26.5c-4.5 0-5.6 0-5.6 7.5c0 5.6-5.6 5.6-5.6 11.2v3.7h18.8V26.5z"></path>
         <path fill="#ffce31" d="M5.8 43.3h1.9V47H5.8z"></path>
         <path fill="#cbc9c9" d="M12.8 39.6c-1.1 0-1.7.8-1.3 1.8l1.6 4c.4 1 1.6 1.7 2.7 1.7h3c1.1 0 2-.8 2-1.9v-3.7c0-1-.9-1.9-2-1.9z"></path>
-        <g fill="#1a1a1a" className="knots">
+        <g fill="#1a1a1a">
           <path d="M20.8 28.3h-7.5s-1.9.2-1.9 2.8v4.5s0 2.1 1.9 2.1h7.5z"></path>
           <circle cx={12.3} cy={51.7} r={0.9}></circle>
           <circle cx={9.1} cy={53.6} r={0.9}></circle>
