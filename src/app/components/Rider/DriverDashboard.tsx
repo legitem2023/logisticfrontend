@@ -423,7 +423,8 @@ const tabs = [
                 <div>
                   <p className="text-xs text-gray-500">Time received</p>
                   <p className="font-medium text-gray-900">
-                    {formatDate(item.receivedAt)}
+                    {/*formatDate(item.receivedAt)*/}
+                    {new Date(Number(item.receivedAt)).toLocaleString()}
                   </p>
                 </div>
               </div>
