@@ -211,12 +211,12 @@ function DeliveryTruck({ className, ...props }: SVGProps<SVGSVGElement>) {
         <path fill="#606262" d="M37.6 55.5c0 1-.8 1.9-1.9 1.9h-7.5c-1 0-1.9-.8-1.9-1.9v-1.9c0-1 .8-1.9 1.9-1.9h7.5c1 0 1.9.8 1.9 1.9z"></path>
         <path fill="#b2c1c0" d="M28.5 52.7c-.6 0-1.2.4-1.2.9s.5.9 1.2.9h7c.6 0 1.2-.4 1.2-.9s-.5-.9-1.2-.9z"></path>
       </svg>
-      <style jsx>{`
+      {/* <style jsx>{`
         .truck-wheel {
           animation: wheel-roll 1.5s linear infinite;
           transform-origin: center;
         }
-      `}</style>
+      `}</style>*/}
     </div>
   );
 }
