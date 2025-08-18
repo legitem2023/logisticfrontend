@@ -23,9 +23,7 @@ const AnimatedCityScape = ({
         className
       )}
     >
-      {/* Blur overlay (only visible on xs) */}
-      <div className="absolute inset-0 backdrop-blur-xs bg-black/10 pointer-events-none z-30"></div>
-
+      
       {/* STAR FIELD */}
       <div className="absolute inset-0">
         {Array.from({ length: 40 }).map((_, i) => (
