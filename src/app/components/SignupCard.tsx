@@ -33,7 +33,7 @@ const fileToBase64 = (file: File): Promise<string> => {
 };
 
 const SignupCard = () => {
-  const { loading, error, data } = useQuery(VEHICLEQUERY);
+  const { loading:vehicloading, error, data } = useQuery(VEHICLEQUERY);
   const [createRider] = useMutation(CREATERIDER, {
     onCompleted: (data) => {
       showToast(data, "success");
@@ -86,7 +86,7 @@ const SignupCard = () => {
     createRider({ variables: { input } });
   };
 
-  if (loading)
+  if (vehicloading)
     return (
       <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-green-50 to-green-100">
         <div className="animate-pulse flex flex-col items-center">
