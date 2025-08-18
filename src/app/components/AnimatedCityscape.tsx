@@ -108,10 +108,16 @@ const AnimatedCityScape = ({
         </div>
       </div>
 
-      {/* L300 Vans with rolling wheels */}
-      <div className="absolute bottom-4 left-0 right-0 z-10"> 
-        <div className="absolute right-[70%] bottom-1">
+      {/* L300 Vans with accurate design */}
+      <div className="absolute bottom-4 left-0 right-0 z-10">
+        <div className="absolute left-[10%] bottom-1">
           <L300Van color="white" />
+        </div>
+        <div className="absolute left-[40%] bottom-1">
+          <L300Van color="blue" />
+        </div>
+        <div className="absolute left-[70%] bottom-1">
+          <L300Van color="red" />
         </div>
       </div>
 
@@ -166,30 +172,32 @@ function L300Van({ color = "white" }: { color?: string }) {
   };
   
   return (
-    <div className="relative w-24 h-12 transform">
-      {/* Main van body */}
-      <div className={`absolute top-0 w-full h-10 rounded-sm ${colorMap[color as keyof typeof colorMap]}`}>
-        {/* Front section with windshield */}
-        <div className="absolute top-0 left-0 w-6 h-8">
-          {/* Windshield */}
-          <div className="absolute top-0 left-0 w-6 h-4 bg-gradient-to-b from-blue-300 to-blue-400 rounded-t-sm"></div>
-          {/* Front grille */}
-          <div className="absolute bottom-0 left-0 w-6 h-2 bg-gray-800 rounded-b-sm"></div>
-        </div>
-        
-        {/* Side body */}
-        <div className="absolute top-0 left-6 w-18 h-10">
-          {/* Side window */}
-          <div className="absolute top-1 left-1 w-10 h-3 bg-gradient-to-b from-blue-300 to-blue-400 rounded-sm"></div>
-          {/* Rear window */}
-          <div className="absolute top-1 right-1 w-5 h-3 bg-gradient-to-b from-blue-300 to-blue-400 rounded-sm"></div>
-          {/* Side stripe */}
-          <div className="absolute bottom-1 left-1 w-16 h-1 bg-gray-800 rounded-sm"></div>
-        </div>
+    <div className="relative w-24 h-14">
+      {/* Rear section - higher */}
+      <div className={`absolute top-0 left-8 w-16 h-10 rounded-t-sm ${colorMap[color as keyof typeof colorMap]}`}>
+        {/* Side window */}
+        <div className="absolute top-1 left-1 w-10 h-3 bg-gradient-to-b from-blue-300 to-blue-400 rounded-sm"></div>
+        {/* Rear window */}
+        <div className="absolute top-1 right-1 w-3 h-3 bg-gradient-to-b from-blue-300 to-blue-400 rounded-sm"></div>
+        {/* Side stripe */}
+        <div className="absolute bottom-1 left-1 w-14 h-1 bg-gray-800 rounded-sm"></div>
       </div>
       
+      {/* Front cab - lower and sloped */}
+      <div className={`absolute top-3 left-0 w-8 h-7 ${colorMap[color as keyof typeof colorMap]} rounded-tl-sm`}>
+        {/* Windshield - sloped */}
+        <div className="absolute top-0 left-0 w-8 h-4 bg-gradient-to-b from-blue-300 to-blue-400 rounded-tr-sm"
+             style={{ clipPath: "polygon(0 0, 100% 0, 70% 100%, 0 100%)" }}>
+        </div>
+        {/* Front grille */}
+        <div className="absolute bottom-0 left-0 w-8 h-2 bg-gray-800 rounded-b-sm"></div>
+      </div>
+      
+      {/* Connecting section between cab and body */}
+      <div className={`absolute top-3 left-7 w-1 h-7 ${colorMap[color as keyof typeof colorMap]}`}></div>
+      
       {/* Front wheel */}
-      <div className="absolute bottom-0 left-4 w-5 h-5 rounded-full bg-black flex items-center justify-center">
+      <div className="absolute bottom-0 left-3 w-5 h-5 rounded-full bg-black flex items-center justify-center">
         <div 
           className="w-1.5 h-1.5 rounded-full bg-gray-300"
           style={{ animation: "roll 1.5s linear infinite" }}
@@ -197,7 +205,7 @@ function L300Van({ color = "white" }: { color?: string }) {
       </div>
       
       {/* Rear wheel */}
-      <div className="absolute bottom-0 right-4 w-5 h-5 rounded-full bg-black flex items-center justify-center">
+      <div className="absolute bottom-0 right-3 w-5 h-5 rounded-full bg-black flex items-center justify-center">
         <div 
           className="w-1.5 h-1.5 rounded-full bg-gray-300"
           style={{ animation: "roll 1.5s linear infinite" }}
