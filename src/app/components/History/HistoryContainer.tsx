@@ -11,13 +11,13 @@ export default function HistoryContainer() {
   const progressitem = [
     {
       label: 'Completed',
-      content: role === 'Sender'
+      content: role === 'Sender' || role === 'SENDER'
         ? <SenderShipmentHistory status="Delivered" />
         : <RiderShipmentHistory status="Delivered" />
     },
     {
       label: 'Cancelled',
-      content: role === 'Sender'
+      content: role === 'Sender' || role === 'SENDER'
         ? <SenderShipmentHistory status="Cancelled" />
         : <RiderShipmentHistory status="Cancelled" />
     },
