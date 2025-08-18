@@ -181,7 +181,7 @@ function DeliveryTruck({ className, ...props }: SVGProps<SVGSVGElement>) {
         <path fill="#e3e3e3" d="M15.1 26.5c-4.5 0-5.6 0-5.6 7.5c0 5.6-5.6 5.6-5.6 11.2v3.7h18.8V26.5z"></path>
         <path fill="#ffce31" d="M5.8 43.3h1.9V47H5.8z"></path>
         <path fill="#cbc9c9" d="M12.8 39.6c-1.1 0-1.7.8-1.3 1.8l1.6 4c.4 1 1.6 1.7 2.7 1.7h3c1.1 0 2-.8 2-1.9v-3.7c0-1-.9-1.9-2-1.9z"></path>
-        <g fill="#1a1a1a">
+        <g fill="#1a1a1a" className="knots">
           <path d="M20.8 28.3h-7.5s-1.9.2-1.9 2.8v4.5s0 2.1 1.9 2.1h7.5z"></path>
           <circle cx={12.3} cy={51.7} r={0.9}></circle>
           <circle cx={9.1} cy={53.6} r={0.9}></circle>
@@ -211,12 +211,12 @@ function DeliveryTruck({ className, ...props }: SVGProps<SVGSVGElement>) {
         <path fill="#606262" d="M37.6 55.5c0 1-.8 1.9-1.9 1.9h-7.5c-1 0-1.9-.8-1.9-1.9v-1.9c0-1 .8-1.9 1.9-1.9h7.5c1 0 1.9.8 1.9 1.9z"></path>
         <path fill="#b2c1c0" d="M28.5 52.7c-.6 0-1.2.4-1.2.9s.5.9 1.2.9h7c.6 0 1.2-.4 1.2-.9s-.5-.9-1.2-.9z"></path>
       </svg>
-      {/* <style jsx>{`
-        .truck-wheel {
+       <style jsx>{`
+        .knots {
           animation: wheel-roll 1.5s linear infinite;
           transform-origin: center;
         }
-      `}</style>*/}
+      `}</style>
     </div>
   );
 }
