@@ -108,21 +108,8 @@ const AnimatedCityScape = ({
         </div>
       </div>
 
-      {/* L300 Vans with accurate design */}
-      <div className="absolute bottom-4 left-0 right-0 z-10">
-        <div className="absolute left-[10%] bottom-1">
-          <L300Van color="white" />
-        </div>
-        <div className="absolute left-[40%] bottom-1">
-          <L300Van color="blue" />
-        </div>
-        <div className="absolute left-[70%] bottom-1">
-          <L300Van color="red" />
-        </div>
-      </div>
-
       {/* Ground */}
-      <div className="absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-b from-green-950 to-black z-0" />
+      <div className="absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-b from-green-950 to-black" />
 
       {/* Content overlay */}
       <div className="pointer-events-none absolute inset-0 flex items-center justify-center z-20">
@@ -149,71 +136,10 @@ const AnimatedCityScape = ({
             opacity: 1;
           }
         }
-        @keyframes roll {
-          0% {
-            transform: rotate(0deg);
-          }
-          100% {
-            transform: rotate(360deg);
-          }
-        }
       `}</style>
     </div>
   );
 };
-
-function L300Van({ color = "white" }: { color?: string }) {
-  const colorMap = {
-    white: "bg-gray-100",
-    blue: "bg-blue-600",
-    red: "bg-red-600",
-    green: "bg-green-600",
-    yellow: "bg-yellow-400",
-  };
-  
-  return (
-    <div className="relative w-24 h-14">
-      {/* Rear section - higher */}
-      <div className={`absolute top-0 left-8 w-16 h-10 rounded-t-sm ${colorMap[color as keyof typeof colorMap]}`}>
-        {/* Side window */}
-        <div className="absolute top-1 left-1 w-10 h-3 bg-gradient-to-b from-blue-300 to-blue-400 rounded-sm"></div>
-        {/* Rear window */}
-        <div className="absolute top-1 right-1 w-3 h-3 bg-gradient-to-b from-blue-300 to-blue-400 rounded-sm"></div>
-        {/* Side stripe */}
-        <div className="absolute bottom-1 left-1 w-14 h-1 bg-gray-800 rounded-sm"></div>
-      </div>
-      
-      {/* Front cab - lower and sloped */}
-      <div className={`absolute top-3 left-0 w-8 h-7 ${colorMap[color as keyof typeof colorMap]} rounded-tl-sm`}>
-        {/* Windshield - sloped */}
-        <div className="absolute top-0 left-0 w-8 h-4 bg-gradient-to-b from-blue-300 to-blue-400 rounded-tr-sm"
-             style={{ clipPath: "polygon(0 0, 100% 0, 70% 100%, 0 100%)" }}>
-        </div>
-        {/* Front grille */}
-        <div className="absolute bottom-0 left-0 w-8 h-2 bg-gray-800 rounded-b-sm"></div>
-      </div>
-      
-      {/* Connecting section between cab and body */}
-      <div className={`absolute top-3 left-7 w-1 h-7 ${colorMap[color as keyof typeof colorMap]}`}></div>
-      
-      {/* Front wheel */}
-      <div className="absolute bottom-0 left-3 w-5 h-5 rounded-full bg-black flex items-center justify-center">
-        <div 
-          className="w-1.5 h-1.5 rounded-full bg-gray-300"
-          style={{ animation: "roll 1.5s linear infinite" }}
-        ></div>
-      </div>
-      
-      {/* Rear wheel */}
-      <div className="absolute bottom-0 right-3 w-5 h-5 rounded-full bg-black flex items-center justify-center">
-        <div 
-          className="w-1.5 h-1.5 rounded-full bg-gray-300"
-          style={{ animation: "roll 1.5s linear infinite" }}
-        ></div>
-      </div>
-    </div>
-  );
-}
 
 function ParallaxStrip({
   className,
