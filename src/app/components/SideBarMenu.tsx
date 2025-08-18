@@ -146,7 +146,7 @@ export function SideBarMenu({ activeTab, useRole, isUserActive }: {
       {/* Overlay for mobile menu */}
       {mobileMenuOpen && (
         <div 
-          className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 lg:hidden animate-fadeIn"
+          className="fixed inset-0 bg-black/30 backdrop-blur-sm z-20 lg:hidden animate-fadeIn"
           onClick={() => setMobileMenuOpen(false)}
         />
       )}
