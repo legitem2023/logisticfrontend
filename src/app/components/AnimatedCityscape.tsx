@@ -14,7 +14,7 @@ export default function AnimatedCityScape({
     <div
       className={clsx(
         "relative w-[100%] overflow-hidden aspect-[3/1]",
-        "bg-gradient-to-b from-emerald-950 via-emerald-800 to-emerald-700",
+        "bg-gradient-to-b from-green-950 via-green-800 to-green-700",
         className
       )}
     >
@@ -53,7 +53,7 @@ export default function AnimatedCityScape({
       <ParallaxStrip
         className="bottom-2 opacity-100"
         speedClass="animate-[scrollX_70s_linear_infinite]"
-        buildingTone="from-green-800 to-green-700"
+        buildingTone="from-emerald-800 to-emerald-700"
         heights={[30, 40, 35, 45]} // shrunk
         detailLevel="far"
       />
@@ -62,7 +62,7 @@ export default function AnimatedCityScape({
       <ParallaxStrip
         className="bottom-2 opacity-100"
         speedClass="animate-[scrollX_45s_linear_infinite]"
-        buildingTone="from-green-900 to-green-800"
+        buildingTone="from-emerald-900 to-emerald-800"
         heights={[50, 60, 55, 65]} // shrunk
         detailLevel="mid"
       />
@@ -71,7 +71,7 @@ export default function AnimatedCityScape({
       <ParallaxStrip
         className="bottom-2 opacity-100"
         speedClass="animate-[scrollX_25s_linear_infinite]"
-        buildingTone="from-green-950 to-green-900"
+        buildingTone="from-emerald-950 to-emerald-900"
         heights={[60, 75, 65, 90]} // shrunk
         hasAntennas
         detailLevel="near"
