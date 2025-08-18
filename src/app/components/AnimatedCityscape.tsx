@@ -108,8 +108,21 @@ const AnimatedCityScape = ({
         </div>
       </div>
 
+      {/* Static cars with rolling wheels */}
+      <div className="absolute bottom-4 left-0 right-0 z-10">
+        <div className="absolute left-[15%] bottom-0">
+          <Car />
+        </div>
+        <div className="absolute left-[45%] bottom-0">
+          <Car color="blue-500" />
+        </div>
+        <div className="absolute left-[75%] bottom-0">
+          <Car color="yellow-500" />
+        </div>
+      </div>
+
       {/* Ground */}
-      <div className="absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-b from-green-950 to-black" />
+      <div className="absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-b from-green-950 to-black z-0" />
 
       {/* Content overlay */}
       <div className="pointer-events-none absolute inset-0 flex items-center justify-center z-20">
@@ -136,10 +149,48 @@ const AnimatedCityScape = ({
             opacity: 1;
           }
         }
+        @keyframes roll {
+          0% {
+            transform: rotate(0deg);
+          }
+          100% {
+            transform: rotate(360deg);
+          }
+        }
       `}</style>
     </div>
   );
 };
+
+function Car({ color = "red-500" }: { color?: string }) {
+  return (
+    <div className="relative w-16 h-8 transform -translate-y-1">
+      {/* Car body */}
+      <div
+        className={clsx(
+          "absolute top-0 w-full h-5 rounded-md bg-gradient-to-b",
+          `from-${color} to-${color.replace("500", "700")}`
+        )}
+      ></div>
+      
+      {/* Front wheel */}
+      <div className="absolute bottom-0 left-1 w-4 h-4 rounded-full bg-black flex items-center justify-center">
+        <div 
+          className="w-1 h-1 rounded-full bg-gray-300"
+          style={{ animation: "roll 1s linear infinite" }}
+        ></div>
+      </div>
+      
+      {/* Rear wheel */}
+      <div className="absolute bottom-0 right-1 w-4 h-4 rounded-full bg-black flex items-center justify-center">
+        <div 
+          className="w-1 h-1 rounded-full bg-gray-300"
+          style={{ animation: "roll 1s linear infinite" }}
+        ></div>
+      </div>
+    </div>
+  );
+}
 
 function ParallaxStrip({
   className,
