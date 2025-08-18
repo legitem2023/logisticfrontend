@@ -117,7 +117,7 @@ export default function SidebarLinks({
         {/* Mobile Drawer */}
         <div
           ref={drawerRef}
-          className={`lg:hidden fixed top-0 left-0 h-full w-64 bg-white/70 backdrop-blur-md shadow-xl z-30 rounded-tr-2xl rounded-br-2xl transform transition-all duration-300 ease-in-out ${
+          className={`lg:hidden fixed top-0 left-0 h-full w-64 bg-white/70 backdrop-blur-md shadow-xl z-50 rounded-tr-2xl rounded-br-2xl transform transition-all duration-300 ease-in-out ${
             mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
           }`}
         >
