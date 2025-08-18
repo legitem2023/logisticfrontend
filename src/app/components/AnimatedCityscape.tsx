@@ -195,12 +195,12 @@ function BuildingsRow({
             )}
             style={{ height: `${h}px` }}
           >
-            <div className="absolute inset-0 grid grid-cols-3 gap-0.8 p-1">
+            <div className="absolute inset-0 grid grid-cols-3 gap-1 p-1">
               {Array.from({ length: Math.floor(h / 12) * 3 }).map((_, w) => (
                 <div
                   key={w}
                   className={clsx(
-                    "h-2 w-2",
+                    "h-1.5 w-1.5",
                     Math.random() > 0.6
                       ? "bg-yellow-500 opacity-100 shadow-[0_0_2px_rgba(255,255,200,0.9)]"
                       : "bg-emerald-900"
