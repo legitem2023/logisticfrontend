@@ -1,8 +1,6 @@
 "use client";
-
 import React from "react";
 import clsx from "clsx";
-
 const AnimatedCityScape = ({
   className,
   children,
