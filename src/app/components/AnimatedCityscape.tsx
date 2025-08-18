@@ -3,13 +3,13 @@
 import React from "react";
 import clsx from "clsx";
 
-export default function AnimatedCityScape({
+const AnimatedCityScape({
   className,
   children,
 }: {
   className?: string;
   children?: React.ReactNode;
-}) {
+}) => {
   return (
     <div
       className={clsx(
@@ -246,3 +246,4 @@ function TreeRow({ side }: { side: "left" | "right" }) {
     </div>
   );
       }
+export default React.memo(AnimatedCityScape)
