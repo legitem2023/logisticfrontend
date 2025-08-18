@@ -134,7 +134,7 @@ const AnimatedCityScape = ({
       <div className="absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-b from-green-950 to-black" />
 
       {/* Content overlay */}
-      <div className="pointer-events-none absolute inset-0 flex items-center justify-center z-30">
+      <div className="pointer-events-none absolute inset-0 flex items-center justify-center z-20">
         <div className="pointer-events-auto px-6 py-3 text-white">
           {children}
         </div>
