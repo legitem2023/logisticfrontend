@@ -2,7 +2,7 @@
 import Image from 'next/image';
 import ProofOfDeliveryForm from './ProofOfDeliveryForm';
 import PickupProofForm from './PickupProofForm';
-
+import ProofOfPickupCard from './ProofOfPickupCard';
 import PaymentComponent from './PaymentComponent';
 import { useState, useEffect, useMemo } from "react"; 
 import 'react-datepicker/dist/react-datepicker.css';
@@ -290,6 +290,27 @@ const tabs = [
                               </button>
                               
                           </div>
+                       {
+                         delivery.proofOfPickup.map((proof:any,i:number) =>(
+                          <div key={i}>
+                          <ProofOfPickupCard
+                           createdAt={proof.createdAt}
+                           customerName={proof.customerName}
+                           customerSignature={proof.customerSignature}
+                           id={proof.id}
+                           numberOfPackages={proof.numberOfPackages}
+                           packageCondition={proof.packageCondition}
+                           pickupAddress={proof.pickupAddress}
+                           pickupDateTime={proof.pickupDateTime}
+                           pickupLatitude={proof.pickupLatitude}
+                           pickupLongitude={proof.pickupLongitude}
+                           proofPhotoUrl={proof.proofPhotoUrl}
+                           remarks={proof.remarks}
+                           status={proof.status}
+                           updatedAt={proof.updatedAt}/>
+                          </div> 
+                         ))
+                       }
                         
                            
                       </Collapsible>
