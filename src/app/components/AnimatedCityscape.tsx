@@ -24,7 +24,7 @@ const AnimatedCityScape = ({
       )}
     >
       {/* Blur overlay (only visible on xs) */}
-      <div className="absolute inset-0 backdrop-blur-sm xs:block hidden bg-black/10 z-10 pointer-events-none"></div>
+      <div className="absolute inset-0 backdrop-blur bg-black/10 z-10 pointer-events-none"></div>
 
       {/* STAR FIELD */}
       <div className="absolute inset-0">
