@@ -114,18 +114,20 @@ const AnimatedCityScape = ({
         </div>
       </div>
 
-      {/* Delivery Vehicles - Centered horizontally */}
-      <div className="absolute bottom-4 left-0 right-0 z-10 flex justify-center">
-        <div className="relative flex items-end">
-          {/* Motorcycle (in front) */}
-          <div className="relative z-20  translate-y-[2px] left-[45%]">
-            <EmojioneMotorcycle className="h-12 w-12 transform scale-x-[-1] " />
-          </div>
-          {/* Delivery truck (behind) */}
-          <div className="relative z-10 left-[25%]">
-            <DeliveryTruck className="h-16 w-16 " />
-          </div>
-        </div>
+      {/* Delivery Truck - Positioned at 45% left */}
+      <div className="absolute bottom-4 left-[45%] z-10">
+        <DeliveryTruck className="h-16 w-16" />
+      </div>
+
+      {/* Motorcycle - Animated to overtake the truck */}
+      <div 
+        className="absolute z-20 animate-overtake"
+        style={{ 
+          bottom: '0.7rem', // Positioned slightly lower than truck
+          animation: 'overtake 8s infinite linear'
+        }}
+      >
+        <EmojioneMotorcycle className="h-14 w-14 transform scale-x-[-1]" />
       </div>
 
       {/* Ground */}
@@ -148,6 +150,7 @@ const AnimatedCityScape = ({
             transform: translateX(-66.666%);
           }
         }
+        
         @keyframes twinkle {
           from {
             opacity: 0.2;
@@ -156,12 +159,37 @@ const AnimatedCityScape = ({
             opacity: 1;
           }
         }
+        
         @keyframes wheel-roll {
           0% {
             transform: rotate(0deg);
           }
           100% {
             transform: rotate(360deg);
+          }
+        }
+        
+        /* Motorcycle overtake animation */
+        @keyframes overtake {
+          0% {
+            left: 30%;
+    
+          }
+          30% {
+            left: 45%;
+            
+          }
+          50% {
+            left: 80%;
+            
+          }
+          80% {
+            left: 30%;
+            
+          }
+          100% {
+            left: 30%;
+            
           }
         }
       `}</style>
