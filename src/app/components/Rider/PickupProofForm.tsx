@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useMutation } from '@apollo/client';
+import { useMutation, ApolloQueryResult } from '@apollo/client';
 import { useSelector } from 'react-redux';
 import { INSERTPICKUPPROOF } from '../../../../graphql/mutation';
 import { Camera, Edit2, CheckCircle, Trash2, X } from 'lucide-react';
@@ -11,8 +11,11 @@ const packageConditions = [
   { value: 'fair', label: 'Fair - Some damage' },
   { value: 'poor', label: 'Poor - Significant damage' },
 ];
-
-const PickupProofForm = () => {
+type PickupProofFormProps = {
+  data: { id: string };
+  refresh: () => Promise<ApolloQueryResult<any>>; // Changed to return Promise
+}
+const PickupProofForm = ({data,refresh}:PickupProofFormProps) => {
   const location = useSelector((state: any) => state.location.current);
   console.log(location);
     const globalUserId = useSelector(selectTempUserId);
@@ -20,7 +23,7 @@ const PickupProofForm = () => {
   const [formData, setFormData] = useState({
     customerName: '',
     customerSignature: null,
-    id: '',
+    id: data.id,
     numberOfPackages: 1,
     otpCode: '',
     packageCondition: '',
