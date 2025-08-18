@@ -49,44 +49,45 @@ const AnimatedCityScape = ({
         <div className="absolute inset-0 rounded-full shadow-[0_0_25px_10px_rgba(255,255,200,0.4)]"></div>
       </div>
 
-      {/* FAR skyline */}
+      {/* FAR skyline - 3 copies for seamless looping */}
       <ParallaxStrip
         className="bottom-2 opacity-100"
-        speedClass="animate-[scrollX_70s_linear_infinite]"
+        speedClass="animate-[scrollX_70s_linear_infinite] will-change-transform transform-gpu"
         buildingTone="from-emerald-800 to-emerald-700"
-        heights={[30, 40, 35, 45]} // shrunk
+        heights={[30, 40, 35, 45]}
         detailLevel="far"
       />
 
-      {/* MID skyline */}
+      {/* MID skyline - 3 copies for seamless looping */}
       <ParallaxStrip
         className="bottom-2 opacity-100"
-        speedClass="animate-[scrollX_45s_linear_infinite]"
+        speedClass="animate-[scrollX_45s_linear_infinite] will-change-transform transform-gpu"
         buildingTone="from-emerald-900 to-emerald-800"
-        heights={[50, 60, 55, 65]} // shrunk
+        heights={[50, 60, 55, 65]}
         detailLevel="mid"
       />
 
-      {/* NEAR skyline */}
+      {/* NEAR skyline - 3 copies for seamless looping */}
       <ParallaxStrip
         className="bottom-2 opacity-100"
-        speedClass="animate-[scrollX_25s_linear_infinite]"
+        speedClass="animate-[scrollX_25s_linear_infinite] will-change-transform transform-gpu"
         buildingTone="from-emerald-950 to-emerald-900"
-        heights={[60, 75, 65, 90]} // shrunk
+        heights={[60, 75, 65, 90]}
         hasAntennas
         detailLevel="near"
       />
 
-      {/* Moving Trees */}
+      {/* Moving Trees - 3 copies for seamless looping */}
       <div className="absolute bottom-4 left-0 right-0 h-8">
         {/* Left trees */}
         <div
           className={clsx(
             "absolute left-0 top-0 w-full",
-            "animate-[scrollX_5s_linear_infinite]"
+            "animate-[scrollX_5s_linear_infinite] will-change-transform transform-gpu"
           )}
         >
-          <div className="flex w-[200%]">
+          <div className="flex w-[300%]">
+            <TreeRow side="left" />
             <TreeRow side="left" />
             <TreeRow side="left" />
           </div>
@@ -95,10 +96,11 @@ const AnimatedCityScape = ({
         <div
           className={clsx(
             "absolute left-0 top-0 w-full",
-            "animate-[scrollX_5s_linear_infinite]"
+            "animate-[scrollX_5s_linear_infinite] will-change-transform transform-gpu"
           )}
         >
-          <div className="flex w-[200%]">
+          <div className="flex w-[300%]">
+            <TreeRow side="right" />
             <TreeRow side="right" />
             <TreeRow side="right" />
           </div>
@@ -118,11 +120,11 @@ const AnimatedCityScape = ({
       {/* Keyframes */}
       <style jsx global>{`
         @keyframes scrollX {
-          from {
+          0% {
             transform: translateX(0);
           }
-          to {
-            transform: translateX(-50%);
+          100% {
+            transform: translateX(-66.666%);
           }
         }
         @keyframes twinkle {
@@ -155,7 +157,13 @@ function ParallaxStrip({
 }) {
   return (
     <div className={clsx("absolute left-0 right-0", className)}>
-      <div className={clsx("flex w-[200%] gap-6", speedClass)}>
+      <div className={clsx("flex w-[300%]", speedClass)}>
+        <BuildingsRow
+          buildingTone={buildingTone}
+          heights={heights}
+          hasAntennas={hasAntennas}
+          detailLevel={detailLevel}
+        />
         <BuildingsRow
           buildingTone={buildingTone}
           heights={heights}
@@ -185,7 +193,7 @@ function BuildingsRow({
   detailLevel: "far" | "mid" | "near";
 }) {
   return (
-    <div className="flex w-1/2 items-end gap-6 px-4">
+    <div className="flex w-1/3 items-end gap-6 px-4">
       {heights.map((h, i) => (
         <div key={`${h}-${i}`} className="relative flex items-end">
           <div
@@ -234,7 +242,7 @@ function TreeRow({ side }: { side: "left" | "right" }) {
   return (
     <div
       className={clsx(
-        "w-1/2 flex items-end",
+        "w-1/3 flex items-end",
         side === "left" ? "justify-start pl-4" : "justify-end pr-4"
       )}
     >
@@ -245,5 +253,6 @@ function TreeRow({ side }: { side: "left" | "right" }) {
       </div>
     </div>
   );
-      }
-export default React.memo(AnimatedCityScape)
+}
+      
+export default React.memo(AnimatedCityScape);
