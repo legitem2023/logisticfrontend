@@ -36,12 +36,12 @@ const SignupCard = () => {
   const { loading:vehicloading, error, data } = useQuery(VEHICLEQUERY);
   const [createRider] = useMutation(CREATERIDER, {
     onCompleted: (data) => {
-      showToast(data, "success");
+      showToast("Your account has been created successfully!", "success");
       setloading(false);
       console.log("Driver created:", data);
     },
     onError: (err) => {
-      console.log("Driver creation failed:", err.message);
+      console.log("Signup failed Please Try again:", err.message);
     },
   });
 
