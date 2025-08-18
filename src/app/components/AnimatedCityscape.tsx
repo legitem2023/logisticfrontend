@@ -164,29 +164,38 @@ const AnimatedCityScape = ({
 
 function Car({ color = "red" }: { color?: string }) {
   const colorMap = {
-    red: "bg-red-500",
-    blue: "bg-blue-500",
+    red: "bg-red-600",
+    blue: "bg-blue-600",
     yellow: "bg-yellow-400",
   };
   
   return (
-    <div className="relative w-20 h-10 transform">
+    <div className="relative w-20 h-8 transform">
       {/* Car body */}
-      <div className="absolute top-0 w-full h-6 rounded-md bg-gradient-to-b from-gray-800 to-black"></div>
-      <div className={`absolute top-0 w-full h-4 rounded-md ${colorMap[color as keyof typeof colorMap]}`}></div>
+      <div className={`absolute top-0 w-full h-5 rounded-t-md ${colorMap[color as keyof typeof colorMap]}`}>
+        {/* Windshield */}
+        <div className="absolute top-0 right-3 w-8 h-2 bg-gradient-to-b from-blue-300 to-blue-400 rounded-t-sm"></div>
+        {/* Side window */}
+        <div className="absolute top-1 left-1 w-4 h-2 bg-gradient-to-b from-blue-300 to-blue-400 rounded-sm"></div>
+        {/* Headlights */}
+        <div className="absolute top-2 right-0 w-1 h-1 rounded-full bg-yellow-200"></div>
+      </div>
+      
+      {/* Car bottom */}
+      <div className="absolute bottom-0 w-full h-2 bg-gradient-to-b from-gray-800 to-black rounded-b-md"></div>
       
       {/* Front wheel */}
-      <div className="absolute bottom-0 left-2 w-5 h-5 rounded-full bg-black flex items-center justify-center">
+      <div className="absolute bottom-0 left-3 w-4 h-4 rounded-full bg-black flex items-center justify-center">
         <div 
-          className="w-1.5 h-1.5 rounded-full bg-gray-300"
+          className="w-1 h-1 rounded-full bg-gray-300"
           style={{ animation: "roll 1s linear infinite" }}
         ></div>
       </div>
       
       {/* Rear wheel */}
-      <div className="absolute bottom-0 right-2 w-5 h-5 rounded-full bg-black flex items-center justify-center">
+      <div className="absolute bottom-0 right-3 w-4 h-4 rounded-full bg-black flex items-center justify-center">
         <div 
-          className="w-1.5 h-1.5 rounded-full bg-gray-300"
+          className="w-1 h-1 rounded-full bg-gray-300"
           style={{ animation: "roll 1s linear infinite" }}
         ></div>
       </div>
