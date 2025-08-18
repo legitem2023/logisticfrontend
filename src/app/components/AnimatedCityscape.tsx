@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import clsx from "clsx";
+
 const AnimatedCityScape = ({
   className,
   children,
@@ -83,6 +84,7 @@ const AnimatedCityScape = ({
             "absolute left-0 top-0 w-full",
             "animate-[scrollX_5s_linear_infinite] will-change-transform transform-gpu"
           )}
+          style={{ backfaceVisibility: "hidden" }}
         >
           <div className="flex w-[300%]">
             <TreeRow side="left" />
@@ -96,6 +98,7 @@ const AnimatedCityScape = ({
             "absolute left-0 top-0 w-full",
             "animate-[scrollX_5s_linear_infinite] will-change-transform transform-gpu"
           )}
+          style={{ backfaceVisibility: "hidden" }}
         >
           <div className="flex w-[300%]">
             <TreeRow side="right" />
@@ -136,7 +139,7 @@ const AnimatedCityScape = ({
       `}</style>
     </div>
   );
-}
+};
 
 function ParallaxStrip({
   className,
@@ -252,5 +255,5 @@ function TreeRow({ side }: { side: "left" | "right" }) {
     </div>
   );
 }
-      
+
 export default React.memo(AnimatedCityScape);
