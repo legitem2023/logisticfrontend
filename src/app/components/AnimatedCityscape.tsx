@@ -109,15 +109,9 @@ const AnimatedCityScape = ({
       </div>
 
       {/* L300 Vans with rolling wheels */}
-      <div className="absolute bottom-4 left-0 right-0 z-10">
-        <div className="absolute left-[10%] bottom-1">
-          <L300Van color="white" />
-        </div>
-        <div className="absolute left-[40%] bottom-1">
-          <L300Van color="blue" />
-        </div>
+      <div className="absolute bottom-4 left-0 right-0 z-10"> 
         <div className="absolute left-[70%] bottom-1">
-          <L300Van color="red" />
+          <L300Van color="white" />
         </div>
       </div>
 
