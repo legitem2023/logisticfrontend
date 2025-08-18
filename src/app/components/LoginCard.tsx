@@ -2,6 +2,9 @@
 import Cookies from 'js-cookie'
 import React, { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { useDispatch,useSelector } from 'react-redux';
+import { setActiveIndex } from '../../../Redux/activeIndexSlice';
+import { selectTempUserId } from "../../../Redux/tempUserSlice";
 import { Card, CardContent, CardHeader, CardTitle } from './ui/Card'
 import { Button } from './ui/Button'
 import { Input } from './ui/Input'
@@ -19,6 +22,12 @@ export default function LoginCard() {
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
 
+  const dispatch = useDispatch()
+//  const globalUserId = useSelector(selectTempUserId);
+ // const GlobalactiveIndex = useSelector((state: any) => state.activeIndex.value);
+
+
+  
   const [login, { loading, error }] = useMutation(LOGIN, {
     onCompleted: (data) => {
       const token = data?.login?.token
@@ -143,9 +152,9 @@ export default function LoginCard() {
           {/* Footer link */}
           <div className="text-center text-sm text-gray-500 mt-6">
             Dont have an account?{' '}
-            <a href="#" className="text-green-600 hover:text-green-800 font-medium transition-colors">
+            <span onClick={()=>{dispatch(setActiveIndex(11))}} className="text-green-600 hover:text-green-800 font-medium transition-colors">
               Sign up
-            </a>
+            </span>
           </div>
         </CardContent>
       </Card>
