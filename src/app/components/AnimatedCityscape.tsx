@@ -3,7 +3,7 @@
 import React from "react";
 import clsx from "clsx";
 
-const AnimatedCityScape({
+const AnimatedCityScape = ({
   className,
   children,
 }: {
