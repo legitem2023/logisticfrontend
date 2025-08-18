@@ -167,7 +167,8 @@ const SenderSignupForm = () => {
 
               <Button
                 type="submit"
-                className="w-full py-3 bg-gradient-to-r from-green-700 to-green-600 hover:from-green-800 hover:to-green-700 text-white font-bold rounded-lg shadow-lg transition-all duration-300 hover:shadow-xl"
+                className="w-full py-3 bg-gradient-to-r from-green-700 to-green-600 hover:from-green-800 hover:to-green-700 text-white font-bold rounded-lg shadow-lg transition-all duration-300 hover:shadow-xl relative overflow-hidden group"
+                disabled={loading}
               >
                 {loading ? (
               <span className="flex items-center justify-center">
@@ -178,7 +179,7 @@ const SenderSignupForm = () => {
                     3.042 1.135 5.824 3 7.938l3-2.647z">
                   </path>
                 </svg>
-                Logging in...
+                Loading...
               </span>
             ) : 'Create Account'}
               </Button>
