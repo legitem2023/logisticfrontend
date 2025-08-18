@@ -22,12 +22,12 @@ import {
 const SenderSignupForm = () => {
   const [createSender] = useMutation(CREATESENDER, {
     onCompleted: (data) => {
-      showToast(data, "success");
+      showToast("Your account has been created successfully!", "success");
       setloading(false);
       console.log("Sender created:", data);
     },
     onError: (err) => {
-      console.log("Sender creation failed:", err.message);
+      console.log("Signup failed Please Try Again:", err.message);
     },
   });
 
