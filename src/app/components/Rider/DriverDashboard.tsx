@@ -290,7 +290,7 @@ const tabs = [
                               </button>
                               
                           </div>
-                       {
+                       { delivery.proofOfPickup.length > 0?
                          delivery.proofOfPickup.map((proof:any,i:number) =>(
                           <div key={i}>
                           <ProofOfPickupCard
@@ -309,7 +309,15 @@ const tabs = [
                            status={proof.status}
                            updatedAt={proof.updatedAt}/>
                           </div> 
-                         ))
+                         )):(
+                           <div className="flex flex-col items-center justify-center py-12 bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl border-2 border-dashed border-gray-300">
+                        <FileSignature className="text-gray-400" size={48} />
+                        <h3 className="mt-4 text-lg font-medium text-gray-700">No proof added</h3>
+                        <p className="mt-2 text-gray-500 text-center max-w-md">
+                          Add pickup proof including photos, recipient information, and signatures
+                        </p>
+                      </div>
+                         )
                        }
                         
                            
