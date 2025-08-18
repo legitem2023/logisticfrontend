@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { Card, CardContent } from "../ui/Card";
 import { Button } from "../ui/Button"; 
 import Collapsible from "../ui/Collapsible";
-import ProofOfPickupCard "../Rider/ProofOfPickupCard";
+import ProofOfPickupCard from "../Rider/ProofOfPickupCard";
 import { 
   Clock, MapPin, Bike, Compass, XCircle, FileSignature, 
   User, Truck, WalletCards, CreditCard, Code  
