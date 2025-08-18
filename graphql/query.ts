@@ -121,6 +121,22 @@ query GetRidersDelivery($getRidersDeliveryId: String) {
     perKmRate
     distance
     paymentCode
+    proofOfPickup {
+        id
+        pickupDateTime
+        pickupAddress
+        pickupLatitude
+        pickupLongitude
+        customerName
+        customerSignature
+        proofPhotoUrl
+        packageCondition
+        numberOfPackages
+        remarks
+        status
+        createdAt
+        updatedAt
+     }
     proofOfDelivery {
       id
       photoUrl
@@ -206,6 +222,22 @@ query GetDispatch($getDispatchId: String) {
     perKmRate
     distance
     paymentCode
+        proofOfPickup {
+        id
+        pickupDateTime
+        pickupAddress
+        pickupLatitude
+        pickupLongitude
+        customerName
+        customerSignature
+        proofPhotoUrl
+        packageCondition
+        numberOfPackages
+        remarks
+        status
+        createdAt
+        updatedAt
+     }
     proofOfDelivery {
       id
       photoUrl
@@ -309,6 +341,22 @@ query GetDeliveries {
     baseRate
     perKmRate
     distance
+        proofOfPickup {
+        id
+        pickupDateTime
+        pickupAddress
+        pickupLatitude
+        pickupLongitude
+        customerName
+        customerSignature
+        proofPhotoUrl
+        packageCondition
+        numberOfPackages
+        remarks
+        status
+        createdAt
+        updatedAt
+     }
     packages {
       id
       packageType
