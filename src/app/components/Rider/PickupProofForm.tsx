@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useMutation } from '@apollo/client';
+import { useSelector } from 'react-redux';
 import { INSERTPICKUPPROOF } from '../../../../graphql/mutation';
 import { Camera, Edit2, CheckCircle, Trash2, X } from 'lucide-react';
 
@@ -11,6 +12,8 @@ const packageConditions = [
 ];
 
 const PickupProofForm = () => {
+  const location = useSelector((state: any) => state.location.current);
+  console.log(location);
   const [formData, setFormData] = useState({
     customerName: '',
     customerSignature: null,
