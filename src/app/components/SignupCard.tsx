@@ -8,7 +8,6 @@ import { Select } from "./ui/Select";
 import { useMutation, useQuery } from "@apollo/client";
 import { VEHICLEQUERY } from "../../../graphql/query";
 import AnimatedCityscape from './AnimatedCityscape';
-
 import { CREATERIDER } from "../../../graphql/mutation";
 import { showToast } from "../../../utils/toastify";
 import {
