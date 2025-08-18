@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { Card, CardContent } from "../ui/Card";
 import { Button } from "../ui/Button"; 
 import Collapsible from "../ui/Collapsible";
+import ProofOfPickupCard "../Rider/ProofOfPickupCard";
 import { 
   Clock, MapPin, Bike, Compass, XCircle, FileSignature, 
   User, Truck, WalletCards, CreditCard, Code  
@@ -201,6 +202,35 @@ export default function SenderDashboard() {
                     />
                   </Collapsible>
 
+                  <Collapsible 
+                        title={'Pickup Proof'}
+                        defaultOpen={false}>
+                       {
+                         delivery.proofOfPickup.map((proof:any,i:number) =>(
+                          <div key={i}>
+                          <ProofOfPickupCard
+                           createdAt={proof.createdAt}
+                           customerName={proof.customerName}
+                           customerSignature={proof.customerSignature}
+                           id={proof.id}
+                           numberOfPackages={proof.numberOfPackages}
+                           packageCondition={proof.packageCondition}
+                           pickupAddress={proof.pickupAddress}
+                           pickupDateTime={proof.pickupDateTime}
+                           pickupLatitude={proof.pickupLatitude}
+                           pickupLongitude={proof.pickupLongitude}
+                           proofPhotoUrl={proof.proofPhotoUrl}
+                           remarks={proof.remarks}
+                           status={proof.status}
+                           updatedAt={proof.updatedAt}/>
+                          </div> 
+                         ))
+                       }
+                        
+                           
+                      </Collapsible>
+
+                  
                   <Collapsible title="Delivery Proof" defaultOpen={false}>
                     {/* Proof Gallery */}
                     {delivery.proofOfDelivery.length > 0 ? (
