@@ -105,7 +105,7 @@ export default function SidebarLinks({
               {/* Mobile Menu Button */}
               <button
                 onClick={() => setMobileMenuOpen((v) => !v)}
-                className="lg:hidden p-2 rounded-xl backdrop-blur bg-white/40 border border-gray-200 shadow-lg hover:bg-white/60 transition"
+                className="lg:hidden p-2 rounded-xl z-70 backdrop-blur bg-white/40 border border-gray-200 shadow-lg hover:bg-white/60 transition"
                 aria-label="Toggle menu"
               >
                 {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -117,7 +117,7 @@ export default function SidebarLinks({
         {/* Mobile Drawer */}
         <div
           ref={drawerRef}
-          className={`lg:hidden fixed top-0 left-0 h-full w-64 bg-white/70 backdrop-blur-md shadow-xl z-50 rounded-tr-2xl rounded-br-2xl transform transition-all duration-300 ease-in-out ${
+          className={`lg:hidden fixed top-0 left-0 h-full w-64 bg-white/70 backdrop-blur-md shadow-xl z-60 rounded-tr-2xl rounded-br-2xl transform transition-all duration-300 ease-in-out ${
             mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
           }`}
         >
