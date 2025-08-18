@@ -3,6 +3,7 @@ import { useMutation } from '@apollo/client';
 import { useSelector } from 'react-redux';
 import { INSERTPICKUPPROOF } from '../../../../graphql/mutation';
 import { Camera, Edit2, CheckCircle, Trash2, X } from 'lucide-react';
+import { selectTempUserId } from '../../../../Redux/tempUserSlice';
 
 const packageConditions = [
   { value: 'excellent', label: 'Excellent - No visible damage' },
@@ -14,6 +15,8 @@ const packageConditions = [
 const PickupProofForm = () => {
   const location = useSelector((state: any) => state.location.current);
   console.log(location);
+    const globalUserId = useSelector(selectTempUserId);
+
   const [formData, setFormData] = useState({
     customerName: '',
     customerSignature: null,
@@ -23,11 +26,11 @@ const PickupProofForm = () => {
     packageCondition: '',
     pickupAddress: '',
     pickupDateTime: '',
-    pickupLatitude: 0.000000,
-    pickupLongitude: 0.000000,
+    pickupLatitude: location.latitude,
+    pickupLongitude: location.longitude,
     proofPhotoUrl: null,
     remarks: '',
-    riderId: '',
+    riderId: globalUserId,
     status: 'completed'
   });
 
