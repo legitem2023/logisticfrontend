@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import { INSERTPICKUPPROOF } from '../../../../graphql/mutation';
 import { Camera, Edit2, CheckCircle, Trash2, X } from 'lucide-react';
 import { selectTempUserId } from '../../../../Redux/tempUserSlice';
+import { showToast } from '../../../../utils/toastify'; 
 
 const packageConditions = [
   { value: 'excellent', label: 'Excellent - No visible damage' },
@@ -45,7 +46,17 @@ const PickupProofForm = ({data,refresh}:PickupProofFormProps) => {
   const fileInputRef = useRef(null);
   const [ctx, setCtx] = useState(null);
 
-  const [insertPickupProof, { loading, error }] = useMutation(INSERTPICKUPPROOF);
+  const [insertPickupProof, { loading, error }] = useMutation(INSERTPICKUPPROOF,{
+    onCompleted: async () => {
+      setSubmitSuccess(false);
+      try {
+        await refresh();
+        showToast("Proof of pickup submitted successfully!", 'success');
+      } catch (error) {
+        showToast("Failed to refresh data", 'error');
+      }
+    },
+  });
 
   // Initialize canvas context with high resolution
   useEffect(() => {
