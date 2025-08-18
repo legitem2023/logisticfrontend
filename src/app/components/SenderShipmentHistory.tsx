@@ -39,7 +39,7 @@ const DetailCard = ({ icon, label, value }: { icon: string; label: string; value
   </div>
 );
 
-export default function RiderShipmentHistory({ status }: any) {
+export default function SenderShipmentHistory({ status }: any) {
   const [search, setSearch] = useState("");
   const [selectedShipment, setSelectedShipment] = useState<any>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
