@@ -212,7 +212,7 @@ export function SideBarMenu({ activeTab, useRole, isUserActive }: {
         </div>
 
         {/* Mobile Menu - Shown on screens smaller than lg */}
-        <div className={`lg:hidden fixed top-0 left-0 h-full w-64 bg-white/70 backdrop-blur-md shadow-xl z-30 rounded-tr-2xl rounded-br-2xl transform transition-all duration-300 ease-in-out ${
+        <div className={`lg:hidden fixed top-0 left-0 h-full w-64 bg-white/70 backdrop-blur-md shadow-xl z-50 rounded-tr-2xl rounded-br-2xl transform transition-all duration-300 ease-in-out ${
           mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
         }`}>
           {/* Profile Section at the top of mobile menu */}
