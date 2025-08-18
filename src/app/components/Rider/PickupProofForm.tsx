@@ -21,7 +21,7 @@ const PickupProofForm = () => {
     customerName: '',
     customerSignature: null,
     id: '',
-    numberOfPackages: 0,
+    numberOfPackages: 1,
     otpCode: '',
     packageCondition: '',
     pickupAddress: '',
