@@ -114,12 +114,6 @@ const AnimatedCityScape = ({
         <div className="absolute left-[15%] bottom-0">
           <DeliveryTruck className="h-16 w-16" />
         </div>
-        <div className="absolute left-[45%] bottom-0">
-          <DeliveryTruck className="h-16 w-16" />
-        </div>
-        <div className="absolute left-[75%] bottom-0">
-          <DeliveryTruck className="h-16 w-16" />
-        </div>
       </div>
 
       {/* Ground */}
