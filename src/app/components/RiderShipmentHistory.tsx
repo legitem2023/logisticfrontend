@@ -55,22 +55,24 @@ export default function RiderShipmentHistory({ status }: any) {
 
   useEffect(() => {
     if (data) {
-      const formattedDeliveries = data.getRidersDelivery.filter((del:any)=>del.deliveryStatus === status).map((delivery: any) => ({
-        ...delivery,
-       // deliveryStatus: capitalize(delivery.deliveryStatus),
-        estimatedDeliveryTime: formatDate(delivery.estimatedDeliveryTime),
-        packages: delivery.packages || [],
-      }));
+      const formattedDeliveries = data.getRidersDelivery
+        .filter((del: any) => del.deliveryStatus === status)
+        .map((delivery: any) => ({
+          ...delivery,
+          estimatedDeliveryTime: formatDate(delivery.estimatedDeliveryTime),
+          packages: delivery.packages || [],
+        }));
       
       setOriginalDeliveries(formattedDeliveries);
       setFilteredDeliveries(formattedDeliveries);
+      setCurrentPage(1); // Reset to first page when data or status changes
     }
-  }, [data]);
+  }, [data, status]); // Added status to dependency array
 
   const handleFilter = ({ search, date }: { search: string; date: Date | null }) => {
     if (!search && !date) {
       setFilteredDeliveries(originalDeliveries);
-      setCurrentPage(1); // Reset to first page when filters are cleared
+      setCurrentPage(1);
       return;
     }
 
@@ -88,7 +90,7 @@ export default function RiderShipmentHistory({ status }: any) {
     });
 
     setFilteredDeliveries(result);
-    setCurrentPage(1); // Reset to first page when filters change
+    setCurrentPage(1);
   };
 
   // Calculate pagination
@@ -424,4 +426,4 @@ export default function RiderShipmentHistory({ status }: any) {
       )}
     </>
   );
-              }
+                  }
