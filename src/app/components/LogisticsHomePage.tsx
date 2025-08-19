@@ -7,7 +7,7 @@ import { setActiveIndex } from '../../../Redux/activeIndexSlice';
 export default function LogisticsHomePage() { 
   const dispatch = useDispatch();
  
-  const handlesearch = () =>{
+  const handleSearch = () =>{
     dispatch(setActiveIndex(14))
   }
   return ( 
