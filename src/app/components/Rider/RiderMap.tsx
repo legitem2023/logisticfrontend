@@ -276,8 +276,8 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
 
   return (
     <div className="relative w-full h-full overflow-hidden bg-black">
-          <div className="flex justify-between items-center p-4 border-b bg-white">
-            <h2 className="text-lg font-semibold text-gray-900">Payment</h2>
+          <div className="flex justify-between items-center p-4 border-b bg-white z-10">
+            <h2 className="text-lg font-semibold text-gray-900">Map</h2>
             <Button
               variant="ghost"
               size="sm"
