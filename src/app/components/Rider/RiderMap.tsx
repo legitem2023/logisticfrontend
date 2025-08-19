@@ -281,7 +281,7 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
             <Button
               variant="ghost"
               size="sm"
-              onClick={setMap()}
+              onClick={setMap}
             >
               <XIcon className="w-5 h-5" />
             </Button>
