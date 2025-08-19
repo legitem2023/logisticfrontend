@@ -20,11 +20,12 @@ type Coordinates = {
   lng: number;
 }
 
-export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, deliveryId, senderId }: { 
+export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, deliveryId, senderId, setMap }: { 
   PickUpCoordinates: Coordinates,
   DropOffCoordinates: Coordinates,
   deliveryId: any,
-  senderId: any 
+  senderId: any,
+  setMap:() => void
 }) {
   const mapRef = useRef<L.Map | null>(null);
   const routingRef = useRef<L.Routing.Control | null>(null);
@@ -273,6 +274,16 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
 
   return (
     <div className="relative w-full h-full overflow-hidden bg-black">
+          <div className="flex justify-between items-center p-4 border-b bg-white">
+            <h2 className="text-lg font-semibold text-gray-900">Payment</h2>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={setMap(false)}
+            >
+              <XIcon className="w-5 h-5" />
+            </Button>
+          </div>
       <div
         ref={mapContainerRef}
         id="map"
