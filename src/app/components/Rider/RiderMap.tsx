@@ -6,14 +6,14 @@ import 'leaflet/dist/leaflet.css';
 import 'leaflet-routing-machine';
 import 'leaflet-routing-machine/dist/leaflet-routing-machine.css';
 import { Button } from "../ui/Button"; 
-import { Clock, X,XIcon, Compass, FileText, Upload, Plus, User,PackageOpen, FileSignature ,CreditCard ,WalletCards, Flag,Code,Truck } from "lucide-react"; 
+import { XIcon } from "lucide-react"; 
 import { showToast } from '../../../../utils/toastify'; 
 import { useSelector } from 'react-redux';
 import { selectTempUserId } from '../../../../Redux/tempUserSlice';
 import { SENDNOTIFICATION } from "../../../../graphql/mutation"; 
 import { useMutation, useSubscription } from "@apollo/client";
 import { LocationTracking } from '../../../../graphql/subscription';
-import { FaMotorcycle, FaBox, FaMapMarkerAlt, FaCrown, FaChevronUp, FaCheck, FaTimes, FaExclamationTriangle, FaStore } from 'react-icons/fa';
+import { FaMotorcycle, FaMapMarkerAlt, FaCrown, FaChevronUp, FaExclamationTriangle, FaStore } from 'react-icons/fa';
 import { GiPathDistance } from 'react-icons/gi';
 import { MdOutlineDeliveryDining } from 'react-icons/md';
 
@@ -281,13 +281,13 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
         <h2 className="text-lg font-semibold text-white">Map</h2>
         <button
           onClick={setMap}
-          className="text-white hover:bg-gray-800 p-1 rounded-full transition-colors"
+          className="text-white hover:bg-yellow-600 p-2 rounded-full transition-colors bg-yellow-700 shadow-lg"
         >
           <XIcon className="w-5 h-5" />
         </button>
       </div>
 
-      {/* Map container with top padding */}
+      {/* Map container */}
       <div 
         ref={mapContainerRef}
         id="map"
@@ -314,11 +314,11 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
         </div>
       </div>
 
-      {/* Luxury Status Panel - Slidable */}
+      {/* Luxury Status Panel - Fixed height and z-index */}
       <div
         ref={panelRef}
         className={`
-          absolute bottom-0 left-0 right-0 z-10 px-6 pb-8
+          fixed bottom-0 left-0 right-0 z-50 px-6 pb-8
           bg-gradient-to-t from-gray-900 to-black
           border-t border-yellow-600/50
           rounded-t-3xl shadow-[0_-20px_50px_-10px_rgba(0,0,0,0.8)]
@@ -440,7 +440,7 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
       {!isPanelOpen && (
         <button
           onClick={() => setIsPanelOpen(true)}
-          className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-20
+          className="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-50
             bg-gradient-to-r from-yellow-600 to-yellow-800 text-white
             rounded-full p-3 shadow-lg hover:shadow-xl animate-bounce
             flex items-center justify-center w-12 h-12"
@@ -450,4 +450,4 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
       )}
     </div>
   );
-                      }
+}
