@@ -15,6 +15,7 @@ import LogisticsForm from './Sender/LogisticsForm';
 import SettingsPage from './SettingsPage';
 import HelpPage from './HelpPage';
 import LoginCard from './LoginCard';
+import DeliveryTracker from './DeliveryTracker';
 import SignupRoleSelector from './SignupRoleSelector';
 import { mockItems } from './json/mockItems';
 import dynamic from 'next/dynamic';
@@ -29,6 +30,7 @@ import {
   Truck,
   BadgeCheck,
   Users,
+  Compass,
   WalletMinimal,ChartBar,ChartBarIcon,
   HomeIcon
 } from "lucide-react";
@@ -243,6 +245,21 @@ export function ActiveContentDisplay({ activeTab, useRole, isUserActive }: {
             content: (
               <div className="px-1 py-1 space-y-1">
                 <Profile/>
+              </div>
+            ),
+          },
+        ]
+      : []),
+        ...(!isUserActive()
+      ? [
+          {
+            id:14,
+            label: '',
+            role: '',
+            icon: <Compass color="green" />,
+            content: (
+              <div className="px-1 py-1 space-y-1">
+                <DeliveryTracker/>
               </div>
             ),
           },
