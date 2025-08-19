@@ -1,9 +1,15 @@
 import Image from 'next/image'; 
 import { Button } from './ui/Button'; 
 import { Input } from './ui/Input';
+import { useSelector, useDispatch } from "react-redux";
+import { setActiveIndex } from '../../../Redux/activeIndexSlice';
 
 export default function LogisticsHomePage() { 
-  
+  const dispatch = useDispatch();
+ 
+  const handlesearch = () =>{
+    dispatch(setActiveIndex(14))
+  }
   return ( 
 <main className="min-h-screen bg-white text-gray-800"> {/* Hero Section */} 
   <section className="customgrad py-24 text-center text-white"> 
@@ -12,7 +18,7 @@ export default function LogisticsHomePage() {
       <p className="text-lg mb-8">Seamlessly manage, track, and optimize your deliveries in real-time.</p> 
     <div className="flex flex-col sm:flex-row items-center justify-center gap-4 max-w-xl mx-auto"> 
     <Input placeholder="Enter tracking number..." className="w-full" /> 
-      <Button className="w-full sm:w-auto">Track Package</Button> 
+      <Button className="w-full sm:w-auto" onClick={()=>handleSearch()}>Track Package</Button> 
     </div> 
     </div> 
   </section>
