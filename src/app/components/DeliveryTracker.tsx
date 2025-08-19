@@ -271,7 +271,7 @@ const DeliveryTracker = () => {
                 <span className="text-green-700 text-xl font-bold">2</span>
               </div>
               <h3 className="text-lg font-semibold mb-2">Track Your Package</h3>
-              <p className="text-gray-600">Click the "Track Package" button to see your delivery status</p>
+              <p className="text-gray-600">Click the Track Package button to see your delivery status</p>
             </div>
             
             <div className="bg-white p-6 rounded-lg border border-gray-200 text-center">
