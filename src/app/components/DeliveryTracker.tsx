@@ -3,7 +3,7 @@ import { useQuery } from '@apollo/client';
 import { GETDELIVERIESADMIN } from '../../../graphql/query';
 import HomeDataCarousel from './HomeDataCarousel';
 import { mockItems } from './json/mockItems';
-
+import Link from 'next/link';
 const DeliveryTracker = () => {
   const [trackingNumber, setTrackingNumber] = useState('');
   const { loading, error, data } = useQuery(GETDELIVERIESADMIN);
@@ -338,9 +338,9 @@ const DeliveryTracker = () => {
             Get started today with our fast, reliable, and affordable logistics solutions.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="bg-green-700 hover:bg-green-800 text-white font-medium py-3 px-8 rounded-lg">
+            <Link href="https://logisticfrontend.vercel.app/Contact" className="bg-green-700 hover:bg-green-800 text-white font-medium py-3 px-8 rounded-lg">
               Get a Quote
-            </button>
+            </Link>
             <button className="bg-white border border-green-600 text-green-600 hover:bg-green-50 font-medium py-3 px-8 rounded-lg">
               Create Account
             </button>
