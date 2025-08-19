@@ -1,168 +1,3 @@
-/*'use client';
-
-import { useEffect, useRef, useState } from 'react';
-import L from 'leaflet';
-import 'leaflet/dist/leaflet.css';
-import 'leaflet-routing-machine';
-import 'leaflet-routing-machine/dist/leaflet-routing-machine.css';
-import { showToast } from '../../../../utils/toastify'; 
-import { useSelector } from 'react-redux';
-import { selectTempUserId } from '../../../../Redux/tempUserSlice';
-
-import { SENDNOTIFICATION } from "../../../../graphql/mutation"; 
-
-//import { useSubscription } from '@apollo/client';
-import { LocationTracking } from '../../../../graphql/subscription'; // update with correct path
-
-import { useMutation, useQuery, useSubscription } from "@apollo/client"; 
-type Coordinates = {
-  lat: number;
-  lng: number;
-}
-
-export default function RiderMap({ PickUpCoordinates,DropOffCoordinates,deliveryId,senderId }: { PickUpCoordinates:Coordinates,DropOffCoordinates: Coordinates,deliveryId:any,senderId:any }) {
-  const mapRef = useRef<L.Map | null>(null);
-  const routingRef = useRef<L.Routing.Control | null>(null);
-  const mapContainerRef = useRef<HTMLDivElement | null>(null);
-  
-const [sendNotification] = useMutation(SENDNOTIFICATION,{
-   onCompleted: () => showToast("Notification sent", "success"),
-   onError: (e: any) => console.log('Finished Error', e)
-  })
-  
-  const location = useSelector((state: any) => state.location.current);
-  const globalUserId = useSelector(selectTempUserId);
-  const [status, setStatus] = useState<'pending' | 'cancelled' | 'finished' | null>(null);
-  const [showPanel, setShowPanel] = useState(false);
-
-
-const { data: locationData } = useSubscription(LocationTracking, {
-    variables: { userId: globalUserId },
-  });
-
-  const handleNotification = (message:any) =>{
-    sendNotification({
-      variables:{
-        userID: senderId, 
-        title: message, 
-        message: message, 
-        type: 'Notification Message'
-      }
-    })
-  }
-  
-  const rider = locationData?.LocationTracking
-  ? L.latLng(locationData.LocationTracking.latitude, locationData.LocationTracking.longitude)
-  : L.latLng(location?.latitude, location?.longitude); // fallback
-
-  const sender = L.latLng(PickUpCoordinates?.lat, PickUpCoordinates?.lng);   // Manila
-  const receiver = L.latLng(DropOffCoordinates.lat, DropOffCoordinates.lng); // Quezon City
-
-  const riderIcon = L.icon({
-    iconUrl: '/Bike.svg',
-    iconSize: [40, 40],
-    iconAnchor: [20, 40],
-    popupAnchor: [0, -35],
-  });
-
-  const senderIcon = L.icon({
-    iconUrl: 'https://cdn-icons-png.flaticon.com/512/535/535137.png',
-    iconSize: [40, 40],
-    iconAnchor: [20, 40],
-    popupAnchor: [0, -35],
-  });
-  
-  const receiverIcon = L.icon({
-    iconUrl: 'https://cdn-icons-png.flaticon.com/512/535/535137.png',
-    iconSize: [40, 40],
-    iconAnchor: [20, 40],
-    popupAnchor: [0, -35],
-  });
-
-  useEffect(() => {
-    if (!mapContainerRef.current || mapRef.current) return;
-
-    const map = L.map(mapContainerRef.current).setView(sender, 13);
-    mapRef.current = map;
-
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; OpenStreetMap contributors',
-    }).addTo(map);
-    
-    L.marker(rider, { icon: riderIcon }).bindPopup('Rider Point').addTo(map);
-    L.marker(sender, { icon: senderIcon }).bindPopup('📦 Pickup Point').addTo(map);
-    L.marker(receiver, { icon: receiverIcon }).bindPopup('📍 Delivery Point').addTo(map);
-
-    import('leaflet-routing-machine').then(() => {
-      if (!mapRef.current) return;
-
-      const routingControl = L.Routing.control({
-        waypoints: [rider, sender, receiver],
-        createMarker: () => null,
-        addWaypoints: false,
-        routeWhileDragging: false,
-        show:false,
-      } as any).addTo(mapRef.current!);
-
-      routingRef.current = routingControl;
-    });
-
-    const handleResize = () => map.invalidateSize();
-    window.addEventListener('resize', handleResize);
-
-    // Show panel after slight delay for animation effect
-    setTimeout(() => setShowPanel(true), 300);
-
-    return () => {
-      window.removeEventListener('resize', handleResize);
-      routingRef.current?.remove();
-      routingRef.current = null;
-      mapRef.current?.remove();
-      mapRef.current = null;
-    };
-  }, []);
-
-  
-  return (
-    <div className="relative w-full h-screen overflow-hidden">
-      <div
-        ref={mapContainerRef}
-        id="map"
-        style={{ width: '100%', height: '100%', position: 'absolute', top: 0, zIndex: 0 }}
-      />
-
-      
-      <div
-        className={`
-          absolute bottom-0 left-0 right-0 z-10 px-4 pb-6 pt-5
-          backdrop-blur-xl bg-white/60 dark:bg-black/40 border-t border-white/20
-          rounded-t-2xl shadow-2xl transition-transform duration-500
-          ${showPanel ? 'translate-y-0' : 'translate-y-full'}
-        `}
-      >
-        <div className="text-center mb-4">
-          <div className="h-1.5 w-12 bg-gray-400/50 mx-auto rounded-full mb-2" />
-          <h2 className="text-xl font-bold text-gray-800 dark:text-white">Delivery Status</h2>
-          <p className="text-xs text-gray-500">Update the delivery below.</p>
-        </div>
-
-        <div className="flex justify-between gap-3">
-          <button
-            className="flex-1 bg-yellow-600 hover:bg-green-700 text-white font-semibold py-2 rounded-xl shadow-lg transition-all focus:ring-2 focus:ring-green-300">
-            Failed Attemp
-          </button>
-        </div>
-
-        {status && (
-          <div className="text-center text-sm text-gray-700 dark:text-gray-300 mt-4">
-            Current status: <span className="font-semibold capitalize">{status}</span>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
-*/
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
@@ -176,6 +11,9 @@ import { selectTempUserId } from '../../../../Redux/tempUserSlice';
 import { SENDNOTIFICATION } from "../../../../graphql/mutation"; 
 import { useMutation, useSubscription } from "@apollo/client";
 import { LocationTracking } from '../../../../graphql/subscription';
+import { FaMotorcycle, FaBox, FaMapMarkerAlt, FaCrown } from 'react-icons/fa';
+import { GiPathDistance } from 'react-icons/gi';
+import { MdCancel, MdCheckCircle } from 'react-icons/md';
 
 type Coordinates = {
   lat: number;
@@ -195,6 +33,7 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
   // Tracking state
   const [acceptancePoint, setAcceptancePoint] = useState<L.LatLng | null>(null);
   const [notificationSent, setNotificationSent] = useState(false);
+  const [estimatedTime, setEstimatedTime] = useState<number | null>(null);
   const progressRef = useRef({
     totalDistance: null as number | null,
     checkInterval: null as NodeJS.Timeout | null
@@ -232,25 +71,43 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
   const sender = L.latLng(PickUpCoordinates?.lat, PickUpCoordinates?.lng);
   const receiver = L.latLng(DropOffCoordinates.lat, DropOffCoordinates.lng);
 
-  const riderIcon = L.icon({
-    iconUrl: '/Bike.svg',
+  // Premium SVG icons with golden accents
+  const riderIcon = L.divIcon({
+    html: `
+      <div class="relative">
+        <div class="absolute -top-1 -right-1 text-yellow-500 z-10">
+          <FaCrown />
+        </div>
+        <div class="w-10 h-10 bg-gradient-to-br from-gray-900 to-black rounded-full border-2 border-yellow-500 flex items-center justify-center text-yellow-500">
+          <FaMotorcycle class="text-xl" />
+        </div>
+      </div>
+    `,
+    className: "",
     iconSize: [40, 40],
     iconAnchor: [20, 40],
-    popupAnchor: [0, -35],
   });
 
-  const senderIcon = L.icon({
-    iconUrl: 'https://cdn-icons-png.flaticon.com/512/535/535137.png',
+  const senderIcon = L.divIcon({
+    html: `
+      <div class="w-10 h-10 bg-gradient-to-br from-blue-700 to-blue-900 rounded-full border-2 border-white flex items-center justify-center text-white">
+        <FaBox class="text-xl" />
+      </div>
+    `,
+    className: "",
     iconSize: [40, 40],
     iconAnchor: [20, 40],
-    popupAnchor: [0, -35],
   });
   
-  const receiverIcon = L.icon({
-    iconUrl: 'https://cdn-icons-png.flaticon.com/512/535/535137.png',
+  const receiverIcon = L.divIcon({
+    html: `
+      <div class="w-10 h-10 bg-gradient-to-br from-green-600 to-green-800 rounded-full border-2 border-white flex items-center justify-center text-white">
+        <FaMapMarkerAlt class="text-xl" />
+      </div>
+    `,
+    className: "",
     iconSize: [40, 40],
     iconAnchor: [20, 40],
-    popupAnchor: [0, -35],
   });
 
   // 1. Set acceptance point when rider first appears
@@ -259,6 +116,10 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
       setAcceptancePoint(rider.clone());
       progressRef.current.totalDistance = rider.distanceTo(sender);
       console.log(`Total distance to pickup: ${progressRef.current.totalDistance?.toFixed(0)} meters`);
+      
+      // Calculate estimated time (1.5 minutes per 100 meters)
+      const timeEstimate = (progressRef.current.totalDistance / 100) * 1.5;
+      setEstimatedTime(Math.round(timeEstimate));
     }
   }, [rider]);
 
@@ -299,16 +160,27 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
   useEffect(() => {
     if (!mapContainerRef.current || mapRef.current) return;
 
-    const map = L.map(mapContainerRef.current).setView(sender, 13);
+    const map = L.map(mapContainerRef.current, {
+      zoomControl: false,
+      attributionControl: false,
+    }).setView(sender, 13);
+    
     mapRef.current = map;
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; OpenStreetMap contributors',
+    // Premium map tiles
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+      maxZoom: 19,
     }).addTo(map);
     
-    L.marker(rider, { icon: riderIcon }).bindPopup('Rider Point').addTo(map);
-    L.marker(sender, { icon: senderIcon }).bindPopup('📦 Pickup Point').addTo(map);
-    L.marker(receiver, { icon: receiverIcon }).bindPopup('📍 Delivery Point').addTo(map);
+    // Add custom zoom control
+    L.control.zoom({
+      position: 'bottomright'
+    }).addTo(map);
+    
+    // Add markers
+    L.marker(rider, { icon: riderIcon }).bindPopup('<div class="font-bold text-yellow-600">Premium Rider</div>').addTo(map);
+    L.marker(sender, { icon: senderIcon }).bindPopup('<div class="font-bold text-blue-600">Pickup Point</div>').addTo(map);
+    L.marker(receiver, { icon: receiverIcon }).bindPopup('<div class="font-bold text-green-600">Delivery Point</div>').addTo(map);
 
     import('leaflet-routing-machine').then(() => {
       if (!mapRef.current) return;
@@ -319,6 +191,13 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
         addWaypoints: false,
         routeWhileDragging: false,
         show: false,
+        lineOptions: {
+          styles: [{ 
+            color: '#f59e0b', 
+            weight: 5,
+            opacity: 0.7
+          }]
+        }
       } as any).addTo(mapRef.current!);
 
       routingRef.current = routingControl;
@@ -339,41 +218,107 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
   }, []);
 
   return (
-    <div className="relative w-full h-screen overflow-hidden">
+    <div className="relative w-full h-screen overflow-hidden bg-black">
       <div
         ref={mapContainerRef}
         id="map"
-        style={{ width: '100%', height: '100%', position: 'absolute', top: 0, zIndex: 0 }}
+        className="w-full h-full absolute top-0 z-0"
       />
 
-      {/* Sliding Panel */}
+      {/* Premium Control Panel */}
+      <div className="absolute top-4 left-4 z-10">
+        <div className="bg-gradient-to-br from-gray-900 to-black rounded-2xl p-4 shadow-2xl border border-gray-700">
+          <div className="flex items-center mb-3">
+            <div className="bg-yellow-500 w-3 h-3 rounded-full mr-2"></div>
+            <h3 className="text-white font-bold text-lg">Delivery #{deliveryId.slice(0, 8)}</h3>
+          </div>
+          
+          <div className="flex items-center text-sm text-gray-300 mb-2">
+            <GiPathDistance className="mr-2 text-yellow-500" />
+            <span>{progressRef.current.totalDistance ? `${(progressRef.current.totalDistance / 1000).toFixed(1)} km` : 'Calculating...'}</span>
+          </div>
+          
+          <div className="flex items-center text-sm text-gray-300">
+            <FaMotorcycle className="mr-2 text-yellow-500" />
+            <span>{estimatedTime ? `~${estimatedTime} min` : 'Estimating...'}</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Luxury Status Panel */}
       <div
         className={`
-          absolute bottom-0 left-0 right-0 z-10 px-4 pb-6 pt-5
-          backdrop-blur-xl bg-white/60 dark:bg-black/40 border-t border-white/20
-          rounded-t-2xl shadow-2xl transition-transform duration-500
+          absolute bottom-0 left-0 right-0 z-10 px-6 pb-8 pt-6
+          bg-gradient-to-t from-gray-900 to-black
+          border-t border-yellow-600/50
+          rounded-t-3xl shadow-[0_-20px_50px_-10px_rgba(0,0,0,0.8)]
+          transition-transform duration-700 ease-in-out
           ${showPanel ? 'translate-y-0' : 'translate-y-full'}
         `}
       >
-        <div className="text-center mb-4">
-          <div className="h-1.5 w-12 bg-gray-400/50 mx-auto rounded-full mb-2" />
-          <h2 className="text-xl font-bold text-gray-800 dark:text-white">Delivery Status</h2>
-          <p className="text-xs text-gray-500">Update the delivery below.</p>
+        <div className="text-center mb-6">
+          <div className="h-1 w-24 bg-yellow-600/60 mx-auto rounded-full mb-4" />
+          <h2 className="text-2xl font-bold text-white mb-1">Delivery Status</h2>
+          <p className="text-sm text-gray-400">Premium Express Service</p>
         </div>
 
-        <div className="flex justify-between gap-3">
+        <div className="grid grid-cols-2 gap-4">
           <button
-            className="flex-1 bg-yellow-600 hover:bg-green-700 text-white font-semibold py-2 rounded-xl shadow-lg transition-all focus:ring-2 focus:ring-green-300">
-            Failed Attempt
+            onClick={() => setStatus('finished')}
+            className={`
+              flex items-center justify-center gap-2 py-4 rounded-xl
+              bg-gradient-to-r from-green-700 to-green-900
+              text-white font-semibold shadow-lg
+              transition-all duration-300 hover:shadow-xl hover:scale-[1.02]
+              focus:ring-2 focus:ring-green-500 focus:ring-opacity-50
+              border border-green-500/30
+              ${status === 'finished' ? 'ring-2 ring-green-500' : ''}
+            `}>
+            <MdCheckCircle className="text-xl" />
+            Mark Delivered
+          </button>
+          
+          <button
+            onClick={() => setStatus('cancelled')}
+            className={`
+              flex items-center justify-center gap-2 py-4 rounded-xl
+              bg-gradient-to-r from-red-700 to-red-900
+              text-white font-semibold shadow-lg
+              transition-all duration-300 hover:shadow-xl hover:scale-[1.02]
+              focus:ring-2 focus:ring-red-500 focus:ring-opacity-50
+              border border-red-500/30
+              ${status === 'cancelled' ? 'ring-2 ring-red-500' : ''}
+            `}>
+            <MdCancel className="text-xl" />
+            Cancel Delivery
           </button>
         </div>
 
         {status && (
-          <div className="text-center text-sm text-gray-700 dark:text-gray-300 mt-4">
-            Current status: <span className="font-semibold capitalize">{status}</span>
+          <div className="mt-6 flex justify-center">
+            <span className={`
+              px-4 py-2 rounded-full text-sm font-medium
+              ${
+                status === 'pending' ? 'bg-yellow-900 text-yellow-200' : 
+                status === 'cancelled' ? 'bg-red-900/80 text-red-200' : 
+                'bg-green-900/80 text-green-200'
+              }
+            `}>
+              {status === 'pending' ? '🔄 Processing update...' : 
+               status === 'cancelled' ? '❌ Delivery cancelled' : 
+               '✅ Delivery completed'}
+            </span>
           </div>
         )}
+
+        <div className="mt-6 pt-4 border-t border-gray-800">
+          <div className="flex justify-between text-gray-400 text-sm">
+            <span>Pickup location</span>
+            <span className="text-yellow-500">Premium</span>
+            <span>Delivery location</span>
+          </div>
+        </div>
       </div>
     </div>
   );
-}
+                }
