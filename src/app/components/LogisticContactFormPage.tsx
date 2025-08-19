@@ -50,7 +50,7 @@ const LogisticContactFormPage = () => {
 
   return (
     <div className="min-h-screen flex justify-center bg-gradient-to-br from-green-50 to-green-100 p-1">
-      <Card className="max-w-4xl w-full shadow-xl border border-green-100 overflow-hidden relative bg-white">
+      <Card className="max-w-2xl w-full shadow-xl border border-green-100 overflow-hidden relative bg-white">
         
 
         {/* Header */}
