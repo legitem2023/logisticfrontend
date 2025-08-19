@@ -291,7 +291,7 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
       <div 
         ref={mapContainerRef}
         id="map"
-        className="w-full h-full pt-14"
+        className="w-full h-full pt-14 z-0"
       />
 
       {/* Premium Control Panel */}
