@@ -17,6 +17,16 @@ import { FaMotorcycle, FaMapMarkerAlt, FaCrown, FaChevronUp, FaExclamationTriang
 import { GiPathDistance } from 'react-icons/gi';
 import { MdOutlineDeliveryDining } from 'react-icons/md';
 
+// Luxury color palette
+const COLORS = {
+  darkGreen: '#0a2f15',
+  mediumGreen: '#1b5e3a',
+  lightGreen: '#2e8b57',
+  gold: '#d4af37',
+  cream: '#f5f5dc',
+  dark: '#1a1a1a'
+};
+
 type Coordinates = {
   lat: number;
   lng: number;
@@ -80,10 +90,10 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
   const riderIcon = L.divIcon({
     html: `
       <div class="relative">
-        <div class="absolute -top-1 -right-1 text-yellow-500 z-10">
+        <div class="absolute -top-1 -right-1 text-${COLORS.gold} z-10">
           <FaCrown />
         </div>
-        <div class="w-10 h-10 bg-gradient-to-br from-gray-900 to-black rounded-full border-2 border-yellow-500 flex items-center justify-center text-yellow-500">
+        <div class="w-10 h-10 bg-gradient-to-br from-${COLORS.darkGreen} to-${COLORS.dark} rounded-full border-2 border-${COLORS.gold} flex items-center justify-center text-${COLORS.gold}">
           <FaMotorcycle class="text-xl" />
         </div>
       </div>
@@ -95,7 +105,7 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
 
   const senderIcon = L.divIcon({
     html: `
-      <div class="w-10 h-10 bg-gradient-to-br from-blue-700 to-blue-900 rounded-full border-2 border-white flex items-center justify-center text-white">
+      <div class="w-10 h-10 bg-gradient-to-br from-${COLORS.mediumGreen} to-${COLORS.darkGreen} rounded-full border-2 border-${COLORS.cream} flex items-center justify-center text-${COLORS.cream}">
         <FaStore class="text-xl" />
       </div>
     `,
@@ -106,7 +116,7 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
   
   const receiverIcon = L.divIcon({
     html: `
-      <div class="w-10 h-10 bg-gradient-to-br from-green-600 to-green-800 rounded-full border-2 border-white flex items-center justify-center text-white">
+      <div class="w-10 h-10 bg-gradient-to-br from-${COLORS.lightGreen} to-${COLORS.mediumGreen} rounded-full border-2 border-${COLORS.cream} flex items-center justify-center text-${COLORS.cream}">
         <FaMapMarkerAlt class="text-xl" />
       </div>
     `,
@@ -173,7 +183,7 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
     mapRef.current = map;
 
     // Premium map tiles
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
       maxZoom: 19,
     }).addTo(map);
     
@@ -183,9 +193,9 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
     }).addTo(map);
     
     // Add markers
-    L.marker(rider, { icon: riderIcon }).bindPopup('<div class="font-bold text-yellow-600">Premium Rider</div>').addTo(map);
-    L.marker(sender, { icon: senderIcon }).bindPopup('<div class="font-bold text-blue-600">Pickup Point</div>').addTo(map);
-    L.marker(receiver, { icon: receiverIcon }).bindPopup('<div class="font-bold text-green-600">Delivery Point</div>').addTo(map);
+    L.marker(rider, { icon: riderIcon }).bindPopup('<div class="font-bold text-${COLORS.gold}">Premium Rider</div>').addTo(map);
+    L.marker(sender, { icon: senderIcon }).bindPopup('<div class="font-bold text-${COLORS.lightGreen}">Pickup Point</div>').addTo(map);
+    L.marker(receiver, { icon: receiverIcon }).bindPopup('<div class="font-bold text-${COLORS.lightGreen}">Delivery Point</div>').addTo(map);
 
     import('leaflet-routing-machine').then(() => {
       if (!mapRef.current) return;
@@ -198,7 +208,7 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
         show: false,
         lineOptions: {
           styles: [{ 
-            color: '#f59e0b', 
+            color: COLORS.gold, 
             weight: 5,
             opacity: 0.7
           }]
@@ -277,11 +287,11 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
   return (
     <div className="relative w-full h-full overflow-hidden bg-black">
       {/* Fixed top bar with dark background */}
-      <div className="fixed top-0 left-0 right-0 flex justify-between items-center p-4 bg-gradient-to-r from-gray-900 to-black z-50 border-b border-yellow-600/50">
-        <h2 className="text-lg font-semibold text-white">Map</h2>
+      <div className={`fixed top-0 left-0 right-0 flex justify-between items-center p-4 bg-gradient-to-r from-${COLORS.darkGreen} to-${COLORS.dark} z-50 border-b border-${COLORS.gold}/50`}>
+        <h2 className="text-lg font-semibold text-${COLORS.cream}">Premium Delivery Tracking</h2>
         <button
           onClick={setMap}
-          className="text-white hover:bg-yellow-600 p-2 rounded-full transition-colors bg-yellow-700 shadow-lg"
+          className={`text-${COLORS.cream} hover:bg-${COLORS.mediumGreen} p-2 rounded-full transition-colors bg-${COLORS.darkGreen} shadow-lg`}
         >
           <XIcon className="w-5 h-5" />
         </button>
@@ -296,19 +306,19 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
 
       {/* Premium Control Panel */}
       <div className="absolute top-16 left-4 z-10">
-        <div className="bg-gradient-to-br from-gray-900 to-black rounded-2xl p-4 shadow-2xl border border-gray-700">
+        <div className={`bg-gradient-to-br from-${COLORS.darkGreen} to-${COLORS.dark} rounded-2xl p-4 shadow-2xl border border-${COLORS.mediumGreen}`}>
           <div className="flex items-center mb-3">
-            <div className="bg-yellow-500 w-3 h-3 rounded-full mr-2"></div>
-            <h3 className="text-white font-bold text-lg">Delivery #{deliveryId.slice(0, 8)}</h3>
+            <div className={`bg-${COLORS.gold} w-3 h-3 rounded-full mr-2`}></div>
+            <h3 className={`text-${COLORS.cream} font-bold text-lg`}>Delivery #{deliveryId.slice(0, 8)}</h3>
           </div>
           
-          <div className="flex items-center text-sm text-gray-300 mb-2">
-            <GiPathDistance className="mr-2 text-yellow-500" />
+          <div className="flex items-center text-sm text-${COLORS.cream}/80 mb-2">
+            <GiPathDistance className={`mr-2 text-${COLORS.gold}`} />
             <span>{progressRef.current.totalDistance ? `${(progressRef.current.totalDistance / 1000).toFixed(1)} km` : 'Calculating...'}</span>
           </div>
           
-          <div className="flex items-center text-sm text-gray-300">
-            <FaMotorcycle className="mr-2 text-yellow-500" />
+          <div className="flex items-center text-sm text-${COLORS.cream}/80">
+            <FaMotorcycle className={`mr-2 text-${COLORS.gold}`} />
             <span>{estimatedTime ? `~${estimatedTime} min` : 'Estimating...'}</span>
           </div>
         </div>
@@ -319,8 +329,8 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
         ref={panelRef}
         className={`
           fixed bottom-0 left-0 right-0 z-50 px-6 pb-8
-          bg-gradient-to-t from-gray-900 to-black
-          border-t border-yellow-600/50
+          bg-gradient-to-t from-${COLORS.darkGreen} to-${COLORS.dark}
+          border-t border-${COLORS.gold}/50
           rounded-t-3xl shadow-[0_-20px_50px_-10px_rgba(0,0,0,0.8)]
           transition-all duration-300 ease-out
           ${isPanelOpen ? 'translate-y-0' : 'translate-y-[calc(100%-60px)]'}
@@ -329,17 +339,17 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
       >
         {/* Draggable Handle */}
         <div 
-          className="drag-handle absolute top-3 left-1/2 transform -translate-x-1/2 w-24 h-1.5 bg-yellow-600/50 rounded-full cursor-row-resize touch-none"
+          className={`drag-handle absolute top-3 left-1/2 transform -translate-x-1/2 w-24 h-1.5 bg-${COLORS.gold}/50 rounded-full cursor-row-resize touch-none`}
         >
-          <div className="absolute -top-7 left-1/2 transform -translate-x-1/2 text-yellow-500">
+          <div className={`absolute -top-7 left-1/2 transform -translate-x-1/2 text-${COLORS.gold}`}>
             <FaChevronUp />
           </div>
         </div>
 
         <div className="pt-8 h-full flex flex-col">
           <div className="text-center mb-6">
-            <h2 className="text-2xl font-bold text-white mb-1">Delivery Operations</h2>
-            <p className="text-sm text-gray-400">Premium Express Service</p>
+            <h2 className={`text-2xl font-bold text-${COLORS.cream} mb-1`}>Delivery Operations</h2>
+            <p className={`text-sm text-${COLORS.cream}/70`}>Premium Express Service</p>
           </div>
 
           <div className="grid grid-cols-1 gap-4 mb-6">
@@ -351,12 +361,12 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
               }}
               className={`
                 flex items-center justify-center gap-3 py-4 rounded-xl
-                bg-gradient-to-r from-blue-700 to-blue-900
-                text-white font-semibold shadow-lg
+                bg-gradient-to-r from-${COLORS.mediumGreen} to-${COLORS.darkGreen}
+                text-${COLORS.cream} font-semibold shadow-lg
                 transition-all duration-300 hover:shadow-xl hover:scale-[1.02]
-                focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50
-                border border-blue-500/30
-                ${status === 'arrived' ? 'ring-2 ring-blue-500' : ''}
+                focus:ring-2 focus:ring-${COLORS.lightGreen} focus:ring-opacity-50
+                border border-${COLORS.gold}/30
+                ${status === 'arrived' ? `ring-2 ring-${COLORS.lightGreen}` : ''}
               `}>
               <FaStore className="text-xl" />
               <span>Arrived at Pickup Location</span>
@@ -370,12 +380,12 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
               }}
               className={`
                 flex items-center justify-center gap-3 py-4 rounded-xl
-                bg-gradient-to-r from-green-700 to-green-900
-                text-white font-semibold shadow-lg
+                bg-gradient-to-r from-${COLORS.lightGreen} to-${COLORS.mediumGreen}
+                text-${COLORS.cream} font-semibold shadow-lg
                 transition-all duration-300 hover:shadow-xl hover:scale-[1.02]
-                focus:ring-2 focus:ring-green-500 focus:ring-opacity-50
-                border border-green-500/30
-                ${status === 'delivered' ? 'ring-2 ring-green-500' : ''}
+                focus:ring-2 focus:ring-${COLORS.lightGreen} focus:ring-opacity-50
+                border border-${COLORS.gold}/30
+                ${status === 'delivered' ? `ring-2 ring-${COLORS.lightGreen}` : ''}
               `}>
               <MdOutlineDeliveryDining className="text-xl" />
               <span>Mark as Delivered</span>
@@ -390,7 +400,7 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
               className={`
                 flex items-center justify-center gap-3 py-4 rounded-xl
                 bg-gradient-to-r from-red-700 to-red-900
-                text-white font-semibold shadow-lg
+                text-${COLORS.cream} font-semibold shadow-lg
                 transition-all duration-300 hover:shadow-xl hover:scale-[1.02]
                 focus:ring-2 focus:ring-red-500 focus:ring-opacity-50
                 border border-red-500/30
@@ -406,10 +416,10 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
               <span className={`
                 px-4 py-2 rounded-full text-sm font-medium
                 ${
-                  status === 'arrived' ? 'bg-blue-900/80 text-blue-200' : 
+                  status === 'arrived' ? `bg-${COLORS.mediumGreen}/80 text-${COLORS.cream}` : 
                   status === 'failed' ? 'bg-red-900/80 text-red-200' : 
-                  status === 'delivered' ? 'bg-green-900/80 text-green-200' :
-                  'bg-yellow-900 text-yellow-200'
+                  status === 'delivered' ? `bg-${COLORS.lightGreen}/80 text-${COLORS.cream}` :
+                  `bg-${COLORS.gold} text-${COLORS.dark}`
                 }
               `}>
                 {status === 'arrived' ? '🏍️ Arrived at pickup location' : 
@@ -420,16 +430,16 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
             </div>
           )}
 
-          <div className="mt-6 pt-4 border-t border-gray-800">
-            <div className="flex justify-between text-gray-400 text-sm">
+          <div className={`mt-6 pt-4 border-t border-${COLORS.mediumGreen}`}>
+            <div className={`flex justify-between text-${COLORS.cream}/70 text-sm`}>
               <span className="flex items-center gap-1">
-                <FaStore className="text-blue-500" /> Pickup
+                <FaStore className={`text-${COLORS.lightGreen}`} /> Pickup
               </span>
-              <span className="text-yellow-500 flex items-center gap-1">
+              <span className={`text-${COLORS.gold} flex items-center gap-1`}>
                 <FaCrown /> Premium
               </span>
               <span className="flex items-center gap-1">
-                <FaMapMarkerAlt className="text-green-500" /> Delivery
+                <FaMapMarkerAlt className={`text-${COLORS.lightGreen}`} /> Delivery
               </span>
             </div>
           </div>
@@ -440,14 +450,47 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
       {!isPanelOpen && (
         <button
           onClick={() => setIsPanelOpen(true)}
-          className="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-50
-            bg-gradient-to-r from-yellow-600 to-yellow-800 text-white
+          className={`fixed bottom-4 left-1/2 transform -translate-x-1/2 z-50
+            bg-gradient-to-r from-${COLORS.gold} to-${COLORS.mediumGreen} text-${COLORS.dark}
             rounded-full p-3 shadow-lg hover:shadow-xl animate-bounce
-            flex items-center justify-center w-12 h-12"
+            flex items-center justify-center w-12 h-12`}
         >
           <FaChevronUp className="text-lg" />
         </button>
       )}
+
+      <style jsx>{`
+        :global(.leaflet-popup-content-wrapper) {
+          background: ${COLORS.darkGreen};
+          color: ${COLORS.cream};
+          border: 1px solid ${COLORS.gold};
+          border-radius: 12px;
+        }
+        
+        :global(.leaflet-popup-tip) {
+          background: ${COLORS.gold};
+        }
+        
+        :global(.leaflet-routing-container) {
+          background: ${COLORS.darkGreen};
+          color: ${COLORS.cream};
+          border: 1px solid ${COLORS.gold};
+        }
+        
+        :global(.leaflet-bar) {
+          box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+        
+        :global(.leaflet-bar a) {
+          background: ${COLORS.darkGreen};
+          color: ${COLORS.cream};
+          border-bottom: 1px solid ${COLORS.mediumGreen};
+        }
+        
+        :global(.leaflet-bar a:hover) {
+          background: ${COLORS.mediumGreen};
+        }
+      `}</style>
     </div>
   );
-}
+    }
