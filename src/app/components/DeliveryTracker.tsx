@@ -4,11 +4,19 @@ import { GETDELIVERIESADMIN } from '../../../graphql/query';
 import HomeDataCarousel from './HomeDataCarousel';
 import { mockItems } from './json/mockItems';
 import Link from 'next/link';
+import { useSelector, useDispatch } from "react-redux";
+import { setActiveIndex } from '../../../Redux/activeIndexSlice';
+
 const DeliveryTracker = () => {
   const [trackingNumber, setTrackingNumber] = useState('');
   const { loading, error, data } = useQuery(GETDELIVERIESADMIN);
   const [searched, setSearched] = useState(false);
 
+
+  const createAccount = () =>{
+    dispatch(setActiveIndex(11))
+  }
+  
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (trackingNumber.trim()) {
@@ -341,7 +349,7 @@ const DeliveryTracker = () => {
             <Link href="https://logisticfrontend.vercel.app/Contact" className="bg-green-700 hover:bg-green-800 text-white font-medium py-3 px-8 rounded-lg">
               Get a Quote
             </Link>
-            <button className="bg-white border border-green-600 text-green-600 hover:bg-green-50 font-medium py-3 px-8 rounded-lg">
+            <button onClick={createAccount} className="bg-white border border-green-600 text-green-600 hover:bg-green-50 font-medium py-3 px-8 rounded-lg">
               Create Account
             </button>
           </div>
