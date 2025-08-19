@@ -253,71 +253,53 @@ const DeliveryTracker = () => {
         )}
       </div>
 
-      {/* How It Works Section */}
+      {/* Our Core Features Section */}
       <div className="bg-white py-16">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center text-gray-800 mb-12">How It Works</h2>
-          <div className="grid md:grid-cols-4 gap-8">
+          <h2 className="text-3xl font-bold text-center text-gray-800 mb-12">Our Core Features</h2>
+          <div className="grid md:grid-cols-3 gap-8">
             <div className="bg-white p-6 rounded-lg border border-gray-200 text-center">
-              <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-green-700 text-xl font-bold">1</span>
-              </div>
-              <h3 className="text-lg font-semibold mb-2">Enter Tracking Number</h3>
-              <p className="text-gray-600">Locate your tracking number from your receipt or confirmation email</p>
+              <div className="text-4xl mb-4">📍</div>
+              <h3 className="text-lg font-semibold mb-2">Live Tracking</h3>
+              <p className="text-gray-600">Track your packages in real-time from pickup to delivery.</p>
             </div>
             
             <div className="bg-white p-6 rounded-lg border border-gray-200 text-center">
-              <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-green-700 text-xl font-bold">2</span>
-              </div>
-              <h3 className="text-lg font-semibold mb-2">Track Your Package</h3>
-              <p className="text-gray-600">Click the Track Package button to see your delivery status</p>
+              <div className="text-4xl mb-4">⚡</div>
+              <h3 className="text-lg font-semibold mb-2">Fast Dispatch</h3>
+              <p className="text-gray-600">On-demand logistics optimized for speed and efficiency.</p>
             </div>
             
             <div className="bg-white p-6 rounded-lg border border-gray-200 text-center">
-              <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-green-700 text-xl font-bold">3</span>
-              </div>
-              <h3 className="text-lg font-semibold mb-2">Real-Time Updates</h3>
-              <p className="text-gray-600">View real-time status updates and estimated delivery time</p>
-            </div>
-            
-            <div className="bg-white p-6 rounded-lg border border-gray-200 text-center">
-              <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-green-700 text-xl font-bold">4</span>
-              </div>
-              <h3 className="text-lg font-semibold mb-2">Receive Your Package</h3>
-              <p className="text-gray-600">Get notified when your package is out for delivery and when it arrives</p>
+              <div className="text-4xl mb-4">🔒</div>
+              <h3 className="text-lg font-semibold mb-2">Secure Delivery</h3>
+              <p className="text-gray-600">We guarantee safe handling for all shipments.</p>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Services Section */}
+      {/* How It Works Section */}
       <div className="bg-gray-50 py-16">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center text-gray-800 mb-12">Our Services</h2>
+          <h2 className="text-3xl font-bold text-center text-gray-800 mb-12">How It Works</h2>
           <div className="grid md:grid-cols-3 gap-8">
-            <div className="bg-white p-8 rounded-xl text-center shadow-sm">
-              <div className="text-green-600 text-4xl mb-4">
-                <i className="fas fa-shipping-fast"></i>
-              </div>
-              <h3 className="text-xl font-semibold mb-3">Express Delivery</h3>
-              <p className="text-gray-600">Fast and reliable delivery services with real-time tracking for all your packages.</p>
+            <div className="bg-white p-6 rounded-lg border border-gray-200 text-center">
+              <div className="text-4xl mb-4">📝</div>
+              <h3 className="text-lg font-semibold mb-2">Step 1</h3>
+              <p className="text-gray-600">Book a delivery via app or dashboard.</p>
             </div>
-            <div className="bg-white p-8 rounded-xl text-center shadow-sm">
-              <div className="text-green-600 text-4xl mb-4">
-                <i className="fas fa-warehouse"></i>
-              </div>
-              <h3 className="text-xl font-semibold mb-3">Warehousing</h3>
-              <p className="text-gray-600">Secure storage solutions with inventory management for businesses of all sizes.</p>
+            
+            <div className="bg-white p-6 rounded-lg border border-gray-200 text-center">
+              <div className="text-4xl mb-4">📦</div>
+              <h3 className="text-lg font-semibold mb-2">Step 2</h3>
+              <p className="text-gray-600">Track the delivery in real-time.</p>
             </div>
-            <div className="bg-white p-8 rounded-xl text-center shadow-sm">
-              <div className="text-green-600 text-4xl mb-4">
-                <i className="fas fa-globe"></i>
-              </div>
-              <h3 className="text-xl font-semibold mb-3">International Shipping</h3>
-              <p className="text-gray-600">Global logistics solutions with customs clearance and door-to-door delivery.</p>
+            
+            <div className="bg-white p-6 rounded-lg border border-gray-200 text-center">
+              <div className="text-4xl mb-4">✅</div>
+              <h3 className="text-lg font-semibold mb-2">Step 3</h3>
+              <p className="text-gray-600">Receive your package safely.</p>
             </div>
           </div>
         </div>
