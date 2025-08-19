@@ -11,7 +11,7 @@ const DeliveryTracker = () => {
   const [trackingNumber, setTrackingNumber] = useState('');
   const { loading, error, data } = useQuery(GETDELIVERIESADMIN);
   const [searched, setSearched] = useState(false);
-
+  const dispatch = useDispatch()
 
   const createAccount = () =>{
     dispatch(setActiveIndex(11))
