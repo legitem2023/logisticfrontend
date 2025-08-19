@@ -11,8 +11,9 @@ import { selectTempUserId } from '../../../../Redux/tempUserSlice';
 import { SENDNOTIFICATION } from "../../../../graphql/mutation"; 
 import { useMutation, useSubscription } from "@apollo/client";
 import { LocationTracking } from '../../../../graphql/subscription';
-import { FaMotorcycle, FaBox, FaMapMarkerAlt, FaCrown, FaChevronUp, FaChevronDown, FaCheck, FaTimes } from 'react-icons/fa';
+import { FaMotorcycle, FaBox, FaMapMarkerAlt, FaCrown, FaChevronUp, FaCheck, FaTimes, FaExclamationTriangle, FaStore } from 'react-icons/fa';
 import { GiPathDistance } from 'react-icons/gi';
+import { MdOutlineDeliveryDining } from 'react-icons/md';
 
 type Coordinates = {
   lat: number;
@@ -48,7 +49,7 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
   
   const location = useSelector((state: any) => state.location.current);
   const globalUserId = useSelector(selectTempUserId);
-  const [status, setStatus] = useState<'pending' | 'cancelled' | 'finished' | null>(null);
+  const [status, setStatus] = useState<'pending' | 'arrived' | 'failed' | 'delivered' | null>(null);
 
   const { data: locationData } = useSubscription(LocationTracking, {
     variables: { userId: globalUserId },
@@ -92,7 +93,7 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
   const senderIcon = L.divIcon({
     html: `
       <div class="w-10 h-10 bg-gradient-to-br from-blue-700 to-blue-900 rounded-full border-2 border-white flex items-center justify-center text-white">
-        <FaBox class="text-xl" />
+        <FaStore class="text-xl" />
       </div>
     `,
     className: "",
@@ -271,7 +272,7 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
   }, [panelHeight]);
 
   return (
-    <div className="relative w-full h-screen overflow-hidden bg-black">
+    <div className="relative w-full h-full overflow-hidden bg-black">
       <div
         ref={mapContainerRef}
         id="map"
@@ -316,51 +317,72 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
           className="drag-handle absolute top-3 left-1/2 transform -translate-x-1/2 w-24 h-1.5 bg-yellow-600/50 rounded-full cursor-row-resize touch-none"
         >
           <div className="absolute -top-7 left-1/2 transform -translate-x-1/2 text-yellow-500">
-            {isPanelOpen ? <FaChevronDown /> : <FaChevronUp />}
+            <FaChevronUp />
           </div>
         </div>
 
         <div className="pt-8 h-full flex flex-col">
           <div className="text-center mb-6">
-            <h2 className="text-2xl font-bold text-white mb-1">Delivery Status</h2>
+            <h2 className="text-2xl font-bold text-white mb-1">Delivery Operations</h2>
             <p className="text-sm text-gray-400">Premium Express Service</p>
           </div>
 
-          <div className="grid grid-cols-2 gap-4 mb-6">
+          <div className="grid grid-cols-1 gap-4 mb-6">
             <button
               onClick={() => {
-                setStatus('finished');
+                setStatus('arrived');
+                handleNotification("🏍️ Rider has arrived at pickup location");
                 setIsPanelOpen(false);
               }}
               className={`
-                flex items-center justify-center gap-2 py-4 rounded-xl
+                flex items-center justify-center gap-3 py-4 rounded-xl
+                bg-gradient-to-r from-blue-700 to-blue-900
+                text-white font-semibold shadow-lg
+                transition-all duration-300 hover:shadow-xl hover:scale-[1.02]
+                focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50
+                border border-blue-500/30
+                ${status === 'arrived' ? 'ring-2 ring-blue-500' : ''}
+              `}>
+              <FaStore className="text-xl" />
+              <span>Arrived at Pickup Location</span>
+            </button>
+            
+            <button
+              onClick={() => {
+                setStatus('delivered');
+                handleNotification("📦 Package has been successfully delivered");
+                setIsPanelOpen(false);
+              }}
+              className={`
+                flex items-center justify-center gap-3 py-4 rounded-xl
                 bg-gradient-to-r from-green-700 to-green-900
                 text-white font-semibold shadow-lg
                 transition-all duration-300 hover:shadow-xl hover:scale-[1.02]
                 focus:ring-2 focus:ring-green-500 focus:ring-opacity-50
                 border border-green-500/30
-                ${status === 'finished' ? 'ring-2 ring-green-500' : ''}
+                ${status === 'delivered' ? 'ring-2 ring-green-500' : ''}
               `}>
-              <FaCheck className="text-xl" />
-              Mark Delivered
+              <MdOutlineDeliveryDining className="text-xl" />
+              <span>Mark as Delivered</span>
             </button>
             
             <button
               onClick={() => {
-                setStatus('cancelled');
+                setStatus('failed');
+                handleNotification("⚠️ Delivery attempt failed - Package not delivered");
                 setIsPanelOpen(false);
               }}
               className={`
-                flex items-center justify-center gap-2 py-4 rounded-xl
+                flex items-center justify-center gap-3 py-4 rounded-xl
                 bg-gradient-to-r from-red-700 to-red-900
                 text-white font-semibold shadow-lg
                 transition-all duration-300 hover:shadow-xl hover:scale-[1.02]
                 focus:ring-2 focus:ring-red-500 focus:ring-opacity-50
                 border border-red-500/30
-                ${status === 'cancelled' ? 'ring-2 ring-red-500' : ''}
+                ${status === 'failed' ? 'ring-2 ring-red-500' : ''}
               `}>
-              <FaTimes className="text-xl" />
-              Cancel Delivery
+              <FaExclamationTriangle className="text-xl" />
+              <span>Delivery Attempt Failed</span>
             </button>
           </div>
 
@@ -369,23 +391,31 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
               <span className={`
                 px-4 py-2 rounded-full text-sm font-medium
                 ${
-                  status === 'pending' ? 'bg-yellow-900 text-yellow-200' : 
-                  status === 'cancelled' ? 'bg-red-900/80 text-red-200' : 
-                  'bg-green-900/80 text-green-200'
+                  status === 'arrived' ? 'bg-blue-900/80 text-blue-200' : 
+                  status === 'failed' ? 'bg-red-900/80 text-red-200' : 
+                  status === 'delivered' ? 'bg-green-900/80 text-green-200' :
+                  'bg-yellow-900 text-yellow-200'
                 }
               `}>
-                {status === 'pending' ? '🔄 Processing update...' : 
-                 status === 'cancelled' ? '❌ Delivery cancelled' : 
-                 '✅ Delivery completed'}
+                {status === 'arrived' ? '🏍️ Arrived at pickup location' : 
+                 status === 'failed' ? '⚠️ Delivery attempt failed' : 
+                 status === 'delivered' ? '📦 Package delivered successfully' : 
+                 '🔄 Processing update...'}
               </span>
             </div>
           )}
 
           <div className="mt-6 pt-4 border-t border-gray-800">
             <div className="flex justify-between text-gray-400 text-sm">
-              <span>Pickup location</span>
-              <span className="text-yellow-500">Premium</span>
-              <span>Delivery location</span>
+              <span className="flex items-center gap-1">
+                <FaStore className="text-blue-500" /> Pickup
+              </span>
+              <span className="text-yellow-500 flex items-center gap-1">
+                <FaCrown /> Premium
+              </span>
+              <span className="flex items-center gap-1">
+                <FaMapMarkerAlt className="text-green-500" /> Delivery
+              </span>
             </div>
           </div>
         </div>
@@ -405,4 +435,4 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
       )}
     </div>
   );
-                    }
+        }
