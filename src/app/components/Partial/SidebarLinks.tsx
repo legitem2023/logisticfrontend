@@ -135,7 +135,7 @@ export default function SidebarLinks({
                       : 'text-gray-600 hover:bg-blue-700/20 hover:text-white'
                   }`}
                 >
-                  {link.icon && <span className="mr-3">{link.icon}</span>}
+                  {link.icon && <span className="mr-3 text-green">{link.icon}</span>}
                   {link.label}
                 </Link>
               );
