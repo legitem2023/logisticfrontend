@@ -628,6 +628,7 @@ const tabs = [
                 lat: selectedDelivery.dropoffLatitude,
                 lng: selectedDelivery.dropoffLongitude,
               }}
+              setMap={()=>setMap(false)}
             />
           </div>
         </div>
