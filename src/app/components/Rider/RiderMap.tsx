@@ -276,24 +276,26 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
 
   return (
     <div className="relative w-full h-full overflow-hidden bg-black">
-          <div className="flex justify-between items-center p-4 border-b bg-white z-10">
-            <h2 className="text-lg font-semibold text-gray-900">Map</h2>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={setMap}
-            >
-              <XIcon className="w-5 h-5" />
-            </Button>
-          </div>
-      <div
+      {/* Fixed top bar with dark background */}
+      <div className="fixed top-0 left-0 right-0 flex justify-between items-center p-4 bg-gradient-to-r from-gray-900 to-black z-50 border-b border-yellow-600/50">
+        <h2 className="text-lg font-semibold text-white">Map</h2>
+        <button
+          onClick={setMap}
+          className="text-white hover:bg-gray-800 p-1 rounded-full transition-colors"
+        >
+          <XIcon className="w-5 h-5" />
+        </button>
+      </div>
+
+      {/* Map container with top padding */}
+      <div 
         ref={mapContainerRef}
         id="map"
-        className="w-full h-full absolute top-0 z-0"
+        className="w-full h-full pt-14"
       />
 
       {/* Premium Control Panel */}
-      <div className="absolute top-4 left-4 z-10">
+      <div className="absolute top-16 left-4 z-10">
         <div className="bg-gradient-to-br from-gray-900 to-black rounded-2xl p-4 shadow-2xl border border-gray-700">
           <div className="flex items-center mb-3">
             <div className="bg-yellow-500 w-3 h-3 rounded-full mr-2"></div>
@@ -448,4 +450,4 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
       )}
     </div>
   );
-        }
+                      }
