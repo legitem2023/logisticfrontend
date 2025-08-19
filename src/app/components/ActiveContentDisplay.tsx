@@ -65,8 +65,7 @@ export function ActiveContentDisplay({ activeTab, useRole, isUserActive }: {
       icon: <Home color="green" />,
       content: (
         <div className="px-1 py-1 space-y-1">
-          <HomeDataCarousel items={mockItems} />
-          <LogisticsHomePage />
+          <DeliveryTracker/>
         </div>
       )
     },
