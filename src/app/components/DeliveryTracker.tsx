@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useQuery } from '@apollo/client';
 import { GETDELIVERIESADMIN } from '../../../graphql/query';
+import HomeDataCarousel from './HomeDataCarousel';
 
 const DeliveryTracker = () => {
   const [trackingNumber, setTrackingNumber] = useState('');
@@ -53,43 +54,50 @@ const DeliveryTracker = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-green-50 py-8 px-4">
-      <div className="max-w-4xl mx-auto">
-        {/* Header */}
-        <div className="bg-gradient-to-r from-emerald-800 to-green-700 rounded-t-xl shadow-lg overflow-hidden">
-          <div className="p-8 text-white">
-            <h1 className="text-3xl font-bold mb-2">Premium Delivery Tracker</h1>
-            <p className="opacity-90">Track your deliveries with precision and style</p>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
+      {/* Hero Section with Carousel */}
+      <div className="relative bg-gradient-to-r from-blue-800 to-indigo-900 text-white">
+        <div className="absolute inset-0 bg-black/30 z-0"></div>
+        <div className="relative z-10 container mx-auto px-4 py-12">
+          <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
+            <div className="lg:w-1/2 text-center lg:text-left">
+              <h1 className="text-4xl md:text-5xl font-bold mb-4">Track Your Deliveries</h1>
+              <p className="text-xl mb-8 opacity-90">Real-time tracking for all your packages with premium delivery service</p>
+              
+              <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-4 max-w-2xl">
+                <div className="flex-grow">
+                  <input
+                    type="text"
+                    value={trackingNumber}
+                    onChange={(e) => setTrackingNumber(e.target.value)}
+                    placeholder="Enter your tracking number"
+                    className="w-full px-5 py-3 rounded-lg text-gray-800 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+                <button
+                  type="submit"
+                  className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-8 rounded-lg transition-colors flex items-center justify-center min-w-[140px]"
+                >
+                  <i className="fas fa-search mr-2"></i>
+                  Track
+                </button>
+              </form>
+            </div>
+            
+            <div className="lg:w-1/2 w-full max-w-2xl">
+              <HomeDataCarousel />
+            </div>
           </div>
         </div>
+      </div>
 
-        {/* Search Section */}
-        <div className="bg-white p-6 shadow-md">
-          <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-4">
-            <div className="flex-grow">
-              <input
-                type="text"
-                value={trackingNumber}
-                onChange={(e) => setTrackingNumber(e.target.value)}
-                placeholder="Enter your tracking number"
-                className="w-full px-5 py-3 border border-emerald-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
-              />
-            </div>
-            <button
-              type="submit"
-              className="bg-emerald-700 hover:bg-emerald-800 text-white font-medium py-3 px-8 rounded-lg transition-colors flex items-center justify-center min-w-[140px]"
-            >
-              <i className="fas fa-search mr-2"></i>
-              Track Package
-            </button>
-          </form>
-        </div>
-
+      {/* Main Content */}
+      <div className="container mx-auto px-4 py-12">
         {/* Loading State */}
         {loading && (
           <div className="mt-6 bg-white rounded-xl shadow-lg p-8 text-center">
             <div className="flex justify-center">
-              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-emerald-500"></div>
+              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
             </div>
             <p className="mt-4 text-gray-600">Loading delivery information...</p>
           </div>
@@ -137,7 +145,7 @@ const DeliveryTracker = () => {
             <div className="p-6 grid md:grid-cols-2 gap-6">
               {/* Recipient Info */}
               <div className="bg-gray-50 p-5 rounded-lg">
-                <h3 className="text-lg font-medium text-emerald-800 mb-3">Recipient Information</h3>
+                <h3 className="text-lg font-medium text-blue-800 mb-3">Recipient Information</h3>
                 <div className="space-y-2">
                   <p><span className="font-semibold">Name:</span> {delivery.recipientName}</p>
                   <p><span className="font-semibold">Phone:</span> {delivery.recipientPhone}</p>
@@ -147,7 +155,7 @@ const DeliveryTracker = () => {
 
               {/* Delivery Info */}
               <div className="bg-gray-50 p-5 rounded-lg">
-                <h3 className="text-lg font-medium text-emerald-800 mb-3">Delivery Information</h3>
+                <h3 className="text-lg font-medium text-blue-800 mb-3">Delivery Information</h3>
                 <div className="space-y-2">
                   {delivery.estimatedDeliveryTime && (
                     <p><span className="font-semibold">Estimated Delivery:</span> {formatDate(delivery.estimatedDeliveryTime)}</p>
@@ -166,7 +174,7 @@ const DeliveryTracker = () => {
 
               {/* Package Details */}
               <div className="bg-gray-50 p-5 rounded-lg">
-                <h3 className="text-lg font-medium text-emerald-800 mb-3">Package Details</h3>
+                <h3 className="text-lg font-medium text-blue-800 mb-3">Package Details</h3>
                 {delivery.packages.map((pkg: any) => (
                   <div key={pkg.id} className="space-y-2">
                     <p><span className="font-semibold">Type:</span> {pkg.packageType}</p>
@@ -182,16 +190,16 @@ const DeliveryTracker = () => {
               {/* Rider Information */}
               {delivery.assignedRider && (
                 <div className="bg-gray-50 p-5 rounded-lg">
-                  <h3 className="text-lg font-medium text-emerald-800 mb-3">Delivery Agent</h3>
+                  <h3 className="text-lg font-medium text-blue-800 mb-3">Delivery Agent</h3>
                   <div className="flex items-center">
-                    <div className="bg-emerald-200 w-12 h-12 rounded-full flex items-center justify-center mr-4">
-                      <i className="fas fa-user text-emerald-700"></i>
+                    <div className="bg-blue-200 w-12 h-12 rounded-full flex items-center justify-center mr-4">
+                      <i className="fas fa-user text-blue-700"></i>
                     </div>
                     <div>
                       <p className="font-semibold">{delivery.assignedRider.name}</p>
                       <p>{delivery.assignedRider.phoneNumber}</p>
                       {delivery.deliveryStatus === 'OUT_FOR_DELIVERY' && (
-                        <p className="text-sm text-emerald-600 mt-1">
+                        <p className="text-sm text-blue-600 mt-1">
                           <i className="fas fa-map-marker-alt mr-1"></i> Your package is in transit
                         </p>
                       )}
@@ -203,24 +211,24 @@ const DeliveryTracker = () => {
 
             {/* Delivery Progress */}
             <div className="px-6 pb-6">
-              <h3 className="text-lg font-medium text-emerald-800 mb-4">Delivery Progress</h3>
+              <h3 className="text-lg font-medium text-blue-800 mb-4">Delivery Progress</h3>
               <div className="flex items-center justify-between relative">
                 <div className="flex flex-col items-center z-10">
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center ${delivery.deliveryStatus !== 'PENDING' ? 'bg-emerald-500 text-white' : 'bg-gray-300'}`}>
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center ${delivery.deliveryStatus !== 'PENDING' ? 'bg-blue-500 text-white' : 'bg-gray-300'}`}>
                     <i className="fas fa-check"></i>
                   </div>
                   <span className="text-xs mt-1">Order Confirmed</span>
                 </div>
                 
                 <div className="flex flex-col items-center z-10">
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center ${['OUT_FOR_DELIVERY', 'DELIVERED'].includes(delivery.deliveryStatus) ? 'bg-emerald-500 text-white' : 'bg-gray-300'}`}>
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center ${['OUT_FOR_DELIVERY', 'DELIVERED'].includes(delivery.deliveryStatus) ? 'bg-blue-500 text-white' : 'bg-gray-300'}`}>
                     <i className="fas fa-shipping-fast"></i>
                   </div>
                   <span className="text-xs mt-1">Out for Delivery</span>
                 </div>
                 
                 <div className="flex flex-col items-center z-10">
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center ${delivery.deliveryStatus === 'DELIVERED' ? 'bg-emerald-500 text-white' : 'bg-gray-300'}`}>
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center ${delivery.deliveryStatus === 'DELIVERED' ? 'bg-blue-500 text-white' : 'bg-gray-300'}`}>
                     <i className="fas fa-home"></i>
                   </div>
                   <span className="text-xs mt-1">Delivered</span>
@@ -228,7 +236,7 @@ const DeliveryTracker = () => {
                 
                 <div className="absolute top-4 left-16 right-16 h-1 bg-gray-300">
                   <div 
-                    className={`h-1 ${delivery.deliveryStatus === 'DELIVERED' ? 'bg-emerald-500 w-full' : delivery.deliveryStatus === 'OUT_FOR_DELIVERY' ? 'bg-emerald-500 w-1/2' : 'bg-emerald-500 w-0'}`}
+                    className={`h-1 ${delivery.deliveryStatus === 'DELIVERED' ? 'bg-blue-500 w-full' : delivery.deliveryStatus === 'OUT_FOR_DELIVERY' ? 'bg-blue-500 w-1/2' : 'bg-blue-500 w-0'}`}
                   ></div>
                 </div>
               </div>
@@ -239,7 +247,7 @@ const DeliveryTracker = () => {
         {/* Initial State */}
         {!searched && !loading && data && (
           <div className="mt-12 text-center py-12 bg-white rounded-xl shadow-md">
-            <div className="text-emerald-700 mb-4">
+            <div className="text-blue-700 mb-4">
               <i className="fas fa-box-open text-5xl"></i>
             </div>
             <h3 className="text-xl font-medium text-gray-700">Track Your Delivery</h3>
