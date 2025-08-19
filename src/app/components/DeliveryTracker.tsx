@@ -326,23 +326,7 @@ const DeliveryTracker = () => {
         </div>
       </div>
 
-      <style jsx global>{`
-        @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css');
-        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
-        
-        body {
-          font-family: 'Montserrat', sans-serif;
-        }
-        
-        .customgrad {
-          background: linear-gradient(to right, #1B5E20, #388E3C);
-        }
-        
-        :root {
-          --darkgreen: #1B5E20;
-          --green: #388E3C;
-        }
-      `}</style>
+      
     </div>
   );
 };
