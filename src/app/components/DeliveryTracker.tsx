@@ -7,7 +7,7 @@ const DeliveryTracker = () => {
   const { loading, error, data } = useQuery(GETDELIVERIESADMIN);
   const [searched, setSearched] = useState(false);
 
-  const handleSearch = (e) => {
+  const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (trackingNumber.trim()) {
       setSearched(true);
@@ -16,12 +16,12 @@ const DeliveryTracker = () => {
 
   // Filter deliveries by tracking number
   const filteredDeliveries = data?.getDeliveries?.filter(
-    delivery => delivery.trackingNumber === trackingNumber.toUpperCase()
+    (delivery: any) => delivery.trackingNumber === trackingNumber.toUpperCase()
   ) || [];
 
   // Format date function
-  const formatDate = (dateString) => {
-    const options = { 
+  const formatDate = (dateString: string) => {
+    const options: Intl.DateTimeFormatOptions = { 
       year: 'numeric', 
       month: 'long', 
       day: 'numeric',
@@ -32,7 +32,7 @@ const DeliveryTracker = () => {
   };
 
   // Get status color and text
-  const getStatusColor = (status) => {
+  const getStatusColor = (status: string) => {
     switch(status) {
       case 'DELIVERED': return 'bg-green-100 text-green-800';
       case 'OUT_FOR_DELIVERY': return 'bg-amber-100 text-amber-800';
@@ -42,7 +42,7 @@ const DeliveryTracker = () => {
     }
   };
 
-  const getStatusText = (status) => {
+  const getStatusText = (status: string) => {
     switch(status) {
       case 'DELIVERED': return 'Delivered';
       case 'OUT_FOR_DELIVERY': return 'Out for Delivery';
@@ -118,7 +118,7 @@ const DeliveryTracker = () => {
         )}
 
         {/* Results */}
-        {filteredDeliveries.map(delivery => (
+        {filteredDeliveries.map((delivery: any) => (
           <div key={delivery.id} className="mt-6 bg-white rounded-xl shadow-lg overflow-hidden">
             {/* Status Header */}
             <div className={`p-6 ${getStatusColor(delivery.deliveryStatus)}`}>
@@ -167,7 +167,7 @@ const DeliveryTracker = () => {
               {/* Package Details */}
               <div className="bg-gray-50 p-5 rounded-lg">
                 <h3 className="text-lg font-medium text-emerald-800 mb-3">Package Details</h3>
-                {delivery.packages.map((pkg) => (
+                {delivery.packages.map((pkg: any) => (
                   <div key={pkg.id} className="space-y-2">
                     <p><span className="font-semibold">Type:</span> {pkg.packageType}</p>
                     <p><span className="font-semibold">Weight:</span> {pkg.weight} kg</p>
