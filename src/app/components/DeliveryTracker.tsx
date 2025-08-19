@@ -62,11 +62,11 @@ const DeliveryTracker = () => {
       </div>
 
       {/* Tracking Section */}
-      <div className="container mx-auto p-1 relative z-10">
-        <div className="bg-white rounded-xl shadow-2xl p-8 max-w-4xl mx-auto">
+      <div className="container mx-auto p-0 relative z-10">
+        <div className="bg-white rounded-xl shadow-2xl p-8 max-w-4xl mx-auto customgrad">
           <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold text-gray-800">Track Your Shipment</h2>
-            <p className="text-gray-600 mt-2">Enter your tracking number to get real-time updates</p>
+            <h2 className="text-3xl font-bold text-white">Track Your Shipment</h2>
+            <p className="text-white mt-2">Enter your tracking number to get real-time updates</p>
           </div>
           
           <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-4 mb-8">
@@ -123,8 +123,8 @@ const DeliveryTracker = () => {
           {/* Results */}
           {filteredDeliveries.map((delivery: any) => (
             <div key={delivery.id} className="mt-6 bg-white rounded-xl shadow-lg overflow-hidden">
-              {/* Status Header with custom gradient */}
-              <div className={`p-6 customgrad text-white`}>
+              {/* Status Header - Removed custom gradient that might have contained lights */}
+              <div className="p-6 bg-green-700 text-white">
                 <div className="flex justify-between items-center">
                   <h2 className="text-xl font-semibold">Delivery Status</h2>
                   <span className="px-3 py-1 rounded-full text-sm font-medium bg-white bg-opacity-20">
@@ -204,7 +204,7 @@ const DeliveryTracker = () => {
                 )}
               </div>
 
-              {/* Delivery Progress - Fixed to not look floating */}
+              {/* Delivery Progress - Removed any potential light effects */}
               <div className="px-6 pb-6">
                 <h3 className="text-lg font-medium text-green-800 mb-4">Delivery Progress</h3>
                 <div className="relative">
@@ -325,8 +325,6 @@ const DeliveryTracker = () => {
           </div>
         </div>
       </div>
-
-      
     </div>
   );
 };
