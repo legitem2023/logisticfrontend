@@ -71,7 +71,7 @@ const DeliveryTracker = () => {
 
       {/* Tracking Section */}
       <div className="container mx-auto p-0 relative z-10 mt-1">
-        <div className="customgrad p-8 max-w-4xl mx-auto">
+        <div className="customgrad p-8 mx-auto">
           <div className="text-center mb-8">
             <h2 className="text-3xl font-bold text-white">Track Your Shipment</h2>
             <p className="text-white mt-2">Enter your tracking number to get real-time updates</p>
@@ -109,7 +109,7 @@ const DeliveryTracker = () => {
 
         {/* Error State */}
         {error && (
-          <div className="mt-6 bg-white rounded-xl shadow-lg p-8 text-center max-w-4xl mx-auto">
+          <div className="mt-6 bg-white rounded-xl shadow-lg p-8 text-center mx-auto">
             <div className="text-red-500 text-5xl mb-4">
               <i className="fas fa-exclamation-circle"></i>
             </div>
@@ -120,7 +120,7 @@ const DeliveryTracker = () => {
 
         {/* No Results State */}
         {searched && !loading && filteredDeliveries.length === 0 && (
-          <div className="mt-6 bg-white rounded-xl shadow-lg p-8 text-center max-w-4xl mx-auto">
+          <div className="mt-6 bg-white rounded-xl shadow-lg p-8 text-center mx-auto">
             <div className="text-gray-400 text-5xl mb-4">
               <i className="fas fa-box-open"></i>
             </div>
@@ -131,7 +131,7 @@ const DeliveryTracker = () => {
 
         {/* Results */}
         {filteredDeliveries.map((delivery: any) => (
-          <div key={delivery.id} className="mt-6 bg-white rounded-xl shadow-lg overflow-hidden max-w-4xl mx-auto">
+          <div key={delivery.id} className="mt-6 bg-white rounded-xl shadow-lg overflow-hidden mx-auto">
             {/* Status Header */}
             <div className="p-6 bg-green-700 text-white">
               <div className="flex justify-between items-center">
@@ -251,7 +251,7 @@ const DeliveryTracker = () => {
 
         {/* Initial State */}
         {!searched && !loading && data && (
-          <div className="mt-12 text-center py-12 bg-white rounded-xl shadow-md max-w-4xl mx-auto">
+          <div className="mt-12 text-center py-12 bg-white rounded-xl shadow-md mx-auto">
             <div className="text-green-700 mb-4">
               <i className="fas fa-box-open text-5xl"></i>
             </div>
