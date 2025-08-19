@@ -62,7 +62,7 @@ const DeliveryTracker = () => {
       </div>
 
       {/* Tracking Section */}
-      <div className="container mx-auto px-4 py-12 relative z-10">
+      <div className="container mx-auto p-1 relative z-10">
         <div className="bg-white rounded-xl shadow-2xl p-8 max-w-4xl mx-auto">
           <div className="text-center mb-8">
             <h2 className="text-3xl font-bold text-gray-800">Track Your Shipment</h2>
