@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useQuery } from '@apollo/client';
 import { GETDELIVERIESADMIN } from '../../../graphql/query';
 import HomeDataCarousel from './HomeDataCarousel';
-
+import { mockItems } from './json/mockItems';
 const DeliveryTracker = () => {
   const [trackingNumber, setTrackingNumber] = useState('');
   const { loading, error, data } = useQuery(GETDELIVERIESADMIN);
@@ -85,7 +85,7 @@ const DeliveryTracker = () => {
             </div>
             
             <div className="lg:w-1/2 w-full max-w-2xl">
-              <HomeDataCarousel />
+              <HomeDataCarousel items={mockItems}/>
             </div>
           </div>
         </div>
