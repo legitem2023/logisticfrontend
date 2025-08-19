@@ -17,20 +17,22 @@ import { FaMotorcycle, FaMapMarkerAlt, FaCrown, FaChevronUp, FaExclamationTriang
 import { GiPathDistance } from 'react-icons/gi';
 import { MdOutlineDeliveryDining } from 'react-icons/md';
 
-// Luxury color palette
-const COLORS = {
-  darkGreen: '#0a2f15',
-  mediumGreen: '#1b5e3a',
-  lightGreen: '#2e8b57',
-  gold: '#d4af37',
-  cream: '#f5f5dc',
-  dark: '#1a1a1a'
-};
-
 type Coordinates = {
   lat: number;
   lng: number;
 }
+
+// Luxury color palette
+const COLORS = {
+  darkGreen: '#0A2810',
+  green: '#1A4D2B',
+  lightGreen: '#4CAF50',
+  gold: '#D4AF37',
+  dark: '#1A1A1A',
+  light: '#F5F5F5',
+  accent: '#8B4513',
+  gray: '#333333'
+};
 
 export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, deliveryId, senderId, setMap }: { 
   PickUpCoordinates: Coordinates,
@@ -105,7 +107,7 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
 
   const senderIcon = L.divIcon({
     html: `
-      <div class="w-10 h-10 bg-gradient-to-br from-${COLORS.mediumGreen} to-${COLORS.darkGreen} rounded-full border-2 border-${COLORS.cream} flex items-center justify-center text-${COLORS.cream}">
+      <div class="w-10 h-10 bg-gradient-to-br from-${COLORS.green} to-${COLORS.darkGreen} rounded-full border-2 border-${COLORS.light} flex items-center justify-center text-${COLORS.light}">
         <FaStore class="text-xl" />
       </div>
     `,
@@ -116,7 +118,7 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
   
   const receiverIcon = L.divIcon({
     html: `
-      <div class="w-10 h-10 bg-gradient-to-br from-${COLORS.lightGreen} to-${COLORS.mediumGreen} rounded-full border-2 border-${COLORS.cream} flex items-center justify-center text-${COLORS.cream}">
+      <div class="w-10 h-10 bg-gradient-to-br from-${COLORS.lightGreen} to-${COLORS.green} rounded-full border-2 border-${COLORS.light} flex items-center justify-center text-${COLORS.light}">
         <FaMapMarkerAlt class="text-xl" />
       </div>
     `,
@@ -183,7 +185,7 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
     mapRef.current = map;
 
     // Premium map tiles
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
       maxZoom: 19,
     }).addTo(map);
     
@@ -208,7 +210,7 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
         show: false,
         lineOptions: {
           styles: [{ 
-            color: COLORS.gold, 
+            color: COLORS.lightGreen, 
             weight: 5,
             opacity: 0.7
           }]
@@ -285,13 +287,13 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
   }, [panelHeight]);
 
   return (
-    <div className="relative w-full h-full overflow-hidden bg-black">
+    <div className="relative w-full h-full overflow-hidden bg-${COLORS.dark}">
       {/* Fixed top bar with dark background */}
-      <div className={`fixed top-0 left-0 right-0 flex justify-between items-center p-4 bg-gradient-to-r from-${COLORS.darkGreen} to-${COLORS.dark} z-50 border-b border-${COLORS.gold}/50`}>
-        <h2 className="text-lg font-semibold text-${COLORS.cream}">Premium Delivery Tracking</h2>
+      <div className="fixed top-0 left-0 right-0 flex justify-between items-center p-4 bg-gradient-to-r from-${COLORS.darkGreen} to-${COLORS.dark} z-50 border-b border-${COLORS.gold}/50">
+        <h2 className="text-lg font-semibold text-${COLORS.light}">Map</h2>
         <button
           onClick={setMap}
-          className={`text-${COLORS.cream} hover:bg-${COLORS.mediumGreen} p-2 rounded-full transition-colors bg-${COLORS.darkGreen} shadow-lg`}
+          className="text-${COLORS.light} hover:bg-${COLORS.lightGreen} p-2 rounded-full transition-colors bg-${COLORS.green} shadow-lg"
         >
           <XIcon className="w-5 h-5" />
         </button>
@@ -306,19 +308,19 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
 
       {/* Premium Control Panel */}
       <div className="absolute top-16 left-4 z-10">
-        <div className={`bg-gradient-to-br from-${COLORS.darkGreen} to-${COLORS.dark} rounded-2xl p-4 shadow-2xl border border-${COLORS.mediumGreen}`}>
+        <div className="bg-gradient-to-br from-${COLORS.darkGreen} to-${COLORS.dark} rounded-2xl p-4 shadow-2xl border border-${COLORS.gray}">
           <div className="flex items-center mb-3">
-            <div className={`bg-${COLORS.gold} w-3 h-3 rounded-full mr-2`}></div>
-            <h3 className={`text-${COLORS.cream} font-bold text-lg`}>Delivery #{deliveryId.slice(0, 8)}</h3>
+            <div className="bg-${COLORS.lightGreen} w-3 h-3 rounded-full mr-2"></div>
+            <h3 className="text-${COLORS.light} font-bold text-lg">Delivery #{deliveryId.slice(0, 8)}</h3>
           </div>
           
-          <div className="flex items-center text-sm text-${COLORS.cream}/80 mb-2">
-            <GiPathDistance className={`mr-2 text-${COLORS.gold}`} />
+          <div className="flex items-center text-sm text-${COLORS.light} mb-2">
+            <GiPathDistance className="mr-2 text-${COLORS.lightGreen}" />
             <span>{progressRef.current.totalDistance ? `${(progressRef.current.totalDistance / 1000).toFixed(1)} km` : 'Calculating...'}</span>
           </div>
           
-          <div className="flex items-center text-sm text-${COLORS.cream}/80">
-            <FaMotorcycle className={`mr-2 text-${COLORS.gold}`} />
+          <div className="flex items-center text-sm text-${COLORS.light}">
+            <FaMotorcycle className="mr-2 text-${COLORS.lightGreen}" />
             <span>{estimatedTime ? `~${estimatedTime} min` : 'Estimating...'}</span>
           </div>
         </div>
@@ -339,17 +341,17 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
       >
         {/* Draggable Handle */}
         <div 
-          className={`drag-handle absolute top-3 left-1/2 transform -translate-x-1/2 w-24 h-1.5 bg-${COLORS.gold}/50 rounded-full cursor-row-resize touch-none`}
+          className="drag-handle absolute top-3 left-1/2 transform -translate-x-1/2 w-24 h-1.5 bg-${COLORS.lightGreen}/50 rounded-full cursor-row-resize touch-none"
         >
-          <div className={`absolute -top-7 left-1/2 transform -translate-x-1/2 text-${COLORS.gold}`}>
+          <div className="absolute -top-7 left-1/2 transform -translate-x-1/2 text-${COLORS.lightGreen}">
             <FaChevronUp />
           </div>
         </div>
 
         <div className="pt-8 h-full flex flex-col">
           <div className="text-center mb-6">
-            <h2 className={`text-2xl font-bold text-${COLORS.cream} mb-1`}>Delivery Operations</h2>
-            <p className={`text-sm text-${COLORS.cream}/70`}>Premium Express Service</p>
+            <h2 className="text-2xl font-bold text-${COLORS.light} mb-1">Delivery Operations</h2>
+            <p className="text-sm text-${COLORS.light}">Premium Express Service</p>
           </div>
 
           <div className="grid grid-cols-1 gap-4 mb-6">
@@ -361,12 +363,12 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
               }}
               className={`
                 flex items-center justify-center gap-3 py-4 rounded-xl
-                bg-gradient-to-r from-${COLORS.mediumGreen} to-${COLORS.darkGreen}
-                text-${COLORS.cream} font-semibold shadow-lg
+                bg-gradient-to-r from-${COLORS.green} to-${COLORS.darkGreen}
+                text-${COLORS.light} font-semibold shadow-lg
                 transition-all duration-300 hover:shadow-xl hover:scale-[1.02]
                 focus:ring-2 focus:ring-${COLORS.lightGreen} focus:ring-opacity-50
-                border border-${COLORS.gold}/30
-                ${status === 'arrived' ? `ring-2 ring-${COLORS.lightGreen}` : ''}
+                border border-${COLORS.lightGreen}/30
+                ${status === 'arrived' ? 'ring-2 ring-${COLORS.lightGreen}' : ''}
               `}>
               <FaStore className="text-xl" />
               <span>Arrived at Pickup Location</span>
@@ -380,12 +382,12 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
               }}
               className={`
                 flex items-center justify-center gap-3 py-4 rounded-xl
-                bg-gradient-to-r from-${COLORS.lightGreen} to-${COLORS.mediumGreen}
-                text-${COLORS.cream} font-semibold shadow-lg
+                bg-gradient-to-r from-${COLORS.lightGreen} to-${COLORS.green}
+                text-${COLORS.light} font-semibold shadow-lg
                 transition-all duration-300 hover:shadow-xl hover:scale-[1.02]
                 focus:ring-2 focus:ring-${COLORS.lightGreen} focus:ring-opacity-50
-                border border-${COLORS.gold}/30
-                ${status === 'delivered' ? `ring-2 ring-${COLORS.lightGreen}` : ''}
+                border border-${COLORS.lightGreen}/30
+                ${status === 'delivered' ? 'ring-2 ring-${COLORS.lightGreen}' : ''}
               `}>
               <MdOutlineDeliveryDining className="text-xl" />
               <span>Mark as Delivered</span>
@@ -399,12 +401,12 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
               }}
               className={`
                 flex items-center justify-center gap-3 py-4 rounded-xl
-                bg-gradient-to-r from-red-700 to-red-900
-                text-${COLORS.cream} font-semibold shadow-lg
+                bg-gradient-to-r from-${COLORS.gray} to-${COLORS.dark}
+                text-${COLORS.light} font-semibold shadow-lg
                 transition-all duration-300 hover:shadow-xl hover:scale-[1.02]
-                focus:ring-2 focus:ring-red-500 focus:ring-opacity-50
-                border border-red-500/30
-                ${status === 'failed' ? 'ring-2 ring-red-500' : ''}
+                focus:ring-2 focus:ring-${COLORS.gray} focus:ring-opacity-50
+                border border-${COLORS.gray}/30
+                ${status === 'failed' ? 'ring-2 ring-${COLORS.gray}' : ''}
               `}>
               <FaExclamationTriangle className="text-xl" />
               <span>Delivery Attempt Failed</span>
@@ -416,10 +418,10 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
               <span className={`
                 px-4 py-2 rounded-full text-sm font-medium
                 ${
-                  status === 'arrived' ? `bg-${COLORS.mediumGreen}/80 text-${COLORS.cream}` : 
-                  status === 'failed' ? 'bg-red-900/80 text-red-200' : 
-                  status === 'delivered' ? `bg-${COLORS.lightGreen}/80 text-${COLORS.cream}` :
-                  `bg-${COLORS.gold} text-${COLORS.dark}`
+                  status === 'arrived' ? 'bg-${COLORS.green}/80 text-${COLORS.light}' : 
+                  status === 'failed' ? 'bg-${COLORS.gray}/80 text-${COLORS.light}' : 
+                  status === 'delivered' ? 'bg-${COLORS.lightGreen}/80 text-${COLORS.light}' :
+                  'bg-${COLORS.gold} text-${COLORS.dark}'
                 }
               `}>
                 {status === 'arrived' ? '🏍️ Arrived at pickup location' : 
@@ -430,16 +432,16 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
             </div>
           )}
 
-          <div className={`mt-6 pt-4 border-t border-${COLORS.mediumGreen}`}>
-            <div className={`flex justify-between text-${COLORS.cream}/70 text-sm`}>
+          <div className="mt-6 pt-4 border-t border-${COLORS.gray}">
+            <div className="flex justify-between text-${COLORS.light} text-sm">
               <span className="flex items-center gap-1">
-                <FaStore className={`text-${COLORS.lightGreen}`} /> Pickup
+                <FaStore className="text-${COLORS.lightGreen}" /> Pickup
               </span>
-              <span className={`text-${COLORS.gold} flex items-center gap-1`}>
+              <span className="text-${COLORS.gold} flex items-center gap-1">
                 <FaCrown /> Premium
               </span>
               <span className="flex items-center gap-1">
-                <FaMapMarkerAlt className={`text-${COLORS.lightGreen}`} /> Delivery
+                <FaMapMarkerAlt className="text-${COLORS.lightGreen}" /> Delivery
               </span>
             </div>
           </div>
@@ -450,10 +452,10 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
       {!isPanelOpen && (
         <button
           onClick={() => setIsPanelOpen(true)}
-          className={`fixed bottom-4 left-1/2 transform -translate-x-1/2 z-50
-            bg-gradient-to-r from-${COLORS.gold} to-${COLORS.mediumGreen} text-${COLORS.dark}
+          className="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-50
+            bg-gradient-to-r from-${COLORS.lightGreen} to-${COLORS.green} text-${COLORS.light}
             rounded-full p-3 shadow-lg hover:shadow-xl animate-bounce
-            flex items-center justify-center w-12 h-12`}
+            flex items-center justify-center w-12 h-12"
         >
           <FaChevronUp className="text-lg" />
         </button>
@@ -462,35 +464,54 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
       <style jsx>{`
         :global(.leaflet-popup-content-wrapper) {
           background: ${COLORS.darkGreen};
-          color: ${COLORS.cream};
+          color: ${COLORS.light};
           border: 1px solid ${COLORS.gold};
           border-radius: 12px;
         }
         
         :global(.leaflet-popup-tip) {
-          background: ${COLORS.gold};
+          background: ${COLORS.darkGreen};
         }
         
         :global(.leaflet-routing-container) {
           background: ${COLORS.darkGreen};
-          color: ${COLORS.cream};
+          color: ${COLORS.light};
           border: 1px solid ${COLORS.gold};
         }
         
-        :global(.leaflet-bar) {
-          box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-        }
-        
-        :global(.leaflet-bar a) {
+        :global(.leaflet-routing-alt) {
           background: ${COLORS.darkGreen};
-          color: ${COLORS.cream};
-          border-bottom: 1px solid ${COLORS.mediumGreen};
+          color: ${COLORS.light};
+          max-height: 200px;
         }
         
-        :global(.leaflet-bar a:hover) {
-          background: ${COLORS.mediumGreen};
+        :global(.leaflet-routing-alt h2) {
+          color: ${COLORS.gold};
+        }
+        
+        :global(.leaflet-routing-alt::-webkit-scrollbar) {
+          width: 8px;
+        }
+        
+        :global(.leaflet-routing-alt::-webkit-scrollbar-track) {
+          background: ${COLORS.dark};
+        }
+        
+        :global(.leaflet-routing-alt::-webkit-scrollbar-thumb) {
+          background: ${COLORS.gold};
+          border-radius: 4px;
+        }
+        
+        :global(.leaflet-control-zoom a) {
+          background: ${COLORS.darkGreen};
+          color: ${COLORS.light};
+          border: 1px solid ${COLORS.gold};
+        }
+        
+        :global(.leaflet-control-zoom a:hover) {
+          background: ${COLORS.green};
         }
       `}</style>
     </div>
   );
-    }
+      }
