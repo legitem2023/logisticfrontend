@@ -62,8 +62,8 @@ const DeliveryTracker = () => {
       </div>
 
       {/* Tracking Section */}
-      <div className="container mx-auto p-0 relative z-10">
-        <div className="bg-green-700 rounded-xl p-8 max-w-4xl mx-auto">
+      <div className="container mx-auto p-0 relative z-10 mt-1">
+        <div className="customgrad p-8 max-w-4xl mx-auto">
           <div className="text-center mb-8">
             <h2 className="text-3xl font-bold text-white">Track Your Shipment</h2>
             <p className="text-white mt-2">Enter your tracking number to get real-time updates</p>
@@ -306,7 +306,7 @@ const DeliveryTracker = () => {
       </div>
 
       {/* Stats Section */}
-      <div className="bg-green-800 text-white py-16">
+      <div className="customgrad text-white py-16">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             <div>
