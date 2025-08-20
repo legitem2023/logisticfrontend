@@ -36,3 +36,34 @@ export function calculateEta(distanceKm: number, type: DeliveryType): EtaResult 
     etaInMinutes: Math.round(totalEtaMinutes),
   };
 }
+
+export function convertMinutesToHours(totalMinutes) {
+    // Validate input
+    if (typeof totalMinutes !== 'number' || isNaN(totalMinutes)) {
+        throw new Error('Input must be a number');
+    }
+    
+    if (totalMinutes < 0) {
+        throw new Error('Input must be a non-negative number');
+    }
+    
+    if (!Number.isInteger(totalMinutes)) {
+        throw new Error('Input must be an integer');
+    }
+    
+    // Convert to hours and minutes
+    if (totalMinutes < 60) {
+        return `${totalMinutes} minute${totalMinutes !== 1 ? 's' : ''}`;
+    } else {
+        const hours = Math.floor(totalMinutes / 60);
+        const minutes = totalMinutes % 60;
+        
+        let result = `${hours} hour${hours !== 1 ? 's' : ''}`;
+        
+        if (minutes > 0) {
+            result += ` ${minutes} minute${minutes !== 1 ? 's' : ''}`;
+        }
+        
+        return result;
+    }
+}
