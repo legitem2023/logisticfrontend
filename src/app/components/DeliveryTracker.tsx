@@ -12,6 +12,8 @@ const DeliveryTracker = () => {
   const { loading, error, data } = useQuery(GETDELIVERIESADMIN);
   const [searched, setSearched] = useState(false);
   const dispatch = useDispatch()
+  const [showMap, setMap] = useState(false); 
+  const [selectedDelivery, setSelectedDelivery] = useState(null); 
 
   const createAccount = () =>{
     dispatch(setActiveIndex(11))
@@ -173,6 +175,8 @@ const DeliveryTracker = () => {
                       {delivery.paymentStatus}
                     </span>
                   </p>
+                  <button onClick={()=>{setMap(true);
+                                        setSelectedDelivery(delivery)}}>Show Map</button>
                 </div>
               </div>
 
@@ -355,6 +359,37 @@ const DeliveryTracker = () => {
           </div>
         </div>
       </div>
+
+{showMap && (
+        <div className="fixed h-[100vh] inset-0 z-50 flex items-end sm:items-center justify-center bg-black/50">
+          <button
+            onClick={() => setMap(false)}
+            className="fixed top-5 right-5 z-50 p-1 rounded hover:bg-gray-100 transition"
+          >
+            <XCircle className="w-5 h-5 text-red-600" />
+          </button>
+          <div className="w-full h-[100vh] sm:max-w-md bg-white shadow-lg overflow-y-auto">
+            <SenderMap
+              riderId={selectedDelivery.assignedRiderId}
+              riderPOS={{
+                lat: selectedDelivery.pickupLatitude,
+                lng: selectedDelivery.pickupLongitude,
+              }}
+              senderPOS={{
+                lat: selectedDelivery.pickupLatitude,
+                lng: selectedDelivery.pickupLongitude, 
+              }}
+              receiverPOS={{
+                lat: selectedDelivery.dropoffLatitude,
+                lng: selectedDelivery.dropoffLongitude,
+              }}
+              delivery={selectedDelivery}
+              setMap={()=>setMap(false)}
+            />
+          </div>
+        </div>
+      )}
+      
     </div>
   );
 };
