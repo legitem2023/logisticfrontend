@@ -433,7 +433,7 @@ const SenderMap = ({ riderId, receiverPOS, senderPOS, riderPOS, delivery, setMap
         <div className="pt-8 h-full flex flex-col">
           <div className="text-center mb-6">
             <h2 className="text-2xl font-bold text-yellow-100 mb-1">Delivery Tracking</h2>
-            <p className="text-sm" style={{ color: mapTheme === 'dark' ? '#d9f99d' : '#d9f99d' }}>Premium Express Service</p>
+            <p className="text-sm" style={{ color: mapTheme === 'dark' ? '#d9f99d' : '#d9f99d' }}>Express Service</p>
           </div>
 
           <div className="flex items-center mb-6">
@@ -475,7 +475,7 @@ const SenderMap = ({ riderId, receiverPOS, senderPOS, riderPOS, delivery, setMap
           <div className="flex justify-between items-center mt-6">
             <div className="text-center">
               <div className="text-white font-light">Estimated</div>
-              <div className="font-serif text-xl" style={{ color: mapTheme === 'dark' ? '#d9f99d' : '#d9f99d' }}>{estimatedTime}</div>
+              <div className="font-serif text-xl" style={{ color: mapTheme === 'dark' ? '#d9f99d' : '#d9f99d' }}>{ETA}</div>
             </div>
             
             <div className="flex space-x-3">
