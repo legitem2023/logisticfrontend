@@ -348,13 +348,13 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
       {/* Fixed top bar with theme-appropriate background */}
       <div className={`fixed top-0 left-0 right-0 flex justify-between items-center p-4 z-50 border-b ${
         mapTheme === 'dark' 
-          ? 'bg-gradient-to-r from-emerald-900 to-emerald-800 border-yellow-400/30' 
-          : 'bg-gradient-to-r from-emerald-600 to-emerald-500 border-yellow-300/30'
+          ? 'bg-gradient-to-r from-green-900 to-green-800 border-yellow-400/30' 
+          : 'bg-gradient-to-r from-green-600 to-green-500 border-yellow-300/30'
       }`}>
         <h2 className={`text-lg font-semibold ${mapTheme === 'dark' ? 'text-yellow-100' : 'text-white'}`}>
           <span className="flex items-center gap-2">
             <FaCrown className="text-yellow-400" />
-            Premium Delivery
+            Delivery
           </span>
         </h2>
         <div className="flex gap-2">
@@ -391,11 +391,11 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
       />
 
       {/* Luxury Control Panel */}
-      <div className="absolute top-16 left-4 z-10">
+      <div className="absolute top-20 left-4 z-10">
         <div className={`rounded-2xl p-4 shadow-2xl border backdrop-blur-sm ${
           mapTheme === 'dark' 
-            ? 'bg-gradient-to-br from-white-900/90 to-white-800/90 border-yellow-400/30' 
-            : 'bg-gradient-to-br from-white-600/90 to-white-500/90 border-yellow-300/30'
+            ? 'bg-gradient-to-br from-green-900/90 to-green-800/90 border-lime-400/30' 
+            : 'bg-gradient-to-br from-green-600/90 to-green-500/90 border-lime-300/30'
         }`}>
           <div className="flex items-center mb-3">
             <div className={`w-3 h-3 rounded-full mr-2 ${
@@ -430,13 +430,13 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
       <div
         ref={panelRef}
         className={`
-          fixed bottom-0 left-0 right-0 z-50 px-6 pb-8
+          fixed bottom-0 left-0 right-0 z-50 px-6 pb-8 backdrop-blur-sm
           rounded-t-3xl shadow-[0_-20px_50px_-10px_rgba(6,78,59,0.5)]
           transition-all duration-300 ease-out
           ${isPanelOpen ? 'translate-y-0' : 'translate-y-[calc(100%-60px)]'}
           ${mapTheme === 'dark' 
-            ? 'bg-gradient-to-t from-white-900 to-white-950 border-t border-yellow-400/30' 
-            : 'bg-gradient-to-t from-white-500 to-white-600 border-t border-yellow-300/30'}
+            ? 'bg-gradient-to-t from-green-900 to-green-950 border-t border-yellow-400/30' 
+            : 'bg-gradient-to-t from-green-500 to-green-600 border-t border-yellow-300/30'}
         `}
         style={{ height: `${panelHeight}px` }}
       >
