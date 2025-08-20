@@ -10,6 +10,8 @@ import {
   User, Truck, WalletCards, CreditCard, Code  
 } from "lucide-react";
 import HistoryContainer from "../History/HistoryContainer"; 
+import { calculateEta, convertMinutesToHours } from '../../../../utils/calculateEta';
+
 import { LocationTracking } from '../../../../graphql/subscription';
 import Image from 'next/image';
 import { CANCELEDDELIVERY } from "../../../../graphql/mutation"; 
@@ -168,7 +170,7 @@ export default function SenderDashboard() {
 
                   <div className="flex items-center gap-2 text-sm text-gray-500">
                     <Clock className="w-4 h-4" />
-                    <span>ETA: {delivery.eta}</span>
+                    <span>ETA: {convertMinutesToHours(parseFloat(delivery.eta))}</span>
                   </div>
 
                   {delivery.deliveryStatus === 'in_transit' && (
