@@ -65,21 +65,21 @@ export default function ResponsiveNavigation({
 
   // Define links with children for the Rider item
   const sidebarLinks: SidebarLink[] = [
-    { label: 'Home', href: '/', icon: <HomeIcon size={18} /> },
-    { label: 'Contact', href: '/Contact', icon: <Phone size={18} /> },
-    { label: 'Privacy', href: '/Privacy', icon: <Shield size={18} /> },
-    { label: 'FAQ', href: '/FAQ', icon: <HelpCircle size={18} /> },
+    { label: 'Home', href: '/', icon: <HomeIcon color="green" size={18} /> },
+    { label: 'Contact', href: '/Contact', icon: <Phone color="green" size={18} /> },
+    { label: 'Privacy', href: '/Privacy', icon: <Shield color="green" size={18} /> },
+    { label: 'FAQ', href: '/FAQ', icon: <HelpCircle color="green" size={18} /> },
     { 
       label: 'Account', 
       href: '#', 
-      icon: <User size={18} />,
+      icon: <User color="green" size={18}/>,
       children: [
-        { id: 3, label: 'Logistics Panel', href: '/rider/profile', icon: <ClipboardCheck size={16} /> },
-        { id: 4, label: 'Create Delivery', href: '/rider/history', icon: <Truck size={16} /> },
-        { id: 7, label: 'Unassigned', href: '/rider/settings', icon: <BadgeCheck size={16} /> },
-        { id: 8, label: 'Vehicle', href: '/rider/locations', icon: <Truck size={16} /> },
-        { id: 11, label: 'Sign Up', href: '/rider/locations', icon: <Truck size={16} /> },
-        { id: 12, label: 'Login', href: '/rider/locations', icon: <Truck size={16} /> }
+        { id: 3, label: 'Logistics Panel', href: '/rider/profile', icon: <ClipboardCheck color="green" size={16} /> },
+        { id: 4, label: 'Create Delivery', href: '/rider/history', icon: <Truck color="green" size={16} /> },
+        { id: 7, label: 'Unassigned', href: '/rider/settings', icon: <BadgeCheck color="green" size={16} /> },
+        { id: 8, label: 'Vehicle', href: '/rider/locations', icon: <Truck color="green" size={16} /> },
+        { id: 11, label: 'Sign Up', href: '/rider/locations', icon: <Truck color="green" size={16} /> },
+        { id: 12, label: 'Login', href: '/rider/locations', icon: <Truck color="green" size={16} /> }
       ]
     },
   ];
