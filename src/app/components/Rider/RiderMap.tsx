@@ -344,14 +344,14 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
   }, [panelHeight]);
 
   return (
-    <div className={`relative w-full h-full overflow-hidden ${mapTheme === 'dark' ? 'bg-[#001a00]' : 'bg-gray-100'}`}>
+    <div className={`relative w-full h-full overflow-hidden ${mapTheme === 'dark' ? 'bg-[#001a00]' : 'bg-[#e8f5e8]'}`}>
       {/* Fixed top bar with theme-appropriate background */}
       <div className={`fixed top-0 left-0 right-0 flex justify-between items-center p-4 z-50 border-b backdrop-blur-md ${
         mapTheme === 'dark' 
           ? 'bg-gradient-to-r from-[#002000]/90 to-[#001800]/90 border-yellow-400/30' 
-          : 'bg-gradient-to-r from-green-600/90 to-green-500/90 border-yellow-300/30'
+          : 'bg-gradient-to-r from-green-800/90 to-green-900/90 border-yellow-300/30'
       }`}>
-        <h2 className={`text-lg font-semibold ${mapTheme === 'dark' ? 'text-yellow-100' : 'text-white'}`}>
+        <h2 className={`text-lg font-semibold ${mapTheme === 'dark' ? 'text-yellow-100' : 'text-yellow-100'}`}>
           <span className="flex items-center gap-2">
             <FaCrown className="text-yellow-400" />
             Delivery
@@ -364,7 +364,7 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
             className={`p-2 rounded-full transition-colors shadow-lg ${
               mapTheme === 'dark' 
                 ? 'text-yellow-300 bg-[#002000]/80 hover:bg-[#001800]/80' 
-                : 'text-yellow-200 bg-green-500/80 hover:bg-green-400/80'
+                : 'text-yellow-200 bg-green-800/80 hover:bg-green-700/80'
             }`}
             title={`Switch to ${mapTheme === 'dark' ? 'light' : 'dark'} mode`}
           >
@@ -375,7 +375,7 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
             className={`p-2 rounded-full transition-colors shadow-lg ${
               mapTheme === 'dark' 
                 ? 'text-yellow-300 bg-[#002000]/80 hover:bg-[#001800]/80' 
-                : 'text-yellow-200 bg-green-500/80 hover:bg-green-400/80'
+                : 'text-yellow-200 bg-green-800/80 hover:bg-green-700/80'
             }`}
           >
             <XIcon className="w-5 h-5" />
@@ -395,31 +395,31 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
         <div className={`rounded-2xl p-4 shadow-2xl border backdrop-blur-xl ${
           mapTheme === 'dark' 
             ? 'bg-gradient-to-br from-[#002000]/80 to-[#001800]/80 border-lime-400/30' 
-            : 'bg-gradient-to-br from-green-600/80 to-green-500/80 border-lime-300/30'
+            : 'bg-gradient-to-br from-green-800/80 to-green-900/80 border-lime-300/30'
         }`}>
           <div className="flex items-center mb-3">
             <div className={`w-3 h-3 rounded-full mr-2 ${
-              mapTheme === 'dark' ? 'bg-yellow-400 animate-pulse' : 'bg-yellow-200'
+              mapTheme === 'dark' ? 'bg-yellow-400 animate-pulse' : 'bg-yellow-300'
             }`}></div>
             <h3 className={`font-bold text-lg ${
-              mapTheme === 'dark' ? 'text-yellow-100' : 'text-white'
+              mapTheme === 'dark' ? 'text-yellow-100' : 'text-yellow-100'
             }`}>Delivery #{deliveryId.slice(0, 8)}</h3>
           </div>
           
           <div className="flex items-center text-sm mb-2">
             <GiPathDistance className={`mr-2 ${
-              mapTheme === 'dark' ? 'text-yellow-300' : 'text-yellow-100'
+              mapTheme === 'dark' ? 'text-yellow-300' : 'text-yellow-200'
             }`} />
-            <span className={mapTheme === 'dark' ? 'text-yellow-200' : 'text-yellow-100'}>
+            <span className={mapTheme === 'dark' ? 'text-yellow-200' : 'text-yellow-200'}>
               {progressRef.current.totalDistance ? `${(progressRef.current.totalDistance / 1000).toFixed(1)} km` : 'Calculating...'}
             </span>
           </div>
           
           <div className="flex items-center text-sm">
             <Clock className={`mr-2 w-4 h-4 ${
-              mapTheme === 'dark' ? 'text-yellow-300' : 'text-yellow-100'
+              mapTheme === 'dark' ? 'text-yellow-300' : 'text-yellow-200'
             }`} />
-            <span className={mapTheme === 'dark' ? 'text-yellow-200' : 'text-yellow-100'}>
+            <span className={mapTheme === 'dark' ? 'text-yellow-200' : 'text-yellow-200'}>
               {estimatedTime ? `~${estimatedTime} min` : 'Estimating...'}
             </span>
           </div>
@@ -436,17 +436,17 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
           ${isPanelOpen ? 'translate-y-0' : 'translate-y-[calc(100%-60px)]'}
           ${mapTheme === 'dark' 
             ? 'bg-gradient-to-t from-[#001a00]/95 to-[#001200]/95 border-t border-yellow-400/30' 
-            : 'bg-gradient-to-t from-green-600/95 to-green-700/95 border-t border-yellow-300/30'}
+            : 'bg-gradient-to-t from-green-800/95 to-green-900/95 border-t border-yellow-300/30'}
         `}
         style={{ height: `${panelHeight}px` }}
       >
         {/* Draggable Handle */}
         <div 
           className="drag-handle absolute top-3 left-1/2 transform -translate-x-1/2 w-24 h-1.5 rounded-full cursor-row-resize touch-none"
-          style={{ backgroundColor: mapTheme === 'dark' ? 'rgba(251, 191, 36, 0.5)' : 'rgba(255, 255, 255, 0.5)' }}
+          style={{ backgroundColor: mapTheme === 'dark' ? 'rgba(251, 191, 36, 0.5)' : 'rgba(251, 191, 36, 0.5)' }}
         >
           <div className="absolute -top-7 left-1/2 transform -translate-x-1/2" 
-               style={{ color: mapTheme === 'dark' ? '#fde68a' : '#ffffff' }}>
+               style={{ color: mapTheme === 'dark' ? '#fde68a' : '#fde68a' }}>
             <FaChevronUp />
           </div>
         </div>
@@ -454,7 +454,7 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
         <div className="pt-8 h-full flex flex-col">
           <div className="text-center mb-6">
             <h2 className="text-2xl font-bold text-yellow-100 mb-1">Delivery Operations</h2>
-            <p className="text-sm" style={{ color: mapTheme === 'dark' ? '#d9f99d' : '#d1fae5' }}>Premium Express Service</p>
+            <p className="text-sm" style={{ color: mapTheme === 'dark' ? '#d9f99d' : '#d9f99d' }}>Premium Express Service</p>
           </div>
 
           <div className="grid grid-cols-1 gap-4 mb-6">
@@ -473,7 +473,7 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
                 ${status === 'arrived' ? 'ring-2' : ''}
                 ${mapTheme === 'dark' 
                   ? 'bg-gradient-to-r from-[#002000]/90 to-[#001800]/90 border-yellow-400/30 focus:ring-yellow-500 ring-yellow-400' 
-                  : 'bg-gradient-to-r from-green-600/90 to-green-500/90 border-yellow-300/30 focus:ring-yellow-400 ring-yellow-300'}
+                  : 'bg-gradient-to-r from-green-700/90 to-green-800/90 border-yellow-300/30 focus:ring-yellow-400 ring-yellow-300'}
               `}>
               <FaStore className="text-xl" />
               <span>Arrived at Pickup Location</span>
@@ -494,7 +494,7 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
                 ${status === 'delivered' ? 'ring-2' : ''}
                 ${mapTheme === 'dark' 
                   ? 'bg-gradient-to-r from-[#001800]/90 to-[#001400]/90 border-yellow-300/30 focus:ring-yellow-400 ring-yellow-300' 
-                  : 'bg-gradient-to-r from-green-500/90 to-green-400/90 border-yellow-200/30 focus:ring-yellow-300 ring-yellow-200'}
+                  : 'bg-gradient-to-r from-green-600/90 to-green-700/90 border-yellow-300/30 focus:ring-yellow-400 ring-yellow-300'}
               `}>
               <MdOutlineDeliveryDining className="text-xl" />
               <span>Mark as Delivered</span>
@@ -515,7 +515,7 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
                 ${status === 'failed' ? 'ring-2' : ''}
                 ${mapTheme === 'dark' 
                   ? 'bg-gradient-to-r from-rose-800/90 to-rose-700/90 border-rose-400/30 focus:ring-rose-500 ring-rose-400' 
-                  : 'bg-gradient-to-r from-rose-600/90 to-rose-500/90 border-rose-300/30 focus:ring-rose-400 ring-rose-300'}
+                  : 'bg-gradient-to-r from-rose-700/90 to-rose-600/90 border-rose-300/30 focus:ring-rose-400 ring-rose-300'}
               `}>
               <FaExclamationTriangle className="text-xl" />
               <span>Delivery Attempt Failed</span>
@@ -534,7 +534,7 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
           style={{
             background: mapTheme === 'dark' 
               ? 'linear-gradient(to right, rgba(0, 32, 0, 0.9), rgba(0, 24, 0, 0.9))' 
-              : 'linear-gradient(to right, rgba(16, 185, 129, 0.9), rgba(20, 160, 115, 0.9))',
+              : 'linear-gradient(to right, rgba(0, 100, 0, 0.9), rgba(0, 80, 0, 0.9))',
             color: 'white'
           }}
         >
@@ -543,4 +543,4 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
       )}
     </div>
   );
-          }
+        }
