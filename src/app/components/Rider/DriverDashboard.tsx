@@ -214,7 +214,7 @@ const tabs = [
   { label: "Deliveries", icon: Truck },
   { label: "History", icon: Clock }
 ];
-  console.log(data);
+
   return ( 
     <div className="min-h-screen bg-gray-50 flex flex-col md:flex-row"> 
       <aside className="hidden md:block md:w-64 bg-white/70 backdrop-blur-lg border-r border-gray-200 shadow-md p-6 rounded-r-3xl"> 
@@ -555,7 +555,6 @@ const tabs = [
 
       {showProof && (
        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40 backdrop-blur-sm transition-all">
-         
          <div className="w-full h-[90vh] bg-white p-0 shadow-lg animate-slide-up overflow-y-auto">
          <div className="flex justify-between items-center p-4 border-b bg-white">
             <h2 className="text-lg font-semibold text-gray-900">Delivery Proof</h2>
@@ -572,10 +571,8 @@ const tabs = [
        </div>
       )}
 
-
     {showPickupProof && (
        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40 backdrop-blur-sm transition-all">
-         
          <div className="w-full h-[90vh] bg-white p-0 shadow-lg animate-slide-up overflow-y-auto">
          <div className="flex justify-between items-center p-4 border-b bg-white">
             <h2 className="text-lg font-semibold text-gray-900">Delivery Proof</h2>
@@ -592,9 +589,6 @@ const tabs = [
        </div>
       )}
 
-
-
-      
       {showPayment &&(
        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40 backdrop-blur-sm transition-all">    
          <div className="w-full h-[90vh] bg-white p-0 shadow-lg animate-slide-up overflow-y-auto">
