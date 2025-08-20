@@ -344,11 +344,11 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
   }, [panelHeight]);
 
   return (
-    <div className={`relative w-full h-full overflow-hidden ${mapTheme === 'dark' ? 'bg-emerald-950' : 'bg-gray-100'}`}>
+    <div className={`relative w-full h-full overflow-hidden ${mapTheme === 'dark' ? 'bg-[#001a00]' : 'bg-gray-100'}`}>
       {/* Fixed top bar with theme-appropriate background */}
       <div className={`fixed top-0 left-0 right-0 flex justify-between items-center p-4 z-50 border-b backdrop-blur-md ${
         mapTheme === 'dark' 
-          ? 'bg-gradient-to-r from-green-900/90 to-green-800/90 border-yellow-400/30' 
+          ? 'bg-gradient-to-r from-[#002000]/90 to-[#001800]/90 border-yellow-400/30' 
           : 'bg-gradient-to-r from-green-600/90 to-green-500/90 border-yellow-300/30'
       }`}>
         <h2 className={`text-lg font-semibold ${mapTheme === 'dark' ? 'text-yellow-100' : 'text-white'}`}>
@@ -363,7 +363,7 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
             onClick={toggleMapTheme}
             className={`p-2 rounded-full transition-colors shadow-lg ${
               mapTheme === 'dark' 
-                ? 'text-yellow-300 bg-green-800/80 hover:bg-green-700/80' 
+                ? 'text-yellow-300 bg-[#002000]/80 hover:bg-[#001800]/80' 
                 : 'text-yellow-200 bg-green-500/80 hover:bg-green-400/80'
             }`}
             title={`Switch to ${mapTheme === 'dark' ? 'light' : 'dark'} mode`}
@@ -374,7 +374,7 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
             onClick={setMap}
             className={`p-2 rounded-full transition-colors shadow-lg ${
               mapTheme === 'dark' 
-                ? 'text-yellow-300 bg-green-800/80 hover:bg-green-700/80' 
+                ? 'text-yellow-300 bg-[#002000]/80 hover:bg-[#001800]/80' 
                 : 'text-yellow-200 bg-green-500/80 hover:bg-green-400/80'
             }`}
           >
@@ -394,7 +394,7 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
       <div className="absolute top-20 left-4 z-10">
         <div className={`rounded-2xl p-4 shadow-2xl border backdrop-blur-xl ${
           mapTheme === 'dark' 
-            ? 'bg-gradient-to-br from-green-900/80 to-green-800/80 border-lime-400/30' 
+            ? 'bg-gradient-to-br from-[#002000]/80 to-[#001800]/80 border-lime-400/30' 
             : 'bg-gradient-to-br from-green-600/80 to-green-500/80 border-lime-300/30'
         }`}>
           <div className="flex items-center mb-3">
@@ -431,11 +431,11 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
         ref={panelRef}
         className={`
           fixed bottom-0 left-0 right-0 z-50 px-6 pb-8 backdrop-blur-2xl
-          rounded-t-3xl shadow-[0_-20px_50px_-10px_rgba(6,78,59,0.5)]
+          rounded-t-3xl shadow-[0_-20px_50px_-10px_rgba(0,30,0,0.7)]
           transition-all duration-300 ease-out
           ${isPanelOpen ? 'translate-y-0' : 'translate-y-[calc(100%-60px)]'}
           ${mapTheme === 'dark' 
-            ? 'bg-gradient-to-t from-green-900/95 to-green-950/95 border-t border-yellow-400/30' 
+            ? 'bg-gradient-to-t from-[#001a00]/95 to-[#001200]/95 border-t border-yellow-400/30' 
             : 'bg-gradient-to-t from-green-600/95 to-green-700/95 border-t border-yellow-300/30'}
         `}
         style={{ height: `${panelHeight}px` }}
@@ -472,7 +472,7 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
                 border
                 ${status === 'arrived' ? 'ring-2' : ''}
                 ${mapTheme === 'dark' 
-                  ? 'bg-gradient-to-r from-green-800/90 to-green-700/90 border-yellow-400/30 focus:ring-yellow-500 ring-yellow-400' 
+                  ? 'bg-gradient-to-r from-[#002000]/90 to-[#001800]/90 border-yellow-400/30 focus:ring-yellow-500 ring-yellow-400' 
                   : 'bg-gradient-to-r from-green-600/90 to-green-500/90 border-yellow-300/30 focus:ring-yellow-400 ring-yellow-300'}
               `}>
               <FaStore className="text-xl" />
@@ -493,7 +493,7 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
                 border
                 ${status === 'delivered' ? 'ring-2' : ''}
                 ${mapTheme === 'dark' 
-                  ? 'bg-gradient-to-r from-green-700/90 to-green-600/90 border-yellow-300/30 focus:ring-yellow-400 ring-yellow-300' 
+                  ? 'bg-gradient-to-r from-[#001800]/90 to-[#001400]/90 border-yellow-300/30 focus:ring-yellow-400 ring-yellow-300' 
                   : 'bg-gradient-to-r from-green-500/90 to-green-400/90 border-yellow-200/30 focus:ring-yellow-300 ring-yellow-200'}
               `}>
               <MdOutlineDeliveryDining className="text-xl" />
@@ -533,7 +533,7 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
             flex items-center justify-center w-12 h-12"
           style={{
             background: mapTheme === 'dark' 
-              ? 'linear-gradient(to right, rgba(5, 122, 85, 0.9), rgba(6, 95, 70, 0.9))' 
+              ? 'linear-gradient(to right, rgba(0, 32, 0, 0.9), rgba(0, 24, 0, 0.9))' 
               : 'linear-gradient(to right, rgba(16, 185, 129, 0.9), rgba(20, 160, 115, 0.9))',
             color: 'white'
           }}
@@ -543,4 +543,4 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
       )}
     </div>
   );
-        }
+          }
