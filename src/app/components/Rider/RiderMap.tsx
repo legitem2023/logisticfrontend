@@ -48,7 +48,7 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
   const [estimatedTime, setEstimatedTime] = useState<number | null>(null);
   const [panelHeight, setPanelHeight] = useState(320);
   const [isPanelOpen, setIsPanelOpen] = useState(true);
-  const [mapTheme, setMapTheme] = useState<'dark' | 'light'>('dark');
+  const [mapTheme, setMapTheme] = useState<'dark' | 'light'>('light');
   const progressRef = useRef({
     totalDistance: null as number | null,
     checkInterval: null as NodeJS.Timeout | null
@@ -392,7 +392,7 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
 
       {/* Luxury Control Panel */}
       <div className="absolute top-20 left-4 z-10">
-        <div className={`rounded-2xl p-4 shadow-2xl border backdrop-blur-sm ${
+        <div className={`rounded-2xl p-4 shadow-2xl border backdrop-blur-xl ${
           mapTheme === 'dark' 
             ? 'bg-gradient-to-br from-green-900/90 to-green-800/90 border-lime-400/30' 
             : 'bg-gradient-to-br from-green-600/90 to-green-500/90 border-lime-300/30'
@@ -430,7 +430,7 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
       <div
         ref={panelRef}
         className={`
-          fixed bottom-0 left-0 right-0 z-50 px-6 pb-8 backdrop-blur-sm
+          fixed bottom-0 left-0 right-0 z-50 px-6 pb-8 backdrop-blur-xl
           rounded-t-3xl shadow-[0_-20px_50px_-10px_rgba(6,78,59,0.5)]
           transition-all duration-300 ease-out
           ${isPanelOpen ? 'translate-y-0' : 'translate-y-[calc(100%-60px)]'}
