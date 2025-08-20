@@ -92,7 +92,7 @@ const { eta,etaInMinutes } = calculateEta(parseFloat((rider.distanceTo(receiver)
 
 
 console.log(etaInMinutes,"<====");
-const ETA = convertMinutesToHours(parseInt(etaInMinutes==="" || etaInMinutes===null?"0":etaInMinutes));
+const ETA = convertMinutesToHours(parseInt(etaInMinutes));
   // Function to toggle map theme
   const toggleMapTheme = () => {
     setMapTheme(prevTheme => prevTheme === 'dark' ? 'light' : 'dark');
