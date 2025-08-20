@@ -74,12 +74,13 @@ export default function ResponsiveNavigation({
       href: '#', 
       icon: <User color="green" size={18}/>,
       children: [
-        { id: 3, label: 'Logistics Panel', href: '/rider/profile', icon: <ClipboardCheck color="green" size={16} /> },
-        { id: 4, label: 'Create Delivery', href: '/rider/history', icon: <Truck color="green" size={16} /> },
-        { id: 7, label: 'Unassigned', href: '/rider/settings', icon: <BadgeCheck color="green" size={16} /> },
-        { id: 8, label: 'Vehicle', href: '/rider/locations', icon: <Truck color="green" size={16} /> },
-        { id: 11, label: 'Sign Up', href: '/rider/locations', icon: <Truck color="green" size={16} /> },
-        { id: 12, label: 'Login', href: '/rider/locations', icon: <Truck color="green" size={16} /> }
+        { id: 1, label: 'Chart', href: '#', icon: <ClipboardCheck color="green" size={16} /> },
+        { id: 3, label: 'Logistics Panel', href: '#', icon: <ClipboardCheck color="green" size={16} /> },
+        { id: 4, label: 'Create Delivery', href: '#', icon: <Truck color="green" size={16} /> },
+        { id: 7, label: 'Unassigned', href: '#', icon: <BadgeCheck color="green" size={16} /> },
+        { id: 8, label: 'Vehicle', href: '#', icon: <Truck color="green" size={16} /> },
+        { id: 11, label: 'Sign Up', href: '#', icon: <UserPlus color="green" size={16} /> },
+        { id: 12, label: 'Login', href: '#', icon: <LogIn color="green" size={16} /> }
       ]
     },
   ];
