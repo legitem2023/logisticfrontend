@@ -387,6 +387,7 @@ export default function SenderDashboard() {
                 lat: selectedDelivery.dropoffLatitude,
                 lng: selectedDelivery.dropoffLongitude,
               }}
+              delivery={selectedDelivery}
             />
           </div>
         </div>
