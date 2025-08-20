@@ -349,7 +349,7 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
       <div className={`fixed top-0 left-0 right-0 flex justify-between items-center p-4 z-50 border-b backdrop-blur-md ${
         mapTheme === 'dark' 
           ? 'bg-gradient-to-r from-[#002000]/90 to-[#001800]/90 border-yellow-400/30' 
-          : 'bg-[linear-gradient(301deg,rgba(8,137,54,0.6)_0%,rgba(0,44,16,0.6)_50%)] backdrop-blur-md border-yellow-300/30'
+          : 'bg-[linear-gradient(301deg,rgba(8,137,54,1)_0%,rgba(0,44,16,1)_50%)] border-yellow-300/30'
       }`}>
         <h2 className={`text-lg font-semibold ${mapTheme === 'dark' ? 'text-yellow-100' : 'text-yellow-100'}`}>
           <span className="flex items-center gap-2">
