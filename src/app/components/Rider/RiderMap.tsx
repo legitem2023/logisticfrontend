@@ -145,7 +145,7 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
     
     if (mapTheme === 'dark') {
       // Luxury dark theme
-      tileLayer = 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png';
+      tileLayer = 'https://api.maptiler.com/maps/outdoor-v2-dark/{z}/{x}/{y}.png?key=dsaBgVHHsEOsYskJRv0v';
       attribution = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>';
     } else {
       // Maptiler terrain for light mode
@@ -233,7 +233,7 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
     
     if (mapTheme === 'dark') {
       // Luxury dark theme
-      tileLayer = 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png';
+      tileLayer = 'https://api.maptiler.com/maps/outdoor-v2-dark/{z}/{x}/{y}.png?key=dsaBgVHHsEOsYskJRv0v';
       attribution = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>';
     } else {
       // Maptiler terrain for light mode
