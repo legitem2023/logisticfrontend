@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { useSelector, useDispatch } from "react-redux";
 import { setActiveIndex } from '../../../Redux/activeIndexSlice';
 const SenderMap = dynamic(() => import("./Sender/SenderMap"), { ssr: false });
-import { XIcon } from "lucide-react";
+import { XIcon, XCircle } from "lucide-react";
 
 const DeliveryTracker = () => {
   const [trackingNumber, setTrackingNumber] = useState('');
