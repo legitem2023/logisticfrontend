@@ -402,7 +402,7 @@ const SenderMap = ({ riderId, receiverPOS, senderPOS, riderPOS, delivery, setMap
               mapTheme === 'dark' ? 'text-yellow-300' : 'text-yellow-200'
             }`} />
             <span className={mapTheme === 'dark' ? 'text-yellow-200' : 'text-yellow-200'}>
-              {riderLocation && receiver ? `${(riderLocation.distanceTo(receiver) / 1000).toFixed(1)} km away` : 'Calculating...'}
+              {riderLocation && target ? `${(riderLocation.distanceTo(target) / 1000).toFixed(1)} km away` : 'Calculating...'}
             </span>
           </div>
           
