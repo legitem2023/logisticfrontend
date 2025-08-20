@@ -394,8 +394,8 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
       <div className="absolute top-16 left-4 z-10">
         <div className={`rounded-2xl p-4 shadow-2xl border backdrop-blur-sm ${
           mapTheme === 'dark' 
-            ? 'bg-gradient-to-br from-emerald-900/90 to-emerald-800/90 border-yellow-400/30' 
-            : 'bg-gradient-to-br from-emerald-600/90 to-emerald-500/90 border-yellow-300/30'
+            ? 'bg-gradient-to-br from-gray-900/90 to-gray-800/90 border-yellow-400/30' 
+            : 'bg-gradient-to-br from-gray-600/90 to-gray-500/90 border-yellow-300/30'
         }`}>
           <div className="flex items-center mb-3">
             <div className={`w-3 h-3 rounded-full mr-2 ${
@@ -435,8 +435,8 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
           transition-all duration-300 ease-out
           ${isPanelOpen ? 'translate-y-0' : 'translate-y-[calc(100%-60px)]'}
           ${mapTheme === 'dark' 
-            ? 'bg-gradient-to-t from-emerald-900 to-emerald-950 border-t border-yellow-400/30' 
-            : 'bg-gradient-to-t from-emerald-500 to-emerald-600 border-t border-yellow-300/30'}
+            ? 'bg-gradient-to-t from-gray-900 to-gray-950 border-t border-yellow-400/30' 
+            : 'bg-gradient-to-t from-gray-500 to-gray-600 border-t border-yellow-300/30'}
         `}
         style={{ height: `${panelHeight}px` }}
       >
@@ -520,42 +520,6 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
               <FaExclamationTriangle className="text-xl" />
               <span>Delivery Attempt Failed</span>
             </button>
-          </div>
-
-          {status && (
-            <div className="mt-auto flex justify-center">
-              <span className={`
-                px-4 py-2 rounded-full text-sm font-medium
-                ${
-                  status === 'arrived' 
-                    ? mapTheme === 'dark' ? 'bg-emerald-800/80 text-yellow-200' : 'bg-emerald-500/80 text-white'
-                    : status === 'failed' 
-                    ? mapTheme === 'dark' ? 'bg-rose-800/80 text-rose-200' : 'bg-rose-500/80 text-white'
-                    : status === 'delivered' 
-                    ? mapTheme === 'dark' ? 'bg-emerald-700/80 text-yellow-100' : 'bg-emerald-400/80 text-white'
-                    : mapTheme === 'dark' ? 'bg-emerald-900 text-yellow-200' : 'bg-emerald-600 text-white'
-                }
-              `}>
-                {status === 'arrived' ? '🏍️ Arrived at pickup location' : 
-                 status === 'failed' ? '⚠️ Delivery attempt failed' : 
-                 status === 'delivered' ? '📦 Package delivered successfully' : 
-                 '🔄 Processing update...'}
-              </span>
-            </div>
-          )}
-
-          <div className="mt-6 pt-4 border-t" style={{ borderColor: mapTheme === 'dark' ? '#065f46' : '#a7f3d0' }}>
-            <div className="flex justify-between text-sm" style={{ color: mapTheme === 'dark' ? '#d9f99d' : '#d1fae5' }}>
-              <span className="flex items-center gap-1">
-                <FaStore style={{ color: mapTheme === 'dark' ? '#fde68a' : '#ffffff' }} /> Pickup
-              </span>
-              <span className="flex items-center gap-1">
-                <FaCrown style={{ color: mapTheme === 'dark' ? '#fde68a' : '#ffffff' }} /> Premium
-              </span>
-              <span className="flex items-center gap-1">
-                <FaMapMarkerAlt style={{ color: mapTheme === 'dark' ? '#fde68a' : '#ffffff' }} /> Delivery
-              </span>
-            </div>
           </div>
         </div>
       </div>
