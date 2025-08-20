@@ -84,8 +84,13 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
     ? L.latLng(locationData.LocationTracking.latitude, locationData.LocationTracking.longitude)
     : L.latLng(location?.latitude, location?.longitude);
 
+  const receiverLocUnpick = L.latLng(PickUpCoordinates?.lat, PickUpCoordinates?.lng);
+  const receiverLocpickUp = L.latLng(DropOffCoordinates?.lat, DropOffCoordinates?.lng);
+
   const sender = L.latLng(PickUpCoordinates?.lat, PickUpCoordinates?.lng);
-  const receiver = L.latLng(DropOffCoordinates.lat, DropOffCoordinates.lng);
+  
+  
+  const receiver = delivery.proofOfPickup.length >1?receiverLocpickUp:receiverLocUnpick;//L.latLng(DropOffCoordinates.lat, DropOffCoordinates.lng);
 
 
 
