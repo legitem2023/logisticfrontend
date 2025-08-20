@@ -44,7 +44,7 @@ const SenderMap = ({ riderId, receiverPOS, senderPOS, riderPOS, delivery, setMap
   const [mapTheme, setMapTheme] = useState<'dark' | 'light'>('light');
   const [panelHeight, setPanelHeight] = useState(280);
   const [isPanelOpen, setIsPanelOpen] = useState(true);
-  const [estimatedTime, setEstimatedTime] = useState(convertMinutesToHours(parseInt(delivery.eta==="" || delivery.eta===null?"0":delivery.eta)));
+  //const [estimatedTime, setEstimatedTime] = useState(convertMinutesToHours(parseInt(delivery.eta==="" || delivery.eta===null?"0":delivery.eta)));
   const [riderInfo, setRiderInfo] = useState({ name: delivery.assignedRider.name, rating: '4.9', vehicle: 'Premium Bike' });
 
   const sender = L.latLng(senderPOS.lat, senderPOS.lng);
@@ -54,6 +54,29 @@ const SenderMap = ({ riderId, receiverPOS, senderPOS, riderPOS, delivery, setMap
     ? L.latLng(locationData.LocationTracking.latitude, locationData.LocationTracking.longitude)
     : L.latLng(location?.latitude, location?.longitude);
 
+
+
+  const proofOfPickup = delivery.proofOfPickup.length;
+  
+  // Conditionally set sender and receiver based on proofOfPickup
+  const sender = proofOfPickup === 0 ? L.latLng(senderPOS?.lat, senderPOS?.lng) : null;
+  const receiver = proofOfPickup > 0 ? L.latLng(receiverPOS?.lat, receiverPOS?.lng) : null;
+
+  // Calculate ETA based on current target
+  const target = proofOfPickup === 0 ? sender : receiver;
+
+
+
+  
+  const { eta, etaInMinutes } = calculateEta(
+    target ? parseFloat((riderLocation.distanceTo(target) / 1000).toFixed(2)) : 0, 
+    "Priority"
+  );
+
+
+  const ETA = convertMinutesToHours(etaInMinutes);
+
+  
   // Function to toggle map theme
   const toggleMapTheme = () => {
     setMapTheme(prevTheme => prevTheme === 'dark' ? 'light' : 'dark');
@@ -358,7 +381,7 @@ const SenderMap = ({ riderId, receiverPOS, senderPOS, riderPOS, delivery, setMap
               mapTheme === 'dark' ? 'text-yellow-300' : 'text-yellow-200'
             }`} />
             <span className={mapTheme === 'dark' ? 'text-yellow-200' : 'text-yellow-200'}>
-              {estimatedTime}
+              {ETA}
             </span>
           </div>
         </div>
