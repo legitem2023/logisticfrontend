@@ -84,18 +84,21 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
     ? L.latLng(locationData.LocationTracking.latitude, locationData.LocationTracking.longitude)
     : L.latLng(location?.latitude, location?.longitude);
 
-  const receiverLocUnpick = L.latLng(PickUpCoordinates?.lat, PickUpCoordinates?.lng);
-  const receiverLocpickUp = L.latLng(DropOffCoordinates?.lat, DropOffCoordinates?.lng);
-
   const proofOfPickup = delivery.proofOfPickup.length;
   
-  const sender = L.latLng(PickUpCoordinates?.lat, PickUpCoordinates?.lng);
-  const receiver = L.latLng(DropOffCoordinates?.lat, DropOffCoordinates?.lng);
+  // Conditionally set sender and receiver based on proofOfPickup
+  const sender = proofOfPickup === 0 ? L.latLng(PickUpCoordinates?.lat, PickUpCoordinates?.lng) : null;
+  const receiver = proofOfPickup > 0 ? L.latLng(DropOffCoordinates?.lat, DropOffCoordinates?.lng) : null;
 
+  // Calculate ETA based on current target
+  const target = proofOfPickup === 0 ? sender : receiver;
+  const { eta, etaInMinutes } = calculateEta(
+    target ? parseFloat((rider.distanceTo(target) / 1000).toFixed(2)) : 0, 
+    "Priority"
+  );
+  
+  const ETA = convertMinutesToHours(etaInMinutes);
 
-  const { eta,etaInMinutes } = calculateEta(parseFloat((rider.distanceTo(receiver) / 1000).toFixed(2)), "Priority");
-
-const ETA = convertMinutesToHours(etaInMinutes);
   // Function to toggle map theme
   const toggleMapTheme = () => {
     setMapTheme(prevTheme => prevTheme === 'dark' ? 'light' : 'dark');
@@ -184,7 +187,7 @@ const ETA = convertMinutesToHours(etaInMinutes);
 
   // 1. Set acceptance point when rider first appears
   useEffect(() => {
-    if (rider && !acceptancePoint) {
+    if (rider && !acceptancePoint && sender) {
       setAcceptancePoint(rider.clone());
       progressRef.current.totalDistance = rider.distanceTo(sender);
       console.log(`Total distance to pickup: ${progressRef.current.totalDistance?.toFixed(0)} meters`);
@@ -197,7 +200,7 @@ const ETA = convertMinutesToHours(etaInMinutes);
 
   // 2. Automatic progress tracking
   useEffect(() => {
-    if (!rider || !acceptancePoint || !progressRef.current.totalDistance || notificationSent) return;
+    if (!rider || !acceptancePoint || !progressRef.current.totalDistance || notificationSent || !sender) return;
 
     const checkProgress = () => {
       const currentDistance = acceptancePoint.distanceTo(rider);
@@ -232,10 +235,12 @@ const ETA = convertMinutesToHours(etaInMinutes);
   useEffect(() => {
     if (!mapContainerRef.current || mapRef.current) return;
 
+    // Set initial view based on current target
+    const initialView = proofOfPickup === 0 ? sender : receiver;
     const map = L.map(mapContainerRef.current, {
       zoomControl: false,
       attributionControl: false,
-    }).setView(sender, 10);
+    }).setView(initialView || rider, 10);
     
     mapRef.current = map;
 
@@ -264,14 +269,33 @@ const ETA = convertMinutesToHours(etaInMinutes);
     
     // Add markers
     L.marker(rider, { icon: riderIcon }).bindPopup('<div class="font-bold text-yellow-400">Premium Rider</div>').addTo(map);
-    L.marker(sender, { icon: senderIcon }).bindPopup('<div class="font-bold text-yellow-300">Pickup Point</div>').addTo(map);
-    L.marker(receiver, { icon: receiverIcon }).bindPopup('<div class="font-bold text-yellow-300">Delivery Point</div>').addTo(map);
+    
+    // Only add sender marker if proofOfPickup is 0
+    if (proofOfPickup === 0 && sender) {
+      L.marker(sender, { icon: senderIcon }).bindPopup('<div class="font-bold text-yellow-300">Pickup Point</div>').addTo(map);
+    }
+    
+    // Only add receiver marker if proofOfPickup is greater than 0
+    if (proofOfPickup > 0 && receiver) {
+      L.marker(receiver, { icon: receiverIcon }).bindPopup('<div class="font-bold text-yellow-300">Delivery Point</div>').addTo(map);
+    }
 
     import('leaflet-routing-machine').then(() => {
       if (!mapRef.current) return;
 
+      // Set waypoints conditionally
+      const waypoints = [rider];
+      
+      if (proofOfPickup === 0 && sender) {
+        waypoints.push(sender);
+      }
+      
+      if (proofOfPickup > 0 && receiver) {
+        waypoints.push(receiver);
+      }
+
       const routingControl = L.Routing.control({
-        waypoints: [rider, sender, receiver],
+        waypoints: waypoints,
         createMarker: () => null,
         addWaypoints: false,
         routeWhileDragging: false,
@@ -421,7 +445,7 @@ const ETA = convertMinutesToHours(etaInMinutes);
               mapTheme === 'dark' ? 'text-yellow-300' : 'text-yellow-200'
             }`} />
             <span className={mapTheme === 'dark' ? 'text-yellow-200' : 'text-yellow-200'}>
-              {rider ? `${(rider.distanceTo(receiver) / 1000).toFixed(1)} km away` : 'Calculating...'}
+              {rider && target ? `${(rider.distanceTo(target) / 1000).toFixed(1)} km away` : 'Calculating...'}
             </span>
           </div>
           
@@ -475,7 +499,7 @@ const ETA = convertMinutesToHours(etaInMinutes);
                 setIsPanelOpen(false);
               }}
               className={`
-                ${proofOfPickup > 0 ? 'flex' : 'hidden' }
+                ${proofOfPickup > 0 ? 'hidden' : 'flex' }
                 items-center justify-center gap-3 py-4 rounded-xl
                 text-white font-semibold shadow-lg
                 transition-all duration-300 hover:shadow-xl hover:scale-[1.02]
@@ -554,4 +578,4 @@ const ETA = convertMinutesToHours(etaInMinutes);
       )}
     </div>
   );
-        }
+      }
