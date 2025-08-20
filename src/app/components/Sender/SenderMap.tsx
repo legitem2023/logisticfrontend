@@ -105,11 +105,12 @@ export default function SenderMap({ riderId, receiverPOS, senderPOS, riderPOS }:
     mapRef.current = map;
 
     // Add elegant dark map tiles
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    L.tileLayer('https://api.maptiler.com/maps/outdoor/{z}/{x}/{y}.png?key=dsaBgVHHsEOsYskJRv0v', {
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
       subdomains: 'abcd',
       maxZoom: 20
     }).addTo(map);
+   //   tileLayer = 'https://api.maptiler.com/maps/outdoor/{z}/{x}/{y}.png?key=dsaBgVHHsEOsYskJRv0v';
 
     // Add custom zoom controls
     L.control.zoom({
