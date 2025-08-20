@@ -349,7 +349,7 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
       <div className={`fixed top-0 left-0 right-0 flex justify-between items-center p-4 z-50 border-b backdrop-blur-md ${
         mapTheme === 'dark' 
           ? 'bg-gradient-to-r from-[#002000]/90 to-[#001800]/90 border-yellow-400/30' 
-          : 'bg-gradient-to-r from-green-800/90 to-green-900/90 border-yellow-300/30'
+          : 'bg-[linear-gradient(301deg,rgba(8,137,54,0.6)_0%,rgba(0,44,16,0.6)_50%)] backdrop-blur-md border-yellow-300/30'
       }`}>
         <h2 className={`text-lg font-semibold ${mapTheme === 'dark' ? 'text-yellow-100' : 'text-yellow-100'}`}>
           <span className="flex items-center gap-2">
@@ -395,7 +395,7 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
         <div className={`rounded-2xl p-4 shadow-2xl border backdrop-blur-xl ${
           mapTheme === 'dark' 
             ? 'bg-gradient-to-br from-[#002000]/80 to-[#001800]/80 border-lime-400/30' 
-            : 'bg-gradient-to-br from-green-800/80 to-green-900/80 border-lime-300/30'
+            : 'bg-[linear-gradient(301deg,rgba(8,137,54,0.6)_0%,rgba(0,44,16,0.6)_50%)] backdrop-blur-md border-lime-300/30'
         }`}>
           <div className="flex items-center mb-3">
             <div className={`w-3 h-3 rounded-full mr-2 ${
@@ -436,7 +436,7 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
           ${isPanelOpen ? 'translate-y-0' : 'translate-y-[calc(100%-60px)]'}
           ${mapTheme === 'dark' 
             ? 'bg-gradient-to-t from-[#001a00]/95 to-[#001200]/95 border-t border-yellow-400/30' 
-            : 'bg-gradient-to-t from-green-800/95 to-green-900/95 border-t border-yellow-300/30'}
+            : 'bg-[linear-gradient(301deg,rgba(8,137,54,0.6)_0%,rgba(0,44,16,0.6)_50%)] backdrop-blur-md border-t border-yellow-300/30'}
         `}
         style={{ height: `${panelHeight}px` }}
       >
