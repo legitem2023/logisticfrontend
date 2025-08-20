@@ -12,6 +12,7 @@ import { useSelector } from 'react-redux';
 import { selectTempUserId } from '../../../../Redux/tempUserSlice';
 
 export type SidebarLink = {
+  id:number;
   label: string;
   href: string;
   icon?: ReactNode;
@@ -65,10 +66,10 @@ export default function ResponsiveNavigation({
 
   // Define links with children for the Rider item
   const sidebarLinks: SidebarLink[] = [
-    { label: 'Home', href: '/', icon: <HomeIcon color="green" size={18} /> },
-    { label: 'Contact', href: '/Contact', icon: <Phone color="green" size={18} /> },
-    { label: 'Privacy', href: '/Privacy', icon: <Shield color="green" size={18} /> },
-    { label: 'FAQ', href: '/FAQ', icon: <HelpCircle color="green" size={18} /> },
+    { id: 100, label: 'Home', href: '/', icon: <HomeIcon color="green" size={18} /> },
+    { id: 101, label: 'Contact', href: '/Contact', icon: <Phone color="green" size={18} /> },
+    { id: 102, label: 'Privacy', href: '/Privacy', icon: <Shield color="green" size={18} /> },
+    { id: 103, label: 'FAQ', href: '/FAQ', icon: <HelpCircle color="green" size={18} /> },
     { 
       label: 'Account', 
       href: '#', 
