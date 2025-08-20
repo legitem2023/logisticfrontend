@@ -15,7 +15,7 @@ import {
   X
 } from 'lucide-react';
 
-const Navigation = ({ userRole, isUserActive }) => {
+const Navigation = ({ userRole, isUserActive, activeIndex, setActiveIndex }) => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
@@ -153,15 +153,36 @@ const Navigation = ({ userRole, isUserActive }) => {
     setIsDrawerOpen(!isDrawerOpen);
   };
 
+  const handleTabClick = (tabId) => {
+    setActiveIndex(tabId);
+    setIsDrawerOpen(false);
+  };
+
   const NavItem = ({ item }) => (
-    <a
-      href="#"
-      className="flex items-center px-4 py-2 text-gray-700 hover:bg-green-50 hover:text-green-700 rounded-md transition-colors duration-200"
-      onClick={() => setIsDrawerOpen(false)}
+    <button
+      onClick={() => handleTabClick(item.id)}
+      className={`flex items-center w-full px-4 py-3 text-left rounded-md transition-colors duration-200 ${
+        activeIndex === item.id
+          ? 'bg-green-100 text-green-700 font-medium'
+          : 'text-gray-700 hover:bg-green-50 hover:text-green-700'
+      }`}
     >
       <span className="mr-3 text-green-600">{item.icon}</span>
       <span>{item.label}</span>
-    </a>
+    </button>
+  );
+
+  const TopNavItem = ({ item }) => (
+    <button
+      onClick={() => handleTabClick(item.id)}
+      className={`px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
+        activeIndex === item.id
+          ? 'bg-green-100 text-green-700'
+          : 'text-gray-700 hover:bg-green-50 hover:text-green-700'
+      }`}
+    >
+      {item.label}
+    </button>
   );
 
   return (
@@ -175,9 +196,9 @@ const Navigation = ({ userRole, isUserActive }) => {
                 <span className="ml-2 text-xl font-bold text-gray-800">LogisticsApp</span>
               </div>
               {!isMobile && (
-                <div className="hidden md:ml-6 md:flex md:space-x-2">
-                  {tabItems.slice(0, 4).map((item) => (
-                    <NavItem key={item.id} item={item} />
+                <div className="hidden md:ml-6 md:flex md:space-x-1">
+                  {tabItems.slice(0, 3).map((item) => (
+                    <TopNavItem key={item.id} item={item} />
                   ))}
                 </div>
               )}
@@ -185,10 +206,11 @@ const Navigation = ({ userRole, isUserActive }) => {
             
             <div className="flex items-center">
               {!isMobile && (
-                <div className="flex space-x-2">
-                  {tabItems.slice(4, 6).map((item) => (
-                    <NavItem key={item.id} item={item} />
+                <div className="flex space-x-1">
+                  {tabItems.slice(3, 5).map((item) => (
+                    <TopNavItem key={item.id} item={item} />
                   ))}
+                  <TopNavItem key={tabItems[tabItems.length - 1].id} item={tabItems[tabItems.length - 1]} />
                 </div>
               )}
               
@@ -219,7 +241,7 @@ const Navigation = ({ userRole, isUserActive }) => {
               </button>
             </div>
             
-            <div className="p-4 space-y-2">
+            <div className="p-4 space-y-1">
               <h3 className="px-4 pt-4 text-sm font-medium text-gray-500 uppercase tracking-wider">Main Navigation</h3>
               {tabItems.map((item) => (
                 <NavItem key={item.id} item={item} />
