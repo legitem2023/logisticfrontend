@@ -86,6 +86,14 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
   const sender = L.latLng(PickUpCoordinates?.lat, PickUpCoordinates?.lng);
   const receiver = L.latLng(DropOffCoordinates.lat, DropOffCoordinates.lng);
 
+
+
+const { eta,etaInMinutes } = calculateEta(parseFloat((rider.distanceTo(receiver) / 1000).toFixed(2)), "Priority");
+
+
+console.log(etaInMinutes,"<====");
+
+  
   // Function to toggle map theme
   const toggleMapTheme = () => {
     setMapTheme(prevTheme => prevTheme === 'dark' ? 'light' : 'dark');
