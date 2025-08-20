@@ -403,7 +403,7 @@ const LogisticsForm = () => {
 
       try {
         for (const [i, dropoff] of dropoffs.entries()) {
-          const { eta } = calculateEta(parseFloat(distances[i].toFixed(2)), "Priority");
+          const { eta,etaInMinutes } = calculateEta(parseFloat(distances[i].toFixed(2)), "Priority");
 
           const input = {
             assignedRiderId: null,
@@ -413,6 +413,7 @@ const LogisticsForm = () => {
             dropoffLatitude: dropoff.lat,
             dropoffLongitude: dropoff.lng,
             estimatedDeliveryTime: eta,
+            eta:etaInMinutes,
             paymentMethod: "Cash",
             paymentStatus: "Unpaid",
             pickupAddress: pickup.address,
