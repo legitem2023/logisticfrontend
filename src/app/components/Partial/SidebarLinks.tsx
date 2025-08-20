@@ -1,7 +1,9 @@
 'use client';
 
 import { useEffect, useState, useRef, ReactNode } from 'react';
-import { Menu, X, Home, Phone, Shield, HelpCircle, ChevronDown, User, History, Settings, MapPin } from 'lucide-react';
+//import { Menu, X, Home, Phone, Shield, HelpCircle, ChevronDown, User, History, Settings, MapPin, Users } from 'lucide-react';
+import { Menu, X, Truck,Phone,Shield, ChevronDown,History,MapPin, User, Users, Bell, Home as HomeIcon, ClipboardCheck, Bike, BadgeCheck, Settings, HelpCircle, UserPlus, LogIn, ChartBar as ChartBarIcon, WalletMinimal } from "lucide-react";
+
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
@@ -68,14 +70,14 @@ export default function ResponsiveNavigation({
     { label: 'Privacy', href: '/Privacy', icon: <Shield size={18} /> },
     { label: 'FAQ', href: '/FAQ', icon: <HelpCircle size={18} /> },
     { 
-      label: 'Rider', 
+      label: 'Account', 
       href: '#', 
-      icon: <HelpCircle size={18} />,
+      icon: <User size={18} />,
       children: [
-        { label: 'Rider Profile', href: '/rider/profile', icon: <User size={16} /> },
-        { label: 'Rider History', href: '/rider/history', icon: <History size={16} /> },
-        { label: 'Rider Settings', href: '/rider/settings', icon: <Settings size={16} /> },
-        { label: 'Rider Locations', href: '/rider/locations', icon: <MapPin size={16} /> },
+        { label: 'Logistics Panel', href: '/rider/profile', icon: <ClipboardCheck size={16} /> },
+        { label: 'Create Delivery', href: '/rider/history', icon: <Truck size={16} /> },
+        { label: 'Unassigned', href: '/rider/settings', icon: <BadgeCheck size={16} /> },
+        { label: 'Vehicle', href: '/rider/locations', icon: <Truck size={16} /> },
       ]
     },
   ];
