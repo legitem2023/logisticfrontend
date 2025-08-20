@@ -29,7 +29,7 @@ L.Icon.Default.mergeOptions({
   shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
 });
 
-export default function SenderMap({ riderId, receiverPOS, senderPOS, riderPOS, delivery }: { riderId: any, receiverPOS: Coordinates, senderPOS: Coordinates, riderPOS: Coordinates, delivery: any }) {
+export default function SenderMap({ riderId, receiverPOS, senderPOS, riderPOS, delivery, setMap }: { riderId: any, receiverPOS: Coordinates, senderPOS: Coordinates, riderPOS: Coordinates, delivery: any, setMap: () => void }) {
   const mapRef = useRef<L.Map | null>(null);
   const routingRef = useRef<L.Routing.Control | null>(null);
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
@@ -308,6 +308,16 @@ export default function SenderMap({ riderId, receiverPOS, senderPOS, riderPOS, d
             title={`Switch to ${mapTheme === 'dark' ? 'light' : 'dark'} mode`}
           >
             {mapTheme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+          </button>
+          <button
+            onClick={setMap}
+            className={`p-2 rounded-full transition-colors shadow-lg ${
+              mapTheme === 'dark' 
+                ? 'text-yellow-300 bg-[#002000]/80 hover:bg-[#001800]/80' 
+                : 'text-yellow-200 bg-green-800/80 hover:bg-green-700/80'
+            }`}
+          >
+            <XIcon className="w-5 h-5" />
           </button>
         </div>
       </div>
