@@ -148,9 +148,9 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
       tileLayer = 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png';
       attribution = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>';
     } else {
-      // Luxury light theme
-      tileLayer = 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png';
-      attribution = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>';
+      // Maptiler terrain for light mode
+      tileLayer = 'https://api.maptiler.com/maps/outdoor/{z}/{x}/{y}.png?key=YOUR_MAPTILER_KEY';
+      attribution = '<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>';
     }
 
     L.tileLayer(tileLayer, {
@@ -236,9 +236,9 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
       tileLayer = 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png';
       attribution = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>';
     } else {
-      // Luxury light theme
-      tileLayer = 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png';
-      attribution = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>';
+      // Maptiler terrain for light mode
+      tileLayer = 'https://api.maptiler.com/maps/outdoor/{z}/{x}/{y}.png?key=PrUWrAjI6BEP70dJlN5V';
+      attribution = '<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>';
     }
 
     L.tileLayer(tileLayer, {
@@ -579,4 +579,4 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
       )}
     </div>
   );
-      }
+        }
