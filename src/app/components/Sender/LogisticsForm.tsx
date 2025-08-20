@@ -413,7 +413,7 @@ const LogisticsForm = () => {
             dropoffLatitude: dropoff.lat,
             dropoffLongitude: dropoff.lng,
             estimatedDeliveryTime: eta,
-            eta:etaInMinutes,
+            eta:etaInMinutes.toString(),
             paymentMethod: "Cash",
             paymentStatus: "Unpaid",
             pickupAddress: pickup.address,
