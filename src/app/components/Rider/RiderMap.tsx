@@ -90,7 +90,7 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
   const sender = L.latLng(PickUpCoordinates?.lat, PickUpCoordinates?.lng);
   
   
-  const receiver = delivery.proofOfPickup.length >1?receiverLocpickUp:receiverLocUnpick;//L.latLng(DropOffCoordinates.lat, DropOffCoordinates.lng);
+  const receiver = delivery.proofOfPickup.length > 0?receiverLocpickUp:receiverLocUnpick;//L.latLng(DropOffCoordinates.lat, DropOffCoordinates.lng);
 
 
 
