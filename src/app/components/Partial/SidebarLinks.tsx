@@ -74,10 +74,12 @@ export default function ResponsiveNavigation({
       href: '#', 
       icon: <User size={18} />,
       children: [
-        { label: 'Logistics Panel', href: '/rider/profile', icon: <ClipboardCheck size={16} /> },
-        { label: 'Create Delivery', href: '/rider/history', icon: <Truck size={16} /> },
-        { label: 'Unassigned', href: '/rider/settings', icon: <BadgeCheck size={16} /> },
-        { label: 'Vehicle', href: '/rider/locations', icon: <Truck size={16} /> },
+        { id: 3, label: 'Logistics Panel', href: '/rider/profile', icon: <ClipboardCheck size={16} /> },
+        { id: 4, label: 'Create Delivery', href: '/rider/history', icon: <Truck size={16} /> },
+        { id: 7, label: 'Unassigned', href: '/rider/settings', icon: <BadgeCheck size={16} /> },
+        { id: 8, label: 'Vehicle', href: '/rider/locations', icon: <Truck size={16} /> },
+        { id: 11, label: 'Sign Up', href: '/rider/locations', icon: <Truck size={16} /> },
+        { id: 12, label: 'Login', href: '/rider/locations', icon: <Truck size={16} /> }
       ]
     },
   ];
