@@ -390,7 +390,7 @@ export default function SenderDashboard() {
                 lng: selectedDelivery.dropoffLongitude,
               }}
               delivery={selectedDelivery}
-              setMap={setMap(false)}
+              setMap={()=>setMap(false)}
             />
           </div>
         </div>
