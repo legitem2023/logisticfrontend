@@ -6,6 +6,7 @@ import { mockItems } from './json/mockItems';
 import Link from 'next/link';
 import { useSelector, useDispatch } from "react-redux";
 import { setActiveIndex } from '../../../Redux/activeIndexSlice';
+import dynamic from "next/dynamic";
 const SenderMap = dynamic(() => import("./Sender/SenderMap"), { ssr: false });
 import { XIcon, XCircle } from "lucide-react";
 
