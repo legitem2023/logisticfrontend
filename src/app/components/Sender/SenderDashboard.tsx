@@ -168,7 +168,7 @@ export default function SenderDashboard() {
 
                   <div className="flex items-center gap-2 text-sm text-gray-500">
                     <Clock className="w-4 h-4" />
-                    <span>ETA: {delivery.estimatedDeliveryTime}</span>
+                    <span>ETA: {delivery.eta}</span>
                   </div>
 
                   {delivery.deliveryStatus === 'in_transit' && (
