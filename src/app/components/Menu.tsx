@@ -12,6 +12,7 @@ import { decryptToken, capitalize } from '../../../utils/decryptToken';
 import NotificationDropdown from './NotificationDropdown';
 // import { startBackgroundTracking } from './Tracker/startBackgroundTracking';
 import Sidebar from './Sidebar'; 
+import Navigation from './Navigation';
 import HomeDataCarousel from './HomeDataCarousel';
 import LogisticsHomePage from './LogisticsHomePage';
 import DriverDashboard from './Rider/DriverDashboard';
@@ -186,11 +187,13 @@ export default function Menu() {
   const GlobalactiveIndex = useSelector((state: any) => state.activeIndex.value);
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
-     <SideBarMenu       
+      {/*  <SideBarMenu       
       activeTab={GlobalactiveIndex} 
       useRole={useRole}
+      isUserActive={isUserActive}/>*/}
+<Navigation
+      userRole={useRole}
       isUserActive={isUserActive}/>
-
     <main className="p-0">
       <ActiveContentDisplay 
         activeTab={GlobalactiveIndex} 
