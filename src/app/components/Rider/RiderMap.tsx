@@ -6,7 +6,7 @@ import 'leaflet/dist/leaflet.css';
 import 'leaflet-routing-machine';
 import 'leaflet-routing-machine/dist/leaflet-routing-machine.css';
 import { Button } from "../ui/Button"; 
-import { XIcon, Sun, Moon } from "lucide-react"; // Added Sun and Moon icons
+import { XIcon, Sun, Moon } from "lucide-react";
 import { showToast } from '../../../../utils/toastify'; 
 import { useSelector } from 'react-redux';
 import { selectTempUserId } from '../../../../Redux/tempUserSlice';
@@ -40,7 +40,7 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
   const [estimatedTime, setEstimatedTime] = useState<number | null>(null);
   const [panelHeight, setPanelHeight] = useState(320);
   const [isPanelOpen, setIsPanelOpen] = useState(true);
-  const [mapTheme, setMapTheme] = useState<'dark' | 'light'>('dark'); // New state for theme
+  const [mapTheme, setMapTheme] = useState<'dark' | 'light'>('dark');
   const progressRef = useRef({
     totalDistance: null as number | null,
     checkInterval: null as NodeJS.Timeout | null
@@ -135,10 +135,11 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
     // Add new tile layer based on theme
     const tileLayer = mapTheme === 'dark' 
       ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
-      : 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+      : 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png';
 
     L.tileLayer(tileLayer, {
       maxZoom: 19,
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(mapRef.current);
 
     // Update UI elements based on theme
@@ -214,10 +215,11 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
     // Initial map tiles based on theme
     const tileLayer = mapTheme === 'dark' 
       ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
-      : 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+      : 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png';
 
     L.tileLayer(tileLayer, {
       maxZoom: 19,
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
     
     // Add custom zoom control
@@ -318,22 +320,34 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
   }, [panelHeight]);
 
   return (
-    <div className="relative w-full h-full overflow-hidden bg-emerald-950">
-      {/* Fixed top bar with dark green background */}
-      <div className="fixed top-0 left-0 right-0 flex justify-between items-center p-4 bg-gradient-to-r from-emerald-900 to-emerald-800 z-50 border-b border-emerald-400/50">
-        <h2 className="text-lg font-semibold text-white">Premium Delivery</h2>
+    <div className={`relative w-full h-full overflow-hidden ${mapTheme === 'dark' ? 'bg-emerald-950' : 'bg-gray-100'}`}>
+      {/* Fixed top bar with theme-appropriate background */}
+      <div className={`fixed top-0 left-0 right-0 flex justify-between items-center p-4 z-50 border-b ${
+        mapTheme === 'dark' 
+          ? 'bg-gradient-to-r from-emerald-900 to-emerald-800 border-emerald-400/50' 
+          : 'bg-gradient-to-r from-emerald-600 to-emerald-500 border-emerald-300/50'
+      }`}>
+        <h2 className={`text-lg font-semibold ${mapTheme === 'dark' ? 'text-white' : 'text-white'}`}>Premium Delivery</h2>
         <div className="flex gap-2">
           {/* Theme Toggle Button */}
           <button
             onClick={toggleMapTheme}
-            className="text-white hover:bg-emerald-600 p-2 rounded-full transition-colors bg-emerald-700 shadow-lg"
+            className={`p-2 rounded-full transition-colors shadow-lg ${
+              mapTheme === 'dark' 
+                ? 'text-white bg-emerald-700 hover:bg-emerald-600' 
+                : 'text-white bg-emerald-500 hover:bg-emerald-400'
+            }`}
             title={`Switch to ${mapTheme === 'dark' ? 'light' : 'dark'} mode`}
           >
             {mapTheme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
           </button>
           <button
             onClick={setMap}
-            className="text-white hover:bg-emerald-600 p-2 rounded-full transition-colors bg-emerald-700 shadow-lg"
+            className={`p-2 rounded-full transition-colors shadow-lg ${
+              mapTheme === 'dark' 
+                ? 'text-white bg-emerald-700 hover:bg-emerald-600' 
+                : 'text-white bg-emerald-500 hover:bg-emerald-400'
+            }`}
           >
             <XIcon className="w-5 h-5" />
           </button>
@@ -344,25 +358,41 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
       <div 
         ref={mapContainerRef}
         id="map"
-        className={`w-full h-full pt-14 z-0 ${mapTheme === 'dark' ? 'dark-map' : 'light-map'}`}
+        className="w-full h-full pt-14 z-0"
       />
 
       {/* Luxury Control Panel */}
       <div className="absolute top-16 left-4 z-10">
-        <div className="bg-gradient-to-br from-emerald-900 to-emerald-800 rounded-2xl p-4 shadow-2xl border border-emerald-600">
+        <div className={`rounded-2xl p-4 shadow-2xl border ${
+          mapTheme === 'dark' 
+            ? 'bg-gradient-to-br from-emerald-900 to-emerald-800 border-emerald-600' 
+            : 'bg-gradient-to-br from-emerald-600 to-emerald-500 border-emerald-400'
+        }`}>
           <div className="flex items-center mb-3">
-            <div className="bg-emerald-400 w-3 h-3 rounded-full mr-2"></div>
-            <h3 className="text-white font-bold text-lg">Delivery #{deliveryId.slice(0, 8)}</h3>
+            <div className={`w-3 h-3 rounded-full mr-2 ${
+              mapTheme === 'dark' ? 'bg-emerald-400' : 'bg-emerald-200'
+            }`}></div>
+            <h3 className={`font-bold text-lg ${
+              mapTheme === 'dark' ? 'text-white' : 'text-white'
+            }`}>Delivery #{deliveryId.slice(0, 8)}</h3>
           </div>
           
-          <div className="flex items-center text-sm text-emerald-200 mb-2">
-            <GiPathDistance className="mr-2 text-emerald-300" />
-            <span>{progressRef.current.totalDistance ? `${(progressRef.current.totalDistance / 1000).toFixed(1)} km` : 'Calculating...'}</span>
+          <div className="flex items-center text-sm mb-2">
+            <GiPathDistance className={`mr-2 ${
+              mapTheme === 'dark' ? 'text-emerald-300' : 'text-emerald-100'
+            }`} />
+            <span className={mapTheme === 'dark' ? 'text-emerald-200' : 'text-emerald-100'}>
+              {progressRef.current.totalDistance ? `${(progressRef.current.totalDistance / 1000).toFixed(1)} km` : 'Calculating...'}
+            </span>
           </div>
           
-          <div className="flex items-center text-sm text-emerald-200">
-            <FaMotorcycle className="mr-2 text-emerald-300" />
-            <span>{estimatedTime ? `~${estimatedTime} min` : 'Estimating...'}</span>
+          <div className="flex items-center text-sm">
+            <FaMotorcycle className={`mr-2 ${
+              mapTheme === 'dark' ? 'text-emerald-300' : 'text-emerald-100'
+            }`} />
+            <span className={mapTheme === 'dark' ? 'text-emerald-200' : 'text-emerald-100'}>
+              {estimatedTime ? `~${estimatedTime} min` : 'Estimating...'}
+            </span>
           </div>
         </div>
       </div>
@@ -372,19 +402,22 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
         ref={panelRef}
         className={`
           fixed bottom-0 left-0 right-0 z-50 px-6 pb-8
-          bg-gradient-to-t from-emerald-900 to-emerald-950
-          border-t border-emerald-500
           rounded-t-3xl shadow-[0_-20px_50px_-10px_rgba(6,78,59,0.5)]
           transition-all duration-300 ease-out
           ${isPanelOpen ? 'translate-y-0' : 'translate-y-[calc(100%-60px)]'}
+          ${mapTheme === 'dark' 
+            ? 'bg-gradient-to-t from-emerald-900 to-emerald-950 border-t border-emerald-500' 
+            : 'bg-gradient-to-t from-emerald-500 to-emerald-600 border-t border-emerald-400'}
         `}
         style={{ height: `${panelHeight}px` }}
       >
         {/* Draggable Handle */}
         <div 
-          className="drag-handle absolute top-3 left-1/2 transform -translate-x-1/2 w-24 h-1.5 bg-emerald-500/50 rounded-full cursor-row-resize touch-none"
+          className="drag-handle absolute top-3 left-1/2 transform -translate-x-1/2 w-24 h-1.5 rounded-full cursor-row-resize touch-none"
+          style={{ backgroundColor: mapTheme === 'dark' ? 'rgba(16, 185, 129, 0.5)' : 'rgba(255, 255, 255, 0.5)' }}
         >
-          <div className="absolute -top-7 left-1/2 transform -translate-x-1/2 text-emerald-300">
+          <div className="absolute -top-7 left-1/2 transform -translate-x-1/2" 
+               style={{ color: mapTheme === 'dark' ? '#a7f3d0' : '#ffffff' }}>
             <FaChevronUp />
           </div>
         </div>
@@ -392,7 +425,7 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
         <div className="pt-8 h-full flex flex-col">
           <div className="text-center mb-6">
             <h2 className="text-2xl font-bold text-white mb-1">Delivery Operations</h2>
-            <p className="text-sm text-emerald-300">Premium Express Service</p>
+            <p className="text-sm" style={{ color: mapTheme === 'dark' ? '#a7f3d0' : '#d1fae5' }}>Premium Express Service</p>
           </div>
 
           <div className="grid grid-cols-1 gap-4 mb-6">
@@ -404,12 +437,14 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
               }}
               className={`
                 flex items-center justify-center gap-3 py-4 rounded-xl
-                bg-gradient-to-r from-emerald-700 to-emerald-600
                 text-white font-semibold shadow-lg
                 transition-all duration-300 hover:shadow-xl hover:scale-[1.02]
-                focus:ring-2 focus:ring-emerald-500 focus:ring-opacity-50
-                border border-emerald-400/30
-                ${status === 'arrived' ? 'ring-2 ring-emerald-400' : ''}
+                focus:ring-2 focus:ring-opacity-50
+                border
+                ${status === 'arrived' ? 'ring-2' : ''}
+                ${mapTheme === 'dark' 
+                  ? 'bg-gradient-to-r from-emerald-700 to-emerald-600 border-emerald-400/30 focus:ring-emerald-500 ring-emerald-400' 
+                  : 'bg-gradient-to-r from-emerald-600 to-emerald-500 border-emerald-300/30 focus:ring-emerald-400 ring-emerald-300'}
               `}>
               <FaStore className="text-xl" />
               <span>Arrived at Pickup Location</span>
@@ -423,12 +458,14 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
               }}
               className={`
                 flex items-center justify-center gap-3 py-4 rounded-xl
-                bg-gradient-to-r from-emerald-600 to-emerald-500
                 text-white font-semibold shadow-lg
                 transition-all duration-300 hover:shadow-xl hover:scale-[1.02]
-                focus:ring-2 focus:ring-emerald-400 focus:ring-opacity-50
-                border border-emerald-300/30
-                ${status === 'delivered' ? 'ring-2 ring-emerald-300' : ''}
+                focus:ring-2 focus:ring-opacity-50
+                border
+                ${status === 'delivered' ? 'ring-2' : ''}
+                ${mapTheme === 'dark' 
+                  ? 'bg-gradient-to-r from-emerald-600 to-emerald-500 border-emerald-300/30 focus:ring-emerald-400 ring-emerald-300' 
+                  : 'bg-gradient-to-r from-emerald-500 to-emerald-400 border-emerald-200/30 focus:ring-emerald-300 ring-emerald-200'}
               `}>
               <MdOutlineDeliveryDining className="text-xl" />
               <span>Mark as Delivered</span>
@@ -442,12 +479,14 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
               }}
               className={`
                 flex items-center justify-center gap-3 py-4 rounded-xl
-                bg-gradient-to-r from-rose-700 to-rose-600
                 text-white font-semibold shadow-lg
                 transition-all duration-300 hover:shadow-xl hover:scale-[1.02]
-                focus:ring-2 focus:ring-rose-500 focus:ring-opacity-50
-                border border-rose-400/30
-                ${status === 'failed' ? 'ring-2 ring-rose-400' : ''}
+                focus:ring-2 focus:ring-opacity-50
+                border
+                ${status === 'failed' ? 'ring-2' : ''}
+                ${mapTheme === 'dark' 
+                  ? 'bg-gradient-to-r from-rose-700 to-rose-600 border-rose-400/30 focus:ring-rose-500 ring-rose-400' 
+                  : 'bg-gradient-to-r from-rose-600 to-rose-500 border-rose-300/30 focus:ring-rose-400 ring-rose-300'}
               `}>
               <FaExclamationTriangle className="text-xl" />
               <span>Delivery Attempt Failed</span>
@@ -459,10 +498,13 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
               <span className={`
                 px-4 py-2 rounded-full text-sm font-medium
                 ${
-                  status === 'arrived' ? 'bg-emerald-800/80 text-emerald-200' : 
-                  status === 'failed' ? 'bg-rose-800/80 text-rose-200' : 
-                  status === 'delivered' ? 'bg-emerald-700/80 text-emerald-100' :
-                  'bg-emerald-900 text-emerald-200'
+                  status === 'arrived' 
+                    ? mapTheme === 'dark' ? 'bg-emerald-800/80 text-emerald-200' : 'bg-emerald-500/80 text-white'
+                    : status === 'failed' 
+                    ? mapTheme === 'dark' ? 'bg-rose-800/80 text-rose-200' : 'bg-rose-500/80 text-white'
+                    : status === 'delivered' 
+                    ? mapTheme === 'dark' ? 'bg-emerald-700/80 text-emerald-100' : 'bg-emerald-400/80 text-white'
+                    : mapTheme === 'dark' ? 'bg-emerald-900 text-emerald-200' : 'bg-emerald-600 text-white'
                 }
               `}>
                 {status === 'arrived' ? '🏍️ Arrived at pickup location' : 
@@ -473,16 +515,16 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
             </div>
           )}
 
-          <div className="mt-6 pt-4 border-t border-emerald-800">
-            <div className="flex justify-between text-emerald-300 text-sm">
+          <div className="mt-6 pt-4 border-t" style={{ borderColor: mapTheme === 'dark' ? '#065f46' : '#a7f3d0' }}>
+            <div className="flex justify-between text-sm" style={{ color: mapTheme === 'dark' ? '#a7f3d0' : '#d1fae5' }}>
               <span className="flex items-center gap-1">
-                <FaStore className="text-emerald-200" /> Pickup
-              </span>
-              <span className="text-emerald-300 flex items-center gap-1">
-                <FaCrown /> Premium
+                <FaStore style={{ color: mapTheme === 'dark' ? '#a7f3d0' : '#ffffff' }} /> Pickup
               </span>
               <span className="flex items-center gap-1">
-                <FaMapMarkerAlt className="text-emerald-200" /> Delivery
+                <FaCrown style={{ color: mapTheme === 'dark' ? '#a7f3d0' : '#ffffff' }} /> Premium
+              </span>
+              <span className="flex items-center gap-1">
+                <FaMapMarkerAlt style={{ color: mapTheme === 'dark' ? '#a7f3d0' : '#ffffff' }} /> Delivery
               </span>
             </div>
           </div>
@@ -494,13 +536,18 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
         <button
           onClick={() => setIsPanelOpen(true)}
           className="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-50
-            bg-gradient-to-r from-emerald-600 to-emerald-500 text-white
             rounded-full p-3 shadow-lg hover:shadow-xl animate-bounce
             flex items-center justify-center w-12 h-12"
+          style={{
+            background: mapTheme === 'dark' 
+              ? 'linear-gradient(to right, #059669, #10b981)' 
+              : 'linear-gradient(to right, #10b981, #34d399)',
+            color: 'white'
+          }}
         >
           <FaChevronUp className="text-lg" />
         </button>
       )}
     </div>
   );
-          }
+  }
