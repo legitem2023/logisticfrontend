@@ -363,8 +363,8 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
             onClick={toggleMapTheme}
             className={`p-2 rounded-full transition-colors shadow-lg ${
               mapTheme === 'dark' 
-                ? 'text-yellow-300 bg-emerald-700 hover:bg-emerald-600' 
-                : 'text-yellow-200 bg-emerald-500 hover:bg-emerald-400'
+                ? 'text-yellow-300 bg-white-700 hover:bg-white-600' 
+                : 'text-yellow-200 bg-white-500 hover:bg-white-400'
             }`}
             title={`Switch to ${mapTheme === 'dark' ? 'light' : 'dark'} mode`}
           >
@@ -394,8 +394,8 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
       <div className="absolute top-16 left-4 z-10">
         <div className={`rounded-2xl p-4 shadow-2xl border backdrop-blur-sm ${
           mapTheme === 'dark' 
-            ? 'bg-gradient-to-br from-gray-900/90 to-gray-800/90 border-yellow-400/30' 
-            : 'bg-gradient-to-br from-gray-600/90 to-gray-500/90 border-yellow-300/30'
+            ? 'bg-gradient-to-br from-white-900/90 to-white-800/90 border-yellow-400/30' 
+            : 'bg-gradient-to-br from-white-600/90 to-white-500/90 border-yellow-300/30'
         }`}>
           <div className="flex items-center mb-3">
             <div className={`w-3 h-3 rounded-full mr-2 ${
@@ -435,8 +435,8 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
           transition-all duration-300 ease-out
           ${isPanelOpen ? 'translate-y-0' : 'translate-y-[calc(100%-60px)]'}
           ${mapTheme === 'dark' 
-            ? 'bg-gradient-to-t from-gray-900 to-gray-950 border-t border-yellow-400/30' 
-            : 'bg-gradient-to-t from-gray-500 to-gray-600 border-t border-yellow-300/30'}
+            ? 'bg-gradient-to-t from-white-900 to-white-950 border-t border-yellow-400/30' 
+            : 'bg-gradient-to-t from-white-500 to-white-600 border-t border-yellow-300/30'}
         `}
         style={{ height: `${panelHeight}px` }}
       >
