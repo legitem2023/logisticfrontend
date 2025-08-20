@@ -31,12 +31,13 @@ type Coordinates = {
   lng: number;
 }
 
-export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, deliveryId, senderId, setMap }: { 
+export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, deliveryId, senderId, setMap, delivery }: { 
   PickUpCoordinates: Coordinates,
   DropOffCoordinates: Coordinates,
   deliveryId: any,
   senderId: any,
-  setMap: () => void
+  setMap: () => void,
+  delivery:any
 }) {
   const mapRef = useRef<L.Map | null>(null);
   const routingRef = useRef<L.Routing.Control | null>(null);
