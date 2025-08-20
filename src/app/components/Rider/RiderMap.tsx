@@ -473,7 +473,7 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
                 ${status === 'arrived' ? 'ring-2' : ''}
                 ${mapTheme === 'dark' 
                   ? 'bg-gradient-to-r from-[#002000]/90 to-[#001800]/90 border-yellow-400/30 focus:ring-yellow-500 ring-yellow-400' 
-                  : 'bg-gradient-to-r from-green-700/90 to-green-800/90 border-yellow-300/30 focus:ring-yellow-400 ring-yellow-300'}
+                  : 'bg-gradient-to-r from-cyan-700/90 to-cyan-800/90 border-yellow-300/30 focus:ring-yellow-400 ring-yellow-300'}
               `}>
               <FaStore className="text-xl" />
               <span>Arrived at Pickup Location</span>
