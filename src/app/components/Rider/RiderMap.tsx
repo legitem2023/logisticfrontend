@@ -149,7 +149,7 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
       attribution = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>';
     } else {
       // Maptiler terrain for light mode
-      tileLayer = 'https://api.maptiler.com/maps/outdoor/{z}/{x}/{y}.png?key=YOUR_MAPTILER_KEY';
+      tileLayer = 'https://api.maptiler.com/maps/outdoor/{z}/{x}/{y}.png?key=dsaBgVHHsEOsYskJRv0v';
       attribution = '<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>';
     }
 
@@ -237,7 +237,7 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
       attribution = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>';
     } else {
       // Maptiler terrain for light mode
-      tileLayer = 'https://api.maptiler.com/maps/outdoor/{z}/{x}/{y}.png?key=PrUWrAjI6BEP70dJlN5V';
+      tileLayer = 'https://api.maptiler.com/maps/outdoor/{z}/{x}/{y}.png?key=dsaBgVHHsEOsYskJRv0v';
       attribution = '<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>';
     }
 
