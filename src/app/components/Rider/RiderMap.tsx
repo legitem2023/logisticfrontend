@@ -87,17 +87,14 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
   const receiverLocUnpick = L.latLng(PickUpCoordinates?.lat, PickUpCoordinates?.lng);
   const receiverLocpickUp = L.latLng(DropOffCoordinates?.lat, DropOffCoordinates?.lng);
 
+  const proofOfPickup = delivery.proofOfPickup.length;
+  
   const sender = L.latLng(PickUpCoordinates?.lat, PickUpCoordinates?.lng);
-  
-  
-  const receiver = delivery.proofOfPickup.length > 0?receiverLocpickUp:receiverLocUnpick;//L.latLng(DropOffCoordinates.lat, DropOffCoordinates.lng);
+  const receiver = L.latLng(DropOffCoordinates?.lat, DropOffCoordinates?.lng);
 
 
+  const { eta,etaInMinutes } = calculateEta(parseFloat((rider.distanceTo(receiver) / 1000).toFixed(2)), "Priority");
 
-const { eta,etaInMinutes } = calculateEta(parseFloat((rider.distanceTo(receiver) / 1000).toFixed(2)), "Priority");
-
-
-console.log(etaInMinutes,"<====");
 const ETA = convertMinutesToHours(etaInMinutes);
   // Function to toggle map theme
   const toggleMapTheme = () => {
@@ -478,7 +475,8 @@ const ETA = convertMinutesToHours(etaInMinutes);
                 setIsPanelOpen(false);
               }}
               className={`
-                flex items-center justify-center gap-3 py-4 rounded-xl
+                ${proofOfPickup > 0 ? 'flex' : 'hidden' }
+                items-center justify-center gap-3 py-4 rounded-xl
                 text-white font-semibold shadow-lg
                 transition-all duration-300 hover:shadow-xl hover:scale-[1.02]
                 focus:ring-2 focus:ring-opacity-50
