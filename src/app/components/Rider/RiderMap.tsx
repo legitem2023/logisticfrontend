@@ -132,14 +132,23 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
       }
     });
 
-    // Add new tile layer based on theme
-    const tileLayer = mapTheme === 'dark' 
-      ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
-      : 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png';
+    // Add new tile layer based on theme - Using more colorful options
+    let tileLayer, attribution;
+    
+    if (mapTheme === 'dark') {
+      // More colorful dark theme - Using Stadia Maps Alidade Smooth Dark
+      tileLayer = 'https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png';
+      attribution = '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors';
+    } else {
+      // More colorful light theme - Using Stamen Toner Lite
+      tileLayer = 'https://stamen-tiles-{s}.a.ssl.fastly.net/toner-lite/{z}/{x}/{y}{r}.png';
+      attribution = 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
+    }
 
     L.tileLayer(tileLayer, {
-      maxZoom: 19,
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      maxZoom: 20,
+      attribution: attribution,
+      subdomains: mapTheme === 'light' ? ['a', 'b', 'c', 'd'] : undefined
     }).addTo(mapRef.current);
 
     // Update UI elements based on theme
@@ -213,13 +222,22 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
     mapRef.current = map;
 
     // Initial map tiles based on theme
-    const tileLayer = mapTheme === 'dark' 
-      ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
-      : 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png';
+    let tileLayer, attribution;
+    
+    if (mapTheme === 'dark') {
+      // More colorful dark theme
+      tileLayer = 'https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png';
+      attribution = '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors';
+    } else {
+      // More colorful light theme
+      tileLayer = 'https://stamen-tiles-{s}.a.ssl.fastly.net/toner-lite/{z}/{x}/{y}{r}.png';
+      attribution = 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
+    }
 
     L.tileLayer(tileLayer, {
-      maxZoom: 19,
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      maxZoom: 20,
+      attribution: attribution,
+      subdomains: mapTheme === 'light' ? ['a', 'b', 'c', 'd'] : undefined
     }).addTo(map);
     
     // Add custom zoom control
