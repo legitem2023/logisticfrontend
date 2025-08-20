@@ -47,8 +47,8 @@ const SenderMap = ({ riderId, receiverPOS, senderPOS, riderPOS, delivery, setMap
   //const [estimatedTime, setEstimatedTime] = useState(convertMinutesToHours(parseInt(delivery.eta==="" || delivery.eta===null?"0":delivery.eta)));
   const [riderInfo, setRiderInfo] = useState({ name: delivery.assignedRider.name, rating: '4.9', vehicle: 'Premium Bike' });
 
-  const sender = L.latLng(senderPOS.lat, senderPOS.lng);
-  const receiver = L.latLng(receiverPOS.lat, receiverPOS.lng);
+ // const sender = L.latLng(senderPOS.lat, senderPOS.lng);
+  //const receiver = L.latLng(receiverPOS.lat, receiverPOS.lng);
 
   const riderLocation = locationData?.LocationTracking
     ? L.latLng(locationData.LocationTracking.latitude, locationData.LocationTracking.longitude)
