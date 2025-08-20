@@ -6,7 +6,7 @@ import 'leaflet/dist/leaflet.css';
 import 'leaflet-routing-machine';
 import 'leaflet-routing-machine/dist/leaflet-routing-machine.css';
 import { Button } from "../ui/Button"; 
-import { XIcon } from "lucide-react"; 
+import { XIcon, Sun, Moon } from "lucide-react"; // Added Sun and Moon icons
 import { showToast } from '../../../../utils/toastify'; 
 import { useSelector } from 'react-redux';
 import { selectTempUserId } from '../../../../Redux/tempUserSlice';
@@ -40,6 +40,7 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
   const [estimatedTime, setEstimatedTime] = useState<number | null>(null);
   const [panelHeight, setPanelHeight] = useState(320);
   const [isPanelOpen, setIsPanelOpen] = useState(true);
+  const [mapTheme, setMapTheme] = useState<'dark' | 'light'>('dark'); // New state for theme
   const progressRef = useRef({
     totalDistance: null as number | null,
     checkInterval: null as NodeJS.Timeout | null
@@ -75,6 +76,11 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
 
   const sender = L.latLng(PickUpCoordinates?.lat, PickUpCoordinates?.lng);
   const receiver = L.latLng(DropOffCoordinates.lat, DropOffCoordinates.lng);
+
+  // Function to toggle map theme
+  const toggleMapTheme = () => {
+    setMapTheme(prevTheme => prevTheme === 'dark' ? 'light' : 'dark');
+  };
 
   // Luxury dark green to green theme icons
   const riderIcon = L.divIcon({
@@ -114,6 +120,39 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
     iconSize: [40, 40],
     iconAnchor: [20, 40],
   });
+
+  // Update map theme when it changes
+  useEffect(() => {
+    if (!mapRef.current) return;
+
+    // Remove existing tile layers
+    mapRef.current.eachLayer((layer) => {
+      if (layer instanceof L.TileLayer) {
+        mapRef.current?.removeLayer(layer);
+      }
+    });
+
+    // Add new tile layer based on theme
+    const tileLayer = mapTheme === 'dark' 
+      ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
+      : 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+
+    L.tileLayer(tileLayer, {
+      maxZoom: 19,
+    }).addTo(mapRef.current);
+
+    // Update UI elements based on theme
+    const container = document.getElementById('map');
+    if (container) {
+      if (mapTheme === 'dark') {
+        container.classList.remove('light-map');
+        container.classList.add('dark-map');
+      } else {
+        container.classList.remove('dark-map');
+        container.classList.add('light-map');
+      }
+    }
+  }, [mapTheme]);
 
   // 1. Set acceptance point when rider first appears
   useEffect(() => {
@@ -172,8 +211,12 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
     
     mapRef.current = map;
 
-    // Luxury map tiles with dark theme
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    // Initial map tiles based on theme
+    const tileLayer = mapTheme === 'dark' 
+      ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
+      : 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+
+    L.tileLayer(tileLayer, {
       maxZoom: 19,
     }).addTo(map);
     
@@ -279,19 +322,29 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
       {/* Fixed top bar with dark green background */}
       <div className="fixed top-0 left-0 right-0 flex justify-between items-center p-4 bg-gradient-to-r from-emerald-900 to-emerald-800 z-50 border-b border-emerald-400/50">
         <h2 className="text-lg font-semibold text-white">Premium Delivery</h2>
-        <button
-          onClick={setMap}
-          className="text-white hover:bg-emerald-600 p-2 rounded-full transition-colors bg-emerald-700 shadow-lg"
-        >
-          <XIcon className="w-5 h-5" />
-        </button>
+        <div className="flex gap-2">
+          {/* Theme Toggle Button */}
+          <button
+            onClick={toggleMapTheme}
+            className="text-white hover:bg-emerald-600 p-2 rounded-full transition-colors bg-emerald-700 shadow-lg"
+            title={`Switch to ${mapTheme === 'dark' ? 'light' : 'dark'} mode`}
+          >
+            {mapTheme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+          </button>
+          <button
+            onClick={setMap}
+            className="text-white hover:bg-emerald-600 p-2 rounded-full transition-colors bg-emerald-700 shadow-lg"
+          >
+            <XIcon className="w-5 h-5" />
+          </button>
+        </div>
       </div>
 
       {/* Map container */}
       <div 
         ref={mapContainerRef}
         id="map"
-        className="w-full h-full pt-14 z-0"
+        className={`w-full h-full pt-14 z-0 ${mapTheme === 'dark' ? 'dark-map' : 'light-map'}`}
       />
 
       {/* Luxury Control Panel */}
@@ -450,4 +503,4 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
       )}
     </div>
   );
-      }
+          }
