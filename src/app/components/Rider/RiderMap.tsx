@@ -16,6 +16,7 @@ import { LocationTracking } from '../../../../graphql/subscription';
 import { FaMotorcycle, FaMapMarkerAlt, FaCrown, FaChevronUp, FaExclamationTriangle, FaStore, FaRoute } from 'react-icons/fa';
 import { GiPathDistance } from 'react-icons/gi';
 import { MdOutlineDeliveryDining } from 'react-icons/md';
+import { calculateEta, convertMinutesToHours } from '../../../../utils/calculateEta';
 
 // Fix for default markers in Leaflet
 delete (L.Icon.Default.prototype as any)._getIconUrl;
