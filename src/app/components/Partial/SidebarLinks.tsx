@@ -65,7 +65,7 @@ export default function ResponsiveNavigation({
 
   // Define links with children for the Rider item
   const sidebarLinks: SidebarLink[] = [
-    { label: 'Home', href: '/', icon: <Home size={18} /> },
+    { label: 'Home', href: '/', icon: <HomeIcon size={18} /> },
     { label: 'Contact', href: '/Contact', icon: <Phone size={18} /> },
     { label: 'Privacy', href: '/Privacy', icon: <Shield size={18} /> },
     { label: 'FAQ', href: '/FAQ', icon: <HelpCircle size={18} /> },
