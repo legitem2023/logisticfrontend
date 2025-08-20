@@ -149,7 +149,7 @@ export default function SidebarLinks({
             </div>
 
             <div className="flex items-center space-x-4">
-              <NotificationDropdown />
+              <NotificationDropdown userId={globalUserId} />
               <div className="text-white">
                 User ID: {globalUserId || 'Not set'}
               </div>
