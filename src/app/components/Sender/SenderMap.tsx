@@ -29,7 +29,7 @@ L.Icon.Default.mergeOptions({
   shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
 });
 
-const SenderMap = ({ riderId, receiverPOS, senderPOS, riderPOS, delivery, setMap }: { riderId: any, receiverPOS: Coordinates, senderPOS: Coordinates, riderPOS: Coordinates, delivery: any, setMap: () => void }) => {
+const SenderMap = ({ riderId, receiverPOS, senderPOS, riderPOS, delivery, setMap }: { riderId: any, receiverPOS: Coordinates | null, senderPOS: Coordinates | null, riderPOS: Coordinates | null, delivery: any, setMap: () => void }) => {
   const mapRef = useRef<L.Map | null>(null);
   const routingRef = useRef<L.Routing.Control | null>(null);
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
@@ -44,39 +44,43 @@ const SenderMap = ({ riderId, receiverPOS, senderPOS, riderPOS, delivery, setMap
   const [mapTheme, setMapTheme] = useState<'dark' | 'light'>('light');
   const [panelHeight, setPanelHeight] = useState(280);
   const [isPanelOpen, setIsPanelOpen] = useState(true);
-  //const [estimatedTime, setEstimatedTime] = useState(convertMinutesToHours(parseInt(delivery.eta==="" || delivery.eta===null?"0":delivery.eta)));
   const [riderInfo, setRiderInfo] = useState({ name: delivery.assignedRider.name, rating: '4.9', vehicle: 'Premium Bike' });
 
- // const sender = L.latLng(senderPOS.lat, senderPOS.lng);
-  //const receiver = L.latLng(receiverPOS.lat, receiverPOS.lng);
+  // Helper function to check if coordinates are valid
+  const isValidCoordinate = (coord: Coordinates | null): coord is Coordinates => {
+    return coord !== null && typeof coord.lat === 'number' && typeof coord.lng === 'number';
+  };
 
-  const riderLocation = locationData?.LocationTracking
-    ? L.latLng(locationData.LocationTracking.latitude, locationData.LocationTracking.longitude)
-    : L.latLng(location?.latitude, location?.longitude);
+  // Get rider location from subscription or Redux
+  const getRiderLocation = () => {
+    if (locationData?.LocationTracking) {
+      return L.latLng(locationData.LocationTracking.latitude, locationData.LocationTracking.longitude);
+    } else if (location && location.latitude && location.longitude) {
+      return L.latLng(location.latitude, location.longitude);
+    }
+    // Default fallback location if none available
+    return L.latLng(0, 0);
+  };
 
-
-
+  const riderLocation = getRiderLocation();
   const proofOfPickup = delivery.proofOfPickup.length;
-  
-  // Conditionally set sender and receiver based on proofOfPickup
-  const sender = proofOfPickup === 0 ? L.latLng(senderPOS?.lat, senderPOS?.lng) : null;
-  const receiver = proofOfPickup > 0 ? L.latLng(receiverPOS?.lat, receiverPOS?.lng) : null;
 
-  // Calculate ETA based on current target
+  // Conditionally set sender and receiver based on proofOfPickup with null checks
+  const sender = proofOfPickup === 0 && isValidCoordinate(senderPOS) 
+    ? L.latLng(senderPOS.lat, senderPOS.lng) 
+    : null;
+
+  const receiver = proofOfPickup > 0 && isValidCoordinate(receiverPOS) 
+    ? L.latLng(receiverPOS.lat, receiverPOS.lng) 
+    : null;
+
+  // Calculate ETA based on current target with fallbacks
   const target = proofOfPickup === 0 ? sender : receiver;
-
-
-
+  const distanceToTarget = target ? parseFloat((riderLocation.distanceTo(target) / 1000).toFixed(2)) : 0;
   
-  const { eta, etaInMinutes } = calculateEta(
-    target ? parseFloat((riderLocation.distanceTo(target) / 1000).toFixed(2)) : 0, 
-    "Priority"
-  );
-
-
+  const { eta, etaInMinutes } = calculateEta(distanceToTarget, "Priority");
   const ETA = convertMinutesToHours(etaInMinutes);
 
-  
   // Function to toggle map theme
   const toggleMapTheme = () => {
     setMapTheme(prevTheme => prevTheme === 'dark' ? 'light' : 'dark');
@@ -175,11 +179,16 @@ const SenderMap = ({ riderId, receiverPOS, senderPOS, riderPOS, delivery, setMap
   useEffect(() => {
     if (!mapContainerRef.current || mapRef.current) return;
 
+    // Determine initial center point
+    let initialCenter = riderLocation;
+    if (sender) initialCenter = sender;
+    if (receiver) initialCenter = receiver;
+
     // Initialize map with elegant theme
     const map = L.map(mapContainerRef.current, {
       zoomControl: false,
       attributionControl: false
-    }).setView(sender, 13);
+    }).setView(initialCenter, 13);
 
     mapRef.current = map;
 
@@ -209,12 +218,12 @@ const SenderMap = ({ riderId, receiverPOS, senderPOS, riderPOS, delivery, setMap
     // Add markers
     L.marker(riderLocation, { icon: riderIcon }).bindPopup('<div class="font-bold text-yellow-400">Premium Rider</div>').addTo(map);
     
-    // Only add sender marker if proofOfPickup is 0
+    // Only add sender marker if proofOfPickup is 0 and sender exists
     if (proofOfPickup === 0 && sender) {
       L.marker(sender, { icon: senderIcon }).bindPopup('<div class="font-bold text-yellow-300">Pickup Point</div>').addTo(map);
     }
     
-    // Only add receiver marker if proofOfPickup is greater than 0
+    // Only add receiver marker if proofOfPickup is greater than 0 and receiver exists
     if (proofOfPickup > 0 && receiver) {
       L.marker(receiver, { icon: receiverIcon }).bindPopup('<div class="font-bold text-yellow-300">Delivery Point</div>').addTo(map);
     }
@@ -233,27 +242,30 @@ const SenderMap = ({ riderId, receiverPOS, senderPOS, riderPOS, delivery, setMap
         waypoints.push(receiver);
       }
 
-      const routingControl = L.Routing.control({
-        waypoints: waypoints,
-        createMarker: () => null,
-        addWaypoints: false,
-        routeWhileDragging: false,
-        show: false,
-        lineOptions: {
-          styles: [{ 
-            color: '#fbbf24', 
-            weight: 6,
-            opacity: 0.8
-          }]
+      // Only add routing if we have at least 2 waypoints
+      if (waypoints.length >= 2) {
+        const routingControl = L.Routing.control({
+          waypoints: waypoints,
+          createMarker: () => null,
+          addWaypoints: false,
+          routeWhileDragging: false,
+          show: false,
+          lineOptions: {
+            styles: [{ 
+              color: '#fbbf24', 
+              weight: 6,
+              opacity: 0.8
+            }]
+          }
+        } as any).addTo(mapRef.current);
+
+        routingRef.current = routingControl;
+
+        // Style the routing instructions panel
+        const container = routingControl.getContainer();
+        if (container) {
+          container.style.display = 'none'; // Hide default panel
         }
-      } as any).addTo(mapRef.current);
-
-      routingRef.current = routingControl;
-
-      // Style the routing instructions panel
-      const container = routingControl.getContainer();
-      if (container) {
-        container.style.display = 'none'; // Hide default panel
       }
     });
 
@@ -390,7 +402,7 @@ const SenderMap = ({ riderId, receiverPOS, senderPOS, riderPOS, delivery, setMap
               mapTheme === 'dark' ? 'text-yellow-300' : 'text-yellow-200'
             }`} />
             <span className={mapTheme === 'dark' ? 'text-yellow-200' : 'text-yellow-200'}>
-              {riderLocation ? `${(riderLocation.distanceTo(receiver) / 1000).toFixed(1)} km away` : 'Calculating...'}
+              {riderLocation && receiver ? `${(riderLocation.distanceTo(receiver) / 1000).toFixed(1)} km away` : 'Calculating...'}
             </span>
           </div>
           
@@ -521,5 +533,6 @@ const SenderMap = ({ riderId, receiverPOS, senderPOS, riderPOS, delivery, setMap
       )}
     </div>
   );
-    }
-export default React.memo(SenderMap)
+}
+
+export default React.memo(SenderMap);
