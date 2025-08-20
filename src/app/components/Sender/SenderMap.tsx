@@ -1,5 +1,5 @@
 'use client';
-
+import React from 'react'
 import { useEffect, useRef, useState } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -29,12 +29,11 @@ L.Icon.Default.mergeOptions({
   shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
 });
 
-export default function SenderMap({ riderId, receiverPOS, senderPOS, riderPOS, delivery, setMap }: { riderId: any, receiverPOS: Coordinates, senderPOS: Coordinates, riderPOS: Coordinates, delivery: any, setMap: () => void }) {
+const SenderMap({ riderId, receiverPOS, senderPOS, riderPOS, delivery, setMap }: { riderId: any, receiverPOS: Coordinates, senderPOS: Coordinates, riderPOS: Coordinates, delivery: any, setMap: () => void }) => {
   const mapRef = useRef<L.Map | null>(null);
   const routingRef = useRef<L.Routing.Control | null>(null);
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
   const panelRef = useRef<HTMLDivElement>(null);
-  console.log(delivery,"<=");
   const { data: locationData } = useSubscription(LocationTracking, {
     variables: { userId: riderId },
   });
@@ -482,3 +481,4 @@ export default function SenderMap({ riderId, receiverPOS, senderPOS, riderPOS, d
     </div>
   );
     }
+export default React.memo(SenderMap)
