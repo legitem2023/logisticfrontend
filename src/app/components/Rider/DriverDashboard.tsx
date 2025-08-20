@@ -615,7 +615,7 @@ const tabs = [
       {showMap && selectedDelivery && (
         <div className="fixed h-[100vh] inset-0 z-50 flex items-end sm:items-center justify-center bg-black/50 flex flex-col">
              
-          <div className="w-full h-full bg-white p-0 shadow-lg animate-slide-up overflow-y-auto">
+          <div className="w-full h-full bg-white p-0 shadow-lg animate-slide-up overflow-hidden">
             
             <RiderMap
               deliveryId={selectedDelivery.id}
