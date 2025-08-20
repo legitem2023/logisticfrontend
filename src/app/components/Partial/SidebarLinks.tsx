@@ -18,20 +18,31 @@ export type SidebarLink = {
 
 type SidebarLinksProps = {
   links: SidebarLink[];
-  sidebarWidth?: string;
   gradientClass?: string;
 };
 
-export default function SidebarLinks({
+export default function ResponsiveNavigation({
   links,
-  sidebarWidth = 'w-64',
   gradientClass = 'customgrad',
 }: SidebarLinksProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [openItems, setOpenItems] = useState<Record<string, boolean>>({});
+  const [isDesktop, setIsDesktop] = useState(false);
   const pathname = usePathname();
   const globalUserId = useSelector(selectTempUserId);
   const drawerRef = useRef<HTMLDivElement>(null);
+
+  // Check screen size on mount and resize
+  useEffect(() => {
+    const checkScreenSize = () => {
+      setIsDesktop(window.innerWidth >= 1024); // lg breakpoint
+    };
+    
+    checkScreenSize();
+    window.addEventListener('resize', checkScreenSize);
+    
+    return () => window.removeEventListener('resize', checkScreenSize);
+  }, []);
 
   useEffect(() => {
     if (mobileMenuOpen) {
@@ -69,7 +80,7 @@ export default function SidebarLinks({
     },
   ];
 
-  const renderLink = (link: SidebarLink, depth = 0) => {
+  const renderMobileLink = (link: SidebarLink, depth = 0) => {
     const hasChildren = link.children && link.children.length > 0;
     const isActive = pathname === link.href;
     const isOpen = openItems[link.label];
@@ -84,7 +95,10 @@ export default function SidebarLinks({
           <Link
             href={link.href}
             className="flex items-center flex-grow"
-            onClick={() => hasChildren && toggleItem(link.label)}
+            onClick={() => {
+              if (!hasChildren) setMobileMenuOpen(false);
+              else toggleItem(link.label);
+            }}
           >
             {link.icon && <span className="mr-3">{link.icon}</span>}
             <span>{link.label}</span>
@@ -106,7 +120,61 @@ export default function SidebarLinks({
 
         {hasChildren && isOpen && (
           <div className="ml-4 border-l-2 border-gray-200 pl-2 mt-1">
-            {link.children?.map(child => renderLink(child, depth + 1))}
+            {link.children?.map(child => renderMobileLink(child, depth + 1))}
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  const renderDesktopLink = (link: SidebarLink) => {
+    const hasChildren = link.children && link.children.length > 0;
+    const isActive = pathname === link.href;
+    const isOpen = openItems[link.label];
+
+    return (
+      <div key={link.label} className="relative group">
+        <div
+          className={`flex items-center justify-between px-4 py-2 rounded-lg transition-colors ${
+            isActive ? 'bg-blue-100 text-blue-800' : 'text-white hover:bg-blue-800/50'
+          }`}
+        >
+          <Link
+            href={link.href}
+            className="flex items-center flex-grow"
+            onClick={(e) => hasChildren && e.preventDefault()}
+          >
+            {link.icon && <span className="mr-2">{link.icon}</span>}
+            <span>{link.label}</span>
+          </Link>
+          
+          {hasChildren && (
+            <button
+              onClick={() => toggleItem(link.label)}
+              className="p-1 rounded hover:bg-blue-700 transition-colors"
+              aria-expanded={isOpen}
+            >
+              <ChevronDown
+                size={16}
+                className={`transition-transform ${isOpen ? 'rotate-180' : ''}`}
+              />
+            </button>
+          )}
+        </div>
+
+        {hasChildren && isOpen && (
+          <div className="absolute left-0 mt-1 w-56 bg-white rounded-md shadow-lg z-40 overflow-hidden">
+            {link.children?.map(child => (
+              <Link
+                key={child.label}
+                href={child.href}
+                className="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 transition-colors"
+                onClick={() => setOpenItems({})}
+              >
+                {child.icon && <span className="mr-3">{child.icon}</span>}
+                <span>{child.label}</span>
+              </Link>
+            ))}
           </div>
         )}
       </div>
@@ -118,16 +186,16 @@ export default function SidebarLinks({
       {/* Overlay for mobile menu */}
       {mobileMenuOpen && (
         <div
-          className="fixed inset-0 bg-black/30 backdrop-blur-sm z-20 lg:hidden animate-fadeIn"
+          className="fixed inset-0 bg-black/30 backdrop-blur-sm z-40 lg:hidden animate-fadeIn"
           onClick={() => setMobileMenuOpen(false)}
         />
       )}
 
-      {/* Header (copied style) */}
-      <header className="customgrad shadow-2xl sticky top-0 z-30 border-b border-blue-400/20">
+      {/* Header */}
+      <header className={`${gradientClass} shadow-2xl sticky top-0 z-30 border-b border-blue-400/20`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-20 items-center">
-            {/* Logo */}
+            {/* Logo and mobile menu button */}
             <div className="flex items-center">
               <button
                 className="lg:hidden text-white mr-4"
@@ -148,6 +216,12 @@ export default function SidebarLinks({
               </Link>
             </div>
 
+            {/* Desktop Navigation */}
+            <nav className="hidden lg:flex items-center space-x-2">
+              {sidebarLinks.map(link => renderDesktopLink(link))}
+            </nav>
+
+            {/* User info and notifications */}
             <div className="flex items-center space-x-4">
               <NotificationDropdown userId={globalUserId} />
               <div className="text-white">
@@ -158,27 +232,27 @@ export default function SidebarLinks({
         </div>
       </header>
 
-      {/* Sidebar */}
+      {/* Mobile Drawer */}
       <div
         ref={drawerRef}
-        className={`fixed top-0 left-0 h-full ${sidebarWidth} ${gradientClass} shadow-xl z-30 transform ${
+        className={`fixed top-0 left-0 h-full w-64 ${gradientClass} shadow-xl z-50 transform ${
           mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
-        } lg:translate-x-0 transition-transform duration-300 ease-in-out`}
+        } lg:hidden transition-transform duration-300 ease-in-out`}
       >
         <div className="flex items-center justify-between p-4 border-b border-blue-400/20">
           <span className="text-white font-semibold">Navigation</span>
           <button
-            className="lg:hidden text-white"
+            className="text-white"
             onClick={() => setMobileMenuOpen(false)}
           >
             <X size={24} />
           </button>
         </div>
 
-        <nav className="p-4 space-y-2">
-          {sidebarLinks.map(link => renderLink(link))}
+        <nav className="p-4 space-y-2 overflow-y-auto h-full pb-20">
+          {sidebarLinks.map(link => renderMobileLink(link))}
         </nav>
       </div>
     </>
   );
-         }
+}
