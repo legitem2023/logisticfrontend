@@ -45,7 +45,7 @@ export default function SenderMap({ riderId, receiverPOS, senderPOS, riderPOS, d
   const [mapTheme, setMapTheme] = useState<'dark' | 'light'>('light');
   const [panelHeight, setPanelHeight] = useState(280);
   const [isPanelOpen, setIsPanelOpen] = useState(true);
-  const [estimatedTime, setEstimatedTime] = useState(convertMinutesToHours(parseInt(delivery.eta==="" || delivery.eta===null?"0":delivery.eta))});
+  const [estimatedTime, setEstimatedTime] = useState(convertMinutesToHours(parseInt(delivery.eta==="" || delivery.eta===null?"0":delivery.eta)));
   const [riderInfo, setRiderInfo] = useState({ name: delivery.assignedRider.name, rating: '4.9', vehicle: 'Premium Bike' });
 
   const sender = L.latLng(senderPOS.lat, senderPOS.lng);
