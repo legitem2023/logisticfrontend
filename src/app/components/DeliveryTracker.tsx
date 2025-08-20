@@ -6,6 +6,7 @@ import { mockItems } from './json/mockItems';
 import Link from 'next/link';
 import { useSelector, useDispatch } from "react-redux";
 import { setActiveIndex } from '../../../Redux/activeIndexSlice';
+const SenderMap = dynamic(() => import("./Sender/SenderMap"), { ssr: false });
 
 const DeliveryTracker = () => {
   const [trackingNumber, setTrackingNumber] = useState('');
