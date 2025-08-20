@@ -14,6 +14,7 @@ import { FaMotorcycle, FaStore, FaMapMarkerAlt, FaCrown, FaChevronUp, FaExclamat
 import { MdOutlineDeliveryDining } from 'react-icons/md';
 import { GiPathDistance } from 'react-icons/gi';
 import { Sun, Moon, Clock, XIcon } from "lucide-react";
+import { calculateEta, convertMinutesToHours } from '../../../../utils/calculateEta';
 
 type Coordinates = {
   lat: number;
@@ -44,7 +45,7 @@ export default function SenderMap({ riderId, receiverPOS, senderPOS, riderPOS, d
   const [mapTheme, setMapTheme] = useState<'dark' | 'light'>('light');
   const [panelHeight, setPanelHeight] = useState(280);
   const [isPanelOpen, setIsPanelOpen] = useState(true);
-  const [estimatedTime, setEstimatedTime] = useState('15-20 min');
+  const [estimatedTime, setEstimatedTime] = useState(convertMinutesToHours(parseInt(delivery.eta==="" || delivery.eta===null?"0":delivery.eta))});
   const [riderInfo, setRiderInfo] = useState({ name: delivery.assignedRider.name, rating: '4.9', vehicle: 'Premium Bike' });
 
   const sender = L.latLng(senderPOS.lat, senderPOS.lng);
