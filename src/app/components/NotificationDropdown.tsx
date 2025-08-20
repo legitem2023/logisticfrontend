@@ -112,7 +112,7 @@ export default function NotificationDropdown({ userId }: { userId: string | null
   )
 
   const dropdownContent = (
-    <ul className="max-h-64 overflow-y-auto divide-y divide-gray-100">
+    <ul className="overflow-y-auto divide-y divide-gray-100">
       {!userId ? (
         <li className="px-4 py-3 text-sm text-center text-gray-500">
           Please sign in to view notifications
