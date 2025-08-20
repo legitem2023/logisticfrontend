@@ -353,7 +353,6 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
       }`}>
         <h2 className={`text-lg font-semibold ${mapTheme === 'dark' ? 'text-yellow-100' : 'text-yellow-100'}`}>
           <span className="flex items-center gap-2">
-            <FaCrown className="text-yellow-400" />
             Delivery
           </span>
         </h2>
