@@ -200,23 +200,41 @@ const SenderMap = ({ riderId, receiverPOS, senderPOS, riderPOS, delivery, setMap
       maxZoom: 20,
       attribution: attribution,
     }).addTo(map);
-
-    // Add custom zoom controls
+    
+    // Add custom zoom control
     L.control.zoom({
       position: 'bottomright'
     }).addTo(map);
+    
+    // Add markers
+    L.marker(riderLocation, { icon: riderIcon }).bindPopup('<div class="font-bold text-yellow-400">Premium Rider</div>').addTo(map);
+    
+    // Only add sender marker if proofOfPickup is 0
+    if (proofOfPickup === 0 && sender) {
+      L.marker(sender, { icon: senderIcon }).bindPopup('<div class="font-bold text-yellow-300">Pickup Point</div>').addTo(map);
+    }
+    
+    // Only add receiver marker if proofOfPickup is greater than 0
+    if (proofOfPickup > 0 && receiver) {
+      L.marker(receiver, { icon: receiverIcon }).bindPopup('<div class="font-bold text-yellow-300">Delivery Point</div>').addTo(map);
+    }
 
-    // Add markers with luxury styling
-    L.marker(riderLocation, { icon: riderIcon }).bindPopup('Premium Rider').addTo(map);
-    L.marker(sender, { icon: senderIcon }).bindPopup('Pickup Point').addTo(map);
-    L.marker(receiver, { icon: receiverIcon }).bindPopup('Delivery Point').addTo(map);
-
-    // Add routing with luxury styling
     import('leaflet-routing-machine').then(() => {
       if (!mapRef.current) return;
 
+      // Set waypoints conditionally
+      const waypoints = [riderLocation];
+      
+      if (proofOfPickup === 0 && sender) {
+        waypoints.push(sender);
+      }
+      
+      if (proofOfPickup > 0 && receiver) {
+        waypoints.push(receiver);
+      }
+
       const routingControl = L.Routing.control({
-        waypoints: [riderLocation, sender, receiver],
+        waypoints: waypoints,
         createMarker: () => null,
         addWaypoints: false,
         routeWhileDragging: false,
