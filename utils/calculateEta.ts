@@ -67,3 +67,14 @@ export function convertMinutesToHours(totalMinutes) {
         return result;
     }
 }
+
+
+export function getInitials(name) {
+  if (typeof name !== 'string') return '';
+  
+  const words = name.trim().split(/\s+/);
+  const firstInitial = words[0]?.[0] || '';
+  const secondInitial = words[1]?.[0] || '';
+  
+  return `${firstInitial}${secondInitial}`.toUpperCase();
+}
