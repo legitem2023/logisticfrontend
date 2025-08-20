@@ -410,7 +410,7 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
               mapTheme === 'dark' ? 'text-yellow-300' : 'text-yellow-200'
             }`} />
             <span className={mapTheme === 'dark' ? 'text-yellow-200' : 'text-yellow-200'}>
-              {progressRef.current.totalDistance ? `${(progressRef.current.totalDistance / 1000).toFixed(1)} km` : 'Calculating...'}
+              {rider ? `${(rider.distanceTo(receiver) / 1000).toFixed(1)} km away` : 'Calculating...'}
             </span>
           </div>
           
