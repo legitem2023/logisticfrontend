@@ -10,6 +10,7 @@ export default function Page() {
     { id: 102, label: 'Privacy', href: '/Privacy', icon: <Shield color="green" size={18} /> },
     { id: 103, label: 'FAQ', href: '/FAQ', icon: <HelpCircle color="green" size={18} /> },
     { 
+      id: 104,
       label: 'Account', 
       href: '#', 
       icon: <User color="green" size={18}/>,
