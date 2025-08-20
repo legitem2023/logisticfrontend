@@ -206,13 +206,12 @@ export default function ResponsiveNavigation({
               <Link href="/" className="flex items-center">
                 <div className="relative w-10 h-10 mr-3">
                   <Image
-                    src="/logo.png"
-                    alt="Logo"
+                    src="/Motogo.svg"
+                    alt="MotoGo Logo"
                     fill
                     className="object-contain"
                   />
                 </div>
-                <span className="text-xl font-semibold text-white">Your App</span>
               </Link>
             </div>
 
@@ -224,9 +223,6 @@ export default function ResponsiveNavigation({
             {/* User info and notifications */}
             <div className="flex items-center space-x-4">
               <NotificationDropdown userId={globalUserId} />
-              <div className="text-white">
-                User ID: {globalUserId || 'Not set'}
-              </div>
             </div>
           </div>
         </div>
