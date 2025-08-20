@@ -4,7 +4,7 @@ import SidebarLinks, { SidebarLink } from '../components/Partial/SidebarLinks';
 import LogisticContactFormPage from "../components/LogisticContactFormPage";
 import { Menu, X, Truck,Phone,Shield, ChevronDown,History,MapPin, User, Users, Bell, Home as HomeIcon, ClipboardCheck, Bike, BadgeCheck, Settings, HelpCircle, UserPlus, LogIn, ChartBar as ChartBarIcon, WalletMinimal } from "lucide-react";
 export default function Page() {
- const sidebarLinks: SidebarLink[] = [
+ const links: SidebarLink[] = [
     { id: 100, label: 'Home', href: '/', icon: <HomeIcon color="green" size={18} /> },
     { id: 101, label: 'Contact', href: '/Contact', icon: <Phone color="green" size={18} /> },
     { id: 102, label: 'Privacy', href: '/Privacy', icon: <Shield color="green" size={18} /> },
