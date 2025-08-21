@@ -205,8 +205,7 @@ const Navigation = ({ userRole, isUserActive }) => {
                   ))}
                 </div>
               )}
-            </div>
-            
+            </div>          
             <div className="flex items-center">
               {!isMobile && (
                 <div className="flex space-x-2">
@@ -226,7 +225,6 @@ const Navigation = ({ userRole, isUserActive }) => {
           </div>
         </div>
       </nav>
-
       {/* Mobile Drawer */}
       {isMobile && (
         <div
@@ -241,8 +239,7 @@ const Navigation = ({ userRole, isUserActive }) => {
               <button onClick={() => setIsDrawerOpen(false)} className="text-gray-500">
                 <X size={24} />
               </button>
-            </div>
-            
+            </div>         
             <div className="p-4 space-y-2">
               <h3 className="px-4 pt-4 text-sm font-medium text-gray-500 uppercase tracking-wider">Main Navigation</h3>
               {tabItems.map((item) => (
