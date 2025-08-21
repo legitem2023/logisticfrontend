@@ -189,15 +189,10 @@ const Navigation = ({ userRole, isUserActive }) => {
   );
 
   // For desktop, we'll show up to 4 main items and put the rest in a dropdown
-  const mainItems = tabItems.filter(item => 
-    item.id !== 11 && item.id !== 12 && // Exclude signup/login from main nav
-    item.id !== 9 && item.id !== 10 // Exclude settings and help from main nav
-  ).slice(0, 4);
+  const mainItems = tabItems;
   
   const dropdownItems = tabItems.filter(item => 
-    !mainItems.some(mainItem => mainItem.id === item.id) &&
-    item.id !== 11 && item.id !== 12 // Exclude signup/login from dropdown
-  );
+    !mainItems.some(mainItem => mainItem.id === item.id));
 
   return (
     <>
