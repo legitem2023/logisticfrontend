@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from "react-redux";
 import Link from "next/link";
+import Image from "next/image";
+
 import { setActiveIndex } from '../../../Redux/activeIndexSlice';
 import {
   HomeIcon,
