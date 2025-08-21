@@ -190,7 +190,7 @@ const Navigation = ({ userRole, isUserActive }) => {
   // For desktop, we'll show up to 4 main items and put the rest in a dropdown
   const maxMainItems = 4;
   const mainItems = tabItems.slice(0, maxMainItems);
-  const dropdownItems = tabItems.slice(maxMainItems);
+  const dropdownItems = tabItems.slice(tabItems.length);
 
   return (
     <>
