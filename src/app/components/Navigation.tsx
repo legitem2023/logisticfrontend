@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from "react-redux";
+import Link from "next/link";
 import { setActiveIndex } from '../../../Redux/activeIndexSlice';
 import {
   HomeIcon,
@@ -199,8 +200,17 @@ const Navigation = ({ userRole, isUserActive }) => {
           <div className="flex justify-between h-16">
             <div className="flex items-center">
               <div className="flex-shrink-0 flex items-center">
-                <Truck className="h-8 w-8 text-green-600" />
-                <span className="ml-2 text-xl font-bold text-gray-800">LogisticsApp</span>
+                <Link href="/" className="flex items-center group">
+                <div className="relative h-15 w-15 transition-transform duration-300 group-hover:rotate-6">
+                  <Image
+                    src="/Motogo.svg"
+                    alt="MotoGo Logo"
+                    fill
+                    className="object-contain drop-shadow-lg"
+                    priority
+                  />
+                </div>
+              </Link>
               </div>
               {!isMobile && (
                 <div className="hidden md:ml-6 md:flex md:space-x-2">
