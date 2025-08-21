@@ -17,9 +17,9 @@ import {
   X
 } from 'lucide-react';
 
-const Navigation = ({ useRole, isUserActive }) => {
+const Navigation = ({ userRole, isUserActive }) => {
   const dispatch = useDispatch();
-  const activeIndex = useSelector((state:any) => state.activeIndex.value);
+  const activeIndex = useSelector((state) => state.activeIndex.value);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
@@ -59,7 +59,7 @@ const Navigation = ({ useRole, isUserActive }) => {
           },
         ]
       : []),
-    ...(isUserActive && (useRole === 'Sender' || useRole === 'SENDER')
+    ...(isUserActive && (userRole === 'Sender' || userRole === 'SENDER')
       ? [
           {
             id: 4,
@@ -69,7 +69,7 @@ const Navigation = ({ useRole, isUserActive }) => {
           },
         ]
       : []),
-    ...(isUserActive && (useRole === 'Sender' || useRole === 'SENDER')
+    ...(isUserActive && (userRole === 'Sender' || userRole === 'SENDER')
       ? [
           {
             id: 5,
@@ -79,7 +79,7 @@ const Navigation = ({ useRole, isUserActive }) => {
           },
         ]
       : []),
-    ...(isUserActive && (useRole === 'Administrator' || useRole === 'ADMINISTRATOR')
+    ...(isUserActive && (userRole === 'Administrator' || userRole === 'ADMINISTRATOR')
       ? [
           {
             id: 6,
@@ -89,7 +89,7 @@ const Navigation = ({ useRole, isUserActive }) => {
           },
         ]
       : []),
-    ...(isUserActive && (useRole === 'Administrator' || useRole === 'ADMINISTRATOR')
+    ...(isUserActive && (userRole === 'Administrator' || userRole === 'ADMINISTRATOR')
       ? [
           {
             id: 7,
@@ -99,7 +99,7 @@ const Navigation = ({ useRole, isUserActive }) => {
           },
         ]
       : []),
-    ...(isUserActive && (useRole === 'Administrator' || useRole === 'ADMINISTRATOR')
+    ...(isUserActive && (userRole === 'Administrator' || userRole === 'ADMINISTRATOR')
       ? [
           {
             id: 8,
