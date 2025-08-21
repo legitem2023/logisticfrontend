@@ -17,7 +17,6 @@ import {
   X,
   ChevronDown
 } from 'lucide-react';
-
 const Navigation = ({ userRole, isUserActive }) => {
   const dispatch = useDispatch();
   const activeIndex = useSelector((state:any) => state.activeIndex.value);
