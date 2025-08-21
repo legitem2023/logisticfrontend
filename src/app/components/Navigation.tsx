@@ -402,9 +402,7 @@ const Navigation = ({ userRole, isUserActive }) => {
               ))}
             </div>
             
-            <div className="absolute bottom-0 w-full p-4 text-center text-green-600 text-xs">
-              MotoGo Deluxe Experience
-            </div>
+
           </div>
         </div>
       )}
