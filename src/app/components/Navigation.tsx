@@ -29,8 +29,7 @@ const Navigation = ({ userRole, isUserActive }) => {
     };
     
     checkIsMobile();
-    window.addEventListener('resize', checkIsMobile);
-    
+    window.addEventListener('resize', checkIsMobile); 
     return () => {
       window.removeEventListener('resize', checkIsMobile);
     };
