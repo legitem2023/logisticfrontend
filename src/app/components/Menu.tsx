@@ -192,7 +192,7 @@ export default function Menu() {
       useRole={useRole}
       isUserActive={isUserActive}/>*/}
 <Navigation
-      useRole={useRole}
+      userRole={useRole}
       isUserActive={isUserActive}/>
     <main className="p-0">
       <ActiveContentDisplay 
