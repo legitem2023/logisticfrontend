@@ -179,6 +179,7 @@ query GetRidersDelivery($getRidersDeliveryId: String) {
     deliveryStatus
     estimatedDeliveryTime
     eta
+    ata
     actualDeliveryTime
     createdAt
     updatedAt
@@ -309,6 +310,7 @@ query GetDispatch($getDispatchId: String) {
     deliveryStatus
     estimatedDeliveryTime
     eta
+    ata
     actualDeliveryTime
     createdAt
     updatedAt
@@ -378,6 +380,7 @@ query GetDeliveries {
     deliveryStatus
     estimatedDeliveryTime
     eta
+    ata
     actualDeliveryTime
     createdAt
     updatedAt
