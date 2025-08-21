@@ -363,12 +363,12 @@ const Navigation = ({ userRole, isUserActive }) => {
         >
           <div className="fixed inset-0 bg-[rgba(0,0,0,0.5)] backdrop-blur-sm" onClick={() => setIsDrawerOpen(false)}></div>
           <div className="relative bg-white/80 backdrop-blur-md w-80 h-full overflow-y-auto luxury-shadow">
-            <div className="flex items-center justify-between p-5 border-b border-green-500/20">
-              <h2 className="text-xl font-semibold text-green-800 flex items-center">
+            <div className="customgrad flex items-center justify-between p-5 border-b border-green-500/20">
+              <h2 className="text-xl font-semibold text-white-500 flex items-center">
                 <Menu size={20} className="mr-2" /> Menu
               </h2>
               
-              <button onClick={() => setIsDrawerOpen(false)} className="text-gray-600 hover:text-green-700 p-1 rounded-full hover:bg-green-500/10 transition-colors duration-300">
+              <button onClick={() => setIsDrawerOpen(false)} className="text-white-500 hover:text-green-700 p-1 rounded-full hover:bg-green-500/10 transition-colors duration-300">
                 <X size={24} />
               </button>
             </div>
