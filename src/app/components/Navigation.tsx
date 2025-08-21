@@ -330,14 +330,7 @@ const Navigation = ({ userRole, isUserActive }) => {
             </div>
             
             <div className="flex items-center">
-              {!isMobile && (
-                <div className="flex space-x-2">
-                  {/* Auth items (signup/login) */}
-                  {tabItems.filter(item => item.id === 11 || item.id === 12).map((item) => (
-                    <NavItem key={item.id} item={item} />
-                  ))}
-                </div>
-              )}
+              
               {isUserActive() && (
                 <div className="relative">
                   <NotificationDropdown userId={globalUserId} />
