@@ -214,12 +214,7 @@ const Navigation = ({ userRole, isUserActive }) => {
           --gold-400: #E3A008;
           --gold-500: #C27803;
         }
-        
-        .customgrad {
-          background: linear-gradient(135deg, #1a202c 0%, #2d3748 50%, #4a5568 100%);
-          border-bottom: 1px solid rgba(255, 215, 0, 0.15);
-        }
-        
+         
         .luxury-shadow {
           box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25), 0 0 15px rgba(255, 215, 0, 0.15);
         }
@@ -247,9 +242,6 @@ const Navigation = ({ userRole, isUserActive }) => {
                       priority
                     />
                   </div>
-                  <span className="ml-3 text-2xl font-bold gold-gradient-text flex items-center">
-                    MotoGo <Crown size={20} className="ml-1 text-gold-400" />
-                  </span>
                 </Link>
               </div>
               {!isMobile && (
@@ -329,7 +321,7 @@ const Navigation = ({ userRole, isUserActive }) => {
           <div className="relative bg-gradient-to-b from-gray-900 to-gray-800 w-80 h-full overflow-y-auto luxury-shadow">
             <div className="flex items-center justify-between p-5 border-b border-gold-500/20">
               <h2 className="text-xl font-semibold gold-gradient-text flex items-center">
-                <Crown size={20} className="mr-2" /> Premium Menu
+                <Menu size={20} className="mr-2" /> Menu
               </h2>
               <button onClick={() => setIsDrawerOpen(false)} className="text-gold-200 hover:text-white p-1 rounded-full hover:bg-gold-500/10 transition-colors duration-300">
                 <X size={24} />
