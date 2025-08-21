@@ -48,7 +48,7 @@ const Navigation = ({ userRole, isUserActive }) => {
       role: '',
       icon: <ChartBarIcon size={20} />
     },
-    ...(isUserActive
+    ...(isUserActive()
       ? [
           {
             id: 3,
@@ -58,7 +58,7 @@ const Navigation = ({ userRole, isUserActive }) => {
           },
         ]
       : []),
-    ...(isUserActive && (userRole === 'Sender' || userRole === 'SENDER')
+    ...(isUserActive() && (userRole === 'Sender' || userRole === 'SENDER')
       ? [
           {
             id: 4,
@@ -68,7 +68,7 @@ const Navigation = ({ userRole, isUserActive }) => {
           },
         ]
       : []),
-    ...(isUserActive && (userRole === 'Sender' || userRole === 'SENDER')
+    ...(isUserActive() && (userRole === 'Sender' || userRole === 'SENDER')
       ? [
           {
             id: 5,
@@ -78,7 +78,7 @@ const Navigation = ({ userRole, isUserActive }) => {
           },
         ]
       : []),
-    ...(isUserActive && (userRole === 'Administrator' || userRole === 'ADMINISTRATOR')
+    ...(isUserActive() && (userRole === 'Administrator' || userRole === 'ADMINISTRATOR')
       ? [
           {
             id: 6,
@@ -88,7 +88,7 @@ const Navigation = ({ userRole, isUserActive }) => {
           },
         ]
       : []),
-    ...(isUserActive && (userRole === 'Administrator' || userRole === 'ADMINISTRATOR')
+    ...(isUserActive() && (userRole === 'Administrator' || userRole === 'ADMINISTRATOR')
       ? [
           {
             id: 7,
@@ -98,7 +98,7 @@ const Navigation = ({ userRole, isUserActive }) => {
           },
         ]
       : []),
-    ...(isUserActive && (userRole === 'Administrator' || userRole === 'ADMINISTRATOR')
+    ...(isUserActive() && (userRole === 'Administrator' || userRole === 'ADMINISTRATOR')
       ? [
           {
             id: 8,
@@ -108,7 +108,7 @@ const Navigation = ({ userRole, isUserActive }) => {
           },
         ]
       : []),
-    ...(isUserActive
+    ...(isUserActive()
       ? [
           {
             id: 9,
@@ -124,7 +124,7 @@ const Navigation = ({ userRole, isUserActive }) => {
       role: '',
       icon: <HelpCircle size={20} />
     },
-    ...(!isUserActive
+    ...(!isUserActive()
       ? [
           {
             id: 11,
@@ -134,7 +134,7 @@ const Navigation = ({ userRole, isUserActive }) => {
           },
         ]
       : []),
-    ...(!isUserActive
+    ...(!isUserActive()
       ? [
           {
             id: 12,
