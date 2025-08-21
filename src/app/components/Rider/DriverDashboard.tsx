@@ -18,6 +18,7 @@ import { Clock, X,XIcon, Compass, FileText, Upload, Plus, User,PackageOpen, File
 import { DashboardLoading } from "../Loadings/DashboardLoading"; 
 import { capitalize, formatDate } from "../../../../utils/decryptToken"; 
 import { ACCEPTDELIVERY, SKIPDELIVERY, CANCELEDDELIVERY,FINISHDELIVERY,SENDNOTIFICATION, MARKPAID } from "../../../../graphql/mutation"; 
+import { calculateEta, convertMinutesToHours } from '../../../../utils/calculateEta';
 
 import DeliveryDetailCard from "./DeliveryDetailCard"; 
 import dynamic from "next/dynamic"; 
