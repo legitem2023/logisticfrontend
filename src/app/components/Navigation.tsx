@@ -357,9 +357,32 @@ const Navigation = ({ userRole, isUserActive }) => {
           <div className="fixed inset-0 bg-[rgba(0,0,0,0.5)] backdrop-blur-sm" onClick={() => setIsDrawerOpen(false)}></div>
           <div className="relative bg-white/80 backdrop-blur-md w-80 h-full overflow-y-auto luxury-shadow">
             <div className="customgrad h-20 flex items-center justify-between p-5 border-b border-green-500/20">
-              <h2 className="text-xl font-semibold text-white-500 flex items-center">
+          {isUserActive()?(
+            <div className="px-4 py-6 border-b border-gray-200/50">
+              <div className="flex items-center space-x-3">
+                <div className="relative h-10 w-10 rounded-full bg-gray-200 overflow-hidden">
+                  <User className="h-6 w-6 text-gray-600 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-gray-900 truncate">
+                    {useRole || 'User'}
+                  </p>
+                  <span 
+                    className="text-xs text-blue-600 hover:underline"
+                    onClick={() => dispatch(setActiveIndex(13))}
+                  >
+                    View Profile
+                  </span>
+                </div>
+              </div>
+            </div>
+          ):(
+            <h2 className="text-xl font-semibold text-white-500 flex items-center">
                 <Menu size={20} className="mr-2" /> Menu
-              </h2>
+            </h2>
+          )}
+              
+      
               
               <button onClick={() => setIsDrawerOpen(false)} className="text-white-500 hover:text-green-700 p-1 rounded-full hover:bg-green-500/10 transition-colors duration-300">
                 <X size={24} />
