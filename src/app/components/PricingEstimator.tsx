@@ -160,8 +160,8 @@ const PricingEstimator = () => {
   if (error) return <div className="p-6 text-center text-red-500">Error: {error.message}</div>;
 
   return (
-    <div className="w-full max-w-md mx-auto bg-white rounded-xl shadow-lg overflow-hidden">
-      <div className="bg-blue-600 p-6 text-white">
+    <div className="w-full max-w-md mx-auto bg-white mt-5 shadow-lg overflow-hidden">
+      <div className="customgrad p-6 text-white">
         <h1 className="text-2xl font-bold flex items-center">
           <Calculator className="h-8 w-8 mr-3" />
           Delivery Price Estimator
