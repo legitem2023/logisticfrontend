@@ -22,7 +22,6 @@ const Navigation = ({ userRole, isUserActive }) => {
   const activeIndex = useSelector((state:any) => state.activeIndex.value);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-
   useEffect(() => {
     const checkIsMobile = () => {
       setIsMobile(window.innerWidth < 768);
@@ -157,8 +156,7 @@ const Navigation = ({ userRole, isUserActive }) => {
   };
 
   const NavItem = ({ item }) => {
-    const isActive = activeIndex === item.id;
-    
+    const isActive = activeIndex === item.id;    
     return (
       <a
         href="#"
