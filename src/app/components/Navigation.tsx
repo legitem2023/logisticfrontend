@@ -199,6 +199,44 @@ const Navigation = ({ userRole, isUserActive }) => {
     </a>
   );
 
+  // Mobile-specific components with green active tabs
+  const MobileNavItem = ({ item }) => {
+    const isActive = activeIndex === item.id; 
+    return (
+      <a
+        href="#"
+        className={`relative flex items-center px-4 py-3 text-gray-800 hover:bg-green-500/20 hover:text-green-700 rounded-lg transition-all duration-300 group ${
+          isActive ? 'bg-green-500/30 text-green-800 shadow-lg' : ''
+        }`}
+        onClick={(e) => {
+          e.preventDefault();
+          dispatch(setActiveIndex(item.id));
+          setIsDrawerOpen(false);
+        }}
+      >
+        <span className={`mr-3 group-hover:scale-110 transition-transform duration-300 ${
+          isActive ? 'text-green-600' : 'text-gray-600'
+        }`}>{item.icon}</span>
+        <span className="font-medium">{item.label}</span>
+        {isActive && (
+          <div className="absolute bottom-0 left-0 w-full h-0.5 bg-green-600 rounded-full"></div>
+        )}
+        <Sparkles size={12} className="absolute -top-1 -right-1 text-green-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+      </a>
+    );
+  };
+
+  const MobileSupportNavItem = ({ item }) => (
+    <a
+      href={item.role}
+      className="flex items-center px-4 py-3 text-gray-700 hover:bg-green-500/20 hover:text-green-700 rounded-lg transition-all duration-300 group"
+      onClick={() => setIsDrawerOpen(false)}
+    >
+      <span className="mr-3 text-gray-600 group-hover:scale-110 transition-transform duration-300">{item.icon}</span>
+      <span className="font-medium">{item.label}</span>
+    </a>
+  );
+
   // For desktop, we'll show up to 4 main items and put the rest in a dropdown
   const maxMainItems = 3;
   const mainItems = tabItems.slice(0, maxMainItems);
@@ -317,30 +355,30 @@ const Navigation = ({ userRole, isUserActive }) => {
             isDrawerOpen ? 'translate-x-0' : '-translate-x-full'
           } transition-transform duration-300 ease-in-out md:hidden`}
         >
-          <div className="fixed inset-0 bg-black bg-opacity-70 backdrop-blur-sm" onClick={() => setIsDrawerOpen(false)}></div>
-          <div className="relative bg-gradient-to-b from-gray-900 to-gray-800 w-80 h-full overflow-y-auto luxury-shadow">
-            <div className="flex items-center justify-between p-5 border-b border-gold-500/20">
-              <h2 className="text-xl font-semibold gold-gradient-text flex items-center">
+          <div className="fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm" onClick={() => setIsDrawerOpen(false)}></div>
+          <div className="relative bg-white/80 backdrop-blur-md w-80 h-full overflow-y-auto luxury-shadow">
+            <div className="flex items-center justify-between p-5 border-b border-green-500/20">
+              <h2 className="text-xl font-semibold text-green-800 flex items-center">
                 <Menu size={20} className="mr-2" /> Menu
               </h2>
-              <button onClick={() => setIsDrawerOpen(false)} className="text-gold-200 hover:text-white p-1 rounded-full hover:bg-gold-500/10 transition-colors duration-300">
+              <button onClick={() => setIsDrawerOpen(false)} className="text-gray-600 hover:text-green-700 p-1 rounded-full hover:bg-green-500/10 transition-colors duration-300">
                 <X size={24} />
               </button>
             </div>
             
             <div className="p-4 space-y-1">
-              <h3 className="px-4 pt-4 text-sm font-medium text-gold-400 uppercase tracking-wider border-b border-gold-500/10 pb-2">Main Navigation</h3>
+              <h3 className="px-4 pt-4 text-sm font-medium text-green-600 uppercase tracking-wider border-b border-green-500/20 pb-2">Main Navigation</h3>
               {tabItems.map((item) => (
-                <NavItem key={item.id} item={item} />
+                <MobileNavItem key={item.id} item={item} />
               ))}
               
-              <h3 className="px-4 pt-4 text-sm font-medium text-gold-400 uppercase tracking-wider border-b border-gold-500/10 pb-2">Support</h3>
+              <h3 className="px-4 pt-4 text-sm font-medium text-green-600 uppercase tracking-wider border-b border-green-500/20 pb-2">Support</h3>
               {additionalItems.map((item) => (
-                <SupportNavItem key={item.id} item={item} />
+                <MobileSupportNavItem key={item.id} item={item} />
               ))}
             </div>
             
-            <div className="absolute bottom-0 w-full p-4 text-center text-gold-200 text-xs">
+            <div className="absolute bottom-0 w-full p-4 text-center text-green-600 text-xs">
               MotoGo Deluxe Experience
             </div>
           </div>
