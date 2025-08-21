@@ -255,7 +255,8 @@ const tabs = [
                       </div>
                       <div className="flex items-center gap-2 text-sm text-gray-500 mt-2">
                         <Clock className="w-4 h-4 text-blue-500" />
-                        <span className="italic">ETA: {formatDate(delivery.estimatedDeliveryTime) || "N/A"}</span>
+                        <span className="italic">ETA: {convertMinutesToHours(parseInt(delivery.eta==="" || delivery.eta===null?"0":delivery.eta))}</span>
+
                       </div>
                     </div>
                     <div className="flex flex-col gap-2 w-full">
