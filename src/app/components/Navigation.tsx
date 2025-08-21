@@ -412,4 +412,4 @@ const Navigation = ({ userRole, isUserActive }) => {
   );
 };
 
-export default Navigation;
+export default React.memo(Navigation);
