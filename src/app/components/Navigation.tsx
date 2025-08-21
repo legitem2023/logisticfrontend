@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from "react-redux";
 import Link from "next/link";
 import Image from "next/image";
-
+import NotificationDropdown from "./NotificationDropdown";
+import { selectTempUserId } from "../../../Redux/tempUserSlice";
 import { setActiveIndex } from '../../../Redux/activeIndexSlice';
 import {
   HomeIcon,
@@ -29,7 +30,8 @@ const Navigation = ({ userRole, isUserActive }) => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [isMoreOpen, setIsMoreOpen] = useState(false);
-  
+  const globalUserId = useSelector(selectTempUserId);
+
   console.log(isUserActive,"Active User");
   
   useEffect(() => {
@@ -361,6 +363,11 @@ const Navigation = ({ userRole, isUserActive }) => {
               <h2 className="text-xl font-semibold text-green-800 flex items-center">
                 <Menu size={20} className="mr-2" /> Menu
               </h2>
+              {isUserActive() && (
+                <div className="relative">
+                  <NotificationDropdown userId={globalUserId} />
+                </div>
+              )}
               <button onClick={() => setIsDrawerOpen(false)} className="text-gray-600 hover:text-green-700 p-1 rounded-full hover:bg-green-500/10 transition-colors duration-300">
                 <X size={24} />
               </button>
