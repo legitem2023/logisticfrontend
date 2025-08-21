@@ -361,7 +361,7 @@ const Navigation = ({ userRole, isUserActive }) => {
             isDrawerOpen ? 'translate-x-0' : '-translate-x-full'
           } transition-transform duration-300 ease-in-out md:hidden`}
         >
-          <div className="fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm" onClick={() => setIsDrawerOpen(false)}></div>
+          <div className="fixed inset-0 bg-[rgba(0,0,0,0.5)] backdrop-blur-sm" onClick={() => setIsDrawerOpen(false)}></div>
           <div className="relative bg-white/80 backdrop-blur-md w-80 h-full overflow-y-auto luxury-shadow">
             <div className="flex items-center justify-between p-5 border-b border-green-500/20">
               <h2 className="text-xl font-semibold text-green-800 flex items-center">
