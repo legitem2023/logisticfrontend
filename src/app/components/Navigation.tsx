@@ -20,7 +20,7 @@ import {
 
 const Navigation = ({ userRole, isUserActive }) => {
   const dispatch = useDispatch();
-  const activeIndex = useSelector((state) => state.activeIndex.value);
+  const activeIndex = useSelector((state:any) => state.activeIndex.value);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [isMoreOpen, setIsMoreOpen] = useState(false);
