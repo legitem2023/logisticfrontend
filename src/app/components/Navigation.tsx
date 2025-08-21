@@ -150,9 +150,9 @@ const Navigation = ({ userRole, isUserActive }) => {
   ];
 
   const additionalItems = [
-    { id: 13, label: 'Contact Us', icon: <HelpCircle size={20} /> },
-    { id: 14, label: 'FAQ', icon: <HelpCircle size={20} /> },
-    { id: 15, label: 'Privacy Policy', icon: <HelpCircle size={20} /> },
+    { id: 13, label: 'Contact Us', role:'/Contact', icon: <HelpCircle size={20} /> },
+    { id: 14, label: 'FAQ', role:'/FAQ', icon: <HelpCircle size={20} /> },
+    { id: 15, label: 'Privacy Policy', role:'/Privacy', icon: <HelpCircle size={20} /> },
   ];
 
   const toggleDrawer = () => {
@@ -181,7 +181,7 @@ const Navigation = ({ userRole, isUserActive }) => {
 
   const SupportNavItem = ({ item }) => (
     <a
-      href="#"
+      href={item.role}
       className="flex items-center px-4 py-2 text-gray-700 hover:bg-green-50 hover:text-green-700 rounded-md transition-colors duration-200"
       onClick={() => setIsDrawerOpen(false)}
     >
