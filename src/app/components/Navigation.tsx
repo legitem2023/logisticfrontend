@@ -160,8 +160,7 @@ const Navigation = ({ userRole, isUserActive }) => {
   };
 
   const NavItem = ({ item }) => {
-    const isActive = activeIndex === item.id;
-    
+    const isActive = activeIndex === item.id; 
     return (
       <a
         href="#"
@@ -216,8 +215,7 @@ const Navigation = ({ userRole, isUserActive }) => {
                 <div className="hidden md:ml-6 md:flex md:space-x-2">
                   {mainItems.map((item) => (
                     <NavItem key={item.id} item={item} />
-                  ))}
-                  
+                  ))}            
                   {/* More dropdown */}
                   {dropdownItems.length > 0 && (
                     <div className="relative">
@@ -229,8 +227,7 @@ const Navigation = ({ userRole, isUserActive }) => {
                       >
                         <span>More</span>
                         <ChevronDown size={16} className="ml-1" />
-                      </button>
-                      
+                      </button>               
                       {isMoreOpen && (
                         <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10">
                           {dropdownItems.map((item) => (
