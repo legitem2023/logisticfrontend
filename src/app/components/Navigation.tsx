@@ -12,6 +12,7 @@ import {
   Truck,
   WalletMinimal,
   Users,
+  User,
   BadgeCheck,
   Settings,
   HelpCircle,
