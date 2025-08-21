@@ -18,15 +18,20 @@ import {
   LogIn,
   Menu,
   X,
-  ChevronDown
+  ChevronDown,
+  Crown,
+  Sparkles
 } from 'lucide-react';
+
 const Navigation = ({ userRole, isUserActive }) => {
   const dispatch = useDispatch();
   const activeIndex = useSelector((state:any) => state.activeIndex.value);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [isMoreOpen, setIsMoreOpen] = useState(false);
+  
   console.log(isUserActive,"Active User");
+  
   useEffect(() => {
     const checkIsMobile = () => {
       setIsMobile(window.innerWidth < 768);
@@ -47,7 +52,7 @@ const Navigation = ({ userRole, isUserActive }) => {
     },
     {
       id: 1,
-      label: 'Chart',
+      label: 'Analytics',
       role: '',
       icon: <ChartBarIcon size={20} />
     },
@@ -95,7 +100,7 @@ const Navigation = ({ userRole, isUserActive }) => {
       ? [
           {
             id: 7,
-            label: 'Unassigned',
+            label: 'Verification',
             role: '',
             icon: <BadgeCheck size={20} />
           },
@@ -105,7 +110,7 @@ const Navigation = ({ userRole, isUserActive }) => {
       ? [
           {
             id: 8,
-            label: 'Vehicle Types',
+            label: 'Fleet Management',
             role: '',
             icon: <Truck size={20} />
           },
@@ -123,7 +128,7 @@ const Navigation = ({ userRole, isUserActive }) => {
       : []),
     {
       id: 10,
-      label: 'Help Center',
+      label: 'Support',
       role: '',
       icon: <HelpCircle size={20} />
     },
@@ -131,7 +136,7 @@ const Navigation = ({ userRole, isUserActive }) => {
       ? [
           {
             id: 11,
-            label: 'Signup',
+            label: 'Sign Up',
             role: '',
             icon: <UserPlus size={20} />
           },
@@ -164,8 +169,8 @@ const Navigation = ({ userRole, isUserActive }) => {
     return (
       <a
         href="#"
-        className={`flex items-center px-4 py-2 text-gray-700 hover:bg-green-50 hover:text-green-700 rounded-md transition-colors duration-200 ${
-          isActive ? 'bg-green-100 text-green-700' : ''
+        className={`relative flex items-center px-4 py-3 text-gold-100 hover:bg-gradient-to-r from-gold-500/10 to-transparent hover:text-white rounded-lg transition-all duration-300 group ${
+          isActive ? 'bg-gradient-to-r from-gold-500/20 to-transparent text-white shadow-lg' : ''
         }`}
         onClick={(e) => {
           e.preventDefault();
@@ -173,8 +178,12 @@ const Navigation = ({ userRole, isUserActive }) => {
           setIsDrawerOpen(false);
         }}
       >
-        <span className="mr-3 text-green-600">{item.icon}</span>
-        <span>{item.label}</span>
+        <span className="mr-3 text-gold-400 group-hover:scale-110 transition-transform duration-300">{item.icon}</span>
+        <span className="font-medium">{item.label}</span>
+        {isActive && (
+          <div className="absolute bottom-0 left-0 w-full h-0.5 bg-gold-500 rounded-full"></div>
+        )}
+        <Sparkles size={12} className="absolute -top-1 -right-1 text-gold-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
       </a>
     );
   };
@@ -182,11 +191,11 @@ const Navigation = ({ userRole, isUserActive }) => {
   const SupportNavItem = ({ item }) => (
     <a
       href={item.role}
-      className="flex items-center px-4 py-2 text-gray-700 hover:bg-green-50 hover:text-green-700 rounded-md transition-colors duration-200"
+      className="flex items-center px-4 py-3 text-gold-100 hover:bg-gradient-to-r from-gold-500/10 to-transparent hover:text-white rounded-lg transition-all duration-300 group"
       onClick={() => setIsDrawerOpen(false)}
     >
-      <span className="mr-3 text-green-600">{item.icon}</span>
-      <span>{item.label}</span>
+      <span className="mr-3 text-gold-400 group-hover:scale-110 transition-transform duration-300">{item.icon}</span>
+      <span className="font-medium">{item.label}</span>
     </a>
   );
 
@@ -197,25 +206,54 @@ const Navigation = ({ userRole, isUserActive }) => {
 
   return (
     <>
-      <nav className="customgrad shadow-md">
+      <style jsx global>{`
+        :root {
+          --gold-100: #FDF6B2;
+          --gold-200: #FCE96A;
+          --gold-300: #FACA15;
+          --gold-400: #E3A008;
+          --gold-500: #C27803;
+        }
+        
+        .customgrad {
+          background: linear-gradient(135deg, #1a202c 0%, #2d3748 50%, #4a5568 100%);
+          border-bottom: 1px solid rgba(255, 215, 0, 0.15);
+        }
+        
+        .luxury-shadow {
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25), 0 0 15px rgba(255, 215, 0, 0.15);
+        }
+        
+        .gold-gradient-text {
+          background: linear-gradient(135deg, #FDF6B2 0%, #FCE96A 25%, #FACA15 50%, #E3A008 75%, #C27803 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+        }
+      `}</style>
+      
+      <nav className="customgrad luxury-shadow">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16">
+          <div className="flex justify-between h-20">
             <div className="flex items-center">
               <div className="flex-shrink-0 flex items-center">
                 <Link href="/" className="flex items-center group">
-                <div className="relative h-15 w-15 transition-transform duration-300 group-hover:rotate-6">
-                  <Image
-                    src="/Motogo.svg"
-                    alt="MotoGo Logo"
-                    fill
-                    className="object-contain drop-shadow-lg"
-                    priority
-                  />
-                </div>
-              </Link>
+                  <div className="relative h-12 w-12 transition-all duration-500 group-hover:rotate-6 group-hover:scale-110">
+                    <Image
+                      src="/Motogo.svg"
+                      alt="MotoGo Logo"
+                      fill
+                      className="object-contain drop-shadow-lg"
+                      priority
+                    />
+                  </div>
+                  <span className="ml-3 text-2xl font-bold gold-gradient-text flex items-center">
+                    MotoGo <Crown size={20} className="ml-1 text-gold-400" />
+                  </span>
+                </Link>
               </div>
               {!isMobile && (
-                <div className="hidden md:ml-6 md:flex md:space-x-2">
+                <div className="hidden md:ml-8 md:flex md:space-x-1">
                   {mainItems.map((item) => (
                     <NavItem key={item.id} item={item} />
                   ))}          
@@ -224,22 +262,22 @@ const Navigation = ({ userRole, isUserActive }) => {
                   {dropdownItems.length > 0 && (
                     <div className="relative">
                       <button
-                        className={`flex items-center px-4 py-2 text-gray-700 hover:bg-green-50 hover:text-green-700 rounded-md transition-colors duration-200 ${
-                          dropdownItems.some(item => item.id === activeIndex) ? 'bg-green-100 text-green-700' : ''
+                        className={`flex items-center px-4 py-3 text-gold-100 hover:bg-gradient-to-r from-gold-500/10 to-transparent hover:text-white rounded-lg transition-all duration-300 ${
+                          dropdownItems.some(item => item.id === activeIndex) ? 'bg-gradient-to-r from-gold-500/20 to-transparent text-white' : ''
                         }`}
                         onClick={() => setIsMoreOpen(!isMoreOpen)}
                       >
                         <span>More</span>
-                        <ChevronDown size={16} className="ml-1" />
+                        <ChevronDown size={16} className="ml-1 transition-transform duration-300 transform ${isMoreOpen ? 'rotate-180' : ''}" />
                       </button>               
                       {isMoreOpen && (
-                        <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10">
+                        <div className="absolute right-0 mt-2 w-56 bg-gray-900 bg-opacity-95 backdrop-blur-lg rounded-lg shadow-xl luxury-shadow py-2 z-10 border border-gold-500/20">
                           {dropdownItems.map((item) => (
                             <a
                               key={item.id}
                               href="#"
-                              className={`block px-4 py-2 text-sm text-gray-700 hover:bg-green-50 hover:text-green-700 ${
-                                activeIndex === item.id ? 'bg-green-100 text-green-700' : ''
+                              className={`flex items-center px-4 py-3 text-sm text-gold-100 hover:bg-gradient-to-r from-gold-500/10 to-transparent hover:text-white transition-all duration-200 ${
+                                activeIndex === item.id ? 'bg-gradient-to-r from-gold-500/20 to-transparent text-white' : ''
                               }`}
                               onClick={(e) => {
                                 e.preventDefault();
@@ -247,10 +285,8 @@ const Navigation = ({ userRole, isUserActive }) => {
                                 setIsMoreOpen(false);
                               }}
                             >
-                              <div className="flex items-center">
-                                <span className="mr-2 text-green-600">{item.icon}</span>
-                                <span>{item.label}</span>
-                              </div>
+                              <span className="mr-3 text-gold-400">{item.icon}</span>
+                              <span>{item.label}</span>
                             </a>
                           ))}
                         </div>
@@ -273,7 +309,7 @@ const Navigation = ({ userRole, isUserActive }) => {
               
               <button
                 onClick={toggleDrawer}
-                className="md:hidden inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-green-600 focus:outline-none"
+                className="md:hidden inline-flex items-center justify-center p-2 rounded-md text-gold-200 hover:bg-gold-500/10 hover:text-white focus:outline-none transition-all duration-300"
               >
                 {isDrawerOpen ? <X size={24} /> : <Menu size={24} />}
               </button>
@@ -289,25 +325,31 @@ const Navigation = ({ userRole, isUserActive }) => {
             isDrawerOpen ? 'translate-x-0' : '-translate-x-full'
           } transition-transform duration-300 ease-in-out md:hidden`}
         >
-          <div className="fixed inset-0 bg-black bg-opacity-50" onClick={() => setIsDrawerOpen(false)}></div>
-          <div className="relative bg-white w-80 h-full overflow-y-auto">
-            <div className="flex items-center justify-between p-4 border-b">
-              <h2 className="text-xl font-semibold text-gray-800">Menu</h2>
-              <button onClick={() => setIsDrawerOpen(false)} className="text-gray-500">
+          <div className="fixed inset-0 bg-black bg-opacity-70 backdrop-blur-sm" onClick={() => setIsDrawerOpen(false)}></div>
+          <div className="relative bg-gradient-to-b from-gray-900 to-gray-800 w-80 h-full overflow-y-auto luxury-shadow">
+            <div className="flex items-center justify-between p-5 border-b border-gold-500/20">
+              <h2 className="text-xl font-semibold gold-gradient-text flex items-center">
+                <Crown size={20} className="mr-2" /> Premium Menu
+              </h2>
+              <button onClick={() => setIsDrawerOpen(false)} className="text-gold-200 hover:text-white p-1 rounded-full hover:bg-gold-500/10 transition-colors duration-300">
                 <X size={24} />
               </button>
             </div>
             
-            <div className="p-4 space-y-2">
-              <h3 className="px-4 pt-4 text-sm font-medium text-gray-500 uppercase tracking-wider">Main Navigation</h3>
+            <div className="p-4 space-y-1">
+              <h3 className="px-4 pt-4 text-sm font-medium text-gold-400 uppercase tracking-wider border-b border-gold-500/10 pb-2">Main Navigation</h3>
               {tabItems.map((item) => (
                 <NavItem key={item.id} item={item} />
               ))}
               
-              <h3 className="px-4 pt-4 text-sm font-medium text-gray-500 uppercase tracking-wider">Support</h3>
+              <h3 className="px-4 pt-4 text-sm font-medium text-gold-400 uppercase tracking-wider border-b border-gold-500/10 pb-2">Support</h3>
               {additionalItems.map((item) => (
                 <SupportNavItem key={item.id} item={item} />
               ))}
+            </div>
+            
+            <div className="absolute bottom-0 w-full p-4 text-center text-gold-200 text-xs">
+              MotoGo Deluxe Experience
             </div>
           </div>
         </div>
