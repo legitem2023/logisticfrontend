@@ -24,7 +24,6 @@ const Navigation = ({ userRole, isUserActive }) => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [isMoreOpen, setIsMoreOpen] = useState(false);
-
   useEffect(() => {
     const checkIsMobile = () => {
       setIsMobile(window.innerWidth < 768);
@@ -35,7 +34,6 @@ const Navigation = ({ userRole, isUserActive }) => {
       window.removeEventListener('resize', checkIsMobile);
     };
   }, []);
-
   const tabItems = [
     {
       id: 0,
