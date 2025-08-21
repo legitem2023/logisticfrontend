@@ -268,7 +268,6 @@ const Navigation = ({ userRole, isUserActive }) => {
           </div>
         </div>
       </nav>
-
       {/* Mobile Drawer */}
       {isMobile && (
         <div
