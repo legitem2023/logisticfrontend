@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from "react-redux";
 import { setActiveIndex } from '../../../Redux/activeIndexSlice';
 import {
@@ -20,10 +20,11 @@ import {
 
 const Navigation = ({ userRole, isUserActive }) => {
   const dispatch = useDispatch();
-  const activeIndex = useSelector((state:any) => state.activeIndex.value);
+  const activeIndex = useSelector((state) => state.activeIndex.value);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [isMoreOpen, setIsMoreOpen] = useState(false);
+  
   useEffect(() => {
     const checkIsMobile = () => {
       setIsMobile(window.innerWidth < 768);
@@ -34,6 +35,7 @@ const Navigation = ({ userRole, isUserActive }) => {
       window.removeEventListener('resize', checkIsMobile);
     };
   }, []);
+  
   const tabItems = [
     {
       id: 0,
@@ -187,10 +189,9 @@ const Navigation = ({ userRole, isUserActive }) => {
   );
 
   // For desktop, we'll show up to 4 main items and put the rest in a dropdown
-  const mainItems = tabItems;
-  
-  const dropdownItems = tabItems.filter(item => 
-    !mainItems.some(mainItem => mainItem.id === item.id));
+  const maxMainItems = 4;
+  const mainItems = tabItems.slice(0, maxMainItems);
+  const dropdownItems = tabItems.slice(maxMainItems);
 
   return (
     <>
