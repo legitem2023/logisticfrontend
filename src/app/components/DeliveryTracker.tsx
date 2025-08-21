@@ -9,7 +9,7 @@ import { setActiveIndex } from '../../../Redux/activeIndexSlice';
 import dynamic from "next/dynamic";
 const SenderMap = dynamic(() => import("./Sender/SenderMap"), { ssr: false });
 import { XIcon, XCircle } from "lucide-react";
-
+import PricingEstimator from './PricingEstimator';
 const DeliveryTracker = () => {
   const [trackingNumber, setTrackingNumber] = useState('');
   const { loading, error, data } = useQuery(GETDELIVERIESADMIN);
@@ -267,7 +267,7 @@ const DeliveryTracker = () => {
           </div>
         )}
       </div>
-
+      <PricingEstimator/>
       {/* Our Core Features Section */}
       <div className="bg-white py-16">
         <div className="container mx-auto px-4">
