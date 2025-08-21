@@ -206,7 +206,8 @@ const Navigation = ({ userRole, isUserActive }) => {
                 <div className="hidden md:ml-6 md:flex md:space-x-2">
                   {mainItems.map((item) => (
                     <NavItem key={item.id} item={item} />
-                  ))}            
+                  ))}          
+                  
                   {/* More dropdown */}
                   {dropdownItems.length > 0 && (
                     <div className="relative">
