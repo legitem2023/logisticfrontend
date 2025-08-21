@@ -104,7 +104,7 @@ const DeliveryTracker = () => {
 
         {/* Loading State */}
         {loading && (
-          <div className="mt-6 bg-white rounded-xl shadow-lg p-8 text-center max-w-4xl mx-auto">
+          <div className="bg-white rounded-xl shadow-lg p-8 text-center max-w-4xl mx-auto">
             <div className="flex justify-center">
               <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-500"></div>
             </div>
@@ -114,7 +114,7 @@ const DeliveryTracker = () => {
 
         {/* Error State */}
         {error && (
-          <div className="mt-6 bg-white rounded-xl shadow-lg p-8 text-center mx-auto">
+          <div className="bg-white rounded-xl shadow-lg p-8 text-center mx-auto">
             <div className="text-red-500 text-5xl mb-4">
               <i className="fas fa-exclamation-circle"></i>
             </div>
@@ -125,7 +125,7 @@ const DeliveryTracker = () => {
 
         {/* No Results State */}
         {searched && !loading && filteredDeliveries.length === 0 && (
-          <div className="mt-6 bg-white rounded-xl shadow-lg p-8 text-center mx-auto">
+          <div className="bg-white rounded-xl shadow-lg p-8 text-center mx-auto">
             <div className="text-gray-400 text-5xl mb-4">
               <i className="fas fa-box-open"></i>
             </div>
@@ -136,7 +136,7 @@ const DeliveryTracker = () => {
 
         {/* Results */}
         {filteredDeliveries.map((delivery: any) => (
-          <div key={delivery.id} className="mt-6 bg-white rounded-xl shadow-lg overflow-hidden mx-auto">
+          <div key={delivery.id} className="bg-white rounded-xl shadow-lg overflow-hidden mx-auto">
             {/* Status Header */}
             <div className="p-6 bg-green-700 text-white">
               <div className="flex justify-between items-center">
@@ -258,7 +258,7 @@ const DeliveryTracker = () => {
 
         {/* Initial State */}
         {!searched && !loading && data && (
-          <div className="mt-12 text-center py-12 bg-white rounded-xl shadow-md mx-auto">
+          <div className="text-center py-12 bg-white rounded-xl shadow-md mx-auto">
             <div className="text-green-700 mb-4">
               <i className="fas fa-box-open text-5xl"></i>
             </div>
