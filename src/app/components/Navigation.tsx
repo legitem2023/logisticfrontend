@@ -23,7 +23,7 @@ const Navigation = ({ userRole, isUserActive }) => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [isMoreOpen, setIsMoreOpen] = useState(false);
-  
+  console.log(isUserActive,"Active User");
   useEffect(() => {
     const checkIsMobile = () => {
       setIsMobile(window.innerWidth < 768);
