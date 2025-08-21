@@ -363,7 +363,7 @@ const Navigation = ({ userRole, isUserActive }) => {
         >
           <div className="fixed inset-0 bg-[rgba(0,0,0,0.5)] backdrop-blur-sm" onClick={() => setIsDrawerOpen(false)}></div>
           <div className="relative bg-white/80 backdrop-blur-md w-80 h-full overflow-y-auto luxury-shadow">
-            <div className="customgrad flex items-center justify-between p-5 border-b border-green-500/20">
+            <div className="customgrad h-20 flex items-center justify-between p-5 border-b border-green-500/20">
               <h2 className="text-xl font-semibold text-white-500 flex items-center">
                 <Menu size={20} className="mr-2" /> Menu
               </h2>
