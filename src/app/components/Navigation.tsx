@@ -338,7 +338,11 @@ const Navigation = ({ userRole, isUserActive }) => {
                   ))}
                 </div>
               )}
-              
+              {isUserActive() && (
+                <div className="relative">
+                  <NotificationDropdown userId={globalUserId} />
+                </div>
+              )}
               <button
                 onClick={toggleDrawer}
                 className="md:hidden inline-flex items-center justify-center p-2 rounded-md text-gold-200 hover:bg-gold-500/10 hover:text-white focus:outline-none transition-all duration-300"
@@ -363,11 +367,7 @@ const Navigation = ({ userRole, isUserActive }) => {
               <h2 className="text-xl font-semibold text-green-800 flex items-center">
                 <Menu size={20} className="mr-2" /> Menu
               </h2>
-              {isUserActive() && (
-                <div className="relative">
-                  <NotificationDropdown userId={globalUserId} />
-                </div>
-              )}
+              
               <button onClick={() => setIsDrawerOpen(false)} className="text-gray-600 hover:text-green-700 p-1 rounded-full hover:bg-green-500/10 transition-colors duration-300">
                 <X size={24} />
               </button>
