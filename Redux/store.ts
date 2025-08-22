@@ -7,6 +7,7 @@ import locationReducer from './locationSlice';
 import tempUserReducer from './tempUserSlice';
 import activeIndexReducer from './activeIndexSlice';
 import roleReducer from './roleSlice';
+import usernameReducer from './usernameSlice';
 const store = configureStore({
   reducer: {
     drawer:DrawerReducer,
@@ -15,7 +16,8 @@ const store = configureStore({
     location: locationReducer,
     tempUser:tempUserReducer,
     activeIndex:activeIndexReducer,
-    role:roleReducer
+    role:roleReducer,
+    username:usernameReducer
   },
 });
 
