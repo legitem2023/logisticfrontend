@@ -40,7 +40,8 @@ export default function RootLayout({
         <AuthProvider>
           <TokenSyncer />
           <ReduxWrapper>
-            <GlobalScripts>{children}</GlobalScripts>
+            <GlobalScripts/>
+            {children}
           </ReduxWrapper>
         </AuthProvider>
         
