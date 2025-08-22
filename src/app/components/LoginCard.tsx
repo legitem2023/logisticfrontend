@@ -11,6 +11,7 @@ import { Input } from './ui/Input'
 import { Label } from './ui/Label'
 import { useMutation } from '@apollo/client'
 import FacebookLoginButton from './Auth/FacebookLoginButton'
+import GoogleLoginButton from './Auth/GoogleLoginButton'
 import { LOGIN } from '../../../graphql/mutation'
 import { showToast } from '../../../utils/toastify'
 import { Eye, EyeOff } from 'lucide-react'
@@ -147,6 +148,7 @@ export default function LoginCard() {
           </div>
 
           {/* Social login */}
+          <GoogleLoginButton />
           <FacebookLoginButton />
 
           {/* Footer link */}
