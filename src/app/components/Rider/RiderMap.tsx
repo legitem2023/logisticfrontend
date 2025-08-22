@@ -107,12 +107,17 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
   // Luxury dark green to gold theme icons
   const riderIcon = L.divIcon({
     html: `
-      <div class="relative">
+     <div class="relative">
         <div class="absolute -top-2 -right-2 text-yellow-400 z-10">
-          <FaCrown />
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="16px" height="16px">
+            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+          </svg>
         </div>
         <div class="w-12 h-12 bg-gradient-to-br from-emerald-900 to-emerald-700 rounded-full border-2 border-yellow-400 flex items-center justify-center text-yellow-300 shadow-lg">
-          <FaMotorcycle class="text-xl" />
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24px" height="24px">
+            <path d="M19 7c0-1.1-.9-2-2-2h-3v2h3v2.65L13.52 14H10V9H6c-2.21 0-4 1.79-4 4v3h2c0 1.66 1.34 3 3 3s3-1.34 3-3h4.48L19 10.35V7zM7 17c-.55 0-1-.45-1-1h2c0 .55-.45 1-1 1z"/>
+            <path d="M5 6h5v2H5zm14 7c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3zm0 4c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1z"/>
+          </svg>
         </div>
       </div>
     `,
@@ -124,7 +129,9 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
   const senderIcon = L.divIcon({
     html: `
       <div class="w-12 h-12 bg-gradient-to-br from-emerald-800 to-emerald-600 rounded-full border-2 border-yellow-300 flex items-center justify-center text-white shadow-lg">
-        <FaStore class="text-xl" />
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24px" height="24px">
+          <path d="M19 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h4l3 3 3-3h4c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-3 12H8v-2h8v2zm0-3H8V9h8v2zm0-3H8V6h8v2z"/>
+        </svg>
       </div>
     `,
     className: "",
@@ -134,8 +141,10 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
   
   const receiverIcon = L.divIcon({
     html: `
-      <div class="w-12 h-12 bg-gradient-to-br from-emerald-700 to-emerald-500 rounded-full border-2 border-yellow-300 flex items-center justify-center text-white shadow-lg">
-        <FaMapMarkerAlt class="text-xl" />
+     <div class="w-12 h-12 bg-gradient-to-br from-emerald-700 to-emerald-500 rounded-full border-2 border-yellow-300 flex items-center justify-center text-white shadow-lg">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24px" height="24px">
+          <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+        </svg>
       </div>
     `,
     className: "",
