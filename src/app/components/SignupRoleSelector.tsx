@@ -8,7 +8,7 @@ import { setActiveIndex } from '../../../Redux/activeIndexSlice';
 
 export default function SignupRoleSelector() {
   const router = useRouter();
-const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const options = [
     {
       role: "Rider",
@@ -51,7 +51,7 @@ const dispatch = useDispatch()
 
       <p className="mt-6 text-gray-500 text-sm">
         Already have an account?{" "}
-        <span onClick={()=>{dispatch(setActiveIndex(12)}} className="text-green-600 hover:underline font-medium">
+        <span onClick={()=>{dispatch(setActiveIndex(12))}} className="text-green-600 hover:underline font-medium">
           Login here
         </span>
       </p>
