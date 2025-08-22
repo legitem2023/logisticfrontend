@@ -37,7 +37,7 @@ const SenderMap = ({ riderId, receiverPOS, senderPOS, riderPOS, delivery, setMap
   const { data: locationData } = useSubscription(LocationTracking, {
     variables: { userId: riderId },
   });
-  console.log(delivery.assignedRider.name);
+  
   const location = useSelector((state: any) => state.location.current);
   const globalUserId = useSelector(selectTempUserId);
   const [status, setStatus] = useState<'pending' | 'cancelled' | 'finished' | null>(null);
@@ -451,7 +451,7 @@ const SenderMap = ({ riderId, receiverPOS, senderPOS, riderPOS, delivery, setMap
           <div className="flex items-center mb-6">
             <div className="relative">
               <div className="w-12 h-12 bg-gradient-to-br from-emerald-800 to-emerald-600 rounded-full border-2 border-yellow-300 flex items-center justify-center text-white shadow-lg">
-                <span className="font-bold">MR</span>
+                <span className="font-bold">{getInitials(delivery.assignedRider.name)}</span>
               </div>
               <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-emerald-900"></div>
             </div>
