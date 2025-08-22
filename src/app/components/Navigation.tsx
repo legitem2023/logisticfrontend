@@ -382,7 +382,12 @@ const Navigation = ({ userRole, isUserActive }) => {
                   </p>
                   <span 
                     className="text-xs text-green-200 hover:underline"
-                    onClick={() => dispatch(setActiveIndex(13))}
+                    onClick={() => {
+  if (!isHome) {
+    router.push('/');
+  }
+  dispatch(setActiveIndex(13));
+}}
                   >
                     View Profile
                   </span>
