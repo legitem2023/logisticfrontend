@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from "react-redux";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import NotificationDropdown from "./NotificationDropdown";
@@ -36,7 +36,7 @@ const Navigation = ({ userRole, isUserActive }) => {
   const [isMoreOpen, setIsMoreOpen] = useState(false);
   const globalUserId = useSelector(selectTempUserId);
   const username = useSelector((state:any) => state.username.value);
-  
+  const router = useRouter(); 
   const pathname = usePathname();
   const isHome = pathname === "/";
   console.log(isHome,"Home");
@@ -182,7 +182,11 @@ const Navigation = ({ userRole, isUserActive }) => {
         }`}
         onClick={(e) => {
           e.preventDefault();
+          
           dispatch(setActiveIndex(item.id));
+          if(!isHome){
+            router.push('/');
+          }
           setIsDrawerOpen(false);
         }}
       >
@@ -219,6 +223,9 @@ const Navigation = ({ userRole, isUserActive }) => {
         onClick={(e) => {
           e.preventDefault();
           dispatch(setActiveIndex(item.id));
+          if(!isHome){
+            router.push('/');
+          }
           setIsDrawerOpen(false);
         }}
       >
