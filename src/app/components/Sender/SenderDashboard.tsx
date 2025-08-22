@@ -176,7 +176,10 @@ export default function SenderDashboard() {
                       <Clock className="w-4 h-4" />
                       <span>ETA: {convertMinutesToHours(parseInt(delivery.eta==="" || delivery.eta===null?"0":delivery.eta))}</span>
                     </div>
-
+                    <div className="flex items-center gap-2 text-sm text-gray-500">
+                      <Clock className="w-4 h-4" />
+                      <span>ATA: {convertMinutesToHours(parseInt(delivery.eta==="" || delivery.eta===null?"0":delivery.eta))}</span>
+                    </div>
                     {delivery.deliveryStatus === 'in_transit' && (
                       <>
                         <Button
