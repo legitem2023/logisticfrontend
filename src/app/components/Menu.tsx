@@ -100,12 +100,16 @@ function throttle<T extends (...args: any[]) => void>(
 
 export default function Menu() {
  // const [useRole, setRole] = useState('');
-  const client = useApolloClient();
+ // const client = useApolloClient();
   const dispatch = useDispatch();
   const globalUserId = useSelector(selectTempUserId);
 
   const useRole = useSelector(selectRole); 
-  const [LocationTracker] = useMutation(LOCATIONTRACKING, {
+  const isUserActive = (): boolean => {
+    const token = Cookies.get('token');
+    return !!token;
+  };
+  /*const [LocationTracker] = useMutation(LOCATIONTRACKING, {
     onCompleted: (data) => {
       console.log("Mutation Success:", data);
     },
@@ -177,21 +181,16 @@ export default function Menu() {
     variables: { userID: globalUserId },
   });
 
-  const isUserActive = (): boolean => {
-    const token = Cookies.get('token');
-    return !!token;
-  };
+  
 
   //console.log(useRole,"<-role");
 
 
+  */
   const GlobalactiveIndex = useSelector((state: any) => state.activeIndex.value);
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
-      {/*  <SideBarMenu       
-      activeTab={GlobalactiveIndex} 
-      useRole={useRole}
-      isUserActive={isUserActive}/>*/}
+      
 <Navigation
       userRole={useRole}
       isUserActive={isUserActive}/>
