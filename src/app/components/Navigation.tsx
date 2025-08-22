@@ -108,7 +108,7 @@ const Navigation = ({ userRole, isUserActive }) => {
       ? [
           {
             id: 7,
-            label: 'Verification',
+            label: 'Unassigned',
             role: '',
             icon: <BadgeCheck size={20} />
           },
@@ -118,7 +118,7 @@ const Navigation = ({ userRole, isUserActive }) => {
       ? [
           {
             id: 8,
-            label: 'Fleet Management',
+            label: 'Vehicles',
             role: '',
             icon: <Truck size={20} />
           },
@@ -213,7 +213,12 @@ const Navigation = ({ userRole, isUserActive }) => {
 
   // Mobile-specific components with green active tabs
   const MobileNavItem = ({ item }) => {
-  const isActive = isHome ? activeIndex === item.id : false;
+  let isActive;
+  if(isHome){
+     isActive = activeIndex === item.id; 
+  }else{
+     isActive:false;
+  }
   
   return (
     <a
