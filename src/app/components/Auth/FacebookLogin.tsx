@@ -51,7 +51,9 @@ const FacebookLogin = () => {
   };
 
   return (
-    <button onClick={handleFacebookLogin} disabled className="bg-blue-600 text-white px-4 py-2 rounded w-full">
+    <button onClick={handleFacebookLogin} 
+            disabled={true} 
+            className="bg-blue-600 text-white px-4 py-2 rounded w-full">
       Login with Facebook
     </button> 
   );
