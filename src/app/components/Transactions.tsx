@@ -198,16 +198,12 @@ const PaymentInfo = ({ delivery }: { delivery: any }) => {
             <div className="font-medium">{delivery.paymentMethod || 'N/A'}</div>
           </div>
           
-          <div>
-            <div className="text-xs text-gray-500 mb-1">Delivery Fee</div>
-            <div className="font-medium">${deliveryFee.toFixed(2)}</div>
-          </div>
         </div>
         
         <div className="space-y-4">
           <div>
             <div className="text-xs text-gray-500 mb-1">Base Rate</div>
-            <div className="font-medium">${baseRate.toFixed(2)}</div>
+            <div className="font-medium">₱{baseRate.toFixed(2)}</div>
           </div>
           
           <div>
@@ -217,12 +213,12 @@ const PaymentInfo = ({ delivery }: { delivery: any }) => {
           
           <div>
             <div className="text-xs text-gray-500 mb-1">Per Km Rate</div>
-            <div className="font-medium">${perKmRate.toFixed(2)}/km</div>
+            <div className="font-medium">₱{perKmRate.toFixed(2)}/km</div>
           </div>
           
           <div className="pt-2 border-t border-gray-200">
             <div className="text-xs text-gray-500 mb-1">Calculated Fee</div>
-            <div className="font-medium text-lg text-green-600">${calculatedFee.toFixed(2)}</div>
+            <div className="font-medium text-lg text-green-600">₱{calculatedFee.toFixed(2)}</div>
           </div>
         </div>
       </div>
