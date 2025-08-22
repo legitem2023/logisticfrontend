@@ -13,7 +13,7 @@ import { selectTempUserId } from '../../../../Redux/tempUserSlice';
 import { SENDNOTIFICATION } from "../../../../graphql/mutation"; 
 import { useMutation, useSubscription } from "@apollo/client";
 import { LocationTracking } from '../../../../graphql/subscription';
-import { FaMotorcycle, FaMapMarkerAlt, FaCrown, FaChevronUp, FaExclamationTriangle, FaStore, FaRoute } from 'react-icons/fa';
+import { FaMotorcycle, FaMapMarkerAlt, FaCrown, FaChevronUp,FaChevronDown, FaExclamationTriangle, FaStore, FaRoute } from 'react-icons/fa';
 import { GiPathDistance } from 'react-icons/gi';
 import { MdOutlineDeliveryDining } from 'react-icons/md';
 import { calculateEta, convertMinutesToHours } from '../../../../utils/calculateEta';
@@ -484,15 +484,22 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
         style={{ height: `${panelHeight}px` }}
       >
         {/* Draggable Handle */}
-        <div 
-          className="drag-handle absolute top-3 left-1/2 transform -translate-x-1/2 w-24 h-1.5 rounded-full cursor-row-resize touch-none"
-          style={{ backgroundColor: mapTheme === 'dark' ? 'rgba(251, 191, 36, 0.5)' : 'rgba(251, 191, 36, 0.5)' }}
+        {isPanelOpen && (
+        <button
+          onClick={() => setIsPanelOpen(false)}
+          className="top-3 fixed bottom-4 left-1/2 transform -translate-x-1/2 z-50
+            rounded-full p-3 shadow-lg hover:shadow-xl animate-bounce
+            flex items-center justify-center w-12 h-12"
+          style={{
+            background: mapTheme === 'dark' 
+              ? 'linear-gradient(to right, rgba(0, 32, 0, 0.9), rgba(0, 24, 0, 0.9))' 
+              : 'linear-gradient(to right, rgba(0, 100, 0, 0.9), rgba(0, 80, 0, 0.9))',
+            color: 'white'
+          }}
         >
-          <div className="absolute -top-7 left-1/2 transform -translate-x-1/2" 
-               style={{ color: mapTheme === 'dark' ? '#fde68a' : '#fde68a' }}>
-            <FaChevronUp />
-          </div>
-        </div>
+          <FaChevronDown className="text-lg" />
+        </button>
+      )}
 
         <div className="pt-8 h-full flex flex-col">
           <div className="text-center mb-6">
