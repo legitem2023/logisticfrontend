@@ -259,7 +259,7 @@ const tabs = [
                       </div>
                       <div className="flex items-center gap-2 text-sm text-gray-500 mt-2">
                         <Clock className="w-4 h-4 text-green-500" />
-                        <span className="italic">ATA: {delivery.eta}</span>
+                        <span className="italic">ATA: {delivery.ata}</span>
                       </div>
                     </div>
                     <div className="flex flex-col gap-2 w-full">
