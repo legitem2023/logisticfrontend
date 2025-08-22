@@ -160,7 +160,7 @@ export default function SenderShipmentHistory({ status }: any) {
                     {shipment.deliveryStatus}
                   </Badge>
                   <Button
-                    className="flex items-center gap-1 bg-green-600 text-white hover:bg-green-700"
+                    className="flex items-center gap-1 bg-cyan-600 text-white hover:bg-cyan-700"
                     size="sm"
                     onClick={() => {
                       setSelectedShipment(shipment);
