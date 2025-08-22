@@ -3,7 +3,7 @@ import Image from 'next/image';
 import SignupCard from "../../components/SignupCard";
 
 import Navigation from '../../components/Navigation';
-import { setRole, clearRole, selectRole } from '../../../Redux/roleSlice';
+import { setRole, clearRole, selectRole } from '../../../../Redux/roleSlice';
 import { useDispatch,useSelector } from 'react-redux';
 import Cookies from 'js-cookie';
 
