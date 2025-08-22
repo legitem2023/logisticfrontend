@@ -494,9 +494,7 @@ const tabs = [
                   </CardContent>
                 </Card>
               )) : (
-                <div className="col-span-full flex justify-center items-center h-64">
-                  <h1 className="text-2xl font-bold text-gray-800 mb-4">No Deliveries Found...</h1>
-                </div>
+                <div className="text-center mt-8 text-gray-500">No deliveries found</div>
               )}
             </div>
           </>
