@@ -3,10 +3,12 @@
 import { useRouter } from "next/navigation";
 import { Card, CardContent } from "./ui/Card";
 import { FiTruck, FiPackage } from "react-icons/fi";
+import { useDispatch,useSelector } from 'react-redux';
+import { setActiveIndex } from '../../../Redux/activeIndexSlice';
 
 export default function SignupRoleSelector() {
   const router = useRouter();
-
+const dispatch = useDispatch()
   const options = [
     {
       role: "Rider",
@@ -49,9 +51,9 @@ export default function SignupRoleSelector() {
 
       <p className="mt-6 text-gray-500 text-sm">
         Already have an account?{" "}
-        <a href="/login" className="text-green-600 hover:underline font-medium">
+        <span onClick={()=>{dispatch(setActiveIndex(12)}} className="text-green-600 hover:underline font-medium">
           Login here
-        </a>
+        </span>
       </p>
     </div>
   );
