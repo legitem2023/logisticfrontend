@@ -213,12 +213,7 @@ const Navigation = ({ userRole, isUserActive }) => {
 
   // Mobile-specific components with green active tabs
   const MobileNavItem = ({ item }) => {
-  let isActive;
-  if(isHome){
-     isActive = activeIndex === item.id; 
-  }else{
-     isActive:false;
-  }
+  let isActive = isHome?activeIndex === item.id:false; 
   
   return (
     <a
@@ -230,7 +225,7 @@ const Navigation = ({ userRole, isUserActive }) => {
         e.preventDefault();
         if (!isHome) {
           router.push('/');
-          dispatch(setActiveIndex(13)); // Set to home index if not already home
+          dispatch(setActiveIndex(item.id)); // Set to home index if not already home
         } else {
           dispatch(setActiveIndex(item.id)); // Set to the item's id if already home
         }
