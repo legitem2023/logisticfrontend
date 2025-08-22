@@ -365,11 +365,11 @@ const Navigation = ({ userRole, isUserActive }) => {
                   <User className="h-6 w-6 text-gray-600 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-gray-900 truncate">
+                  <p className="text-sm font-medium text-white-900 truncate">
                     {userRole || 'User'}
                   </p>
                   <span 
-                    className="text-xs text-blue-600 hover:underline"
+                    className="text-xs text-green-200 hover:underline"
                     onClick={() => dispatch(setActiveIndex(13))}
                   >
                     View Profile
