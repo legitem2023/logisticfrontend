@@ -52,7 +52,7 @@ export default function SenderShipmentHistory({ status }: any) {
   const { data, loading } = useQuery(GETDISPATCH, {
     variables: { id: globalUserId }
   });
-
+console.log(globalUserId,"userId?");
   useEffect(() => {
     if (data) {
       const formattedDeliveries = data.getDispatch
