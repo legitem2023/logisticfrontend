@@ -1,4 +1,6 @@
 import { metadata as baseMetadata, viewport as baseViewport } from './components/seo'; // Import both
+import GlobalScripts from "./components/GlobalScripts";
+
 export const metadata = baseMetadata;
 export const viewport = baseViewport; // Add viewport export
 
@@ -37,7 +39,9 @@ export default function RootLayout({
         <LoadEruda />
         <AuthProvider>
           <TokenSyncer />
-          <ReduxWrapper>{children}</ReduxWrapper>
+          <ReduxWrapper>
+            <GlobalScripts>{children}</GlobalScripts>
+          </ReduxWrapper>
         </AuthProvider>
         
         {/* ✅ Toast container here */}
