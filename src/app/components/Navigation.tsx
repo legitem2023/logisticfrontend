@@ -213,7 +213,12 @@ const Navigation = ({ userRole, isUserActive }) => {
 
   // Mobile-specific components with green active tabs
   const MobileNavItem = ({ item }) => {
-    const isActive = activeIndex === item.id; 
+    let isActive;
+    if(!isHome){
+      isActive = 13;
+    }else{
+      isActive = activeIndex === item.id;  
+    }
     return (
       <a
         href="#"
