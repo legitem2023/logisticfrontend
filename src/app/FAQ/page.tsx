@@ -6,7 +6,8 @@ import { useDispatch,useSelector } from 'react-redux';
 import Cookies from 'js-cookie';
 
 export default function Page() {
- 
+ const useRole = useSelector(selectRole); 
+
  const isUserActive = (): boolean => {
     const token = Cookies.get('token');
     return !!token;
