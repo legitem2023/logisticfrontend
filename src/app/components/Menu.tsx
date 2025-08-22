@@ -41,7 +41,7 @@ import {
 import { useDispatch,useSelector } from 'react-redux';
 import { setCurrentLocation } from '../../../Redux/locationSlice';
 import { setTempUserId,selectTempUserId } from '../../../Redux/tempUserSlice';
-
+import { setUsername } from '../../../Redux/usernameSlice';
 
 import { setRole, clearRole, selectRole } from '../../../Redux/roleSlice';
 
@@ -124,6 +124,7 @@ export default function Menu() {
         //  setRole(payload.role);
           dispatch(setRole(payload.role));
           dispatch(setTempUserId(payload.userId));
+          dispatch(setUsername(payload.name));
         }
       } catch (err) {
         console.error('Error getting role:', err);
