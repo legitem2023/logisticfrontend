@@ -32,7 +32,7 @@ const Navigation = ({ userRole, isUserActive }) => {
   const [isMobile, setIsMobile] = useState(false);
   const [isMoreOpen, setIsMoreOpen] = useState(false);
   const globalUserId = useSelector(selectTempUserId);
-
+  const username = useSelector((state:any) => state.username.value);
   console.log(isUserActive,"Active User");
   
   useEffect(() => {
@@ -366,7 +366,7 @@ const Navigation = ({ userRole, isUserActive }) => {
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium text-white-900 truncate">
-                    {userRole || 'User'}
+                    {username || 'User'}
                   </p>
                   <span 
                     className="text-xs text-green-200 hover:underline"
