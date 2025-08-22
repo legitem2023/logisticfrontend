@@ -458,7 +458,7 @@ export default function Transactions() {
               <div className="absolute top-0 left-0 w-32 h-32 bg-blue-200 rounded-full filter blur-[100px] opacity-40"></div>
               <div className="absolute bottom-0 right-0 w-48 h-48 bg-blue-100 rounded-full filter blur-[100px] opacity-40"></div>
               
-              <div className="p-6 border-b border-blue-200 bg-gradient-to-r from-white to-blue-50 rounded-t-2xl">
+              <div className="p-6 border-b border-blue-200 bg-gradient-to-r from-white to-blue-50 rounded-t-2xl overflow-y-auto">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                   <div className="flex items-center gap-3">
                     <div className="bg-gradient-to-br from-blue-400 to-blue-600 p-2 rounded-lg">
