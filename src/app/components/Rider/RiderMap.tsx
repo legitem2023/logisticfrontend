@@ -487,7 +487,7 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
         {isPanelOpen && (
         <button
           onClick={() => setIsPanelOpen(false)}
-          className="mb-5 fixed left-1/2 transform z-50 -translate-x-1/2 
+          className="mb-10 fixed left-1/2 transform z-50 -translate-x-1/2 
             rounded-full p-3 shadow-lg hover:shadow-xl animate-bounce
             flex items-center justify-center w-12 h-12"
           style={{
