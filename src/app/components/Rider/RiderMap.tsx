@@ -277,7 +277,7 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
     }).addTo(map);
     
     // Add markers
-    L.marker(rider, { icon: riderIcon }).bindPopup('<div class="font-bold text-yellow-400">Premium Rider</div>').addTo(map);
+    L.marker(rider, { icon: riderIcon }).bindPopup('<div class="font-bold text-yellow-400">Rider</div>').addTo(map);
     
     // Only add sender marker if proofOfPickup is 0
     if (proofOfPickup === 0 && sender) {
