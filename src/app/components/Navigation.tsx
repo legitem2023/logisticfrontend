@@ -213,38 +213,36 @@ const Navigation = ({ userRole, isUserActive }) => {
 
   // Mobile-specific components with green active tabs
   const MobileNavItem = ({ item }) => {
-    let isActive;
-    if(!isHome){
-      isActive = 13;
-    }else{
-      isActive = activeIndex === item.id;  
-    }
-    return (
-      <a
-        href="#"
-        className={`relative flex items-center px-4 py-3 text-gray-800 hover:bg-green-500/20 hover:text-green-700 rounded-lg transition-all duration-300 group ${
-          isActive ? 'bg-green-500/30 text-green-800 shadow-lg' : ''
-        }`}
-        onClick={(e) => {
-          e.preventDefault();
-          dispatch(setActiveIndex(item.id));
-          if(!isHome){
-            router.push('/');
-          }
-          setIsDrawerOpen(false);
-        }}
-      >
-        <span className={`mr-3 group-hover:scale-110 transition-transform duration-300 ${
-          isActive ? 'text-green-600' : 'text-gray-600'
-        }`}>{item.icon}</span>
-        <span className="font-medium">{item.label}</span>
-        {isActive && (
-          <div className="absolute bottom-0 left-0 w-full h-0.5 bg-green-600 rounded-full"></div>
-        )}
-        <Sparkles size={12} className="absolute -top-1 -right-1 text-green-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-      </a>
-    );
-  };
+  const isActive = isHome ? activeIndex === item.id : false;
+  
+  return (
+    <a
+      href="#"
+      className={`relative flex items-center px-4 py-3 text-gray-800 hover:bg-green-500/20 hover:text-green-700 rounded-lg transition-all duration-300 group ${
+        isActive ? 'bg-green-500/30 text-green-800 shadow-lg' : ''
+      }`}
+      onClick={(e) => {
+        e.preventDefault();
+        if (!isHome) {
+          router.push('/');
+          dispatch(setActiveIndex(13)); // Set to home index if not already home
+        } else {
+          dispatch(setActiveIndex(item.id)); // Set to the item's id if already home
+        }
+        setIsDrawerOpen(false);
+      }}
+    >
+      <span className={`mr-3 group-hover:scale-110 transition-transform duration-300 ${
+        isActive ? 'text-green-600' : 'text-gray-600'
+      }`}>{item.icon}</span>
+      <span className="font-medium">{item.label}</span>
+      {isActive && (
+        <div className="absolute bottom-0 left-0 w-full h-0.5 bg-green-600 rounded-full"></div>
+      )}
+      <Sparkles size={12} className="absolute -top-1 -right-1 text-green-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+    </a>
+  );
+};
 
   const MobileSupportNavItem = ({ item }) => (
     <a
