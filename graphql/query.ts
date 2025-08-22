@@ -345,7 +345,7 @@ query GetDeliveries {
     baseRate
     perKmRate
     distance
-        proofOfPickup {
+    proofOfPickup {
         id
         pickupDateTime
         pickupAddress
@@ -361,6 +361,13 @@ query GetDeliveries {
         createdAt
         updatedAt
      }
+     proofOfDelivery {
+      id
+      photoUrl
+      signatureData
+      receivedBy
+      receivedAt
+    }
     packages {
       id
       packageType
