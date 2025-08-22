@@ -56,24 +56,6 @@ export default function DriverDashboard() {
     loadingText: 'Skip Delivery',
     enable: false,
   });  
-  const [finishDelivery] = useMutation(FINISHDELIVERY,{
-   onCompleted: () => showToast("Delivery successfully completed", "success"),
-   onError: (e: any) => console.log('Finished Error', e)
-  })
-
-  const [markPaid] = useMutation(MARKPAID,{
-   onCompleted: () => console.log("Delivery marked as paid", "success"),
-   onError: (e: any) => console.log('Finished Error', e)
-  })
-
-  const handleStatusChange = async (id:any) => {
-     const conf = confirm("Are you sure you want to finish this delivery?"); 
-    if(conf){
-      await finishDelivery({
-           variables : {"deliveryId":id,"riderId": globalUserId}
-       })      
-    }
-  };
 
   
   const location = useSelector((state: any) => state.location.current);
@@ -92,6 +74,30 @@ export default function DriverDashboard() {
     variables: { getRidersDeliveryId: globalUserId }, 
     skip: !globalUserId, 
   });
+  const [finishDelivery] = useMutation(FINISHDELIVERY,{
+   onCompleted: () => {
+     showToast("Delivery successfully completed", "success")
+     refetch();
+   },
+   onError: (e: any) => console.log('Finished Error', e)
+  })
+
+  const [markPaid] = useMutation(MARKPAID,{
+   onCompleted: () => {
+     //showToast("Delivery successfully completed", "success")
+     refetch();   
+   },
+   onError: (e: any) => console.log('Finished Error', e)
+  })
+
+  const handleStatusChange = async (id:any) => {
+     const conf = confirm("Are you sure you want to finish this delivery?"); 
+    if(conf){
+      await finishDelivery({
+           variables : {"deliveryId":id,"riderId": globalUserId}
+       })      
+    }
+  };
 
   const [acceptDelivery] = useMutation(ACCEPTDELIVERY, { 
     onCompleted: () => {
