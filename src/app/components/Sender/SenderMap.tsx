@@ -14,7 +14,7 @@ import { FaMotorcycle, FaStore, FaMapMarkerAlt, FaCrown, FaChevronUp, FaExclamat
 import { MdOutlineDeliveryDining } from 'react-icons/md';
 import { GiPathDistance } from 'react-icons/gi';
 import { Sun, Moon, Clock, XIcon } from "lucide-react";
-import { calculateEta, convertMinutesToHours } from '../../../../utils/calculateEta';
+import { calculateEta, convertMinutesToHours, getInitials } from '../../../../utils/calculateEta';
 
 type Coordinates = {
   lat: number;
@@ -37,7 +37,7 @@ const SenderMap = ({ riderId, receiverPOS, senderPOS, riderPOS, delivery, setMap
   const { data: locationData } = useSubscription(LocationTracking, {
     variables: { userId: riderId },
   });
-
+  console.log(delivery.assignedRider.name);
   const location = useSelector((state: any) => state.location.current);
   const globalUserId = useSelector(selectTempUserId);
   const [status, setStatus] = useState<'pending' | 'cancelled' | 'finished' | null>(null);
