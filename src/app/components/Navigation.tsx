@@ -68,7 +68,7 @@ const Navigation = ({ userRole, isUserActive }) => {
       ? [
           {
             id: 3,
-            label: 'Logistics Panel',
+            label: userRole === 'Administrator' || userRole === 'ADMINISTRATOR'?'Transactions':'Logistics Panel',
             role: '',
             icon: <ClipboardCheck size={20} />
           },
