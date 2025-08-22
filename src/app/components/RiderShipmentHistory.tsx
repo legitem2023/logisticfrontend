@@ -50,7 +50,7 @@ export default function RiderShipmentHistory({ status }: any) {
 
   const globalUserId = useSelector(selectTempUserId);
   const { data, loading } = useQuery(DELIVERIES, {
-    variables: { id: globalUserId }
+    variables: { getRidersDeliveryId: globalUserId }
   });
 
   useEffect(() => {
