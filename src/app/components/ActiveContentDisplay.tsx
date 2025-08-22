@@ -4,6 +4,7 @@ import React from 'react';
 
 import ApiWallet from './Wallet/ApiWallet';
 import HomeDataCarousel from './HomeDataCarousel';
+import Transactions from './Transactions';
 import LogisticsHomePage from './LogisticsHomePage';
 import DriverDashboard from './Rider/DriverDashboard';
 import SenderDashboard from './Sender/SenderDashboard';
@@ -93,7 +94,7 @@ export function ActiveContentDisplay({ activeTab, useRole, isUserActive }: {
             icon: <ClipboardCheck color="green" />,
             content:useRole==='Administrator'||useRole==='ADMINISTRATOR'?(
                   <div className="px-1 py-1 space-y-1">
-                    <h1>No Component Yet</h1>
+                    <Transactions/>
                   </div>):
               useRole === 'Rider' || useRole === 'RIDER' ? (
                     <div className="px-1 py-1 space-y-1">
