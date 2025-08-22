@@ -91,7 +91,11 @@ export function ActiveContentDisplay({ activeTab, useRole, isUserActive }: {
             label: 'Logistics Panel',
             role: '',
             icon: <ClipboardCheck color="green" />,
-            content: useRole === 'Rider' || useRole === 'RIDER' ? (
+            content:useRole==='Administrator'||useRole==='ADMINISTRATOR'?(
+                  <div className="px-1 py-1 space-y-1">
+                    <h1>No Component Yet</h1>
+                  </div>):
+              useRole === 'Rider' || useRole === 'RIDER' ? (
                     <div className="px-1 py-1 space-y-1">
                     <DriverDashboard />
                     </div>
