@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from "react-redux";
+import { usePathname } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import NotificationDropdown from "./NotificationDropdown";
@@ -35,8 +36,10 @@ const Navigation = ({ userRole, isUserActive }) => {
   const [isMoreOpen, setIsMoreOpen] = useState(false);
   const globalUserId = useSelector(selectTempUserId);
   const username = useSelector((state:any) => state.username.value);
-  console.log(isUserActive,"Active User");
   
+  const pathname = usePathname();
+  const isHome = pathname === "/";
+  console.log(isHome,"Home");
   useEffect(() => {
     const checkIsMobile = () => {
       setIsMobile(window.innerWidth < 768);
