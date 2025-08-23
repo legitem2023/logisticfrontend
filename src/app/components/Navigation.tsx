@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
+import CityScape from './CityScape';
 import NotificationDropdown from "./NotificationDropdown";
 import { selectTempUserId } from "../../../Redux/tempUserSlice";
 import { setActiveIndex } from '../../../Redux/activeIndexSlice';
@@ -300,6 +301,7 @@ const MobileSupportNavItem = ({ item }) => {
       `}</style>
       
       <nav className="customgrad luxury-shadow">
+        <CityScape/>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-20">
             <div className="flex items-center">
