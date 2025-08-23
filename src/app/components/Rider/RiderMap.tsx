@@ -69,8 +69,8 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
     variables: { userId: globalUserId },
   });
 
-  const handleNotification = (message: string) => {
-    sendNotification({
+  const handleNotification = async (message: string) => {
+    await sendNotification({
       variables: {
         userId: globalUserId, 
         title: message, 
