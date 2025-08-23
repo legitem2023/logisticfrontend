@@ -136,7 +136,7 @@ const Navigation = ({ userRole, isUserActive }) => {
       : []),
     {
       id: 10,
-      label: 'Support',
+      label: 'Help',
       role: '',
       icon: <HelpCircle size={20} />
     },
