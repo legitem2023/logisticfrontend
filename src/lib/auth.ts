@@ -52,7 +52,7 @@ export const authOptions: NextAuthOptions = {
 
 
           // ✅ Save backend token to JWT
-          token.accessToken = data?.loginWithFacebook?.token;
+    //      token.accessToken = data?.loginWithFacebook?.token;
           //token.statusText = data?.loginWithFacebook?.statusText;
         } catch (error) {
           console.error("GraphQL loginWithFacebook mutation failed:", error);
