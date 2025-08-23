@@ -72,7 +72,7 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
   const handleNotification = (message: string) => {
     sendNotification({
       variables: {
-        userId: senderId.toString(), 
+        userId: globalUserId, 
         title: message, 
         message: message, 
         type: 'Status Update'
