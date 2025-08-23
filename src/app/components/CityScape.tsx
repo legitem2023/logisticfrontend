@@ -84,7 +84,7 @@ const CityScape = ({
   return (
     <div
       className={clsx(
-        "relative w-full h-full min-h-[100%] overflow-hidden", // Added min-h-[50px]
+        "relative w-full h-full min-h-[15vh] overflow-hidden", // Added min-h-[50px]
         "bg-gradient-to-b from-green-950 via-green-800 to-green-700",
         className
       )}
