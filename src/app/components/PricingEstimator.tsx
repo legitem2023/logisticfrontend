@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useQuery } from '@apollo/client';
 import { VEHICLEQUERY } from '../../../graphql/query';
 import { getDistanceInKm } from '../../../utils/getDistanceInKm';
+import PricingEstimatorLoading from './PricingEstimatorLoading';
 import {
   MapPin,
   Truck,
@@ -156,7 +157,7 @@ const PricingEstimator = () => {
     setSuggestions([]);
   };
 
-  if (loading) return <div className="p-6 text-center">Loading vehicle options...</div>;
+  if (loading) return <PricingEstimatorLoading/>;
   if (error) return <div className="p-6 text-center text-red-500">Error: {error.message}</div>;
 
   return (
