@@ -62,7 +62,7 @@ const AdminDeliveriesLoading = () => {
                   <Shimmer width="50px" height="14px" />
                 </div>
                 <div className="flex gap-2">
-                  <Shimmer width="70px" height="24px" rounded="full" />
+                  <Shimmer width="70px" height="24px" />
                 </div>
               </div>
 
@@ -116,7 +116,7 @@ const AdminDeliveriesLoading = () => {
                 </div>
                 <div className="flex items-center gap-2">
                   <Shimmer width="100px" height="16px" />
-                  <Shimmer width="70px" height="24px" rounded="full" />
+                  <Shimmer width="70px" height="24px"/>
                 </div>
               </div>
 
