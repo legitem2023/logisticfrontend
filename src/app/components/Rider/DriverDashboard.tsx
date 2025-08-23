@@ -622,7 +622,7 @@ const tabs = [
             
             <RiderMap
               deliveryId={selectedDelivery.id}
-              senderId={selectedDelivery.sender.id}
+              senderId={selectedDelivery.senderId}
               PickUpCoordinates={{
                 lat: selectedDelivery.pickupLatitude,
                 lng: selectedDelivery.pickupLongitude,
