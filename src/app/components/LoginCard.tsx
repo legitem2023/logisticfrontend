@@ -16,7 +16,7 @@ import { LOGIN } from '../../../graphql/mutation'
 import { showToast } from '../../../utils/toastify'
 import { Eye, EyeOff } from 'lucide-react'
 import { FiMail, FiLock } from 'react-icons/fi'
-import AnimatedCityscape from './AnimatedCityscape';
+import CityScape from './CityScape';
 export default function LoginCard() {
   const router = useRouter()
   const [email, setEmail] = useState('')
