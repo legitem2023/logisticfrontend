@@ -44,13 +44,15 @@ const CityScape = ({
 }) => {
   // Generate random colors for vehicles
   const vehicleColors = useMemo(() => {
-    const colors = [
-      '#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#FF00FF', '#00FFFF',
-      '#FFA500', '#800080', '#FFC0CB', '#A52A2A', '#808080', '#FFFFFF'
-    ];
-    return Array.from({ length: 15 }, () => 
-      colors[Math.floor(Math.random() * colors.length)]
-  }, []);
+  const colors = [
+    '#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#FF00FF', '#00FFFF',
+    '#FFA500', '#800080', '#FFC0CB', '#A52A2A', '#808080', '#FFFFFF'
+  ];
+
+  return Array.from({ length: 15 }, () => 
+    colors[Math.floor(Math.random() * colors.length)]
+  );
+}, []);
 
   return (
     <div
