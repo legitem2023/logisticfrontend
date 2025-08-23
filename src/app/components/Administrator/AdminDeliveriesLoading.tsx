@@ -1,7 +1,7 @@
 // components/AdminDeliveriesLoading.tsx
 import { Card, CardContent } from '../ui/Card';
 import { PackageCheck, User, Phone, MapPin, Truck, BadgeCheck, CreditCard } from "lucide-react";
-import Shimmer from './Shimmer';
+import Shimmer from '../ui/Shimmer';
 
 const AdminDeliveriesLoading = () => {
   // Create 6 skeleton cards (typical loading amount)
