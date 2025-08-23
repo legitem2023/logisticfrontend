@@ -4,6 +4,7 @@ import { Card, CardContent } from "./ui/Card";
 import { Input } from "./ui/Input";
 import { Button } from "./ui/Button";
 import { Badge } from "./ui/Badge";
+import TransactionsLoading from './TransactionsLoading';
 import { CalendarIcon, DownloadIcon, EyeIcon, XIcon, ChevronLeft, ChevronRight, MoreHorizontal, FileSignature, User, CreditCard, WalletCards, MapPin, Package, Truck, Clock } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useQuery } from '@apollo/client';
@@ -294,9 +295,7 @@ export default function Transactions() {
   };
 
   if (loading || !data) return (
-    <div className="min-h-screen flex items-center justify-center">
-      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
-    </div>
+    <TransactionsLoading/>
   );
   
   return (
