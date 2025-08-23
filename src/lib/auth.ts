@@ -40,7 +40,7 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, account }) {
       if (account && account.provider === "facebook") {
         try {
-          const { data } = await client.mutate({
+    /*      const { data } = await client.mutate({
             mutation: FBLOGIN,
             variables: {
               input: {
@@ -48,14 +48,8 @@ export const authOptions: NextAuthOptions = {
               },
             },
           });
+*/
 
-          // ✅ Optional: store in localStorage (only in browser)
-          if (typeof window !== 'undefined' && data?.loginWithFacebook?.token) {
-            localStorage.setItem(
-              "localstorage",
-              JSON.stringify(data.loginWithFacebook)
-            );
-          }
 
           // ✅ Save backend token to JWT
           token.accessToken = data?.loginWithFacebook?.token;
