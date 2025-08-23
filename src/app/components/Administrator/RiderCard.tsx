@@ -119,7 +119,7 @@ console.log(editableData);
               className="text-lg font-semibold text-center border rounded px-2 py-1 w-full"
             />
           ) : (
-            <h3 className="text-xl font-bold text-slate-800">
+            <h3 className="text-xl font-bold text-slate-900">
               {editableData.name || "Unnamed Rider"}
             </h3>
           )}
@@ -129,9 +129,9 @@ console.log(editableData);
           </span>
         </div>
 
-        <div className="border-t border-slate-200"></div>
+        <div className="border-t border-slate-600"></div>
 
-        <div className="space-y-3 text-sm">
+        <div className="space-y-3 text-sm text-slate-400">
           <div className="flex items-center gap-2">
             <Mail size={16} className="text-emerald-600" />
             {isEditing ? (
