@@ -23,7 +23,7 @@ const TransactionsLoading = () => {
       {/* Items Per Page Selector Loading */}
       <div className="flex items-center justify-end gap-2 text-sm">
         <Shimmer width="100px" height="20px" />
-        <Shimmer width="60px" height="32px" rounded />
+        <Shimmer width="60px" height="32px" />
       </div>
 
       {/* Delivery Cards Loading */}
@@ -40,9 +40,9 @@ const TransactionsLoading = () => {
                 </div>
               </div>
               <div className="flex items-center gap-2 flex-wrap">
-                <Shimmer width="80px" height="24px" rounded="full" />
-                <Shimmer width="80px" height="32px" rounded />
-                <Shimmer width="100px" height="32px" rounded />
+                <Shimmer width="80px" height="24px" />
+                <Shimmer width="80px" height="32px" />
+                <Shimmer width="100px" height="32px" />
               </div>
             </CardContent>
           </Card>
@@ -54,17 +54,17 @@ const TransactionsLoading = () => {
         <Shimmer width="200px" height="20px" />
         
         <div className="flex items-center gap-1">
-          <Shimmer width="32px" height="32px" rounded />
+          <Shimmer width="32px" height="32px"  />
           
           {/* Page numbers */}
           <div className="flex items-center gap-1">
-            <Shimmer width="32px" height="32px" rounded />
-            <Shimmer width="32px" height="32px" rounded />
-            <Shimmer width="32px" height="32px" rounded />
-            <Shimmer width="32px" height="32px" rounded />
+            <Shimmer width="32px" height="32px" />
+            <Shimmer width="32px" height="32px" />
+            <Shimmer width="32px" height="32px" />
+            <Shimmer width="32px" height="32px" />
           </div>
           
-          <Shimmer width="32px" height="32px" rounded />
+          <Shimmer width="32px" height="32px" />
         </div>
       </div>
     </div>
