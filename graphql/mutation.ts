@@ -38,8 +38,6 @@ mutation CreateSender($input: CreateSenderInput) {
 }
 `
 
-
-
 export const CREATERIDER = gql`
 mutation CreateRider($input: CreateRiderInput) {
   createRider(input: $input) {
@@ -48,6 +46,22 @@ mutation CreateRider($input: CreateRiderInput) {
 }
 `
 
+export const EDITRIDER = gql`
+  mutation EditRider($input: EditRiderInput!) {
+    editRider(input: $input) {
+      statusText
+      user {
+        id
+        name
+        email
+        phoneNumber
+        vehicleTypeId
+        licensePlate
+        role
+      }
+    }
+  }
+`;
 export const LOCATIONTRACKING = gql`
 mutation LocationTracking($input: LocationTrackingInput) {
   locationTracking(input: $input) {
