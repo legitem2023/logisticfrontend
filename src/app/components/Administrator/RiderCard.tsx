@@ -216,19 +216,17 @@ const Accountrole = [{
                     </Select>
                 </>
               ) : (
-                <>
-                  <p>{editableData.vehicleType?.name}</p>
-                </>
+                  <span>{editableData.vehicleTypeId}</span>
               )}
             </div>
           </div>
           <div>
             <Gauge size={16} className="text-emerald-600 mt-0.5" />
            <div>
-              <p className="text-xs text-slate-500">
+              <span className="text-xs text-slate-500">
                     Max {editableData.vehicleType?.maxCapacityKg ?? "—"}kg ·{" "}
                     {editableData.vehicleType?.maxVolumeM3 ?? "—"}m³
-              </p>
+              </span>
            </div>
           </div>
           <div>
