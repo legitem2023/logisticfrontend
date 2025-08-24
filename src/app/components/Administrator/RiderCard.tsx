@@ -54,6 +54,14 @@ const RiderCard = ({ rider, onViewDetails, onSave }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editableData, setEditableData] = useState({ ...rider });
   const { loading: vehicloading, error, data } = useQuery(VEHICLEQUERY);
+  const [editRider] = useMutation(EDITRIDER,{
+    onCompleted:(e:any) =>{
+      console.log(e);
+    },
+    onError:(e:any) =>{
+      console.log(e);
+    }
+  })
   if (vehicloading) return;
 
   const statusColors = {
@@ -74,7 +82,7 @@ const RiderCard = ({ rider, onViewDetails, onSave }) => {
     }));
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     setIsEditing(false);
     const editData = {
       id: editableData.id,
@@ -87,7 +95,11 @@ const RiderCard = ({ rider, onViewDetails, onSave }) => {
     }
    console.log(editData,"<<<");
   //  if (onSave) onSave(editableData);
-
+   await editRider({
+     variables:{
+       input:editData
+     }
+   })
   };
 
   const lastUpdatedDate = toValidDate(editableData.lastUpdatedAt);
