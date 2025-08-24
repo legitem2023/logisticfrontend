@@ -76,7 +76,16 @@ const RiderCard = ({ rider, onViewDetails, onSave }) => {
 
   const handleSave = () => {
     setIsEditing(false);
-   console.log(editableData,"<<<");
+    const editData = {
+      id: editableData.id,
+      name: editableData.name,
+      email: editableData.email,
+      phoneNumber: editableData.phoneNumber,
+      vehicleTypeId: editableData.vehicleTypeId,
+      licensePlate: editableData.licensePlate,
+      role: editableData.role
+    }
+   console.log(editData,"<<<");
   //  if (onSave) onSave(editableData);
 
   };
