@@ -1,214 +1,201 @@
-'use client';
-
-import React, { useEffect, useRef } from 'react';
+// components/AnimatedCityScape.jsx
+import { useEffect, useRef } from 'react';
 
 const AnimatedEarthAtom = () => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const requestRef = useRef<number | null>(null);
-
+  const roadRef = useRef(null);
+  
   useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-
-    let mouseX = 0;
-    let mouseY = 0;
-    let targetRotationX = 0;
-    let targetRotationY = 0;
-    let currentRotationX = 0;
-    let currentRotationY = 0;
-
-    const handleMouseMove = (e: MouseEvent) => {
-      const rect = container.getBoundingClientRect();
-      const centerX = rect.left + rect.width / 2;
-      const centerY = rect.top + rect.height / 2;
-      
-      mouseX = (e.clientX - centerX) / window.innerWidth;
-      mouseY = (e.clientY - centerY) / window.innerHeight;
-    };
-
-    const animate = () => {
-      // Smoothly follow the mouse
-      targetRotationX = mouseY * 30;
-      targetRotationY = mouseX * 30;
-      
-      currentRotationX += (targetRotationX - currentRotationX) * 0.1;
-      currentRotationY += (targetRotationY - currentRotationY) * 0.1;
-      
-      container.style.transform = `
-        perspective(1000px)
-        rotateX(${currentRotationX}deg)
-        rotateY(${currentRotationY}deg)
-      `;
-      
-      requestRef.current = requestAnimationFrame(animate);
-    };
-
-    container.addEventListener('mousemove', handleMouseMove as EventListener);
-    requestRef.current = requestAnimationFrame(animate);
-
-    return () => {
-      container.removeEventListener('mousemove', handleMouseMove as EventListener);
-      if (requestRef.current) {
-        cancelAnimationFrame(requestRef.current);
+    const handleScroll = () => {
+      if (roadRef.current) {
+        const scrollY = window.scrollY;
+        roadRef.current.style.transform = `translateY(${scrollY * 0.5}px)`;
       }
     };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-black p-4 overflow-hidden">
-      <h1 className="text-3xl md:text-4xl font-bold text-white mb-6 text-center">
-        Scientific 3D Atomic Model
-      </h1>
-      <p className="text-blue-300 mb-8 text-center max-w-lg">
-        A scientifically-inspired representation of an atom with Earth as nucleus and probabilistic electron orbitals
-      </p>
+  // Function to generate random buildings
+  const generateBuildings = (count, side) => {
+    return Array.from({ length: count }).map((_, i) => {
+      const height = Math.floor(Math.random() * 150) + 100;
+      const width = Math.floor(Math.random() * 60) + 40;
+      const delay = Math.random() * 5;
       
-      <div className="relative w-96 h-96 flex items-center justify-center" ref={containerRef}>
-        {/* Earth nucleus with realistic texture */}
-        <div className="absolute w-40 h-40 rounded-full overflow-hidden shadow-2xl shadow-blue-500/30 z-10 transform-style-3d">
-          <div className="w-full h-full bg-gradient-to-tr from-blue-700 via-green-600 to-brown-600 relative overflow-hidden transform-style-3d">
-            {/* Continent details */}
-            <div className="absolute top-12 left-10 w-14 h-8 bg-green-800/60 rounded-full"></div>
-            <div className="absolute bottom-20 right-14 w-16 h-10 bg-brown-700/60 rounded-full"></div>
-            <div className="absolute top-24 left-24 w-12 h-6 bg-green-700/50 rounded-full"></div>
-            <div className="absolute bottom-12 left-16 w-10 h-5 bg-green-800/50 rounded-full"></div>
-            {/* Cloud details */}
-            <div className="absolute top-8 left-12 w-10 h-3 bg-white/80 rounded-full blur-sm"></div>
-            <div className="absolute top-16 right-10 w-12 h-4 bg-white/80 rounded-full blur-sm"></div>
-            <div className="absolute bottom-14 left-8 w-14 h-4 bg-white/80 rounded-full blur-sm"></div>
-            {/* Atmosphere glow */}
-            <div className="absolute inset-0 border-2 border-blue-400/30 rounded-full blur-sm"></div>
-          </div>
+      return (
+        <div
+          key={`${side}-${i}`}
+          className={`absolute ${side === 'left' ? 'left-0' : 'right-0'} bg-gray-800`}
+          style={{
+            height: `${height}px`,
+            width: `${width}px`,
+            bottom: '0',
+            transform: `perspective(500px) rotateY(${side === 'left' ? '5' : '-5'}deg) translateZ(${i * 20}px)`,
+            animation: `flicker 10s infinite ${delay}s`,
+          }}
+        >
+          {/* Windows */}
+          {Array.from({ length: Math.floor(height / 30) }).map((_, j) => (
+            <div key={j} className="flex justify-around mb-2">
+              {Array.from({ length: 2 }).map((_, k) => (
+                <div
+                  key={k}
+                  className="w-4 h-4 bg-yellow-300 rounded-sm"
+                  style={{
+                    animation: `glow ${Math.random() * 5 + 3}s infinite ${Math.random() * 5}s`,
+                    opacity: Math.random() > 0.3 ? 1 : 0.2
+                  }}
+                ></div>
+              ))}
+            </div>
+          ))}
         </div>
-        
-        {/* Quantum orbital clouds (faint probability regions) */}
-        <div className="absolute w-80 h-80 rounded-full bg-purple-500/5 blur-xl transform rotate-x-70 transform-style-3d"></div>
-        <div className="absolute w-72 h-72 rounded-full bg-cyan-500/5 blur-xl transform rotate-y-70 rotate-x-20 transform-style-3d"></div>
-        <div className="absolute w-88 h-88 rounded-full bg-green-500/5 blur-xl transform rotate-y-40 rotate-x-60 transform-style-3d"></div>
-        
-        {/* Electron orbitals with crossing paths */}
-        <div className="absolute w-80 h-64 animate-orbit-slow transform-style-3d">
-          <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-            <div className="w-3 h-3 bg-purple-500 rounded-full shadow-lg shadow-purple-500/80 electron-glow"></div>
-            <div className="absolute -inset-1 bg-purple-500/20 rounded-full blur-md electron-trail"></div>
-          </div>
-        </div>
-        
-        <div className="absolute w-72 h-72 animate-orbit-medium transform-style-3d">
-          <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-            <div className="w-3 h-3 bg-cyan-400 rounded-full shadow-lg shadow-cyan-400/80 electron-glow"></div>
-            <div className="absolute -inset-1 bg-cyan-400/20 rounded-full blur-md electron-trail"></div>
-          </div>
-        </div>
-        
-        <div className="absolute w-64 h-80 animate-orbit-fast transform-style-3d">
-          <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-            <div className="w-3 h-3 bg-green-400 rounded-full shadow-lg shadow-green-400/80 electron-glow"></div>
-            <div className="absolute -inset-1 bg-green-400/20 rounded-full blur-md electron-trail"></div>
-          </div>
-        </div>
-        
-        {/* Additional electrons for more realism */}
-        <div className="absolute w-76 h-76 animate-orbit-slower transform-style-3d">
-          <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-            <div className="w-2 h-2 bg-blue-400 rounded-full shadow-lg shadow-blue-400/70 electron-glow"></div>
-          </div>
-        </div>
-        
-        {/* Subtle orbital rings */}
-        <div className="absolute w-80 h-64 border border-purple-500/10 rounded-full transform rotate-x-70 transform-style-3d"></div>
-        <div className="absolute w-72 h-72 border border-cyan-500/10 rounded-full transform rotate-y-70 rotate-x-20 transform-style-3d"></div>
-        <div className="absolute w-64 h-80 border border-green-500/10 rounded-full transform rotate-y-40 rotate-x-60 transform-style-3d"></div>
-        
-        {/* Energy glow effects */}
-        <div className="absolute inset-0 rounded-full bg-blue-500/5 blur-2xl animate-pulse-slow"></div>
-      </div>
-      
-      <div className="mt-10 text-white/60 text-sm text-center max-w-md">
-        <p>This model represents electron orbitals in different energy levels with probabilistic regions</p>
-        <p className="mt-2">Move your cursor to rotate the model in 3D space</p>
-      </div>
+      );
+    });
+  };
 
+  // Function to generate trees
+  const generateTrees = (count, side) => {
+    return Array.from({ length: count }).map((_, i) => {
+      const height = Math.floor(Math.random() * 80) + 60;
+      const delay = Math.random() * 3;
+      
+      return (
+        <div
+          key={`${side}-tree-${i}`}
+          className={`absolute ${side === 'left' ? 'left-10' : 'right-10'}`}
+          style={{
+            height: `${height}px`,
+            width: `${height * 0.6}px`,
+            bottom: '0',
+            transform: `translateX(${i % 2 === 0 ? i * 40 : i * 30}px) translateZ(${i * 25}px)`,
+            animation: `sway 7s ease-in-out infinite ${delay}s`,
+          }}
+        >
+          {/* Tree trunk */}
+          <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-3 h-8 bg-yellow-900 z-10"></div>
+          {/* Tree foliage */}
+          <div className="absolute bottom-5 left-1/2 transform -translate-x-1/2 w-12 h-12 bg-green-600 rounded-full"></div>
+        </div>
+      );
+    });
+  };
+
+  // Function to generate road lines
+  const generateRoadLines = (count) => {
+    return Array.from({ length: count }).map((_, i) => (
+      <div
+        key={`line-${i}`}
+        className="absolute left-1/2 transform -translate-x-1/2 w-4 h-1 bg-yellow-400"
+        style={{
+          bottom: `${i * 60}px`,
+          animation: `moveLine 1.5s infinite linear`,
+          animationDelay: `${i * 0.2}s`,
+          transform: `perspective(300px) rotateX(60deg) translateZ(${i * 20}px)`,
+        }}
+      ></div>
+    ));
+  };
+
+  return (
+    <div className="relative w-full h-screen overflow-hidden bg-blue-900">
+      {/* Moon */}
+      <div className="absolute top-10 right-20 w-20 h-20 bg-yellow-200 rounded-full shadow-[0_0_50px_10px_yellow]"></div>
+      
+      {/* Stars */}
+      {Array.from({ length: 50 }).map((_, i) => (
+        <div
+          key={`star-${i}`}
+          className="absolute rounded-full bg-white"
+          style={{
+            top: `${Math.random() * 100}%`,
+            left: `${Math.random() * 100}%`,
+            width: `${Math.random() * 3 + 1}px`,
+            height: `${Math.random() * 3 + 1}px`,
+            animation: `twinkle ${Math.random() * 5 + 3}s infinite ${Math.random() * 5}s`,
+          }}
+        ></div>
+      ))}
+      
+      {/* Road */}
+      <div 
+        ref={roadRef}
+        className="absolute left-1/2 transform -translate-x-1/2 w-1/3 h-full bg-gray-700"
+        style={{
+          transform: 'perspective(500px) rotateX(60deg)',
+          transformOrigin: 'center bottom',
+        }}
+      >
+        {/* Road lines */}
+        {generateRoadLines(20)}
+      </div>
+      
+      {/* Left side buildings */}
+      <div className="absolute left-0 bottom-0 h-2/3 w-1/2 overflow-hidden">
+        {generateBuildings(15, 'left')}
+      </div>
+      
+      {/* Right side buildings */}
+      <div className="absolute right-0 bottom-0 h-2/3 w-1/2 overflow-hidden">
+        {generateBuildings(15, 'right')}
+      </div>
+      
+      {/* Left side trees */}
+      <div className="absolute left-0 bottom-0 h-1/3 w-1/2 overflow-hidden">
+        {generateTrees(8, 'left')}
+      </div>
+      
+      {/* Right side trees */}
+      <div className="absolute right-0 bottom-0 h-1/3 w-1/2 overflow-hidden">
+        {generateTrees(8, 'right')}
+      </div>
+      
+      {/* Tall towers */}
+      <div className="absolute left-1/4 bottom-0 h-3/4 w-10 bg-gray-900 transform perspective(500px) rotateY(5deg) translateZ(50px)">
+        <div className="absolute top-0 w-full h-6 bg-red-600"></div>
+        {Array.from({ length: 20 }).map((_, i) => (
+          <div key={`tower-window-${i}`} className="flex justify-around mb-4">
+            <div className="w-3 h-3 bg-yellow-300 rounded-sm" style={{ animation: `glow 5s infinite ${i * 0.5}s` }}></div>
+          </div>
+        ))}
+      </div>
+      
+      <div className="absolute right-1/4 bottom-0 h-4/5 w-12 bg-gray-900 transform perspective(500px) rotateY(-5deg) translateZ(50px)">
+        <div className="absolute top-0 w-full h-8 bg-blue-600"></div>
+        {Array.from({ length: 25 }).map((_, i) => (
+          <div key={`tower2-window-${i}`} className="flex justify-around mb-3">
+            <div className="w-3 h-3 bg-yellow-300 rounded-sm" style={{ animation: `glow 4s infinite ${i * 0.3}s` }}></div>
+            <div className="w-3 h-3 bg-yellow-300 rounded-sm" style={{ animation: `glow 4s infinite ${i * 0.3 + 0.5}s` }}></div>
+          </div>
+        ))}
+      </div>
+      
+      {/* Style tag for animations */}
       <style jsx>{`
-        .transform-style-3d {
-          transform-style: preserve-3d;
+        @keyframes moveLine {
+          0% { transform: perspective(300px) rotateX(60deg) translateY(0) translateZ(0); }
+          100% { transform: perspective(300px) rotateX(60deg) translateY(-60px) translateZ(0); }
         }
-        .rotate-x-70 {
-          transform: rotateX(70deg);
+        
+        @keyframes flicker {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.8; }
         }
-        .rotate-y-70 {
-          transform: rotateY(70deg);
+        
+        @keyframes glow {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.3; }
         }
-        .rotate-x-20 {
-          transform: rotateX(20deg);
+        
+        @keyframes sway {
+          0%, 100% { transform: translateX(0) translateZ(0) rotate(0deg); }
+          50% { transform: translateX(5px) translateZ(0) rotate(2deg); }
         }
-        .rotate-y-40 {
-          transform: rotateY(40deg);
-        }
-        .rotate-x-60 {
-          transform: rotateX(60deg);
-        }
-        @keyframes orbit-slow {
-          0% {
-            transform: rotateZ(0deg) rotateY(60deg);
-          }
-          100% {
-            transform: rotateZ(360deg) rotateY(60deg);
-          }
-        }
-        @keyframes orbit-medium {
-          0% {
-            transform: rotateZ(0deg) rotateX(70deg);
-          }
-          100% {
-            transform: rotateZ(360deg) rotateX(70deg);
-          }
-        }
-        @keyframes orbit-fast {
-          0% {
-            transform: rotateZ(0deg) rotateY(30deg) rotateX(40deg);
-          }
-          100% {
-            transform: rotateZ(360deg) rotateY(30deg) rotateX(40deg);
-          }
-        }
-        @keyframes orbit-slower {
-          0% {
-            transform: rotateZ(0deg) rotateY(45deg) rotateX(50deg);
-          }
-          100% {
-            transform: rotateZ(360deg) rotateY(45deg) rotateX(50deg);
-          }
-        }
-        @keyframes pulse-slow {
-          0%, 100% {
-            opacity: 0.05;
-          }
-          50% {
-            opacity: 0.1;
-          }
-        }
-        .animate-orbit-slow {
-          animation: orbit-slow 20s linear infinite;
-        }
-        .animate-orbit-medium {
-          animation: orbit-medium 15s linear infinite;
-        }
-        .animate-orbit-fast {
-          animation: orbit-fast 12s linear infinite;
-        }
-        .animate-orbit-slower {
-          animation: orbit-slower 25s linear infinite;
-        }
-        .animate-pulse-slow {
-          animation: pulse-slow 8s ease-in-out infinite;
-        }
-        .electron-glow {
-          filter: drop-shadow(0 0 6px currentColor);
-        }
-        .electron-trail {
-          filter: blur(8px);
-          opacity: 0.7;
+        
+        @keyframes twinkle {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.2; }
         }
       `}</style>
     </div>
