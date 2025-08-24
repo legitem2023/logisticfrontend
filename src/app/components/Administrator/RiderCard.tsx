@@ -146,7 +146,7 @@ const RiderCard = ({ rider, onViewDetails, onSave }) => {
             <Select
               id="role"
               name="role"
-              value=""
+              defaultValue={editableData.role}
               onChange={(e) => handleVehicleChange("role", e.target.value)}
               required
               className="pl-2 border-gray-300 focus:border-green-500 focus:ring-green-400 mt-2 w-full"
