@@ -124,7 +124,7 @@ const RiderCard = ({ rider, onViewDetails, onSave }) => {
 
       {/* Body */}
       <div className="p-6 space-y-4">
-        <div className="text-center">
+        <div className="flex">
           {isEditing ? (
             <input
               type="text"
