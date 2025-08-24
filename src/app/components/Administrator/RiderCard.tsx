@@ -77,6 +77,12 @@ const RiderCard = ({ rider, onViewDetails, onSave }) => {
 
   const lastUpdatedDate = toValidDate(editableData.lastUpdatedAt);
 
+const role = [{
+  name:'Sender'
+},{
+  name:'Rider'
+}]
+  
   return (
     <div className="w-full sm:w-96 shadow-2xl overflow-hidden border border-slate-200 bg-white/80 backdrop-blur-md transition-transform duration-300">
       {/* Header */}
@@ -128,10 +134,31 @@ const RiderCard = ({ rider, onViewDetails, onSave }) => {
               {editableData.name || "Unnamed Rider"}
             </h3>
           )}
+          {
+            isEditing ? (
+               <Select
+                      id="role"
+                      name="role"
+                      value={role.name}
+                      onChange={(e) => handleVehicleChange("role", e.target.value)}
+                      required
+                      className="pl-2 border-gray-300 focus:border-green-500 focus:ring-green-400"
+                    >
+                      <option value="">Select a Role</option>
+                      {role.map((role: any,id:number) => (
+                        <option key={id} value={role.name}>
+                          {role.name}
+                        </option>
+                      ))}
+                 </Select>
+              
+            ):(
           <span className="inline-flex items-center px-3 py-1 mt-2 rounded-full text-xs font-medium bg-green-100 text-green-800">
             <BadgeInfo size={14} className="mr-1" />
             {editableData.role || "Rider"}
           </span>
+            )
+          }
         </div>
 
         <div className="border-t border-slate-600"></div>
@@ -175,7 +202,7 @@ const RiderCard = ({ rider, onViewDetails, onSave }) => {
                       id="vehicleType"
                       name="vehicleType"
                       value={editableData.vehicleType?.name}
-                      onChange={(e) => handleVehicleChange("vehicleType", e.target.value)}
+                      onChange={(e) => handleVehicleChange("vehicleTypeId", e.target.value)}
                       required
                       className="pl-2 border-gray-300 focus:border-green-500 focus:ring-green-400"
                     >
