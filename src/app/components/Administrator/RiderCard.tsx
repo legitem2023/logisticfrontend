@@ -11,6 +11,8 @@ import {
   ChevronRight,
   Edit3,
   Check,
+  Gauge,
+  RectangleHorizontal
 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { VEHICLEQUERY } from "../../../../graphql/query";
@@ -197,7 +199,6 @@ const Accountrole = [{
             <div className="w-full">
               {isEditing ? (
                 <>
-                  
                   <Select
                       id="vehicleType"
                       name="vehicleType"
@@ -213,27 +214,41 @@ const Accountrole = [{
                         </option>
                       ))}
                     </Select>
-                  <input
+                </>
+              ) : (
+                <>
+                  <p>{editableData.vehicleType?.name}</p>
+                </>
+              )}
+            </div>
+          </div>
+          <div>
+            <Gauge size={16} className="text-emerald-600 mt-0.5" />
+           <div>
+              <p className="text-xs text-slate-500">
+                    Max {editableData.vehicleType?.maxCapacityKg ?? "—"}kg ·{" "}
+                    {editableData.vehicleType?.maxVolumeM3 ?? "—"}m³
+              </p>
+           </div>
+          </div>
+          <div>
+            <RectangleHorizontal size={16} className="text-emerald-600 mt-0.5" />
+            <div>
+            {
+            isEditing?(
+              <input
                     type="text"
                     value={editableData.licensePlate || ""}
                     onChange={(e) => handleChange("licensePlate", e.target.value)}
                     className="border rounded px-2 py-1 mb-1 w-full"
                     placeholder="License Plate"
-                  />
-                </>
-              ) : (
-                <>
-                  <p>{editableData.vehicleType?.name}</p>
-                  <p>{editableData.licensePlate}</p>
-                  <p className="text-xs text-slate-500">
-                    Max {editableData.vehicleType?.maxCapacityKg ?? "—"}kg ·{" "}
-                    {editableData.vehicleType?.maxVolumeM3 ?? "—"}m³
-                  </p>
-                </>
-              )}
+              />
+            ):(
+              <p>{editableData.licensePlate}</p>
+            )
+          }
             </div>
           </div>
-
           {editableData.currentLatitude != null &&
             editableData.currentLongitude != null && (
               <div className="flex items-center gap-2">
