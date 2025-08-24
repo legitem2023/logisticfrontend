@@ -86,7 +86,7 @@ const Navigation = ({ userRole, isUserActive }) => {
           },
         ]
       : []),
-    ...(isUserActive() && (userRole === 'Sender' || userRole === 'SENDER')
+    /*...(isUserActive() && (userRole === 'Sender' || userRole === 'SENDER')
       ? [
           {
             id: 5,
@@ -95,7 +95,7 @@ const Navigation = ({ userRole, isUserActive }) => {
             icon: <WalletMinimal size={20} />
           },
         ]
-      : []),
+      : []),*/
     ...(isUserActive() && (userRole === 'Administrator' || userRole === 'ADMINISTRATOR')
       ? [
           {
