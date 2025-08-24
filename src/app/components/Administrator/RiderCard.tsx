@@ -19,6 +19,7 @@ import { VEHICLEQUERY } from "../../../../graphql/query";
 import { EDITRIDER } from "../../../../graphql/mutation";
 
 import { Select } from "../ui/Select";
+
 // Safely convert many timestamp shapes to a valid Date or return null
 function toValidDate(input) {
   if ((input === null || input === undefined || input === "") && input !== 0) return null;
@@ -52,8 +53,9 @@ function toValidDate(input) {
 const RiderCard = ({ rider, onViewDetails, onSave }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editableData, setEditableData] = useState({ ...rider });
-  const { loading:vehicloading, error, data } = useQuery(VEHICLEQUERY);
-  if(vehicloading) return
+  const { loading: vehicloading, error, data } = useQuery(VEHICLEQUERY);
+  if (vehicloading) return;
+
   const statusColors = {
     available: "bg-green-100 text-green-800",
     inactive: "bg-red-100 text-red-800",
@@ -79,12 +81,11 @@ const RiderCard = ({ rider, onViewDetails, onSave }) => {
 
   const lastUpdatedDate = toValidDate(editableData.lastUpdatedAt);
 
-const Accountrole = [{
-  name:'Sender'
-},{
-  name:'Rider'
-}]
-  
+  const Accountrole = [
+    { name: "Sender" },
+    { name: "Rider" }
+  ];
+
   return (
     <div className="w-full sm:w-96 shadow-2xl overflow-hidden border border-slate-200 bg-white/80 backdrop-blur-md transition-transform duration-300">
       {/* Header */}
@@ -136,135 +137,156 @@ const Accountrole = [{
               {editableData.name || "Unnamed Rider"}
             </h3>
           )}
-          {
-            isEditing ? (
-               <Select
-                      id="role"
-                      name="role"
-                      value=""
-                      onChange={(e) => handleVehicleChange("role", e.target.value)}
-                      required
-                      className="pl-2 border-gray-300 focus:border-green-500 focus:ring-green-400"
-                    >
-                      <option value="">Select a Role</option>
-                      {Accountrole.map((role: any,id:number) => (
-                        <option key={id} value={role.name}>
-                          {role.name}
-                        </option>
-                      ))}
-                 </Select>
-              
-            ):(
-          <span className="inline-flex items-center px-3 py-1 mt-2 rounded-full text-xs font-medium bg-green-100 text-green-800">
-            <BadgeInfo size={14} className="mr-1" />
-            {editableData.role || "Rider"}
-          </span>
-            )
-          }
+          {isEditing ? (
+            <Select
+              id="role"
+              name="role"
+              value=""
+              onChange={(e) => handleVehicleChange("role", e.target.value)}
+              required
+              className="pl-2 border-gray-300 focus:border-green-500 focus:ring-green-400 mt-2 w-full"
+            >
+              <option value="">Select a Role</option>
+              {Accountrole.map((role: any, id: number) => (
+                <option key={id} value={role.name}>
+                  {role.name}
+                </option>
+              ))}
+            </Select>
+          ) : (
+            <span className="inline-flex items-center px-3 py-1 mt-2 rounded-full text-xs font-medium bg-green-100 text-green-800">
+              <BadgeInfo size={14} className="mr-1" />
+              {editableData.role || "Rider"}
+            </span>
+          )}
         </div>
 
         <div className="border-t border-slate-600"></div>
 
-        <div className="space-y-3 text-sm text-slate-400">
-          <div className="flex items-center gap-2">
-            <Mail size={16} className="text-emerald-600" />
-            {isEditing ? (
-              <input
-                type="email"
-                value={editableData.email || ""}
-                onChange={(e) => handleChange("email", e.target.value)}
-                className="border rounded px-2 py-1 w-full"
-              />
-            ) : (
-              <span>{editableData.email || "No email"}</span>
-            )}
-          </div>
-
-          <div className="flex items-center gap-2">
-            <Phone size={16} className="text-emerald-600" />
-            {isEditing ? (
-              <input
-                type="tel"
-                value={editableData.phoneNumber || ""}
-                onChange={(e) => handleChange("phoneNumber", e.target.value)}
-                className="border rounded px-2 py-1 w-full"
-              />
-            ) : (
-              <span>{editableData.phoneNumber || "No phone"}</span>
-            )}
-          </div>
-
-          <div className="flex items-start gap-2">
-            <Car size={16} className="text-emerald-600 mt-0.5" />
-            <div className="w-full">
+        {/* Info Section with Left Labels */}
+        <div className="space-y-3 text-sm text-slate-600">
+          {/* Email */}
+          <div className="flex items-center">
+            <span className="w-28 flex items-center gap-1 font-medium text-slate-500">
+              <Mail size={16} className="text-emerald-600" /> Email
+            </span>
+            <div className="flex-1">
               {isEditing ? (
-                <>
-                  <Select
-                      id="vehicleType"
-                      name="vehicleType"
-                      value={editableData.vehicleType?.name}
-                      onChange={(e) => handleVehicleChange("vehicleTypeId", e.target.value)}
-                      required
-                      className="pl-2 border-gray-300 focus:border-green-500 focus:ring-green-400"
-                    >
-                      <option value="">Select a vehicle type</option>
-                      {data.getVehicleTypes.map((vehicle: any) => (
-                        <option key={vehicle.id} value={vehicle.id}>
-                          {vehicle.name}
-                        </option>
-                      ))}
-                    </Select>
-                </>
+                <input
+                  type="email"
+                  value={editableData.email || ""}
+                  onChange={(e) => handleChange("email", e.target.value)}
+                  className="border rounded px-2 py-1 w-full"
+                />
               ) : (
-                  <span>{editableData.vehicleTypeId}</span>
+                <span>{editableData.email || "No email"}</span>
               )}
             </div>
           </div>
-          <div className="flex items-center gap-2">
-            <Gauge size={16} className="text-emerald-600 mt-0.5" />
-           <div>
-              <span className="text-xs text-slate-500">
-                    Max {editableData.vehicleType?.maxCapacityKg ?? "—"}kg ·{" "}
-                    {editableData.vehicleType?.maxVolumeM3 ?? "—"}m³
-              </span>
-           </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <RectangleHorizontal size={16} className="text-emerald-600 mt-0.5" />
-            <div>
-            {
-            isEditing?(
-              <input
-                    type="text"
-                    value={editableData.licensePlate || ""}
-                    onChange={(e) => handleChange("licensePlate", e.target.value)}
-                    className="border rounded px-2 py-1 mb-1 w-full"
-                    placeholder="License Plate"
-              />
-            ):(
-              <p>{editableData.licensePlate}</p>
-            )
-          }
+
+          {/* Phone */}
+          <div className="flex items-center">
+            <span className="w-28 flex items-center gap-1 font-medium text-slate-500">
+              <Phone size={16} className="text-emerald-600" /> Phone
+            </span>
+            <div className="flex-1">
+              {isEditing ? (
+                <input
+                  type="tel"
+                  value={editableData.phoneNumber || ""}
+                  onChange={(e) => handleChange("phoneNumber", e.target.value)}
+                  className="border rounded px-2 py-1 w-full"
+                />
+              ) : (
+                <span>{editableData.phoneNumber || "No phone"}</span>
+              )}
             </div>
           </div>
-          {editableData.currentLatitude != null &&
-            editableData.currentLongitude != null && (
-              <div className="flex items-center gap-2">
-                <MapPin size={16} className="text-emerald-600" />
-                <span>
-                  {Number(editableData.currentLatitude).toFixed(4)},{" "}
-                  {Number(editableData.currentLongitude).toFixed(4)}
-                </span>
-              </div>
-            )}
 
-          <div className="flex items-center gap-2">
-            <Clock size={16} className="text-emerald-600" />
-            <span>
+          {/* Vehicle */}
+          <div className="flex items-start">
+            <span className="w-28 flex items-center gap-1 font-medium text-slate-500">
+              <Car size={16} className="text-emerald-600" /> Vehicle
+            </span>
+            <div className="flex-1">
+              {isEditing ? (
+                <Select
+                  id="vehicleType"
+                  name="vehicleType"
+                  value={editableData.vehicleType?.name}
+                  onChange={(e) => handleVehicleChange("vehicleTypeId", e.target.value)}
+                  required
+                  className="pl-2 border-gray-300 focus:border-green-500 focus:ring-green-400"
+                >
+                  <option value="">Select a vehicle type</option>
+                  {data.getVehicleTypes.map((vehicle: any) => (
+                    <option key={vehicle.id} value={vehicle.id}>
+                      {vehicle.name}
+                    </option>
+                  ))}
+                </Select>
+              ) : (
+                <span>{editableData.vehicleTypeId}</span>
+              )}
+            </div>
+          </div>
+
+          {/* Capacity */}
+          <div className="flex items-center">
+            <span className="w-28 flex items-center gap-1 font-medium text-slate-500">
+              <Gauge size={16} className="text-emerald-600" /> Capacity
+            </span>
+            <div className="flex-1">
+              <span className="text-xs text-slate-500">
+                Max {editableData.vehicleType?.maxCapacityKg ?? "—"}kg ·{" "}
+                {editableData.vehicleType?.maxVolumeM3 ?? "—"}m³
+              </span>
+            </div>
+          </div>
+
+          {/* Plate */}
+          <div className="flex items-center">
+            <span className="w-28 flex items-center gap-1 font-medium text-slate-500">
+              <RectangleHorizontal size={16} className="text-emerald-600" /> Plate
+            </span>
+            <div className="flex-1">
+              {isEditing ? (
+                <input
+                  type="text"
+                  value={editableData.licensePlate || ""}
+                  onChange={(e) => handleChange("licensePlate", e.target.value)}
+                  className="border rounded px-2 py-1 w-full"
+                  placeholder="License Plate"
+                />
+              ) : (
+                <span>{editableData.licensePlate || "—"}</span>
+              )}
+            </div>
+          </div>
+
+          {/* Location */}
+          {editableData.currentLatitude != null && editableData.currentLongitude != null && (
+            <div className="flex items-center">
+              <span className="w-28 flex items-center gap-1 font-medium text-slate-500">
+                <MapPin size={16} className="text-emerald-600" /> Location
+              </span>
+              <div className="flex-1">
+                {Number(editableData.currentLatitude).toFixed(4)},{" "}
+                {Number(editableData.currentLongitude).toFixed(4)}
+              </div>
+            </div>
+          )}
+
+          {/* Last Updated */}
+          <div className="flex items-center">
+            <span className="w-28 flex items-center gap-1 font-medium text-slate-500">
+              <Clock size={16} className="text-emerald-600" /> Updated
+            </span>
+            <div className="flex-1">
               {lastUpdatedDate
                 ? formatDistanceToNow(lastUpdatedDate, { addSuffix: true })
                 : "No update time"}
-            </span>
+            </div>
           </div>
         </div>
 
