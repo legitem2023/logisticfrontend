@@ -220,7 +220,7 @@ const Accountrole = [{
               )}
             </div>
           </div>
-          <div>
+          <div className="flex items-center gap-2">
             <Gauge size={16} className="text-emerald-600 mt-0.5" />
            <div>
               <span className="text-xs text-slate-500">
@@ -229,7 +229,7 @@ const Accountrole = [{
               </span>
            </div>
           </div>
-          <div>
+          <div className="flex items-center gap-2">
             <RectangleHorizontal size={16} className="text-emerald-600 mt-0.5" />
             <div>
             {
