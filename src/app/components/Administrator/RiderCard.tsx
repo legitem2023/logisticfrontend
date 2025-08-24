@@ -129,7 +129,7 @@ const Accountrole = [{
               type="text"
               value={editableData.name || ""}
               onChange={(e) => handleChange("name", e.target.value)}
-              className="text-lg font-semibold text-center border rounded px-2 py-1 w-full"
+              className="text-slate-400 text-lg font-semibold text-center border rounded px-2 py-1 w-full"
             />
           ) : (
             <h3 className="text-xl font-bold text-slate-900">
