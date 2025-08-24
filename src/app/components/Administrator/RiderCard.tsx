@@ -223,10 +223,8 @@ const Accountrole = [{
                 </>
               ) : (
                 <>
-                  <p>
-                    {(editableData.vehicleType?.name || "Vehicle") +
-                      (editableData.licensePlate ? ` (${editableData.licensePlate})` : "")}
-                  </p>
+                  <p>{editableData.vehicleType?.name}</p>
+                  <p>{editableData.licensePlate}</p>
                   <p className="text-xs text-slate-500">
                     Max {editableData.vehicleType?.maxCapacityKg ?? "—"}kg ·{" "}
                     {editableData.vehicleType?.maxVolumeM3 ?? "—"}m³
