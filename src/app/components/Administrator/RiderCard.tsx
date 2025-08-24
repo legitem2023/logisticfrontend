@@ -220,22 +220,6 @@ const Accountrole = [{
                     className="border rounded px-2 py-1 mb-1 w-full"
                     placeholder="License Plate"
                   />
-                  <div className="flex gap-2">
-                    <input
-                      type="number"
-                      value={editableData.vehicleType?.maxCapacityKg ?? ""}
-                      onChange={(e) => handleVehicleChange("maxCapacityKg", e.target.value)}
-                      className="border rounded px-2 py-1 w-1/2"
-                      placeholder="Max kg"
-                    />
-                    <input
-                      type="number"
-                      value={editableData.vehicleType?.maxVolumeM3 ?? ""}
-                      onChange={(e) => handleVehicleChange("maxVolumeM3", e.target.value)}
-                      className="border rounded px-2 py-1 w-1/2"
-                      placeholder="Max m³"
-                    />
-                  </div>
                 </>
               ) : (
                 <>
