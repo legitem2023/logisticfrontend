@@ -629,7 +629,7 @@ const LogisticsForm = () => {
           </div>
 
           {/* Service Selection */}
-          <div className="bg-gray-50 p-5 rounded-xl mb-8 border border-gray-200">
+          <div className="bg-gray-50 p-5 rounded-xl mb-8 border border-gray-200 text-slate-400">
             <h2 className="text-lg font-semibold mb-4 flex items-center">
               <Clock className="h-5 w-5 mr-2 text-gray-700" />
               Delivery Option
