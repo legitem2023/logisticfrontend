@@ -50,15 +50,6 @@ export const EDITRIDER = gql`
   mutation EditRider($input: EditRiderInput!) {
     editRider(input: $input) {
       statusText
-      user {
-        id
-        name
-        email
-        phoneNumber
-        vehicleTypeId
-        licensePlate
-        role
-      }
     }
   }
 `;
