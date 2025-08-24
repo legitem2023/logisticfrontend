@@ -171,8 +171,8 @@ const RiderCard = ({ rider, onViewDetails, onSave }) => {
         <div className="space-y-3 text-sm text-slate-600">
           {/* Email */}
           <div className="flex items-center">
-            <span className="w-28 flex items-center gap-1 font-medium text-slate-500">
-              <Mail size={16} className="text-emerald-600" /> Email
+            <span className="w-10 flex items-center gap-1 font-medium text-slate-500">
+              <Mail size={16} className="text-emerald-600" />
             </span>
             <div className="flex-1">
               {isEditing ? (
@@ -190,8 +190,8 @@ const RiderCard = ({ rider, onViewDetails, onSave }) => {
 
           {/* Phone */}
           <div className="flex items-center">
-            <span className="w-28 flex items-center gap-1 font-medium text-slate-500">
-              <Phone size={16} className="text-emerald-600" /> Phone
+            <span className="w-10 flex items-center gap-1 font-medium text-slate-500">
+              <Phone size={16} className="text-emerald-600" />
             </span>
             <div className="flex-1">
               {isEditing ? (
@@ -209,8 +209,8 @@ const RiderCard = ({ rider, onViewDetails, onSave }) => {
 
           {/* Vehicle */}
           <div className="flex items-start">
-            <span className="w-28 flex items-center gap-1 font-medium text-slate-500">
-              <Car size={16} className="text-emerald-600" /> Vehicle
+            <span className="w-10 flex items-center gap-1 font-medium text-slate-500">
+              <Car size={16} className="text-emerald-600" />
             </span>
             <div className="flex-1">
               {isEditing ? (
@@ -237,8 +237,8 @@ const RiderCard = ({ rider, onViewDetails, onSave }) => {
 
           {/* Capacity */}
           <div className="flex items-center">
-            <span className="w-28 flex items-center gap-1 font-medium text-slate-500">
-              <Gauge size={16} className="text-emerald-600" /> Capacity
+            <span className="w-10 flex items-center gap-1 font-medium text-slate-500">
+              <Gauge size={16} className="text-emerald-600" />
             </span>
             <div className="flex-1">
               <span className="text-xs text-slate-500">
@@ -250,8 +250,8 @@ const RiderCard = ({ rider, onViewDetails, onSave }) => {
 
           {/* Plate */}
           <div className="flex items-center">
-            <span className="w-28 flex items-center gap-1 font-medium text-slate-500">
-              <RectangleHorizontal size={16} className="text-emerald-600" /> Plate
+            <span className="w-10 flex items-center gap-1 font-medium text-slate-500">
+              <RectangleHorizontal size={16} className="text-emerald-600" />
             </span>
             <div className="flex-1">
               {isEditing ? (
