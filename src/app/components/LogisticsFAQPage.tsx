@@ -50,7 +50,7 @@ export default function LogisticsFAQPage() {
         {/* Header */}
         <div className="bg-gradient-to-r from-green-800 to-green-600 p-0 relative">
           {/* Pattern overlay */}
-          <AnimatedEarthAtom/>
+          
           <AnimatedCityscape>
           <h2 className="text-2xl font-bold text-white text-center relative z-10">Frequently Asked Questions</h2>
           <p className="text-green-100 text-center mt-2 relative z-10">Find quick answers to our most common questions</p>
