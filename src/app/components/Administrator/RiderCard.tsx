@@ -125,6 +125,7 @@ const RiderCard = ({ rider, onViewDetails, onSave }) => {
       {/* Body */}
       <div className="p-6 space-y-4">
         <div className="flex">
+          <div>
           {isEditing ? (
             <input
               type="text"
@@ -137,6 +138,8 @@ const RiderCard = ({ rider, onViewDetails, onSave }) => {
               {editableData.name || "Unnamed Rider"}
             </span>
           )}
+          </div>
+          <div>
           {isEditing ? (
             <Select
               id="role"
@@ -159,6 +162,7 @@ const RiderCard = ({ rider, onViewDetails, onSave }) => {
               {editableData.role || "Rider"}
             </span>
           )}
+          </div>
         </div>
 
         <div className="border-t border-slate-600"></div>
