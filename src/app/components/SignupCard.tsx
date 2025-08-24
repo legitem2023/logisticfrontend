@@ -283,11 +283,11 @@ const SignupCard = () => {
 
               <p className="text-center text-gray-500 text-sm">
                 By registering, you agree to our{" "}
-                <a href="#" className="text-green-600 hover:underline">
+                <a href="/Terms" className="text-green-600 hover:underline">
                   Terms of Service
                 </a>{" "}
                 and{" "}
-                <a href="#" className="text-green-600 hover:underline">
+                <a href="/Privacy" className="text-green-600 hover:underline">
                   Privacy Policy
                 </a>
               </p>
