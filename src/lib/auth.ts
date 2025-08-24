@@ -37,30 +37,31 @@ export const authOptions: NextAuthOptions = {
   ],
   secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
-    async jwt({ token, account }) {
-      if (account && account.provider === "facebook") {
-        try {
-    /*      const { data } = await client.mutate({
-            mutation: FBLOGIN,
-            variables: {
-              input: {
-                idToken: account.access_token, // ✅ use idToken here
-              },
-            },
-          });
-*/
-
-
-          // ✅ Save backend token to JWT
-    //      token.accessToken = data?.loginWithFacebook?.token;
-          //token.statusText = data?.loginWithFacebook?.statusText;
-        } catch (error) {
-          console.error("GraphQL loginWithFacebook mutation failed:", error);
-        }
+async jwt({ token, account }) {
+  if (account?.provider === "facebook") {
+    try {
+      const { data } = await client.mutate({
+        mutation: FBLOGIN,
+        variables: {
+          input: {
+            idToken: account.access_token,
+          },
+        },
+      })
+      
+      if (data?.loginWithFacebook?.token) {
+        token.accessToken = data.loginWithFacebook.token
+      } else {
+        throw new Error('No token received from backend')
       }
-
-      return token;
-    },
+    } catch (error) {
+      console.error('Facebook authentication failed:', error)
+      // This will fail the authentication flow
+      return null
+    }
+  }
+  return token
+},
 
     async session({ session, token }) {
       // ✅ Save backend token to a cookie
