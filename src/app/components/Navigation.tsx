@@ -26,7 +26,8 @@ import {
   Shield,
   ChevronDown,
   Crown,
-  Sparkles
+  Sparkles,
+  ScrollText
 } from 'lucide-react';
 
 const Navigation = ({ userRole, isUserActive }) => {
@@ -167,6 +168,8 @@ const Navigation = ({ userRole, isUserActive }) => {
     { id: 13, label: 'Contact Us', role:'/Contact', icon: <Phone size={20} /> },
     { id: 14, label: 'FAQ', role:'/FAQ', icon: <HelpCircle size={20} /> },
     { id: 15, label: 'Privacy Policy', role:'/Privacy', icon: <Shield size={20} /> },
+    { id: 16, label: 'Terms of Service', role:'/Terms', icon: <ScrollText size={20} /> },
+
   ];
 
   const toggleDrawer = () => {
