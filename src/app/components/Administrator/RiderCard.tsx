@@ -130,12 +130,12 @@ const RiderCard = ({ rider, onViewDetails, onSave }) => {
               type="text"
               value={editableData.name || ""}
               onChange={(e) => handleChange("name", e.target.value)}
-              className="text-slate-400 text-lg font-semibold text-center border rounded px-2 py-1 w-full"
+              className="text-slate-400 text-xl font-semibold border rounded px-2 py-1 w-full"
             />
           ) : (
-            <h3 className="text-xl font-bold text-slate-900">
+            <span className="text-xl font-bold text-slate-900">
               {editableData.name || "Unnamed Rider"}
-            </h3>
+            </span>
           )}
           {isEditing ? (
             <Select
