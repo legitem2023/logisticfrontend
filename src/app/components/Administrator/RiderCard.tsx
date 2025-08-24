@@ -12,6 +12,8 @@ import {
   Check,
 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
+import { VEHICLEQUERY } from "../../../../graphql/query";
+import { EDITRIDER } from "../../../../graphql/mutation";
 
 // Safely convert many timestamp shapes to a valid Date or return null
 function toValidDate(input) {
@@ -46,7 +48,8 @@ function toValidDate(input) {
 const RiderCard = ({ rider, onViewDetails, onSave }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editableData, setEditableData] = useState({ ...rider });
-
+  const { loading:vehicloading, error, data } = useQuery(VEHICLEQUERY);
+  if(vehicloading) return
   const statusColors = {
     available: "bg-green-100 text-green-800",
     inactive: "bg-red-100 text-red-800",
@@ -71,7 +74,7 @@ const RiderCard = ({ rider, onViewDetails, onSave }) => {
   };
 
   const lastUpdatedDate = toValidDate(editableData.lastUpdatedAt);
-console.log(editableData);
+
   return (
     <div className="w-full sm:w-96 shadow-2xl overflow-hidden border border-slate-200 bg-white/80 backdrop-blur-md transition-transform duration-300">
       {/* Header */}
@@ -165,13 +168,22 @@ console.log(editableData);
             <div className="w-full">
               {isEditing ? (
                 <>
-                  <input
-                    type="text"
-                    value={editableData.vehicleType?.name || ""}
-                    onChange={(e) => handleVehicleChange("name", e.target.value)}
-                    className="border rounded px-2 py-1 mb-1 w-full"
-                    placeholder="Vehicle Type"
-                  />
+                  
+                  <Select
+                      id="vehicleType"
+                      name="vehicleType"
+                      value={editableData.vehicleType?.name}
+                      onChange={(e) => handleVehicleChange("vehicleType", e.target.value)}
+                      required
+                      className="pl-2 border-gray-300 focus:border-green-500 focus:ring-green-400"
+                    >
+                      <option value="">Select a vehicle type</option>
+                      {data.getVehicleTypes.map((vehicle: any) => (
+                        <option key={vehicle.id} value={vehicle.id}>
+                          {vehicle.name}
+                        </option>
+                      ))}
+                    </Select>
                   <input
                     type="text"
                     value={editableData.licensePlate || ""}
