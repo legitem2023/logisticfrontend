@@ -15,6 +15,7 @@ import { formatDistanceToNow } from "date-fns";
 import { VEHICLEQUERY } from "../../../../graphql/query";
 import { EDITRIDER } from "../../../../graphql/mutation";
 
+import { Select } from "../ui/Select";
 // Safely convert many timestamp shapes to a valid Date or return null
 function toValidDate(input) {
   if ((input === null || input === undefined || input === "") && input !== 0) return null;
