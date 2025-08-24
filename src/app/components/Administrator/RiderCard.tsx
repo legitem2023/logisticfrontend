@@ -77,7 +77,7 @@ const RiderCard = ({ rider, onViewDetails, onSave }) => {
 
   const lastUpdatedDate = toValidDate(editableData.lastUpdatedAt);
 
-const role = [{
+const Accountrole = [{
   name:'Sender'
 },{
   name:'Rider'
@@ -139,13 +139,13 @@ const role = [{
                <Select
                       id="role"
                       name="role"
-                      value={role.name}
+                      value=""
                       onChange={(e) => handleVehicleChange("role", e.target.value)}
                       required
                       className="pl-2 border-gray-300 focus:border-green-500 focus:ring-green-400"
                     >
                       <option value="">Select a Role</option>
-                      {role.map((role: any,id:number) => (
+                      {Accountrole.map((role: any,id:number) => (
                         <option key={id} value={role.name}>
                           {role.name}
                         </option>
