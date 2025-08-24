@@ -76,7 +76,9 @@ const RiderCard = ({ rider, onViewDetails, onSave }) => {
 
   const handleSave = () => {
     setIsEditing(false);
-    if (onSave) onSave(editableData);
+   console.log(editableData,"<<<");
+  //  if (onSave) onSave(editableData);
+
   };
 
   const lastUpdatedDate = toValidDate(editableData.lastUpdatedAt);
@@ -271,8 +273,8 @@ const RiderCard = ({ rider, onViewDetails, onSave }) => {
           {/* Location */}
           {editableData.currentLatitude != null && editableData.currentLongitude != null && (
             <div className="flex items-center">
-              <span className="w-28 flex items-center gap-1 font-medium text-slate-500">
-                <MapPin size={16} className="text-emerald-600" /> Location
+              <span className="w-10 flex items-center gap-1 font-medium text-slate-500">
+                <MapPin size={16} className="text-emerald-600" />
               </span>
               <div className="flex-1">
                 {Number(editableData.currentLatitude).toFixed(4)},{" "}
@@ -283,8 +285,8 @@ const RiderCard = ({ rider, onViewDetails, onSave }) => {
 
           {/* Last Updated */}
           <div className="flex items-center">
-            <span className="w-28 flex items-center gap-1 font-medium text-slate-500">
-              <Clock size={16} className="text-emerald-600" /> Updated
+            <span className="w-10 flex items-center gap-1 font-medium text-slate-500">
+              <Clock size={16} className="text-emerald-600" />
             </span>
             <div className="flex-1">
               {lastUpdatedDate
