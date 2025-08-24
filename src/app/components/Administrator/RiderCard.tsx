@@ -147,7 +147,7 @@ const RiderCard = ({ rider, onViewDetails, onSave }) => {
               id="role"
               name="role"
               defaultValue={editableData.role}
-              onChange={(e) => handleVehicleChange("role", e.target.value)}
+              onChange={(e) => handleChange("role", e.target.value)}
               required
               className="pl-2 border-gray-300 focus:border-green-500 focus:ring-green-400 mt-2 w-full"
             >
@@ -220,7 +220,7 @@ const RiderCard = ({ rider, onViewDetails, onSave }) => {
                   id="vehicleType"
                   name="vehicleType"
                   value={editableData.vehicleType?.name}
-                  onChange={(e) => handleVehicleChange("vehicleTypeId", e.target.value)}
+                  onChange={(e) => handleChange("vehicleTypeId", e.target.value)}
                   required
                   className="pl-2 border-gray-300 focus:border-green-500 focus:ring-green-400"
                 >
