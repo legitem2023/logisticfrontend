@@ -3,8 +3,8 @@
 import React, { useEffect, useRef } from 'react';
 
 const AnimatedEarthAtom = () => {
-  const containerRef = useRef(null);
-  const requestRef = useRef();
+  const containerRef = useRef<HTMLDivElement>(null);
+  const requestRef = useRef<number | null>(null);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -17,7 +17,7 @@ const AnimatedEarthAtom = () => {
     let currentRotationX = 0;
     let currentRotationY = 0;
 
-    const handleMouseMove = (e) => {
+    const handleMouseMove = (e: MouseEvent) => {
       const rect = container.getBoundingClientRect();
       const centerX = rect.left + rect.width / 2;
       const centerY = rect.top + rect.height / 2;
@@ -43,12 +43,14 @@ const AnimatedEarthAtom = () => {
       requestRef.current = requestAnimationFrame(animate);
     };
 
-    container.addEventListener('mousemove', handleMouseMove);
+    container.addEventListener('mousemove', handleMouseMove as EventListener);
     requestRef.current = requestAnimationFrame(animate);
 
     return () => {
-      container.removeEventListener('mousemove', handleMouseMove);
-      cancelAnimationFrame(requestRef.current);
+      container.removeEventListener('mousemove', handleMouseMove as EventListener);
+      if (requestRef.current) {
+        cancelAnimationFrame(requestRef.current);
+      }
     };
   }, []);
 
