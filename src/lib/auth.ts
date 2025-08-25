@@ -1,10 +1,10 @@
-import GoogleProvider from "next-auth/providers/google"
-import FacebookProvider from "next-auth/providers/facebook"
-import { NextAuthOptions } from "next-auth"
-import Cookies from 'js-cookie'
-import { gql, ApolloClient, InMemoryCache, HttpLink } from '@apollo/client'
+import GoogleProvider from "next-auth/providers/google";
+import FacebookProvider from "next-auth/providers/facebook";
+import { NextAuthOptions } from "next-auth";
+import Cookies from "js-cookie";
+import { gql, ApolloClient, InMemoryCache, HttpLink } from "@apollo/client";
 
-// 🔸 GraphQL Mutation
+// 🔸 GraphQL Mutation (commented for now)
 export const FBLOGIN = gql`
   mutation LoginWithFacebook($input: GoogleLoginInput!) {
     loginWithFacebook(input: $input) {
@@ -12,7 +12,7 @@ export const FBLOGIN = gql`
       statusText
     }
   }
-`
+`;
 
 // 🔸 Apollo Client Setup
 const client = new ApolloClient({
@@ -21,7 +21,7 @@ const client = new ApolloClient({
     fetch,
   }),
   cache: new InMemoryCache(),
-})
+});
 
 // 🔸 NextAuth Options
 export const authOptions: NextAuthOptions = {
@@ -32,26 +32,42 @@ export const authOptions: NextAuthOptions = {
     }),
     FacebookProvider({
       clientId: process.env.FACEBOOK_CLIENT_ID!,
-      clientSecret: process.env.FACEBOOK_CLIENT_SECRET!
+      clientSecret: process.env.FACEBOOK_CLIENT_SECRET!,
+      authorization: {
+        url: "https://www.facebook.com/v11.0/dialog/oauth",
+        params: { scope: "email,public_profile" },
+      },
+      userinfo: {
+        url: "https://graph.facebook.com/me?fields=id,name,email,picture",
+      },
+      profile(profile) {
+        return {
+          id: profile.id,
+          name: profile.name,
+          email: profile.email ?? "",
+          image: profile.picture?.data?.url ?? null,
+        };
+      },
     }),
   ],
   secret: process.env.NEXTAUTH_SECRET,
   logger: {
     error(code, metadata) {
-      console.error("❌ NextAuth ERROR:", code, metadata)
+      console.error("❌ NextAuth ERROR:", code, metadata);
     },
     warn(code) {
-      console.warn("⚠️ NextAuth WARNING:", code)
+      console.warn("⚠️ NextAuth WARNING:", code);
     },
     debug(code, metadata) {
-      console.debug("🐛 NextAuth DEBUG:", code, metadata)
+      console.debug("🐛 NextAuth DEBUG:", code, metadata);
     },
   },
 
   callbacks: {
     async jwt({ token, account }) {
       if (account?.provider === "facebook") {
-      /*  try {
+        /*
+        try {
           const { data } = await client.mutate({
             mutation: FBLOGIN,
             variables: {
@@ -59,36 +75,37 @@ export const authOptions: NextAuthOptions = {
                 idToken: account.access_token,
               },
             },
-          })
+          });
 
           if (data?.loginWithFacebook?.token) {
-            token.accessToken = data.loginWithFacebook.token
+            token.accessToken = data.loginWithFacebook.token;
           } else {
-            throw new Error("No token received from backend")
+            throw new Error("No token received from backend");
           }
         } catch (error) {
-          console.error("Facebook authentication failed:", error)
-          // ❌ Fail auth flow if mutation fails
-          return null
-        }*/
+          console.error("Facebook authentication failed:", error);
+          return null;
+        }
+        */
       }
-      return token
+      return token;
     },
 
     async session({ session, token }) {
-      // ✅ Save backend token to a cookie
       if (token.accessToken) {
         Cookies.set("token", token.accessToken as string, {
           expires: 7,
           secure: true,
           sameSite: "lax",
-        })
+        });
       }
 
-      session.accessToken = token.accessToken as string
-      session.provider = token.provider as string
+      session.accessToken = token.accessToken as string;
+      session.provider = token.provider as string;
 
-      return session
+      return session;
     },
   },
-}
+
+  debug: true, // enable debug logs for testing
+};
