@@ -31,8 +31,8 @@ export const authOptions: NextAuthOptions = {
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     }),
     FacebookProvider({
-      clientId:'1656393388392188',//process.env.NEXT_PUBLIC_FACEBOOK_CLIENT_ID!,
-      clientSecret:'256835b37fcefea96355777c959a86c8',//process.env.NEXT_PUBLIC_FACEBOOK_CLIENT_SECRET!,
+      clientId:process.env.NEXT_PUBLIC_FACEBOOK_CLIENT_ID!,
+      clientSecret:process.env.NEXT_PUBLIC_FACEBOOK_CLIENT_SECRET!,
     }),
   ],
   secret: process.env.NEXTAUTH_SECRET,
