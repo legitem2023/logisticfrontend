@@ -31,8 +31,8 @@ export const authOptions: NextAuthOptions = {
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     }),
     FacebookProvider({
-      clientId: process.env.FACEBOOK_CLIENT_ID!,
-      clientSecret: process.env.FACEBOOK_CLIENT_SECRET!,
+      clientId: '1656393388392188',//process.env.FACEBOOK_CLIENT_ID!,
+      clientSecret: '256835b37fcefea96355777c959a86c8',//process.env.FACEBOOK_CLIENT_SECRET!,
       authorization: {
         url: "https://www.facebook.com/v11.0/dialog/oauth",
         params: { scope: "email,public_profile" },
