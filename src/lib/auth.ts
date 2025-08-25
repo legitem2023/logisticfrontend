@@ -31,53 +31,67 @@ export const authOptions: NextAuthOptions = {
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     }),
     FacebookProvider({
-      clientId:process.env.FACEBOOK_CLIENT_ID!,
-      clientSecret:process.env.FACEBOOK_CLIENT_SECRET!,
+      clientId: process.env.FACEBOOK_CLIENT_ID!,
+      clientSecret: process.env.FACEBOOK_CLIENT_SECRET!,
     }),
   ],
   secret: process.env.NEXTAUTH_SECRET,
+
+  // ✅ Enable debugging + log details
+  debug: true,
+  logger: {
+    error(code, metadata) {
+      console.error("❌ NextAuth ERROR:", code, metadata)
+    },
+    warn(code) {
+      console.warn("⚠️ NextAuth WARNING:", code)
+    },
+    debug(code, metadata) {
+      console.debug("🐛 NextAuth DEBUG:", code, metadata)
+    },
+  },
+
   callbacks: {
-async jwt({ token, account }) {
-  if (account?.provider === "facebook") {
-    try {
-      const { data } = await client.mutate({
-        mutation: FBLOGIN,
-        variables: {
-          input: {
-            idToken: account.access_token,
-          },
-        },
-      })
-      
-      if (data?.loginWithFacebook?.token) {
-        token.accessToken = data.loginWithFacebook.token
-      } else {
-        throw new Error('No token received from backend')
+    async jwt({ token, account }) {
+      if (account?.provider === "facebook") {
+        try {
+          const { data } = await client.mutate({
+            mutation: FBLOGIN,
+            variables: {
+              input: {
+                idToken: account.access_token,
+              },
+            },
+          })
+
+          if (data?.loginWithFacebook?.token) {
+            token.accessToken = data.loginWithFacebook.token
+          } else {
+            throw new Error("No token received from backend")
+          }
+        } catch (error) {
+          console.error("Facebook authentication failed:", error)
+          // ❌ Fail auth flow if mutation fails
+          return null
+        }
       }
-    } catch (error) {
-      console.error('Facebook authentication failed:', error)
-      // This will fail the authentication flow
-      return null
-    }
-  }
-  return token
-},
+      return token
+    },
 
     async session({ session, token }) {
       // ✅ Save backend token to a cookie
       if (token.accessToken) {
-        Cookies.set('token', token.accessToken as string, {
+        Cookies.set("token", token.accessToken as string, {
           expires: 7,
           secure: true,
-          sameSite: 'lax',
-        });
+          sameSite: "lax",
+        })
       }
 
-      session.accessToken = token.accessToken as string;
-      session.provider = token.provider as string;
-      //session.statusText = token.statusText as string;
+      session.accessToken = token.accessToken as string
+      session.provider = token.provider as string
 
-      return session;
+      return session
     },
   },
 }
