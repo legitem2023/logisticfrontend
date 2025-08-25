@@ -33,6 +33,13 @@ export const authOptions: NextAuthOptions = {
     FacebookProvider({
       clientId: process.env.FACEBOOK_CLIENT_ID!,
       clientSecret: process.env.FACEBOOK_CLIENT_SECRET!,
+      authorization: {
+           url: "https://www.facebook.com/v11.0/dialog/oauth",
+           params: { 
+             auth_type: "reauthenticate", 
+             scope: "email" 
+           }
+      }
     }),
   ],
   secret: process.env.NEXTAUTH_SECRET,
