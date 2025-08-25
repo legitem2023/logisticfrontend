@@ -51,7 +51,7 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async jwt({ token, account }) {
       if (account?.provider === "facebook") {
-        try {
+      /*  try {
           const { data } = await client.mutate({
             mutation: FBLOGIN,
             variables: {
@@ -70,7 +70,7 @@ export const authOptions: NextAuthOptions = {
           console.error("Facebook authentication failed:", error)
           // ❌ Fail auth flow if mutation fails
           return null
-        }
+        }*/
       }
       return token
     },
