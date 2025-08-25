@@ -34,12 +34,23 @@ export const authOptions: NextAuthOptions = {
       clientId: process.env.FACEBOOK_CLIENT_ID!,
       clientSecret: process.env.FACEBOOK_CLIENT_SECRET!,
       authorization: {
-           url: "https://www.facebook.com/v11.0/dialog/oauth",
-           params: { 
-             auth_type: "reauthenticate", 
-             scope: "email" 
-           }
-      }
+        url: "https://www.facebook.com/v11.0/dialog/oauth",
+        params: { 
+          auth_type: "reauthenticate", 
+          scope: "email,public_profile"
+        },
+      },
+      userinfo: {
+        url: "https://graph.facebook.com/me?fields=id,name,email,picture",
+      },
+      profile(profile) {
+        return {
+          id: profile.id,
+          name: profile.name,
+          email: profile.email,
+          image: profile.picture?.data?.url,
+        }
+      },
     }),
   ],
   secret: process.env.NEXTAUTH_SECRET,
