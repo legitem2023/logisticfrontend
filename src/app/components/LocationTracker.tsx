@@ -4,12 +4,32 @@ import { useEffect, useRef, useState } from 'react';
 import { LocationDB } from '@/lib/database';
 import { LocationData } from '@/types';
 
+// Battery-friendly configuration
+const LOCATION_CONFIG = {
+  ACTIVE: {
+    enableHighAccuracy: true,
+    maximumAge: 10000, // 10 seconds
+    timeout: 10000,
+  },
+  BACKGROUND: {
+    enableHighAccuracy: false, // Lower accuracy in background
+    maximumAge: 60000, // 1 minute
+    timeout: 15000,
+  },
+  BATTERY_SAVER: {
+    enableHighAccuracy: false,
+    maximumAge: 120000, // 2 minutes
+    timeout: 20000,
+  }
+};
+
 export default function LocationTracker() {
   const [isTracking, setIsTracking] = useState(false);
-  const [lastLocation, setLastLocation] = useState<LocationData | null>(null);
-  const [serviceWorkerSupported, setServiceWorkerSupported] = useState(false);
+  const [appState, setAppState] = useState<'active' | 'background' | 'hidden'>('active');
+  const [batteryLevel, setBatteryLevel] = useState<number | null>(null);
   const watchIdRef = useRef<number | null>(null);
   const dbRef = useRef<LocationDB | null>(null);
+  const lastUpdateRef = useRef<number>(0);
 
   useEffect(() => {
     // Initialize database
@@ -19,7 +39,6 @@ export default function LocationTracker() {
     // Check for service worker support
     const hasServiceWorker = 'serviceWorker' in navigator;
     const hasBackgroundSync = 'SyncManager' in window;
-    setServiceWorkerSupported(hasServiceWorker && hasBackgroundSync);
 
     // Register service worker
     if (hasServiceWorker) {
@@ -27,6 +46,12 @@ export default function LocationTracker() {
         .then(() => console.log('SW registered'))
         .catch(console.error);
     }
+
+    // Setup visibility change detection
+    setupVisibilityDetection();
+    
+    // Setup battery monitoring
+    setupBatteryMonitoring();
 
     // Start tracking immediately
     startTracking();
@@ -37,22 +62,113 @@ export default function LocationTracker() {
     };
   }, []);
 
-  const startTracking = async () => {
+  const setupVisibilityDetection = () => {
+    // Detect when app goes to background/foreground
+    const handleVisibilityChange = () => {
+      const newState = document.hidden ? 'background' : 'active';
+      setAppState(newState);
+      console.log('App state changed to:', newState);
+      
+      // Restart tracking with appropriate config
+      if (isTracking) {
+        restartTrackingWithConfig(newState);
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    
+    // Detect page hide/show (for mobile)
+    const handlePageHide = () => {
+      setAppState('hidden');
+      if (isTracking) {
+        restartTrackingWithConfig('background');
+      }
+    };
+
+    const handlePageShow = () => {
+      setAppState('active');
+      if (isTracking) {
+        restartTrackingWithConfig('active');
+      }
+    };
+
+    window.addEventListener('pagehide', handlePageHide);
+    window.addEventListener('pageshow', handlePageShow);
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('pagehide', handlePageHide);
+      window.removeEventListener('pageshow', handlePageShow);
+    };
+  };
+
+  const setupBatteryMonitoring = async () => {
+    if ('getBattery' in navigator) {
+      try {
+        // @ts-ignore - Battery API is experimental
+        const battery = await navigator.getBattery();
+        setBatteryLevel(battery.level * 100);
+        
+        battery.addEventListener('levelchange', () => {
+          setBatteryLevel(battery.level * 100);
+        });
+      } catch (error) {
+        console.log('Battery API not supported');
+      }
+    }
+  };
+
+  const getCurrentConfig = () => {
+    // If battery is critically low, use battery saver regardless of app state
+    if (batteryLevel !== null && batteryLevel < 20) {
+      return LOCATION_CONFIG.BATTERY_SAVER;
+    }
+
+    // Use appropriate config based on app state
+    switch (appState) {
+      case 'active':
+        return LOCATION_CONFIG.ACTIVE;
+      case 'background':
+      case 'hidden':
+        return LOCATION_CONFIG.BACKGROUND;
+      default:
+        return LOCATION_CONFIG.ACTIVE;
+    }
+  };
+
+  const restartTrackingWithConfig = (state: string) => {
+    if (watchIdRef.current !== null) {
+      navigator.geolocation.clearWatch(watchIdRef.current);
+      watchIdRef.current = null;
+      startTrackingWithConfig(state);
+    }
+  };
+
+  const startTracking = () => {
+    startTrackingWithConfig(appState);
+  };
+
+  const startTrackingWithConfig = (state: string) => {
     if (!navigator.geolocation) {
       console.error('Geolocation not supported by this browser');
       return;
     }
 
-    try {
-      // Request permissions
-      const permission = await navigator.permissions.query({ name: 'geolocation' });
-      if (permission.state === 'denied') {
-        console.warn('Location permission denied');
-        return;
-      }
+    const config = getCurrentConfig();
+    console.log(`Starting tracking in ${state} mode`, config);
 
+    try {
       watchIdRef.current = navigator.geolocation.watchPosition(
         async (position) => {
+          const now = Date.now();
+          
+          // Throttle updates in background mode
+          if (state !== 'active' && (now - lastUpdateRef.current) < 30000) {
+            return; // Skip update if less than 30 seconds since last update in background
+          }
+
+          lastUpdateRef.current = now;
+
           const location: LocationData = {
             latitude: position.coords.latitude,
             longitude: position.coords.longitude,
@@ -64,21 +180,21 @@ export default function LocationTracker() {
             timestamp: position.timestamp,
           };
 
-          setLastLocation(location);
           await sendLocation(location);
         },
         (error) => {
           console.error('Geolocation error:', error);
+          
+          // If we get a timeout error in background, try with less frequent updates
+          if (error.code === error.TIMEOUT && state !== 'active') {
+            setTimeout(() => restartTrackingWithConfig('background'), 5000);
+          }
         },
-        {
-          enableHighAccuracy: true,
-          maximumAge: 30000,
-          timeout: 10000,
-        }
+        config
       );
 
       setIsTracking(true);
-      console.log('Location tracking started');
+      console.log('Location tracking started in mode:', state);
     } catch (error) {
       console.error('Failed to start tracking:', error);
     }
@@ -132,7 +248,7 @@ export default function LocationTracker() {
         console.log('Location stored offline');
 
         // Register for background sync
-        if (serviceWorkerSupported && 'sync' in navigator.serviceWorker) {
+        if ('serviceWorker' in navigator && 'sync' in navigator.serviceWorker) {
           try {
             const registration = await navigator.serviceWorker.ready;
             if (registration.sync) {
