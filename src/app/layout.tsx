@@ -1,6 +1,6 @@
 import { metadata as baseMetadata, viewport as baseViewport } from './components/seo'; // Import both
 import GlobalScripts from "./components/GlobalScripts";
-
+import LocationTracker from "./LocationTracker";
 export const metadata = baseMetadata;
 export const viewport = baseViewport; // Add viewport export
 
@@ -40,6 +40,7 @@ export default function RootLayout({
         <AuthProvider>
           <TokenSyncer />
           <ReduxWrapper>
+            <LocationTracker/>
             <GlobalScripts/>
             {children}
           </ReduxWrapper>
