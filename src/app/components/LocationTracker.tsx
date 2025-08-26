@@ -19,7 +19,6 @@ export default function LocationTracker() {
     // Check for service worker support
     const hasServiceWorker = 'serviceWorker' in navigator;
     const hasBackgroundSync = 'SyncManager' in window;
-
     setServiceWorkerSupported(hasServiceWorker && hasBackgroundSync);
 
     // Register service worker
@@ -29,6 +28,9 @@ export default function LocationTracker() {
         .catch(console.error);
     }
 
+    // Start tracking immediately
+    startTracking();
+
     // Cleanup
     return () => {
       stopTracking();
@@ -37,7 +39,7 @@ export default function LocationTracker() {
 
   const startTracking = async () => {
     if (!navigator.geolocation) {
-      alert('Geolocation is not supported by your browser');
+      console.error('Geolocation not supported by this browser');
       return;
     }
 
@@ -45,7 +47,7 @@ export default function LocationTracker() {
       // Request permissions
       const permission = await navigator.permissions.query({ name: 'geolocation' });
       if (permission.state === 'denied') {
-        alert('Location permission denied. Please enable it in browser settings.');
+        console.warn('Location permission denied');
         return;
       }
 
@@ -67,7 +69,6 @@ export default function LocationTracker() {
         },
         (error) => {
           console.error('Geolocation error:', error);
-          alert(`Location error: ${error.message}`);
         },
         {
           enableHighAccuracy: true,
@@ -78,7 +79,6 @@ export default function LocationTracker() {
 
       setIsTracking(true);
       console.log('Location tracking started');
-
     } catch (error) {
       console.error('Failed to start tracking:', error);
     }
@@ -131,7 +131,7 @@ export default function LocationTracker() {
         });
         console.log('Location stored offline');
 
-        // Register for background sync with proper type checking
+        // Register for background sync
         if (serviceWorkerSupported && 'sync' in navigator.serviceWorker) {
           try {
             const registration = await navigator.serviceWorker.ready;
@@ -144,7 +144,6 @@ export default function LocationTracker() {
           }
         }
       }
-
     } catch (error) {
       console.error('Failed to send location:', error);
       // Store for later retry
@@ -159,37 +158,7 @@ export default function LocationTracker() {
       });
     }
   };
-startTracking();
-  return (
-    <div className="location-tracker">
-      {/*<h2>Background Location Tracker</h2>
-      
-      <div className="status">
-        <p>Tracking: {isTracking ? 'Active' : 'Inactive'}</p>
-        <p>Background Sync: {serviceWorkerSupported ? 'Supported' : 'Not Supported'}</p>
-        {lastLocation && (
-          <p>
-            Last Location: {lastLocation.latitude.toFixed(6)}, {lastLocation.longitude.toFixed(6)}
-          </p>
-        )}
-      </div>
 
-      <div className="controls">
-        {!isTracking ? (
-          <button onClick={startTracking} className="start-btn">
-            Start Background Tracking
-          </button>
-        ) : (
-          <button onClick={stopTracking} className="stop-btn">
-            Stop Tracking
-          </button>
-        )}
-      </div>
-
-      <div className="info">
-        <p>This PWA will continue tracking in the background even when the browser is closed.</p>
-        <p>Make sure to Install the app for best background performance.</p>
-      </div>*/}
-    </div>
-  );
-  }
+  // ✅ Auto-run tracking, no UI
+  return null;
+}
