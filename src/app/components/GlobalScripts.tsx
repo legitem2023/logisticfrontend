@@ -77,7 +77,7 @@ export default function GlobalScripts() {
         longitude: location.longitude,
       }));
       
-      LocationTracker({
+     /* LocationTracker({
         variables: {
           input: {
             accuracy: location.accuracy,
@@ -92,7 +92,7 @@ export default function GlobalScripts() {
         },
       }).catch((error) => {
         console.error('Location tracking failed:', error);
-      });
+      });*/
     }, 10000);
 
     const stopWatching = startWatchingLocation(throttledUpdate);
