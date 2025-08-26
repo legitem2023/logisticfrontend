@@ -1,6 +1,6 @@
 import { gql, ApolloClient } from '@apollo/client';
 import BackgroundGeolocation from '@transistorsoft/capacitor-background-geolocation';
-import { startWatchingLocation, LocationData } from './startWatchingLocation';
+import { startWatchingLocation, LocationData } from '../ObtainLocation';
 
 export const LOCATIONTRACKING = gql`
   mutation LocationTracking($input: LocationTrackingInput) {
