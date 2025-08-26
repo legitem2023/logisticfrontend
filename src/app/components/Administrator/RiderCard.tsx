@@ -63,7 +63,7 @@ const RiderCard = ({ rider, onViewDetails, onSave }) => {
     }
   })
   if (vehicloading) return;
-console.log(data);
+console.log(editableData);
   const statusColors = {
     available: "bg-green-100 text-green-800",
     inactive: "bg-red-100 text-red-800",
