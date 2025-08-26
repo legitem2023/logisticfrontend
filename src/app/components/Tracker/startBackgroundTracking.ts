@@ -3,7 +3,7 @@ import { Geolocation, Position } from '@capacitor/geolocation';
 import BackgroundGeolocation from '@transistorsoft/capacitor-background-geolocation';
 import Cookies from "js-cookie";
 import { gql, ApolloClient, InMemoryCache, HttpLink } from "@apollo/client";
-import { decryptToken } from '../../../utils/decryptToken';
+import { decryptToken } from '../../../../utils/decryptToken';
 
 // 🔸 Apollo Client Setup
 const client = new ApolloClient({
