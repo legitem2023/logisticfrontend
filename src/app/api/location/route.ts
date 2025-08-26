@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
 const client = new ApolloClient({
   link: new HttpLink({
     uri: process.env.NEXT_PUBLIC_SERVER_LINK!,
-    fetch,
+    credentials: 'include',
   }),
   cache: new InMemoryCache(),
 });
