@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import { LocationDB } from '@/lib/database';
 import { LocationData } from '@/types';
 
@@ -31,81 +31,11 @@ export default function LocationTracker() {
   const dbRef = useRef<LocationDB | null>(null);
   const lastUpdateRef = useRef<number>(0);
 
-  useEffect(() => {
-    // Initialize database
-    dbRef.current = new LocationDB();
-    dbRef.current.init();
-
-    // Check for service worker support
-    const hasServiceWorker = 'serviceWorker' in navigator;
-    const hasBackgroundSync = 'SyncManager' in window;
-
-    // Register service worker
-    if (hasServiceWorker) {
-      navigator.serviceWorker.register('/sw.js')
-        .then(() => console.log('SW registered'))
-        .catch(console.error);
-    }
-
-    // Setup visibility change detection
-    setupVisibilityDetection();
-    
-    // Setup battery monitoring
-    setupBatteryMonitoring();
-
-    // Start tracking immediately
-    startTracking();
-
-    // Cleanup
-    return () => {
-      stopTracking();
-    };
-  }, []);
-
-  const setupVisibilityDetection = () => {
-    // Detect when app goes to background/foreground
-    const handleVisibilityChange = () => {
-      const newState = document.hidden ? 'background' : 'active';
-      setAppState(newState);
-      console.log('App state changed to:', newState);
-      
-      // Restart tracking with appropriate config
-      if (isTracking) {
-        restartTrackingWithConfig(newState);
-      }
-    };
-
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-    
-    // Detect page hide/show (for mobile)
-    const handlePageHide = () => {
-      setAppState('hidden');
-      if (isTracking) {
-        restartTrackingWithConfig('background');
-      }
-    };
-
-    const handlePageShow = () => {
-      setAppState('active');
-      if (isTracking) {
-        restartTrackingWithConfig('active');
-      }
-    };
-
-    window.addEventListener('pagehide', handlePageHide);
-    window.addEventListener('pageshow', handlePageShow);
-
-    return () => {
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-      window.removeEventListener('pagehide', handlePageHide);
-      window.removeEventListener('pageshow', handlePageShow);
-    };
-  };
-
-  const setupBatteryMonitoring = async () => {
+  // Memoized functions to avoid dependency issues
+  const setupBatteryMonitoring = useCallback(async () => {
     if ('getBattery' in navigator) {
       try {
-        // @ts-ignore - Battery API is experimental
+        // @ts-expect-error - Battery API is experimental
         const battery = await navigator.getBattery();
         setBatteryLevel(battery.level * 100);
         
@@ -116,9 +46,9 @@ export default function LocationTracker() {
         console.log('Battery API not supported');
       }
     }
-  };
+  }, []);
 
-  const getCurrentConfig = () => {
+  const getCurrentConfig = useCallback(() => {
     // If battery is critically low, use battery saver regardless of app state
     if (batteryLevel !== null && batteryLevel < 20) {
       return LOCATION_CONFIG.BATTERY_SAVER;
@@ -134,82 +64,9 @@ export default function LocationTracker() {
       default:
         return LOCATION_CONFIG.ACTIVE;
     }
-  };
+  }, [appState, batteryLevel]);
 
-  const restartTrackingWithConfig = (state: string) => {
-    if (watchIdRef.current !== null) {
-      navigator.geolocation.clearWatch(watchIdRef.current);
-      watchIdRef.current = null;
-      startTrackingWithConfig(state);
-    }
-  };
-
-  const startTracking = () => {
-    startTrackingWithConfig(appState);
-  };
-
-  const startTrackingWithConfig = (state: string) => {
-    if (!navigator.geolocation) {
-      console.error('Geolocation not supported by this browser');
-      return;
-    }
-
-    const config = getCurrentConfig();
-    console.log(`Starting tracking in ${state} mode`, config);
-
-    try {
-      watchIdRef.current = navigator.geolocation.watchPosition(
-        async (position) => {
-          const now = Date.now();
-          
-          // Throttle updates in background mode
-          if (state !== 'active' && (now - lastUpdateRef.current) < 30000) {
-            return; // Skip update if less than 30 seconds since last update in background
-          }
-
-          lastUpdateRef.current = now;
-
-          const location: LocationData = {
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
-            accuracy: position.coords.accuracy,
-            speed: position.coords.speed,
-            heading: position.coords.heading,
-            altitude: position.coords.altitude,
-            altitudeAccuracy: position.coords.altitudeAccuracy,
-            timestamp: position.timestamp,
-          };
-
-          await sendLocation(location);
-        },
-        (error) => {
-          console.error('Geolocation error:', error);
-          
-          // If we get a timeout error in background, try with less frequent updates
-          if (error.code === error.TIMEOUT && state !== 'active') {
-            setTimeout(() => restartTrackingWithConfig('background'), 5000);
-          }
-        },
-        config
-      );
-
-      setIsTracking(true);
-      console.log('Location tracking started in mode:', state);
-    } catch (error) {
-      console.error('Failed to start tracking:', error);
-    }
-  };
-
-  const stopTracking = () => {
-    if (watchIdRef.current !== null) {
-      navigator.geolocation.clearWatch(watchIdRef.current);
-      watchIdRef.current = null;
-    }
-    setIsTracking(false);
-    console.log('Location tracking stopped');
-  };
-
-  const sendLocation = async (location: LocationData) => {
+  const sendLocation = useCallback(async (location: LocationData) => {
     try {
       // Get token from cookies or storage
       const token = document.cookie
@@ -273,7 +130,142 @@ export default function LocationTracker() {
         createdAt: Date.now(),
       });
     }
-  };
+  }, []);
+
+  const restartTrackingWithConfig = useCallback((state: string) => {
+    if (watchIdRef.current !== null) {
+      navigator.geolocation.clearWatch(watchIdRef.current);
+      watchIdRef.current = null;
+      startTrackingWithConfig(state);
+    }
+  }, []);
+
+  const startTrackingWithConfig = useCallback((state: string) => {
+    if (!navigator.geolocation) {
+      console.error('Geolocation not supported by this browser');
+      return;
+    }
+
+    const config = getCurrentConfig();
+    console.log(`Starting tracking in ${state} mode`, config);
+
+    try {
+      watchIdRef.current = navigator.geolocation.watchPosition(
+        async (position) => {
+          const now = Date.now();
+          
+          // Throttle updates in background mode
+          if (state !== 'active' && (now - lastUpdateRef.current) < 30000) {
+            return; // Skip update if less than 30 seconds since last update in background
+          }
+
+          lastUpdateRef.current = now;
+
+          const location: LocationData = {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+            accuracy: position.coords.accuracy,
+            speed: position.coords.speed,
+            heading: position.coords.heading,
+            altitude: position.coords.altitude,
+            altitudeAccuracy: position.coords.altitudeAccuracy,
+            timestamp: position.timestamp,
+          };
+
+          await sendLocation(location);
+        },
+        (error) => {
+          console.error('Geolocation error:', error);
+          
+          // If we get a timeout error in background, try with less frequent updates
+          if (error.code === error.TIMEOUT && state !== 'active') {
+            setTimeout(() => restartTrackingWithConfig('background'), 5000);
+          }
+        },
+        config
+      );
+
+      setIsTracking(true);
+      console.log('Location tracking started in mode:', state);
+    } catch (error) {
+      console.error('Failed to start tracking:', error);
+    }
+  }, [getCurrentConfig, sendLocation, restartTrackingWithConfig]);
+
+  const startTracking = useCallback(() => {
+    startTrackingWithConfig(appState);
+  }, [appState, startTrackingWithConfig]);
+
+  const stopTracking = useCallback(() => {
+    if (watchIdRef.current !== null) {
+      navigator.geolocation.clearWatch(watchIdRef.current);
+      watchIdRef.current = null;
+    }
+    setIsTracking(false);
+    console.log('Location tracking stopped');
+  }, []);
+
+  useEffect(() => {
+    // Initialize database
+    dbRef.current = new LocationDB();
+    dbRef.current.init();
+
+    // Check for service worker support
+    const hasServiceWorker = 'serviceWorker' in navigator;
+
+    // Register service worker
+    if (hasServiceWorker) {
+      navigator.serviceWorker.register('/sw.js')
+        .then(() => console.log('SW registered'))
+        .catch(console.error);
+    }
+
+    // Setup visibility change detection
+    const handleVisibilityChange = () => {
+      const newState = document.hidden ? 'background' : 'active';
+      setAppState(newState);
+      console.log('App state changed to:', newState);
+      
+      // Restart tracking with appropriate config
+      if (isTracking) {
+        restartTrackingWithConfig(newState);
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    
+    // Detect page hide/show (for mobile)
+    const handlePageHide = () => {
+      setAppState('hidden');
+      if (isTracking) {
+        restartTrackingWithConfig('background');
+      }
+    };
+
+    const handlePageShow = () => {
+      setAppState('active');
+      if (isTracking) {
+        restartTrackingWithConfig('active');
+      }
+    };
+
+    window.addEventListener('pagehide', handlePageHide);
+    window.addEventListener('pageshow', handlePageShow);
+
+    // Setup battery monitoring
+    setupBatteryMonitoring();
+
+    // Start tracking immediately
+    startTracking();
+
+    // Cleanup
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('pagehide', handlePageHide);
+      window.removeEventListener('pageshow', handlePageShow);
+      stopTracking();
+    };
+  }, [startTracking, stopTracking, restartTrackingWithConfig, setupBatteryMonitoring, isTracking]);
 
   // ✅ Auto-run tracking, no UI
   return null;
