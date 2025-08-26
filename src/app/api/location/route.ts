@@ -49,8 +49,8 @@ const client = new ApolloClient({
             userID: payload.userId,
             latitude: locationData.latitude,
             longitude: locationData.longitude,
-            speed: coords.speed || 0,
-            heading: coords.heading || 0,
+            speed: 0,
+            heading: 0,
             accuracy: locationData.accuracy,
             batteryLevel: null,
             timestamp:new Date(locationData.timestamp).toISOString()
