@@ -4,12 +4,6 @@ import { useEffect, useRef, useState } from 'react';
 import { LocationDB } from '@/lib/database';
 import { LocationData } from '@/types';
 
-declare global {
-  interface Window {
-    LocationTracker: any;
-  }
-}
-
 export default function LocationTracker() {
   const [isTracking, setIsTracking] = useState(false);
   const [lastLocation, setLastLocation] = useState<LocationData | null>(null);
@@ -23,13 +17,13 @@ export default function LocationTracker() {
     dbRef.current.init();
 
     // Check for service worker support
-    setServiceWorkerSupported(
-      'serviceWorker' in navigator && 
-      'SyncManager' in window
-    );
+    const hasServiceWorker = 'serviceWorker' in navigator;
+    const hasBackgroundSync = 'SyncManager' in window;
+
+    setServiceWorkerSupported(hasServiceWorker && hasBackgroundSync);
 
     // Register service worker
-    if ('serviceWorker' in navigator) {
+    if (hasServiceWorker) {
       navigator.serviceWorker.register('/sw.js')
         .then(() => console.log('SW registered'))
         .catch(console.error);
@@ -53,23 +47,6 @@ export default function LocationTracker() {
       if (permission.state === 'denied') {
         alert('Location permission denied. Please enable it in browser settings.');
         return;
-      }
-
-      // Request background sync permission
-      if ('periodicSync' in navigator) {
-        try {
-          const status = await navigator.permissions.query({
-            name: 'periodic-background-sync' as any,
-          });
-          if (status.state === 'granted') {
-            const registration = await navigator.serviceWorker.ready;
-            await registration.periodicSync.register('location-periodic-sync', {
-              minInterval: 15 * 60 * 1000, // 15 minutes
-            });
-          }
-        } catch (error) {
-          console.log('Periodic sync not supported:', error);
-        }
       }
 
       watchIdRef.current = navigator.geolocation.watchPosition(
@@ -158,6 +135,7 @@ export default function LocationTracker() {
         if (serviceWorkerSupported) {
           const registration = await navigator.serviceWorker.ready;
           await registration.sync.register('location-sync');
+          console.log('Background sync registered');
         }
       }
 
@@ -208,4 +186,4 @@ export default function LocationTracker() {
       </div>
     </div>
   );
-}
+      }
