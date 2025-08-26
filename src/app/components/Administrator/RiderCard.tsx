@@ -253,7 +253,7 @@ const RiderCard = ({ rider, onViewDetails, onSave }) => {
                   ))}
                 </Select>
               ) : (
-                <span>{editableData.vehicleType.name}</span>
+                <span>{editableData.vehicleType?.name}</span>
               )}
             </div>
           </div>
