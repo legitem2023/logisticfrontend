@@ -21,6 +21,7 @@ type Rider = {
   phone?: string;
   phoneNumber?: string;
   license?:string;
+  vehicleTypeId?:string
   vehicleType?: {
     name: string;
     maxCapacityKg: number;
@@ -53,6 +54,7 @@ const Accounts = () => {
     avatarUrl: r.image,
     phone: r.phoneNumber,
     phoneNumber: r.phoneNumber,
+    vehicleTypeId:r.vehicleTypeId,
     vehicleType: r.vehicleType,
     licensePlate: r.licensePlate,
     license:r.license,
