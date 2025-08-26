@@ -1,7 +1,18 @@
 import { Capacitor } from '@capacitor/core';
 import { Geolocation, Position } from '@capacitor/geolocation';
 import BackgroundGeolocation from '@transistorsoft/capacitor-background-geolocation';
-import { gql, ApolloClient } from '@apollo/client';
+import Cookies from "js-cookie";
+import { gql, ApolloClient, InMemoryCache, HttpLink } from "@apollo/client";
+import { decryptToken } from '../../../utils/decryptToken';
+
+// 🔸 Apollo Client Setup
+const client = new ApolloClient({
+  link: new HttpLink({
+    uri: process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT!,
+    fetch,
+  }),
+  cache: new InMemoryCache(),
+});
 
 export type LocationData = {
   latitude: number;
@@ -31,15 +42,20 @@ export const LOCATIONTRACKING = gql`
 
 let watchId: string | number | null = null;
 
-export const startBackgroundTracking = (
-  userId: string,
-  client: ApolloClient<any>,
-  onError?: (error: Error) => void
-): (() => void) | void => {
+export const startBackgroundTracking = () => {
+ 
+  const token = Cookies.get('token');
+  const secret = process.env.NEXT_PUBLIC_JWT_SECRET;
+
+  
+  
   const MIN_UPDATE_INTERVAL = 15000; // 15 seconds
   let lastUpdateTime = 0;
 
   const handleUpdate = async (position: Position | GeolocationPosition) => {
+    const payload = await decryptToken(token, secret);
+    const userId = payload.userId;
+  
     const now = Date.now();
     if (now - lastUpdateTime < MIN_UPDATE_INTERVAL) return;
     
