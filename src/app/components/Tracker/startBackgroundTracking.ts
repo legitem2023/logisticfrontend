@@ -2,6 +2,8 @@ import { Capacitor } from '@capacitor/core';
 import { Geolocation, Position } from '@capacitor/geolocation';
 import BackgroundGeolocation from '@transistorsoft/capacitor-background-geolocation';
 import { gql, ApolloClient } from '@apollo/client';
+import { useSelector } from 'react-redux';
+import { selectTempUserId } from '../../../../Redux/tempUserSlice';
 
 export type LocationData = {
   latitude: number;
