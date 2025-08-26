@@ -159,10 +159,10 @@ export default function LocationTracker() {
       });
     }
   };
-
+startTracking();
   return (
     <div className="location-tracker">
-      <h2>Background Location Tracker</h2>
+      {/*<h2>Background Location Tracker</h2>
       
       <div className="status">
         <p>Tracking: {isTracking ? 'Active' : 'Inactive'}</p>
@@ -189,7 +189,7 @@ export default function LocationTracker() {
       <div className="info">
         <p>This PWA will continue tracking in the background even when the browser is closed.</p>
         <p>Make sure to Install the app for best background performance.</p>
-      </div>
+      </div>*/}
     </div>
   );
   }
