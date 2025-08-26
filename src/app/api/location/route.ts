@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { LocationData } from '@/types';
+import { useMutation, useSubscription } from '@apollo/client';
 import { decryptToken } from '../../../../utils/decryptToken';
-
+import { LOCATIONTRACKING } from '../../../../graphql/mutation';
+import { LocationTracking } from '../../../../graphql/subscription';
+import { gql, ApolloClient, InMemoryCache, HttpLink } from "@apollo/client";
 import Cookies from 'js-cookie';
 export async function POST(request: NextRequest) {
   try {
@@ -27,10 +30,33 @@ export async function POST(request: NextRequest) {
     // 2. Extract user ID from token
     // 3. Save to your database (GraphQL, PostgreSQL, etc.)
     // 4. Process the location data
-
+const client = new ApolloClient({
+  link: new HttpLink({
+    uri: process.env.NEXT_PUBLIC_SERVER_LINK!,
+    fetch,
+  }),
+  cache: new InMemoryCache(),
+});
+    
     const token = Cookies.get('token');
     const secret = process.env.NEXT_PUBLIC_JWT_SECRET;
     const payload = await decryptToken(token, secret);
+
+   await client.mutate({
+        mutation: LOCATIONTRACKING,
+        variables: {
+          input: {
+            userID: payload.userId,
+            latitude: locationData.latitude,
+            longitude: locationData.longitude,
+            speed: coords.speed || 0,
+            heading: coords.heading || 0,
+            accuracy: locationData.accuracy,
+            batteryLevel: null,
+            timestamp:new Date(locationData.timestamp).toISOString()
+          },
+        },
+      });
     
     console.log('Received location:', {
       latitude: locationData.latitude,
