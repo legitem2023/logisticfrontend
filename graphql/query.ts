@@ -7,6 +7,7 @@ query GetUsers {
     name
     email
     phoneNumber
+    vehicleTypeId
     vehicleType {
       id
       name
@@ -39,6 +40,7 @@ query GetUser($id: String) {
     name
     email
     phoneNumber
+    vehicleTypeId
     vehicleType {
       id
       name
@@ -89,6 +91,7 @@ query GetRiders {
     name
     email
     phoneNumber
+    vehicleTypeId
     vehicleType {
       id
       name
