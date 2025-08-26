@@ -131,11 +131,17 @@ export default function LocationTracker() {
         });
         console.log('Location stored offline');
 
-        // Register for background sync
-        if (serviceWorkerSupported) {
-          const registration = await navigator.serviceWorker.ready;
-          await registration.sync.register('location-sync');
-          console.log('Background sync registered');
+        // Register for background sync with proper type checking
+        if (serviceWorkerSupported && 'sync' in navigator.serviceWorker) {
+          try {
+            const registration = await navigator.serviceWorker.ready;
+            if (registration.sync) {
+              await registration.sync.register('location-sync');
+              console.log('Background sync registered');
+            }
+          } catch (syncError) {
+            console.log('Background sync not supported:', syncError);
+          }
         }
       }
 
@@ -186,4 +192,4 @@ export default function LocationTracker() {
       </div>
     </div>
   );
-      }
+  }
