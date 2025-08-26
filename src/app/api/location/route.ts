@@ -66,7 +66,6 @@ export async function POST(request: NextRequest) {
           speed: locationData.speed || 0,
           heading: locationData.heading || 0,
           accuracy: locationData.accuracy,
-          batteryLevel: locationData.batteryLevel || null,
           timestamp: new Date(locationData.timestamp).toISOString()
         },
       },
