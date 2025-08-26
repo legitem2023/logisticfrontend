@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { LocationData } from '@/types';
+import { decryptToken } from '../../../../utils/decryptToken';
 
+import Cookies from 'js-cookie';
 export async function POST(request: NextRequest) {
   try {
     const locationData: LocationData & { token?: string } = await request.json();
@@ -26,11 +28,16 @@ export async function POST(request: NextRequest) {
     // 3. Save to your database (GraphQL, PostgreSQL, etc.)
     // 4. Process the location data
 
+    const token = Cookies.get('token');
+    const secret = process.env.NEXT_PUBLIC_JWT_SECRET;
+    const payload = await decryptToken(token, secret);
+    
     console.log('Received location:', {
       latitude: locationData.latitude,
       longitude: locationData.longitude,
       accuracy: locationData.accuracy,
       timestamp: new Date(locationData.timestamp).toISOString(),
+      userID: payload.userId,
     });
 
     return NextResponse.json({ 
