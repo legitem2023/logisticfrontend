@@ -20,11 +20,11 @@ self.addEventListener('sync', (event) => {
 });
 
 // Periodic sync (every 15 minutes)
-self.addEventListener('periodicsync', (event) => {
+/*self.addEventListener('periodicsync', (event) => {
   if (event.tag === 'location-periodic-sync') {
     event.waitUntil(syncLocations());
   }
-});
+});*/
 
 // Push notifications for background updates
 self.addEventListener('push', (event) => {
