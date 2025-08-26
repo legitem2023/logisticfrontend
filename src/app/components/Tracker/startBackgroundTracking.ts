@@ -84,7 +84,7 @@ export const startBackgroundTracking = () => {
       console.log('Location sent:', coords.latitude, coords.longitude);
     } catch (error) {
       console.error('Location tracking error:', error);
-      onError?.(error instanceof Error ? error : new Error(String(error)));
+      
     }
   };
 
@@ -108,14 +108,14 @@ export const startBackgroundTracking = () => {
           { enableHighAccuracy: true },
           (position, err) => {
             if (err) {
-              onError?.(new Error(err.message));
+              
               return;
             }
             if (position) handleUpdate(position);
           }
         );
       } catch (err) {
-        onError?.(err instanceof Error ? err : new Error(String(err)));
+        
       }
     };
 
@@ -131,7 +131,7 @@ export const startBackgroundTracking = () => {
   // Web platform
   else if ('geolocation' in navigator) {
     const handleError = (error: GeolocationPositionError) => {
-      onError?.(new Error(error.message));
+      
     };
 
     watchId = navigator.geolocation.watchPosition(
@@ -153,7 +153,7 @@ export const startBackgroundTracking = () => {
   // Geolocation not supported
   else {
     const error = new Error('Geolocation not supported');
-    onError?.(error);
+    
     console.error(error.message);
   }
 };
