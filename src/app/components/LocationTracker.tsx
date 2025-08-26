@@ -204,7 +204,7 @@ export default function LocationTracker() {
 
       <div className="info">
         <p>This PWA will continue tracking in the background even when the browser is closed.</p>
-        <p>Make sure to "Install" the app for best background performance.</p>
+        <p>Make sure to Install the app for best background performance.</p>
       </div>
     </div>
   );
