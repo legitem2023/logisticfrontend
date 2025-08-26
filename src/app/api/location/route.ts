@@ -1,11 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { LocationData } from '@/types';
-import { useMutation, useSubscription } from '@apollo/client';
 import { decryptToken } from '../../../../utils/decryptToken';
 import { LOCATIONTRACKING } from '../../../../graphql/mutation';
-import { LocationTracking } from '../../../../graphql/subscription';
 import { gql, ApolloClient, InMemoryCache, HttpLink } from "@apollo/client";
-import Cookies from 'js-cookie';
+import { cookies } from 'next/headers';
+
+function getApolloClient() {
+  return new ApolloClient({
+    link: new HttpLink({
+      uri: process.env.NEXT_PUBLIC_SERVER_LINK!,
+      credentials: 'include',
+    }),
+    cache: new InMemoryCache(),
+    ssrMode: true,
+  });
+}
+
 export async function POST(request: NextRequest) {
   try {
     const locationData: LocationData & { token?: string } = await request.json();
@@ -25,39 +35,43 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Here you would:
-    // 1. Verify the JWT token
-    // 2. Extract user ID from token
-    // 3. Save to your database (GraphQL, PostgreSQL, etc.)
-    // 4. Process the location data
-const client = new ApolloClient({
-  link: new HttpLink({
-    uri: process.env.NEXT_PUBLIC_SERVER_LINK!,
-    credentials: 'include',
-  }),
-  cache: new InMemoryCache(),
-});
+    const cookieStore = cookies();
+    const token = cookieStore.get('token')?.value;
     
-    const token = Cookies.get('token');
-    const secret = process.env.NEXT_PUBLIC_JWT_SECRET;
-    const payload = await decryptToken(token, secret);
+    if (!token) {
+      return NextResponse.json(
+        { error: 'Authentication token not found' },
+        { status: 401 }
+      );
+    }
 
-   await client.mutate({
-        mutation: LOCATIONTRACKING,
-        variables: {
-          input: {
-            userID: payload.userId,
-            latitude: locationData.latitude,
-            longitude: locationData.longitude,
-            speed: 0,
-            heading: 0,
-            accuracy: locationData.accuracy,
-            batteryLevel: null,
-            timestamp:new Date(locationData.timestamp).toISOString()
-          },
+    const secret = process.env.NEXT_PUBLIC_JWT_SECRET;
+    if (!secret) {
+      return NextResponse.json(
+        { error: 'JWT secret not configured' },
+        { status: 500 }
+      );
+    }
+
+    const payload = await decryptToken(token, secret);
+    const client = getApolloClient();
+
+    await client.mutate({
+      mutation: LOCATIONTRACKING,
+      variables: {
+        input: {
+          userID: payload.userId,
+          latitude: locationData.latitude,
+          longitude: locationData.longitude,
+          speed: locationData.speed || 0,
+          heading: locationData.heading || 0,
+          accuracy: locationData.accuracy,
+          batteryLevel: locationData.batteryLevel || null,
+          timestamp: new Date(locationData.timestamp).toISOString()
         },
-      });
-    
+      },
+    });
+
     console.log('Received location:', {
       latitude: locationData.latitude,
       longitude: locationData.longitude,
