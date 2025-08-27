@@ -3,6 +3,8 @@
 import Cookies from 'js-cookie'
 import { useRouter } from 'next/navigation'
 import { Button } from './ui/Button'
+import { useSelector, useDispatch } from "react-redux";
+import { setActiveIndex } from '../../../Redux/activeIndexSlice';
 
 export default function LogoutButton() {
   const router = useRouter()
@@ -14,6 +16,7 @@ export default function LogoutButton() {
     }
     Cookies.remove('token') // Clear the auth token
     window.location.reload();
+    dispatch(setActiveIndex(12));
   }
 
   return (
