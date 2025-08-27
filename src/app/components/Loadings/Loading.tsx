@@ -10,7 +10,7 @@ export default function Loading() {
       <div className="customgrad w-full h-20 p-4">
         <Shimmer className="h-full w-full rounded-lg" />
       </div>    
-    <div className="min-h-screen flex flex-col items-center justify-center p-1 z-50 h-screen w-full bg-gradient-to-br from-green-50 to-green-100">  
+    <div className="min-h-screen flex flex-col items-center justify-center p-0 z-50 h-screen w-full bg-gradient-to-br from-green-50 to-green-100">  
       <div className="w-full max-w-6xl mx-auto shadow-lg overflow-hidden">
         {/* Header Shimmer */}
       <div className="bg-gradient-to-r relative">
