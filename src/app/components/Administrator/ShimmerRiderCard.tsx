@@ -43,8 +43,8 @@ const ShimmerRiderCard: React.FC = () => {
 
         {/* Buttons Shimmer */}
         <div className="mt-6 flex gap-3">
-          <Shimmer width="50%" height="40" borderRadius="12px" />
-          <Shimmer width="50%" height="40" borderRadius="12px" />
+          <Shimmer width="50%" height="40" />
+          <Shimmer width="50%" height="40" />
         </div>
       </div>
     </div>
