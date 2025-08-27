@@ -13,6 +13,7 @@ import Image from "next/image";
 import RiderCard from './RiderCard'; // Import the card component
 import RiderProfileCard from './RiderProfileCard'; // Import the profile card component
 import FilterBar from "../Rider/Filterbar";
+import ShimmerRiderCard "./ShimmerRiderCard";
 type Rider = {
   id: string;
   name: string;
@@ -104,12 +105,13 @@ const handleFilter = ({ search, date }: { search: string; date: Date | null }) =
 }
   
   if (loading) return (
-    <div className="flex justify-center items-center min-h-[300px]">
-      <div className="animate-pulse flex flex-col items-center">
-        <div className="w-12 h-12 rounded-full bg-gray-200 mb-4" />
-        <p className="text-lg font-medium text-gray-600">Loading riders...</p>
+    <div className="w-full mx-auto p-0">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 items-center justify-center gap-6">
+          {Array(10).map((rider: any) => (
+           <ShimmerRiderCard/>
+          ))}
+        </div>
       </div>
-    </div>
   );
 
   if (error) return (
