@@ -36,7 +36,7 @@ export default function LoginCard() {
         Cookies.set('token', token, { expires: 7, secure: true, sameSite: 'lax' })
         showToast('Login successful', 'success');
         window.location.reload();
-        dispatch(setActiveIndex(3));
+        dispatch(setActiveIndex(1));
       } else {
         console.error('No token returned')
       }
