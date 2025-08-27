@@ -13,7 +13,7 @@ import Image from "next/image";
 import RiderCard from './RiderCard'; // Import the card component
 import RiderProfileCard from './RiderProfileCard'; // Import the profile card component
 import FilterBar from "../Rider/Filterbar";
-import ShimmerRiderCard "./ShimmerRiderCard";
+import ShimmerRiderCard from "./ShimmerRiderCard";
 type Rider = {
   id: string;
   name: string;
