@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectTempUserId } from '../../../Redux/tempUserSlice';
@@ -11,25 +11,37 @@ export default function Menu() {
   const dispatch = useDispatch();
   const globalUserId = useSelector(selectTempUserId);
   const useRole = useSelector(selectRole);
-  
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 1500); // 1.5 sec delay
+    return () => clearTimeout(timer);
+  }, []);
+
   const isUserActive = (): boolean => {
     const token = Cookies.get('token');
     return !!token;
   };
 
   const GlobalactiveIndex = useSelector((state: any) => state.activeIndex.value);
-  
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <p className="text-gray-600 text-lg">Loading...</p>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
-      <Navigation
-        userRole={useRole}
-        isUserActive={isUserActive}
-      />
+      <Navigation userRole={useRole} isUserActive={isUserActive} />
       <main className="p-0">
-        <ActiveContentDisplay 
-          activeTab={GlobalactiveIndex} 
-          useRole={useRole} 
-          isUserActive={isUserActive} 
+        <ActiveContentDisplay
+          activeTab={GlobalactiveIndex}
+          useRole={useRole}
+          isUserActive={isUserActive}
         />
       </main>
     </div>
