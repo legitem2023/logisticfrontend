@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { selectTempUserId } from '../../../Redux/tempUserSlice';
 import { selectRole } from '../../../Redux/roleSlice';
 import Navigation from './Navigation';
+import Footer from './Footer';
 import { ActiveContentDisplay } from './ActiveContentDisplay';
 import Loader from './Loadings/Loading';
 export default function Menu() {
@@ -41,6 +42,7 @@ export default function Menu() {
           isUserActive={isUserActive}
         />
       </main>
+      <Footer/>
     </div>
   );    
   }
