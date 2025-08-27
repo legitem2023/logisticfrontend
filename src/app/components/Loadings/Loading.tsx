@@ -5,7 +5,7 @@ import Shimmer from '../ui/Shimmer';
 
 export default function Loading() {
   return (
-    <div className="min-h-screen flex flex-col justify-center p-0 z-50 w-full">
+    <div className="flex flex-col justify-center p-0 z-50 w-full">
       {/* Top bar shimmer with 88px height */}
       <div className="customgrad w-full h-[88px] p-4">
         <Shimmer className="h-full w-full rounded-lg" />
