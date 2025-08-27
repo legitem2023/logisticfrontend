@@ -35,7 +35,8 @@ export default function LogoutButton() {
       await new Promise(resolve => setTimeout(resolve, 100))
       
       // Redirect to login or home page
-      router.push('/login')
+      //router.push('/login')
+      window.location.reload();
     } catch (error) {
       console.error('Logout error:', error)
       // Fallback to reload if something goes wrong
