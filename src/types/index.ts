@@ -8,6 +8,7 @@ export interface LocationData {
   altitudeAccuracy: number | null;
   timestamp: number;
   token?: string;
+  userId:string;
 }
 
 export interface StoredLocation extends LocationData {
