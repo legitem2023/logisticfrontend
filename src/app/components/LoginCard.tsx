@@ -34,8 +34,9 @@ export default function LoginCard() {
       const token = data?.login?.token
       if (token) {
         Cookies.set('token', token, { expires: 7, secure: true, sameSite: 'lax' })
-        showToast('Login successful', 'success')
-        window.location.reload()
+        showToast('Login successful', 'success');
+        window.location.reload();
+        dispatch(setActiveIndex(3));
       } else {
         console.error('No token returned')
       }
