@@ -8,6 +8,7 @@ import { setActiveIndex } from '../../../Redux/activeIndexSlice';
 
 export default function LogoutButton() {
   const router = useRouter()
+  const dispatch = useDispatch();
 
   const handleLogout = () => {
     const confirmLogout = confirm('Are you sure you want to logout?');
