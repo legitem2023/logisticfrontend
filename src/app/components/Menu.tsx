@@ -6,7 +6,7 @@ import { selectTempUserId } from '../../../Redux/tempUserSlice';
 import { selectRole } from '../../../Redux/roleSlice';
 import Navigation from './Navigation';
 import { ActiveContentDisplay } from './ActiveContentDisplay';
-import Loader from './Loading/Loading';
+import Loader from './Loadings/Loading';
 export default function Menu() {
   const dispatch = useDispatch();
   const globalUserId = useSelector(selectTempUserId);
