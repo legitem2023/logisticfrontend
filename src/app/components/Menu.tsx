@@ -6,7 +6,7 @@ import { selectTempUserId } from '../../../Redux/tempUserSlice';
 import { selectRole } from '../../../Redux/roleSlice';
 import Navigation from './Navigation';
 import { ActiveContentDisplay } from './ActiveContentDisplay';
-
+import Loader from './Loading/Loading';
 export default function Menu() {
   const dispatch = useDispatch();
   const globalUserId = useSelector(selectTempUserId);
@@ -28,12 +28,9 @@ export default function Menu() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <p className="text-gray-600 text-lg">Loading...</p>
-      </div>
+      <Loader/>
     );
-  }
-
+  } else {
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
       <Navigation userRole={useRole} isUserActive={isUserActive} />
@@ -45,5 +42,6 @@ export default function Menu() {
         />
       </main>
     </div>
-  );
+  );    
+  }
 }
