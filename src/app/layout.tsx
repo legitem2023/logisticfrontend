@@ -13,7 +13,6 @@ import 'swiper/css/pagination';
 import ReduxWrapper from "./components/ApolloProvider/ReduxWrapper"; 
 import AuthProvider from "./components/Auth/AuthProvider";
 import TokenSyncer from "./components/TokenSyncer";
-import Footer from "./components/Footer";
 // ✅ Toastify import
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -48,7 +47,7 @@ export default function RootLayout({
         
         {/* ✅ Toast container here */}
         <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} newestOnTop />
-      <Footer/>
+      
       </body>
     </html>
   );
