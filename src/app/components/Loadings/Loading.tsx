@@ -16,7 +16,7 @@ export default function Loading() {
           {/* Header Shimmer with 1px padding on parent */}
           <div className="bg-gradient-to-r relative p-[3px]">
             <div className="customgrad w-[100%] aspect-[3/1]">
-              <div className="animate-pulse">
+              <div className="animate-pulse h-full w-full items-center justify-center">
                 <div className="h-7 bg-green-700 rounded w-1/3 mb-2"></div>
                 <div className="h-4 bg-green-600 rounded w-1/2"></div>
               </div>
