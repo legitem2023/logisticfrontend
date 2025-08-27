@@ -1,6 +1,6 @@
 // components/ui/ShimmerRiderCard.tsx
 import React from "react";
-import { Shimmer } from "../ui/Shimmer";
+import Shimmer  from "../ui/Shimmer";
 
 export const ShimmerRiderCard: React.FC = () => {
   return (
