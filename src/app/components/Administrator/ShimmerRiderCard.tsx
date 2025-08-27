@@ -8,10 +8,10 @@ const ShimmerRiderCard: React.FC = () => {
       {/* Header Shimmer */}
       <div className="h-40 relative bg-gray-200">
         <div className="absolute top-10 left-10">
-          <Shimmer width="96" height="96" borderRadius="50%" />
+          <Shimmer width="96" height="96"/>
         </div>
         <div className="absolute bottom-3 right-3">
-          <Shimmer width="60" height="24" borderRadius="9999px" />
+          <Shimmer width="60" height="24" />
         </div>
       </div>
 
@@ -38,7 +38,7 @@ const ShimmerRiderCard: React.FC = () => {
         {/* License Image Shimmer */}
         <div className="mt-4">
           <Shimmer width="40%" height="16" className="mb-2" />
-          <Shimmer width="100%" height="192" borderRadius="12px" />
+          <Shimmer width="100%" height="192" />
         </div>
 
         {/* Buttons Shimmer */}
