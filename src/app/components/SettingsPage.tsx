@@ -1,5 +1,5 @@
 'use client'
-
+import { useSelector, useDispatch } from "react-redux";
 import React, { useEffect, useState } from 'react'
 import { Card, CardHeader, CardTitle, CardContent } from './ui/Card'
 import { Label } from './ui/Label'
@@ -11,6 +11,7 @@ import SubscriptionsToggle from './commands/SubscriptionsToggle'
 import { decryptToken } from '../../../utils/decryptToken'
 import Cookies from 'js-cookie';
 import LogoutButton from './LogoutButton'
+import { setActiveIndex } from '../../../Redux/activeIndexSlice';
 
 export default function SettingsPage() {
   const [name, setName] = useState('Juan Dela Cruz')
@@ -18,6 +19,7 @@ export default function SettingsPage() {
   const [vehicleType, setVehicleType] = useState('motorcycle')
   const [notificationsEnabled, setNotificationsEnabled] = useState(true)
   const [useID, setID] = useState('');
+  const dispatch = useDispatch();
 
  useEffect(() => {
     const getRole = async () => {
