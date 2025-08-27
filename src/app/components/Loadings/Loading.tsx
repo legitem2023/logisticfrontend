@@ -5,7 +5,7 @@ import Shimmer from '../ui/Shimmer';
 
 export default function Loading() {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-0 z-50 w-full">
+    <div className="min-h-screen flex flex-col justify-center p-0 z-50 w-full">
       {/* Top bar shimmer with 88px height */}
       <div className="customgrad w-full h-[88px] p-4">
         <Shimmer className="h-full w-full rounded-lg" />
@@ -14,7 +14,7 @@ export default function Loading() {
       <div className="relative flex-1 flex flex-col items-center justify-center p-0 z-50 w-full bg-gradient-to-br from-green-50 to-green-100">  
         <div className="w-full max-w-6xl mx-auto shadow-lg overflow-hidden">
           {/* Header Shimmer with 1px padding on parent */}
-          <div className="bg-gradient-to-r relative p-[1px]">
+          <div className="bg-gradient-to-r relative p-[3px]">
             <div className="customgrad w-[100%] aspect-[3/1]">
               <div className="animate-pulse">
                 <div className="h-7 bg-green-700 rounded w-1/3 mb-2"></div>
