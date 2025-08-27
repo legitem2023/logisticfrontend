@@ -11,6 +11,7 @@ export default function Loading() {
         <Shimmer className="h-full w-full rounded-lg" />
       </div>    
     <div className="min-h-screen fixed top-0 bottom-0 left-0 m-auto flex flex-col items-center justify-center p-0 z-50 h-screen w-full bg-gradient-to-br from-green-50 to-green-100">  
+     <div className="customgrad w-[100%] aspect-[3/1]"></div>
       <div className="w-full max-w-6xl mx-auto shadow-lg overflow-hidden">
         {/* Header Shimmer */}
         <div className="bg-gradient-to-r from-green-800 to-green-600 relative p-6">
