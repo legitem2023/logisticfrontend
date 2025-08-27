@@ -2,6 +2,8 @@
 import Image from 'next/image';
 import SenderSignupForm from "../../components/SenderSignupForm";
 import Navigation from '../../components/Navigation';
+import Footer from "../../components/Footer";
+
 import { setRole, clearRole, selectRole } from '../../../../Redux/roleSlice';
 import { useDispatch,useSelector } from 'react-redux';
 import Cookies from 'js-cookie';
@@ -18,6 +20,7 @@ const isUserActive = (): boolean => {
       isUserActive={isUserActive}/>        
       {/* Sidebar with tab content */}
       <SenderSignupForm />
+     <Footer/>
     </div>
   );
 }
