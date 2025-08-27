@@ -60,7 +60,7 @@ export async function POST(request: NextRequest) {
       mutation: LOCATIONTRACKING,
       variables: {
         input: {
-          userID: payload.userId,
+          userID: locationData.userId,
           latitude: locationData.latitude,
           longitude: locationData.longitude,
           speed: locationData.speed || 0,
