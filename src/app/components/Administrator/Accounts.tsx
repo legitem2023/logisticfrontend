@@ -131,7 +131,7 @@ const handleFilter = ({ search, date }: { search: string; date: Date | null }) =
     <>
       <div className="w-full mx-auto p-0">
         <FilterBar onFilter={handleFilter} />
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 items-center justify-center gap-6">
           {updatedRiders.map((rider: Rider) => (
             <RiderCard 
               key={rider.id}
