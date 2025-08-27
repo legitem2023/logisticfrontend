@@ -13,7 +13,7 @@ export default function Loading() {
     <div className="min-h-screen flex flex-col items-center justify-center p-1 z-50 h-screen w-full bg-gradient-to-br from-green-50 to-green-100">  
       <div className="w-full max-w-6xl mx-auto shadow-lg overflow-hidden">
         {/* Header Shimmer */}
-      <div className="bg-gradient-to-r from-green-800 to-green-600 relative p-6">
+      <div className="bg-gradient-to-r relative">
         <div className="customgrad w-[100%] aspect-[3/1]">
           <div className="animate-pulse">
             <div className="h-7 bg-green-700 rounded w-1/3 mb-2"></div>
