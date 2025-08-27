@@ -2,7 +2,7 @@
 import React from "react";
 import Shimmer  from "../ui/Shimmer";
 
-export const ShimmerRiderCard: React.FC = () => {
+const ShimmerRiderCard: React.FC = () => {
   return (
     <div className="w-full sm:w-96 shadow-2xl overflow-hidden border border-slate-200 bg-white/80 backdrop-blur-md">
       {/* Header Shimmer */}
@@ -50,3 +50,4 @@ export const ShimmerRiderCard: React.FC = () => {
     </div>
   );
 };
+export default ShimmerRiderCard;
