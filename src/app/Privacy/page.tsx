@@ -5,6 +5,7 @@ import Navigation from '../components/Navigation';
 import { setRole, clearRole, selectRole } from '../../../Redux/roleSlice';
 import { useDispatch,useSelector } from 'react-redux';
 import Cookies from 'js-cookie';
+import Footer from "../components/Footer";
 
 export default function Page() {
  const useRole = useSelector(selectRole); 
@@ -19,6 +20,7 @@ export default function Page() {
       isUserActive={isUserActive}/>       
       {/* Sidebar with tab content */}
       <PrivacyPolicy />
+     <Footer/>
     </div>
   );
 }
