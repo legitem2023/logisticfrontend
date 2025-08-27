@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { LocationDB } from '@/lib/database';
 import { LocationData } from '@/types';
+import Cookies from 'js-cookie';
+import { decryptToken } from '../../../utils/decryptToken';
 
 // Battery-friendly configuration
 const LOCATION_CONFIG = {
@@ -160,7 +162,10 @@ export default function LocationTracker() {
           }
 
           lastUpdateRef.current = now;
-
+        
+        const token = Cookies.get('token');
+        const secret = process.env.NEXT_PUBLIC_JWT_SECRET;
+        const payload = await decryptToken(token, secret);
           const location: LocationData = {
             latitude: position.coords.latitude,
             longitude: position.coords.longitude,
@@ -170,6 +175,7 @@ export default function LocationTracker() {
             altitude: position.coords.altitude,
             altitudeAccuracy: position.coords.altitudeAccuracy,
             timestamp: position.timestamp,
+            userId:payload.userId
           };
 
           await sendLocation(location);
