@@ -191,10 +191,11 @@ export const authOptions: NextAuthOptions = {
   debug: true,
 };
 */
+
+
 import GoogleProvider from "next-auth/providers/google";
 import FacebookProvider from "next-auth/providers/facebook";
 import { NextAuthOptions } from "next-auth";
-import Cookies from "js-cookie";
 import { gql, ApolloClient, InMemoryCache, HttpLink } from "@apollo/client";
 import { DefaultSession } from "next-auth";
 
@@ -259,54 +260,7 @@ export const authOptions: NextAuthOptions = {
       },
     }),
   ],
-  secret: 'o6Dp5qYH5mUl+eZ7bgHs88qRyd5M5PZxR2+yMN2O1WQ=',
-  cookies: {
-  state: {
-    name: "next-auth.state",
-    options: {
-      httpOnly: true,
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-      path: "/",
-      secure: process.env.NODE_ENV === "production",
-    },
-  },
-  pkceCodeVerifier: {
-    name: "next-auth.pkce.code_verifier",
-    options: {
-      httpOnly: true,
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-      path: "/",
-      secure: process.env.NODE_ENV === "production",
-    },
-  },
-  sessionToken: {
-    name: "next-auth.session-token",
-    options: {
-      httpOnly: true,
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-      path: "/",
-      secure: process.env.NODE_ENV === "production",
-    },
-  },
-  callbackUrl: {
-    name: "next-auth.callback-url",
-    options: {
-      httpOnly: false, // client needs access
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-      path: "/",
-      secure: process.env.NODE_ENV === "production",
-    },
-  },
-  csrfToken: {
-    name: "next-auth.csrf-token",
-    options: {
-      httpOnly: true,
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-      path: "/",
-      secure: process.env.NODE_ENV === "production",
-    },
-  },
-},
+  secret: process.env.NEXTAUTH_SECRET!,
   session: {
     strategy: 'jwt',
     maxAge: 30 * 24 * 60 * 60,
@@ -341,7 +295,7 @@ export const authOptions: NextAuthOptions = {
           token.accessToken = account.access_token;
           token.provider = account.provider;
 
-          // Save to localStorage (client-side safe only)
+          // ✅ Only localStorage (client-side)
           if (typeof window !== "undefined") {
             localStorage.setItem("fb_access_token", account.access_token);
             localStorage.setItem("fb_provider", account.provider);
@@ -360,13 +314,8 @@ export const authOptions: NextAuthOptions = {
 
     async session({ session, token }) {
       if (token.accessToken) {
-        Cookies.set("token", token.accessToken as string, {
-          expires: 7,
-          secure: process.env.NODE_ENV === 'production',
-          sameSite: "lax",
-        });
-
-        // Save to localStorage on session creation
+        // ❌ Removed js-cookie save
+        // ✅ Only localStorage
         if (typeof window !== "undefined") {
           localStorage.setItem("session_token", token.accessToken as string);
         }
