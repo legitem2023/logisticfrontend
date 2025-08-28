@@ -192,11 +192,8 @@ export const authOptions: NextAuthOptions = {
 };
 */
 
-import GoogleProvider from "next-auth/providers/google";
 import FacebookProvider from "next-auth/providers/facebook";
 import { NextAuthOptions } from "next-auth";
-import { gql, ApolloClient, InMemoryCache, HttpLink } from "@apollo/client";
-import { DefaultSession } from "next-auth";
 
 declare module "next-auth" {
   interface Session {
@@ -212,32 +209,8 @@ declare module "next-auth" {
   }
 }
 
-// 🔸 GraphQL Mutation (kept but not used now)
-export const FBLOGIN = gql`
-  mutation LoginWithFacebook($input: GoogleLoginInput!) {
-    loginWithFacebook(input: $input) {
-      token
-      statusText
-    }
-  }
-`;
-
-// 🔸 Apollo Client Setup (kept but not used now)
-const client = new ApolloClient({
-  link: new HttpLink({
-    uri: process.env.NEXT_PUBLIC_SERVER_LINK!,
-    credentials: 'include',
-  }),
-  cache: new InMemoryCache(),
-  ssrMode: true,
-});
-
 export const authOptions: NextAuthOptions = {
   providers: [
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-    }),
     FacebookProvider({
       clientId: process.env.FACEBOOK_CLIENT_ID!,
       clientSecret: process.env.FACEBOOK_CLIENT_SECRET!,
@@ -245,52 +218,29 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
 
-  secret: 'o6Dp5qYH5mUl+eZ7bgHs88qRyd5M5PZxR2+yMN2O1WQ=',
-  session: {
-    strategy: 'jwt',
-    maxAge: 30 * 24 * 60 * 60,
-  },
+  secret: process.env.NEXTAUTH_SECRET,
 
-  logger: {
-    error(code, metadata) {
-      console.error("❌ NextAuth ERROR:", code, metadata);
-    },
-    warn(code) {
-      console.warn("⚠️ NextAuth WARNING:", code);
-      console.warn("Facebook Client ID:", process.env.FACEBOOK_CLIENT_ID);
-    },
-    debug(code, metadata) {
-      console.debug("🐛 NextAuth DEBUG:", code, metadata);
-    },
+  session: {
+    strategy: "jwt", // store info in JWT (no cookies needed)
+    maxAge: 30 * 24 * 60 * 60, // 30 days
   },
 
   callbacks: {
     async jwt({ token, account }) {
       if (account?.provider === "facebook") {
-        // Only store access token in JWT and localStorage (no cookie)
+        // Save the FB access token in the JWT
         token.accessToken = account.access_token;
         token.provider = account.provider;
-
-        if (typeof window !== "undefined") {
-          localStorage.setItem("fb_access_token", account.access_token);
-          localStorage.setItem("fb_provider", account.provider);
-        }
       }
       return token;
     },
 
     async session({ session, token }) {
-      // Store token in session only (no cookie)
+      // Make the token available in session
       session.accessToken = token.accessToken as string;
       session.provider = token.provider as string;
       if (token.error) session.error = token.error as string;
       return session;
-    },
-
-    async redirect({ url, baseUrl }) {
-      if (url.startsWith("/")) return `${baseUrl}${url}`;
-      else if (new URL(url).origin === baseUrl) return url;
-      return baseUrl;
     },
   },
 
