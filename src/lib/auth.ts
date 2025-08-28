@@ -246,21 +246,6 @@ export const authOptions: NextAuthOptions = {
   ],
 
   secret: 'o6Dp5qYH5mUl+eZ7bgHs88qRyd5M5PZxR2+yMN2O1WQ=',
-
-  // ✅ Simplified cookies for production
-  useSecureCookies: process.env.NODE_ENV === 'production',
-  cookies: {
-    sessionToken: {
-      name: `next-auth.session-token`,
-      options: {
-        httpOnly: true,
-        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-        path: '/',
-        secure: process.env.NODE_ENV === 'production',
-      },
-    },
-  },
-
   session: {
     strategy: 'jwt',
     maxAge: 30 * 24 * 60 * 60,
