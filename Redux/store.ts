@@ -54,7 +54,7 @@ export const store = configureStore({
     vehicle: VehicleReducer,
     location: locationReducer,
     tempUser: tempUserReducer,
-    activeIndex: activeIndexReducer, // Only this one is persisted
+    activeIndex: persistedActiveIndexReducer, // Only this one is persisted
     role: roleReducer,
     username: usernameReducer
   },
