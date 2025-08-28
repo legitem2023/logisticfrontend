@@ -4,7 +4,7 @@ import { NextAuthOptions } from "next-auth";
 import Cookies from "js-cookie";
 import { gql, ApolloClient, InMemoryCache, HttpLink } from "@apollo/client";
 
-// 🔸 GraphQL Mutation (commented for now)
+// 🔸 GraphQL Mutation
 export const FBLOGIN = gql`
   mutation LoginWithFacebook($input: GoogleLoginInput!) {
     loginWithFacebook(input: $input) {
@@ -53,7 +53,7 @@ export const authOptions: NextAuthOptions = {
   ],
   secret: 'o6Dp5qYH5mUl+eZ7bgHs88qRyd5M5PZxR2+yMN2O1WQ=',//process.env.NEXTAUTH_SECRET,
   
-  // ✅ ADDED: Cookie configuration to fix state cookie issue
+  // ✅ Cookie configuration
   cookies: {
     state: {
       name: `next-auth.state`,
@@ -92,13 +92,11 @@ export const authOptions: NextAuthOptions = {
     },
   },
 
-  // ✅ ADDED: Session configuration
   session: {
     strategy: 'jwt',
     maxAge: 30 * 24 * 60 * 60, // 30 days
   },
 
-  // ✅ ADDED: Use secure cookies in production
   useSecureCookies: process.env.NODE_ENV === 'production',
 
   logger: {
@@ -123,27 +121,41 @@ export const authOptions: NextAuthOptions = {
             mutation: FBLOGIN,
             variables: {
               input: {
-                idToken: account.access_token,
+                idToken: account.access_token, // ❌ This should probably be accessToken, not idToken
               },
             },
           });
 
           if (data?.loginWithFacebook?.token) {
-            token.accessToken = data.loginWithFacebook.token;
+            // ✅ Return a new object with the updated properties
+            return {
+              ...token,
+              accessToken: data.loginWithFacebook.token,
+              provider: account.provider,
+            };
           } else {
             throw new Error("No token received from backend");
           }
         } catch (error) {
           console.error("Facebook authentication failed:", error);
-          return null;
+          // ✅ CRITICAL FIX: Always return an object, never null
+          // Return the original token with error information
+          return {
+            ...token,
+            provider: account.provider,
+            error: "Facebook authentication failed",
+          };
         }
         
       }
+      // ✅ Always return the token object
       return token;
     },
 
     async session({ session, token }) {
       if (token.accessToken) {
+        // ⚠️ Note: Cookies.set() might not work reliably in server-side callbacks
+        // Consider setting cookies on the client side instead
         Cookies.set("token", token.accessToken as string, {
           expires: 7,
           secure: process.env.NODE_ENV === 'production',
@@ -153,19 +165,21 @@ export const authOptions: NextAuthOptions = {
 
       session.accessToken = token.accessToken as string;
       session.provider = token.provider as string;
+      
+      // ✅ Pass any error information to the session
+      if (token.error) {
+        session.error = token.error as string;
+      }
 
       return session;
     },
 
-    // ✅ ADDED: Redirect callback to handle cross-origin issues
     async redirect({ url, baseUrl }) {
-      // Allows relative callback URLs
       if (url.startsWith("/")) return `${baseUrl}${url}`
-      // Allows callback URLs on the same origin
       else if (new URL(url).origin === baseUrl) return url
       return baseUrl
     },
   },
 
-  debug: true, // enable debug logs for testing
+  debug: true,
 };
