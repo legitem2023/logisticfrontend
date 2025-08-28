@@ -17,7 +17,7 @@ export const FBLOGIN = gql`
 // 🔸 Apollo Client Setup
 const client = new ApolloClient({
   link: new HttpLink({
-    uri: process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT!,
+    uri: process.env.NEXT_PUBLIC_SERVER_LINK!,
     fetch,
   }),
   cache: new InMemoryCache(),
@@ -116,7 +116,7 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async jwt({ token, account }) {
       if (account?.provider === "facebook") {
-        /*
+        
         try {
           const { data } = await client.mutate({
             mutation: FBLOGIN,
@@ -136,7 +136,7 @@ export const authOptions: NextAuthOptions = {
           console.error("Facebook authentication failed:", error);
           return null;
         }
-        */
+        
       }
       return token;
     },
