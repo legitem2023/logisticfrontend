@@ -50,7 +50,7 @@ export const authOptions: NextAuthOptions = {
       },
     }),
   ],
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: 'o6Dp5qYH5mUl+eZ7bgHs88qRyd5M5PZxR2+yMN2O1WQ=',//process.env.NEXTAUTH_SECRET,
   
   // ✅ ADDED: Cookie configuration to fix state cookie issue
   cookies: {
