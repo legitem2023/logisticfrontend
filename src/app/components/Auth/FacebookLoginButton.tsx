@@ -1,9 +1,10 @@
 "use client";
 
 import { signIn, useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
 import { FaFacebook } from "react-icons/fa";
 import { gql, ApolloClient, InMemoryCache, HttpLink } from "@apollo/client";
-import Cookies from 'js-cookie'
+import Cookies from "js-cookie";
 
 const FBLOGIN = gql`
   mutation LoginWithFacebook($input: GoogleLoginInput!) {
@@ -17,41 +18,69 @@ const FBLOGIN = gql`
 const client = new ApolloClient({
   link: new HttpLink({
     uri: process.env.NEXT_PUBLIC_SERVER_LINK!,
-    credentials: 'include',
+    credentials: "include",
   }),
   cache: new InMemoryCache(),
   ssrMode: true,
 });
 
-
 export default function FacebookLoginButton() {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
+  const [loading, setLoading] = useState(false);
 
   const handleFBLogin = async () => {
-    // If already logged in via NextAuth, send token to GraphQL
-    if (session?.accessToken) {
-      const { data } = await client.mutate({
-        mutation: FBLOGIN,
-        variables: {
-          input: { idToken: session.accessToken }, // match your backend input
-        },
-      });
-    Cookies.set('token', data?.loginWithFacebook.token, { expires: 7, secure: true, sameSite: 'lax' })
+    setLoading(true);
 
-      console.log("GraphQL response:", data);
-    } else {
-      // Start Facebook login flow
-      await signIn("facebook");
+    // Start Facebook login flow with popup (no redirect)
+    const result = await signIn("facebook", { redirect: false });
+    if (!result) {
+      console.error("Facebook login failed");
+      setLoading(false);
+      return;
     }
+
+    // Session will update automatically; GraphQL call handled in useEffect
   };
+
+  useEffect(() => {
+    const sendTokenToGraphQL = async () => {
+      if (status === "authenticated" && session?.accessToken) {
+        try {
+          const { data } = await client.mutate({
+            mutation: FBLOGIN,
+            variables: {
+              input: { idToken: session.accessToken },
+            },
+          });
+
+          Cookies.set("token", data?.loginWithFacebook.token, {
+            expires: 7,
+            secure: true,
+            sameSite: "lax",
+          });
+
+          console.log("GraphQL response:", data);
+        } catch (err) {
+          console.error("GraphQL mutation failed:", err);
+        } finally {
+          setLoading(false);
+        }
+      }
+    };
+
+    sendTokenToGraphQL();
+  }, [session, status]);
 
   return (
     <button
       onClick={handleFBLogin}
-      className="w-[100%] flex items-center justify-center gap-2 px-4 py-2 bg-[#1877F2] text-white rounded-lg shadow-sm hover:bg-[#165fce] transition-colors duration-200"
+      disabled={loading}
+      className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-[#1877F2] text-white rounded-lg shadow-sm hover:bg-[#165fce] transition-colors duration-200 disabled:opacity-50"
     >
       <FaFacebook className="text-lg" />
-      <span className="text-sm font-medium">Sign in with Facebook</span>
+      <span className="text-sm font-medium">
+        {loading ? "Signing in..." : "Sign in with Facebook"}
+      </span>
     </button>
   );
 }
