@@ -1,4 +1,4 @@
-import GoogleProvider from "next-auth/providers/google";
+/*import GoogleProvider from "next-auth/providers/google";
 import FacebookProvider from "next-auth/providers/facebook";
 import { NextAuthOptions } from "next-auth";
 import Cookies from "js-cookie";
@@ -185,6 +185,71 @@ export const authOptions: NextAuthOptions = {
       if (url.startsWith("/")) return `${baseUrl}${url}`
       else if (new URL(url).origin === baseUrl) return url
       return baseUrl
+    },
+  },
+
+  debug: true,
+};
+*/
+import GoogleProvider from "next-auth/providers/google";
+import FacebookProvider from "next-auth/providers/facebook";
+import { NextAuthOptions } from "next-auth";
+
+export const authOptions: NextAuthOptions = {
+  providers: [
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+    }),
+    FacebookProvider({
+      clientId: process.env.FACEBOOK_CLIENT_ID!,
+      clientSecret: process.env.FACEBOOK_CLIENT_SECRET!,
+      authorization: {
+        params: { scope: "email,public_profile" },
+      },
+      userinfo: {
+        url: "https://graph.facebook.com/me?fields=id,name,email,picture",
+      },
+      profile(profile) {
+        return {
+          id: profile.id,
+          name: profile.name,
+          email: profile.email ?? "",
+          image: profile.picture?.data?.url ?? null,
+        };
+      },
+    }),
+  ],
+
+  secret: process.env.NEXTAUTH_SECRET,  // ✅ keep in env var, not hardcoded
+
+  session: {
+    strategy: "jwt",
+    maxAge: 30 * 24 * 60 * 60,
+  },
+
+  useSecureCookies: process.env.NODE_ENV === "production",
+
+  callbacks: {
+    async jwt({ token, account }) {
+      if (account?.provider === "facebook") {
+        token.accessToken = account.access_token;
+        token.provider = account.provider;
+      }
+      return token;
+    },
+
+    async session({ session, token }) {
+      session.accessToken = token.accessToken as string;
+      session.provider = token.provider as string;
+      if (token.error) session.error = token.error as string;
+      return session;
+    },
+
+    async redirect({ url, baseUrl }) {
+      if (url.startsWith("/")) return `${baseUrl}${url}`;
+      else if (new URL(url).origin === baseUrl) return url;
+      return baseUrl;
     },
   },
 
