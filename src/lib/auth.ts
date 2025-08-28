@@ -262,52 +262,51 @@ export const authOptions: NextAuthOptions = {
   secret: 'o6Dp5qYH5mUl+eZ7bgHs88qRyd5M5PZxR2+yMN2O1WQ=',
   cookies: {
   state: {
-    name: `next-auth.state`,
+    name: "next-auth.state",
     options: {
       httpOnly: true,
-      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-      path: '/',
-      secure: process.env.NODE_ENV === 'production',
-    }
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      path: "/",
+      secure: process.env.NODE_ENV === "production",
+    },
   },
   pkceCodeVerifier: {
-    name: `next-auth.pkce.code_verifier`,
+    name: "next-auth.pkce.code_verifier",
     options: {
       httpOnly: true,
-      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-      path: '/',
-      secure: process.env.NODE_ENV === 'production',
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      path: "/",
+      secure: process.env.NODE_ENV === "production",
     },
   },
   sessionToken: {
-    name: `next-auth.session-token`,
+    name: "next-auth.session-token",
     options: {
       httpOnly: true,
-      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-      path: '/',
-      secure: process.env.NODE_ENV === 'production',
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      path: "/",
+      secure: process.env.NODE_ENV === "production",
     },
   },
   callbackUrl: {
-    name: `next-auth.callback-url`,
+    name: "next-auth.callback-url",
     options: {
-      httpOnly: false,  // must NOT be httpOnly, client needs access
-      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-      path: '/',
-      secure: process.env.NODE_ENV === 'production',
+      httpOnly: false, // client needs access
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      path: "/",
+      secure: process.env.NODE_ENV === "production",
     },
   },
   csrfToken: {
-    name: `next-auth.csrf-token`,
+    name: "next-auth.csrf-token",
     options: {
       httpOnly: true,
-      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-      path: '/',
-      secure: process.env.NODE_ENV === 'production',
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      path: "/",
+      secure: process.env.NODE_ENV === "production",
     },
   },
 },
-
   session: {
     strategy: 'jwt',
     maxAge: 30 * 24 * 60 * 60,
