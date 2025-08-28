@@ -39,7 +39,7 @@ export default function FacebookLoginButton() {
       console.log("GraphQL response:", data);
     } else {
       // Start Facebook login flow
-      await signIn("facebook", { callbackUrl: "/" });
+      await signIn("facebook");
     }
   };
 
