@@ -16,12 +16,13 @@ export const FBLOGIN = gql`
 
 // 🔸 Apollo Client Setup
 const client = new ApolloClient({
-  link: new HttpLink({
-    uri: process.env.NEXT_PUBLIC_SERVER_LINK!,
-    fetch,
-  }),
-  cache: new InMemoryCache(),
-});
+    link: new HttpLink({
+      uri: process.env.NEXT_PUBLIC_SERVER_LINK!,
+      credentials: 'include',
+    }),
+    cache: new InMemoryCache(),
+    ssrMode: true,
+  });
 
 // 🔸 NextAuth Options
 export const authOptions: NextAuthOptions = {
