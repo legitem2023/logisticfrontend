@@ -314,9 +314,10 @@ export const authOptions: NextAuthOptions = {
       }
 
       // Handle token refresh (if ever needed)
-      if (token.accessTokenExpires && Date.now() > token.accessTokenExpires * 1000) {
-        return refreshAccessToken(token);
-      }
+      const expiresAt = Number(token.accessTokenExpires);
+     if (expiresAt && Date.now() > expiresAt * 1000) {
+      return refreshAccessToken(token);
+     }
 
       return token;
     },
