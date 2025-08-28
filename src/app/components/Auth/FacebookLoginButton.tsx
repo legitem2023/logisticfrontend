@@ -44,22 +44,43 @@ export default function FacebookLoginButton() {
             },
           });
 
-          // Save token to cookies
-          Cookies.set("token", data?.loginWithFacebook.token, {
-            expires: 7,
-            secure: true,
-            sameSite: "lax",
-          });
+          const token = data?.loginWithFacebook.token;
+          
+          if (!token) {
+            console.error("No token received from GraphQL");
+            setLoading(false);
+            return;
+          }
 
-          // Save token to localStorage - SAFE approach
+          // Save token to cookies - FIXED approach
+          try {
+            Cookies.set("auth_token", token, {
+              expires: 7,
+              secure: process.env.NODE_ENV === "production",
+              sameSite: "lax",
+              path: "/",
+            });
+            console.log("Token saved to cookies successfully");
+          } catch (cookieError) {
+            console.error("Failed to save to cookies:", cookieError);
+          }
+
+          // Save token to localStorage
           if (typeof window !== "undefined") {
             try {
-              localStorage.setItem("fbToken", data?.loginWithFacebook.token);
+              localStorage.setItem("fbToken", token);
               console.log("Token saved to localStorage successfully");
             } catch (storageError) {
               console.error("Failed to save to localStorage:", storageError);
             }
           }
+
+          // Verify storage
+          if (typeof window !== "undefined") {
+            console.log("LocalStorage fbToken:", localStorage.getItem("fbToken"));
+            console.log("Cookie auth_token:", Cookies.get("auth_token"));
+          }
+
         } catch (err) {
           console.error("GraphQL mutation failed:", err);
         } finally {
