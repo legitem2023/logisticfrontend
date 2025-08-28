@@ -30,16 +30,7 @@ export default function FacebookLoginButton() {
 
   const handleFBLogin = async () => {
     setLoading(true);
-
-    // Start Facebook login flow with popup (no redirect)
-    const result = await signIn("facebook", { redirect: false });
-    if (!result) {
-      console.error("Facebook login failed");
-      setLoading(false);
-      return;
-    }
-
-    // Session will update automatically; GraphQL call handled in useEffect
+    await signIn("facebook", { redirect: false });
   };
 
   useEffect(() => {
@@ -60,12 +51,15 @@ export default function FacebookLoginButton() {
             sameSite: "lax",
           });
 
-          // Save token to localStorage
+          // Save token to localStorage - SAFE approach
           if (typeof window !== "undefined") {
-            localStorage.setItem("fbToken", data?.loginWithFacebook.token);
+            try {
+              localStorage.setItem("fbToken", data?.loginWithFacebook.token);
+              console.log("Token saved to localStorage successfully");
+            } catch (storageError) {
+              console.error("Failed to save to localStorage:", storageError);
+            }
           }
-
-          console.log("GraphQL response:", data);
         } catch (err) {
           console.error("GraphQL mutation failed:", err);
         } finally {
