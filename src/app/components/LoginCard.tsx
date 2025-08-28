@@ -31,16 +31,19 @@ export default function LoginCard() {
   
   const [login, { loading, error }] = useMutation(LOGIN, {
     onCompleted: (data) => {
-      const token = data?.login?.token
-      if (token) {
-        Cookies.set('token', token, { expires: 7, secure: true, sameSite: 'lax' })
-        showToast('Login successful', 'success');
-        window.location.reload();
-        dispatch(setActiveIndex(1));
-      } else {
-        console.error('No token returned')
-      }
-    },
+  const token = data?.login?.token
+  if (token) {
+    Cookies.set('token', token, { expires: 7, secure: true, sameSite: 'lax' })
+    showToast('Login successful', 'success');    
+    // Use requestAnimationFrame for better timing
+    requestAnimationFrame(() => {
+      dispatch(setActiveIndex(1));
+      window.location.reload();
+    });
+  } else {
+    console.error('No token returned')
+  }
+},
     onError: (err) => {
       console.error('Login failed:', err.message)
     }
