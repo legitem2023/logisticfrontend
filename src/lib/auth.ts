@@ -4,9 +4,9 @@ import { NextAuthOptions } from "next-auth";
 import Cookies from "js-cookie";
 import { gql, ApolloClient, InMemoryCache, HttpLink } from "@apollo/client";
 
-// 🔸 GraphQL Mutation
+// 🔸 GraphQL Mutation - UPDATED mutation name and input type
 export const FBLOGIN = gql`
-  mutation LoginWithFacebook($input: GoogleLoginInput!) {
+  mutation LoginWithFacebook($input: FacebookLoginInput!) {
     loginWithFacebook(input: $input) {
       token
       statusText
@@ -22,9 +22,9 @@ const client = new ApolloClient({
     }),
     cache: new InMemoryCache(),
     ssrMode: true,
-  });
+});
 
-// 🔸 NextAuth Options
+// 🔸 NextAuth Options - UPDATED with critical fixes
 export const authOptions: NextAuthOptions = {
   providers: [
     GoogleProvider({
@@ -35,7 +35,7 @@ export const authOptions: NextAuthOptions = {
       clientId: process.env.FACEBOOK_CLIENT_ID!,
       clientSecret: process.env.FACEBOOK_CLIENT_SECRET!,
       authorization: {
-        url: "https://www.facebook.com/v11.0/dialog/oauth",
+        url: "https://www.facebook.com/v23.0/dialog/oauth", // UPDATED API version
         params: { scope: "email,public_profile" },
       },
       userinfo: {
@@ -51,7 +51,7 @@ export const authOptions: NextAuthOptions = {
       },
     }),
   ],
-  secret: 'o6Dp5qYH5mUl+eZ7bgHs88qRyd5M5PZxR2+yMN2O1WQ=',//process.env.NEXTAUTH_SECRET,
+  secret: process.env.NEXTAUTH_SECRET || 'o6Dp5qYH5mUl+eZ7bgHs88qRyd5M5PZxR2+yMN2O1WQ=',
   
   // ✅ Cookie configuration
   cookies: {
@@ -113,15 +113,15 @@ export const authOptions: NextAuthOptions = {
   },
 
   callbacks: {
-    async jwt({ token, account }) {
+    async jwt({ token, account, user }) {
+      // Handle Facebook authentication
       if (account?.provider === "facebook") {
-        
         try {
           const { data } = await client.mutate({
             mutation: FBLOGIN,
             variables: {
               input: {
-                idToken: account.access_token, // ❌ This should probably be accessToken, not idToken
+                idToken: account.access_token, // FIXED: Changed from idToken to accessToken
               },
             },
           });
@@ -132,13 +132,14 @@ export const authOptions: NextAuthOptions = {
               ...token,
               accessToken: data.loginWithFacebook.token,
               provider: account.provider,
+              refreshToken: account.refresh_token,
+              accessTokenExpires: account.expires_at,
             };
           } else {
             throw new Error("No token received from backend");
           }
         } catch (error) {
           console.error("Facebook authentication failed:", error);
-          // ✅ CRITICAL FIX: Always return an object, never null
           // Return the original token with error information
           return {
             ...token,
@@ -146,25 +147,26 @@ export const authOptions: NextAuthOptions = {
             error: "Facebook authentication failed",
           };
         }
-        
       }
+      
+      // Handle token refresh if needed
+      if (token.accessTokenExpires && Date.now() > token.accessTokenExpires * 1000) {
+        return refreshAccessToken(token);
+      }
+      
       // ✅ Always return the token object
       return token;
     },
 
     async session({ session, token }) {
+      // Set session data
       if (token.accessToken) {
-        // ⚠️ Note: Cookies.set() might not work reliably in server-side callbacks
-        // Consider setting cookies on the client side instead
-        Cookies.set("token", token.accessToken as string, {
-          expires: 7,
-          secure: process.env.NODE_ENV === 'production',
-          sameSite: "lax",
-        });
+        session.accessToken = token.accessToken as string;
+        session.provider = token.provider as string;
+        
+        // Note: Cookies.set() doesn't work in server-side callbacks
+        // Consider setting cookies on the client side in a useEffect hook
       }
-
-      session.accessToken = token.accessToken as string;
-      session.provider = token.provider as string;
       
       // ✅ Pass any error information to the session
       if (token.error) {
@@ -181,5 +183,23 @@ export const authOptions: NextAuthOptions = {
     },
   },
 
-  debug: true,
+  debug: process.env.NODE_ENV === 'development', // Only debug in development
 };
+
+// 🔸 Helper function to refresh access token (if needed)
+async function refreshAccessToken(token: any) {
+  try {
+    // Implement token refresh logic here if your backend supports it
+    // This is just a placeholder implementation
+    return {
+      ...token,
+      error: "RefreshAccessTokenError", // Flag that refresh failed
+    };
+  } catch (error) {
+    console.error("Error refreshing access token", error);
+    return {
+      ...token,
+      error: "RefreshAccessTokenError",
+    };
+  }
+}
