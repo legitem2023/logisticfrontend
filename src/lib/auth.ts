@@ -51,13 +51,62 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   secret: process.env.NEXTAUTH_SECRET,
+  
+  // ✅ ADDED: Cookie configuration to fix state cookie issue
+  cookies: {
+    state: {
+      name: `next-auth.state`,
+      options: {
+        httpOnly: true,
+        sameSite: 'lax',
+        path: '/',
+        secure: process.env.NODE_ENV === 'production',
+      }
+    },
+    sessionToken: {
+      name: `next-auth.session-token`,
+      options: {
+        httpOnly: true,
+        sameSite: 'lax',
+        path: '/',
+        secure: process.env.NODE_ENV === 'production',
+      },
+    },
+    callbackUrl: {
+      name: `next-auth.callback-url`,
+      options: {
+        sameSite: 'lax',
+        path: '/',
+        secure: process.env.NODE_ENV === 'production',
+      },
+    },
+    csrfToken: {
+      name: `next-auth.csrf-token`,
+      options: {
+        httpOnly: true,
+        sameSite: 'lax',
+        path: '/',
+        secure: process.env.NODE_ENV === 'production',
+      },
+    },
+  },
+
+  // ✅ ADDED: Session configuration
+  session: {
+    strategy: 'jwt',
+    maxAge: 30 * 24 * 60 * 60, // 30 days
+  },
+
+  // ✅ ADDED: Use secure cookies in production
+  useSecureCookies: process.env.NODE_ENV === 'production',
+
   logger: {
     error(code, metadata) {
       console.error("❌ NextAuth ERROR:", code, metadata);
     },
     warn(code) {
       console.warn("⚠️ NextAuth WARNING:", code);
-      console.warn(process.env.FACEBOOK_CLIENT_ID);
+      console.warn("Facebook Client ID:", process.env.FACEBOOK_CLIENT_ID);
     },
     debug(code, metadata) {
       console.debug("🐛 NextAuth DEBUG:", code, metadata);
@@ -96,7 +145,7 @@ export const authOptions: NextAuthOptions = {
       if (token.accessToken) {
         Cookies.set("token", token.accessToken as string, {
           expires: 7,
-          secure: true,
+          secure: process.env.NODE_ENV === 'production',
           sameSite: "lax",
         });
       }
@@ -105,6 +154,15 @@ export const authOptions: NextAuthOptions = {
       session.provider = token.provider as string;
 
       return session;
+    },
+
+    // ✅ ADDED: Redirect callback to handle cross-origin issues
+    async redirect({ url, baseUrl }) {
+      // Allows relative callback URLs
+      if (url.startsWith("/")) return `${baseUrl}${url}`
+      // Allows callback URLs on the same origin
+      else if (new URL(url).origin === baseUrl) return url
+      return baseUrl
     },
   },
 
