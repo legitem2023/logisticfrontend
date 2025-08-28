@@ -3,7 +3,21 @@ import FacebookProvider from "next-auth/providers/facebook";
 import { NextAuthOptions } from "next-auth";
 import Cookies from "js-cookie";
 import { gql, ApolloClient, InMemoryCache, HttpLink } from "@apollo/client";
+import { DefaultSession } from "next-auth";
 
+declare module "next-auth" {
+  interface Session {
+    accessToken?: string;
+    provider?: string;
+    error?: string; // ✅ Add this line to extend the session type
+  }
+  
+  interface JWT {
+    accessToken?: string;
+    provider?: string;
+    error?: string;
+  }
+}
 // 🔸 GraphQL Mutation
 export const FBLOGIN = gql`
   mutation LoginWithFacebook($input: GoogleLoginInput!) {
