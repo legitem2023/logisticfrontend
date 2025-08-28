@@ -192,7 +192,6 @@ export const authOptions: NextAuthOptions = {
 };
 */
 
-
 import GoogleProvider from "next-auth/providers/google";
 import FacebookProvider from "next-auth/providers/facebook";
 import { NextAuthOptions } from "next-auth";
@@ -205,7 +204,7 @@ declare module "next-auth" {
     provider?: string;
     error?: string;
   }
-  
+
   interface JWT {
     accessToken?: string;
     provider?: string;
@@ -233,7 +232,6 @@ const client = new ApolloClient({
   ssrMode: true,
 });
 
-// 🔸 NextAuth Options
 export const authOptions: NextAuthOptions = {
   providers: [
     GoogleProvider({
@@ -243,30 +241,30 @@ export const authOptions: NextAuthOptions = {
     FacebookProvider({
       clientId: process.env.FACEBOOK_CLIENT_ID!,
       clientSecret: process.env.FACEBOOK_CLIENT_SECRET!,
-      authorization: {
-        url: "https://www.facebook.com/v11.0/dialog/oauth",
-        params: { scope: "email,public_profile" },
-      },
-      userinfo: {
-        url: "https://graph.facebook.com/me?fields=id,name,email,picture",
-      },
-      profile(profile) {
-        return {
-          id: profile.id,
-          name: profile.name,
-          email: profile.email ?? "",
-          image: profile.picture?.data?.url ?? null,
-        };
-      },
+      authorization: { params: { scope: "email,public_profile" } },
     }),
   ],
-  secret: process.env.NEXTAUTH_SECRET!,
+
+  secret: 'o6Dp5qYH5mUl+eZ7bgHs88qRyd5M5PZxR2+yMN2O1WQ=',
+
+  // ✅ Simplified cookies for production
+  useSecureCookies: process.env.NODE_ENV === 'production',
+  cookies: {
+    sessionToken: {
+      name: `next-auth.session-token`,
+      options: {
+        httpOnly: true,
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+        path: '/',
+        secure: process.env.NODE_ENV === 'production',
+      },
+    },
+  },
+
   session: {
     strategy: 'jwt',
     maxAge: 30 * 24 * 60 * 60,
   },
-
-  useSecureCookies: process.env.NODE_ENV === 'production',
 
   logger: {
     error(code, metadata) {
@@ -284,57 +282,30 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async jwt({ token, account }) {
       if (account?.provider === "facebook") {
-        try {
-          // 🚧 TEMPORARILY COMMENTED OUT GRAPHQL CALL
-          // const { data } = await client.mutate({
-          //   mutation: FBLOGIN,
-          //   variables: { input: { idToken: account.access_token } },
-          // });
+        // Only store access token in JWT and localStorage (no cookie)
+        token.accessToken = account.access_token;
+        token.provider = account.provider;
 
-          // 🚀 Just store the raw Facebook access_token
-          token.accessToken = account.access_token;
-          token.provider = account.provider;
-
-          // ✅ Only localStorage (client-side)
-          if (typeof window !== "undefined") {
-            localStorage.setItem("fb_access_token", account.access_token);
-            localStorage.setItem("fb_provider", account.provider);
-          }
-        } catch (error) {
-          console.error("Facebook authentication failed:", error);
-          return {
-            ...token,
-            provider: account.provider,
-            error: "Facebook authentication failed",
-          };
+        if (typeof window !== "undefined") {
+          localStorage.setItem("fb_access_token", account.access_token);
+          localStorage.setItem("fb_provider", account.provider);
         }
       }
       return token;
     },
 
     async session({ session, token }) {
-      if (token.accessToken) {
-        // ❌ Removed js-cookie save
-        // ✅ Only localStorage
-        if (typeof window !== "undefined") {
-          localStorage.setItem("session_token", token.accessToken as string);
-        }
-      }
-
+      // Store token in session only (no cookie)
       session.accessToken = token.accessToken as string;
       session.provider = token.provider as string;
-
-      if (token.error) {
-        session.error = token.error as string;
-      }
-
+      if (token.error) session.error = token.error as string;
       return session;
     },
 
     async redirect({ url, baseUrl }) {
-      if (url.startsWith("/")) return `${baseUrl}${url}`
-      else if (new URL(url).origin === baseUrl) return url
-      return baseUrl
+      if (url.startsWith("/")) return `${baseUrl}${url}`;
+      else if (new URL(url).origin === baseUrl) return url;
+      return baseUrl;
     },
   },
 
