@@ -3,6 +3,7 @@
 import { signIn, useSession } from "next-auth/react";
 import { FaFacebook } from "react-icons/fa";
 import { gql, ApolloClient, InMemoryCache, HttpLink } from "@apollo/client";
+import Cookies from 'js-cookie'
 
 const FBLOGIN = gql`
   mutation LoginWithFacebook($input: GoogleLoginInput!) {
@@ -35,6 +36,7 @@ export default function FacebookLoginButton() {
           input: { idToken: session.accessToken }, // match your backend input
         },
       });
+    Cookies.set('token', data?.loginWithFacebook.token, { expires: 7, secure: true, sameSite: 'lax' })
 
       console.log("GraphQL response:", data);
     } else {
