@@ -1,6 +1,6 @@
 // Add this component where you want to display the active content
 'use client';
-import React from 'react';
+import React,{useEffect} from 'react';
 
 import ApiWallet from './Wallet/ApiWallet';
 import HomeDataCarousel from './HomeDataCarousel';
@@ -57,6 +57,13 @@ export function ActiveContentDisplay({ activeTab, useRole, isUserActive }: {
   isUserActive: () => boolean;
 }) {
     console.log(useRole,"<<<<");
+
+useEffect(() => {
+     window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [activeTab]);
+
+
+
   
   const tabItems = [
     {
