@@ -113,7 +113,7 @@ export const authOptions: NextAuthOptions = {
   },
 
   callbacks: {
-    async jwt({ token, account, user }) {
+    async jwt({ token, account }) {
       // Handle Facebook authentication
       if (account?.provider === "facebook") {
         try {
@@ -121,7 +121,7 @@ export const authOptions: NextAuthOptions = {
             mutation: FBLOGIN,
             variables: {
               input: {
-                idToken: account.access_token, // FIXED: Changed from idToken to accessToken
+                idToken: account.access_token,
               },
             },
           });
@@ -133,7 +133,7 @@ export const authOptions: NextAuthOptions = {
               accessToken: data.loginWithFacebook.token,
               provider: account.provider,
               refreshToken: account.refresh_token,
-              accessTokenExpires: account.expires_at,
+              accessTokenExpires: account.expires_at ? Number(account.expires_at) : undefined,
             };
           } else {
             throw new Error("No token received from backend");
@@ -149,9 +149,12 @@ export const authOptions: NextAuthOptions = {
         }
       }
       
-      // Handle token refresh if needed
-      if (token.accessTokenExpires && Date.now() > token.accessTokenExpires * 1000) {
-        return refreshAccessToken(token);
+      // Handle token refresh if needed - FIXED: Added proper type checking
+      if (token.accessTokenExpires && typeof token.accessTokenExpires === 'number') {
+        const expiresAt = token.accessTokenExpires * 1000;
+        if (Date.now() > expiresAt) {
+          return refreshAccessToken(token);
+        }
       }
       
       // ✅ Always return the token object
@@ -202,4 +205,4 @@ async function refreshAccessToken(token: any) {
       error: "RefreshAccessTokenError",
     };
   }
-      }
+    }
