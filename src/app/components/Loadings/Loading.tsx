@@ -8,7 +8,9 @@ export default function Loading() {
     <div className="flex flex-col justify-center p-0 z-50 w-full">
       {/* Top bar shimmer with 88px height */}
       <div className="customgrad w-full h-[88px] p-4">
-        <Shimmer className="h-full w-full rounded-lg" />
+        <div className="animate-pulse h-full w-full flex flex-col items-center justify-center">
+            <div className="h-4 bg-green-600 rounded w-1/2"></div>
+        </div>      
       </div>    
       
       <div className="relative flex-1 flex flex-col justify-center p-0 z-50 w-full">  
@@ -64,7 +66,9 @@ export default function Loading() {
 
       {/* Bottom bar shimmer with 88px height */}
       <div className="customgrad w-full h-[88px] p-4">
-        <Shimmer className="h-full w-full rounded-lg" />
+        <div className="animate-pulse h-full w-full flex flex-col items-center justify-center">
+            <div className="h-4 bg-green-600 rounded w-1/2"></div>
+        </div>      
       </div>
     </div>
   );  
