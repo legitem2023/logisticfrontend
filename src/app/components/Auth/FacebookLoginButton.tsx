@@ -1,8 +1,9 @@
+// FacebookLoginButton.jsx
 "use client";
 
 import { signIn, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
-import { FaFacebook } from "react-icons/fa";
+import { FaFacebook, FaCheckCircle, FaExclamationTriangle } from "react-icons/fa";
 import { gql, ApolloClient, InMemoryCache, HttpLink } from "@apollo/client";
 import Cookies from "js-cookie";
 
@@ -17,7 +18,7 @@ const FBLOGIN = gql`
 
 const client = new ApolloClient({
   link: new HttpLink({
-    uri: process.env.NEXT_PUBLIC_SERVER_LINK!,
+    uri: process.env.NEXT_PUBLIC_SERVER_LINK,
     credentials: "include",
   }),
   cache: new InMemoryCache(),
@@ -27,6 +28,11 @@ const client = new ApolloClient({
 export default function FacebookLoginButton() {
   const { data: session, status } = useSession();
   const [loading, setLoading] = useState(false);
+  const [storageStatus, setStorageStatus] = useState({
+    cookies: false,
+    localStorage: false,
+    message: ''
+  });
 
   const handleFBLogin = async () => {
     setLoading(true);
@@ -48,11 +54,16 @@ export default function FacebookLoginButton() {
           
           if (!token) {
             console.error("No token received from GraphQL");
+            setStorageStatus({
+              cookies: false,
+              localStorage: false,
+              message: 'No token received from server'
+            });
             setLoading(false);
             return;
           }
 
-          // Save token to cookies - FIXED approach
+          // Save token to cookies
           try {
             Cookies.set("auth_token", token, {
               expires: 7,
@@ -77,12 +88,23 @@ export default function FacebookLoginButton() {
 
           // Verify storage
           if (typeof window !== "undefined") {
-            console.log("LocalStorage fbToken:", localStorage.getItem("fbToken"));
-            console.log("Cookie auth_token:", Cookies.get("auth_token"));
+            const cookieToken = Cookies.get("auth_token");
+            const localStorageToken = localStorage.getItem("fbToken");
+            
+            setStorageStatus({
+              cookies: !!cookieToken,
+              localStorage: !!localStorageToken,
+              message: 'Token storage verified'
+            });
           }
 
         } catch (err) {
           console.error("GraphQL mutation failed:", err);
+          setStorageStatus({
+            cookies: false,
+            localStorage: false,
+            message: 'Authentication failed'
+          });
         } finally {
           setLoading(false);
         }
@@ -93,15 +115,55 @@ export default function FacebookLoginButton() {
   }, [session, status]);
 
   return (
-    <button
-      onClick={handleFBLogin}
-      disabled={loading}
-      className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-[#1877F2] text-white rounded-lg shadow-sm hover:bg-[#165fce] transition-colors duration-200 disabled:opacity-50"
-    >
-      <FaFacebook className="text-lg" />
-      <span className="text-sm font-medium">
-        {loading ? "Signing in..." : "Sign in with Facebook"}
-      </span>
-    </button>
+    <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-lg">
+      <button
+        onClick={handleFBLogin}
+        disabled={loading || status === "authenticated"}
+        className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-[#1877F2] text-white rounded-lg shadow-sm hover:bg-[#165fce] transition-colors duration-200 disabled:opacity-50 mb-4"
+      >
+        <FaFacebook className="text-xl" />
+        <span className="text-base font-medium">
+          {loading ? "Signing in..." : (status === "authenticated" ? "Signed In" : "Sign in with Facebook")}
+        </span>
+      </button>
+      
+      {status === "authenticated" && (
+        <div className="p-4 bg-gray-50 rounded-lg">
+          <h3 className="font-medium text-gray-800 mb-2">Authentication Status</h3>
+          
+          <div className="space-y-2">
+            <div className="flex items-center">
+              {storageStatus.cookies ? (
+                <FaCheckCircle className="text-green-500 mr-2" />
+              ) : (
+                <FaExclamationTriangle className="text-yellow-500 mr-2" />
+              )}
+              <span>Cookies: {storageStatus.cookies ? 'Token stored' : 'No token found'}</span>
+            </div>
+            
+            <div className="flex items-center">
+              {storageStatus.localStorage ? (
+                <FaCheckCircle className="text-green-500 mr-2" />
+              ) : (
+                <FaExclamationTriangle className="text-yellow-500 mr-2" />
+              )}
+              <span>Local Storage: {storageStatus.localStorage ? 'Token stored' : 'No token found'}</span>
+            </div>
+          </div>
+          
+          {storageStatus.message && (
+            <p className={`mt-2 text-sm ${storageStatus.cookies && storageStatus.localStorage ? 'text-green-600' : 'text-yellow-600'}`}>
+              {storageStatus.message}
+            </p>
+          )}
+        </div>
+      )}
+      
+      <div className="mt-4 p-4 bg-blue-50 rounded-lg">
+        <h4 className="font-medium text-blue-800 mb-2">Debug Info</h4>
+        <p className="text-sm text-blue-700">Session status: {status}</p>
+        <p className="text-sm text-blue-700">User: {session?.user?.name || 'Not authenticated'}</p>
+      </div>
+    </div>
   );
-}
+              }
