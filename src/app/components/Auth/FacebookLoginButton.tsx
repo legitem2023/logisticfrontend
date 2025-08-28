@@ -53,11 +53,17 @@ export default function FacebookLoginButton() {
             },
           });
 
+          // Save token to cookies
           Cookies.set("token", data?.loginWithFacebook.token, {
             expires: 7,
             secure: true,
             sameSite: "lax",
           });
+
+          // Save token to localStorage
+          if (typeof window !== "undefined") {
+            localStorage.setItem("fbToken", data?.loginWithFacebook.token);
+          }
 
           console.log("GraphQL response:", data);
         } catch (err) {
