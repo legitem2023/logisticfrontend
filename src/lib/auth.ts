@@ -9,7 +9,7 @@ declare module "next-auth" {
   interface Session {
     accessToken?: string;
     provider?: string;
-    error?: string; // ✅ Add this line to extend the session type
+    error?: string;
   }
   
   interface JWT {
@@ -18,7 +18,8 @@ declare module "next-auth" {
     error?: string;
   }
 }
-// 🔸 GraphQL Mutation
+
+// 🔸 GraphQL Mutation (kept but not used now)
 export const FBLOGIN = gql`
   mutation LoginWithFacebook($input: GoogleLoginInput!) {
     loginWithFacebook(input: $input) {
@@ -28,15 +29,15 @@ export const FBLOGIN = gql`
   }
 `;
 
-// 🔸 Apollo Client Setup
+// 🔸 Apollo Client Setup (kept but not used now)
 const client = new ApolloClient({
-    link: new HttpLink({
-      uri: process.env.NEXT_PUBLIC_SERVER_LINK!,
-      credentials: 'include',
-    }),
-    cache: new InMemoryCache(),
-    ssrMode: true,
-  });
+  link: new HttpLink({
+    uri: process.env.NEXT_PUBLIC_SERVER_LINK!,
+    credentials: 'include',
+  }),
+  cache: new InMemoryCache(),
+  ssrMode: true,
+});
 
 // 🔸 NextAuth Options
 export const authOptions: NextAuthOptions = {
@@ -65,9 +66,8 @@ export const authOptions: NextAuthOptions = {
       },
     }),
   ],
-  secret: 'o6Dp5qYH5mUl+eZ7bgHs88qRyd5M5PZxR2+yMN2O1WQ=',//process.env.NEXTAUTH_SECRET,
-  
-  // ✅ Cookie configuration
+  secret: 'o6Dp5qYH5mUl+eZ7bgHs88qRyd5M5PZxR2+yMN2O1WQ=',
+
   cookies: {
     state: {
       name: `next-auth.state`,
@@ -108,7 +108,7 @@ export const authOptions: NextAuthOptions = {
 
   session: {
     strategy: 'jwt',
-    maxAge: 30 * 24 * 60 * 60, // 30 days
+    maxAge: 30 * 24 * 60 * 60,
   },
 
   useSecureCookies: process.env.NODE_ENV === 'production',
@@ -129,58 +129,51 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async jwt({ token, account }) {
       if (account?.provider === "facebook") {
-        
         try {
-          const { data } = await client.mutate({
-            mutation: FBLOGIN,
-            variables: {
-              input: {
-                idToken: account.access_token, // ❌ This should probably be accessToken, not idToken
-              },
-            },
-          });
+          // 🚧 TEMPORARILY COMMENTED OUT GRAPHQL CALL
+          // const { data } = await client.mutate({
+          //   mutation: FBLOGIN,
+          //   variables: { input: { idToken: account.access_token } },
+          // });
 
-          if (data?.loginWithFacebook?.token) {
-            // ✅ Return a new object with the updated properties
-            return {
-              ...token,
-              accessToken: data.loginWithFacebook.token,
-              provider: account.provider,
-            };
-          } else {
-            throw new Error("No token received from backend");
+          // 🚀 Just store the raw Facebook access_token
+          token.accessToken = account.access_token;
+          token.provider = account.provider;
+
+          // Save to localStorage (client-side safe only)
+          if (typeof window !== "undefined") {
+            localStorage.setItem("fb_access_token", account.access_token);
+            localStorage.setItem("fb_provider", account.provider);
           }
         } catch (error) {
           console.error("Facebook authentication failed:", error);
-          // ✅ CRITICAL FIX: Always return an object, never null
-          // Return the original token with error information
           return {
             ...token,
             provider: account.provider,
             error: "Facebook authentication failed",
           };
         }
-        
       }
-      // ✅ Always return the token object
       return token;
     },
 
     async session({ session, token }) {
       if (token.accessToken) {
-        // ⚠️ Note: Cookies.set() might not work reliably in server-side callbacks
-        // Consider setting cookies on the client side instead
         Cookies.set("token", token.accessToken as string, {
           expires: 7,
           secure: process.env.NODE_ENV === 'production',
           sameSite: "lax",
         });
+
+        // Save to localStorage on session creation
+        if (typeof window !== "undefined") {
+          localStorage.setItem("session_token", token.accessToken as string);
+        }
       }
 
       session.accessToken = token.accessToken as string;
       session.provider = token.provider as string;
-      
-      // ✅ Pass any error information to the session
+
       if (token.error) {
         session.error = token.error as string;
       }
