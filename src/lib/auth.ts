@@ -66,10 +66,10 @@ export const authOptions: NextAuthOptions = {
         localStorage.setItem("session_token", account.access_token as string);
         // Optional: Send to GraphQL server here in JWT callback
         // This might be better than doing it in session callback
-    /*    try {
+       try {
           const { data } = await client.mutate({
             mutation: FBLOGIN,
-            variables: { input: { idToken: account.access_token } },
+            variables: { input: { idToken: account.access_token as string } },
           });
           
           // Store your server token in JWT if needed
@@ -77,7 +77,7 @@ export const authOptions: NextAuthOptions = {
         } catch (error) {
           console.error('GraphQL mutation error:', error);
           token.error = 'Failed to authenticate with server';
-        }*/
+        }
       }
       return token;
     },
