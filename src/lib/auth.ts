@@ -214,16 +214,21 @@ const client = new ApolloClient({
   ssrMode: true,
 });
 
+// src/types/next-auth.d.ts or in your auth.ts file
+import "next-auth";
+
 declare module "next-auth" {
   interface Session {
     accessToken?: string;
     provider?: string;
+    serverToken?: string; // Add this line
     error?: string;
   }
 
   interface JWT {
     accessToken?: string;
     provider?: string;
+    serverToken?: string; // Add this line
     error?: string;
   }
 }
