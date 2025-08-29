@@ -194,6 +194,25 @@ export const authOptions: NextAuthOptions = {
 
 import FacebookProvider from "next-auth/providers/facebook";
 import { NextAuthOptions } from "next-auth";
+import { gql, ApolloClient, InMemoryCache, HttpLink } from "@apollo/client";
+export const FBLOGIN = gql`
+  mutation LoginWithFacebook($input: GoogleLoginInput!) {
+    loginWithFacebook(input: $input) {
+      token
+      statusText
+    }
+  }
+`;
+
+// 🔸 Apollo Client Setup (kept but not used now)
+const client = new ApolloClient({
+  link: new HttpLink({
+    uri: process.env.NEXT_PUBLIC_SERVER_LINK!,
+    credentials: 'include',
+  }),
+  cache: new InMemoryCache(),
+  ssrMode: true,
+});
 
 declare module "next-auth" {
   interface Session {
@@ -237,8 +256,18 @@ export const authOptions: NextAuthOptions = {
 
     async session({ session, token }) {
       // Make the token available in session
-      session.accessToken = token.accessToken as string;
-      session.provider = token.provider as string;
+      //session.accessToken = token.accessToken as string;
+      //session.provider = token.provider as string;
+
+// 🚧 TEMPORARILY COMMENTED OUT GRAPHQL CALL
+      const { data } = await client.mutate({
+            mutation: FBLOGIN,
+             variables: { input: { idToken: token.accessToken } },
+      });
+      
+        
+      session.accessToken = data.loginWithFacebook.token as string;
+      
       if (token.error) session.error = token.error as string;
       return session;
     },
