@@ -2,31 +2,30 @@
 "use client";
 
 import { signIn, useSession } from "next-auth/react";
+import { useMutation } from '@apollo/client'
 import { useEffect, useState } from "react";
 import { FaFacebook, FaCheckCircle, FaExclamationTriangle } from "react-icons/fa";
 import { gql, ApolloClient, InMemoryCache, HttpLink } from "@apollo/client";
 import Cookies from "js-cookie";
+import { FBLOGIN } from '../../../../graphql/mutation'
 
-const FBLOGIN = gql`
-  mutation LoginWithFacebook($input: GoogleLoginInput!) {
-    loginWithFacebook(input: $input) {
-      token
-      statusText
-    }
-  }
-`;
-
-const client = new ApolloClient({
-  link: new HttpLink({
-    uri: process.env.NEXT_PUBLIC_SERVER_LINK,
-    credentials: "include",
-  }),
-  cache: new InMemoryCache(),
-  ssrMode: true,
-});
 
 export default function FacebookLoginButton() {
   const { data: session, status } = useSession();
+ const [loginWithFacebook] = useMutation(FBLOGIN,{
+   onCompleted:(result:any) =>{
+     console.log(result);
+     Cookies.set("Token", result.Token, {
+              expires: 7,
+              secure: process.env.NODE_ENV === "production",
+              sameSite: "lax",
+              path: "/",
+            });
+   },
+   onError:(e:any) =>{
+     console.log(e);
+   }
+ })
   const [loading, setLoading] = useState(false);
   const [storageStatus, setStorageStatus] = useState({
     cookies: false,
@@ -43,61 +42,12 @@ export default function FacebookLoginButton() {
     const sendTokenToGraphQL = async () => {
       if (status === "authenticated" && session?.accessToken) {
         try {
-          const { data } = await client.mutate({
-            mutation: FBLOGIN,
+          await loginWithFacebook({
             variables: {
               input: { idToken: session.accessToken },
             },
           });
-
-          const token = data?.loginWithFacebook.token;
-          
-          if (!token) {
-            console.error("No token received from GraphQL");
-            setStorageStatus({
-              cookies: false,
-              localStorage: false,
-              message: 'No token received from server'
-            });
-            setLoading(false);
-            return;
-          }
-
-          // Save token to cookies
-          try {
-            Cookies.set("auth_token", token, {
-              expires: 7,
-              secure: process.env.NODE_ENV === "production",
-              sameSite: "lax",
-              path: "/",
-            });
-            console.log("Token saved to cookies successfully");
-          } catch (cookieError) {
-            console.error("Failed to save to cookies:", cookieError);
-          }
-
-          // Save token to localStorage
-          if (typeof window !== "undefined") {
-            try {
-              localStorage.setItem("fbToken", token);
-              console.log("Token saved to localStorage successfully");
-            } catch (storageError) {
-              console.error("Failed to save to localStorage:", storageError);
-            }
-          }
-
-          // Verify storage
-          if (typeof window !== "undefined") {
-            const cookieToken = Cookies.get("auth_token");
-            const localStorageToken = localStorage.getItem("fbToken");
-            
-            setStorageStatus({
-              cookies: !!cookieToken,
-              localStorage: !!localStorageToken,
-              message: 'Token storage verified'
-            });
-          }
-
+       
         } catch (err) {
           console.error("GraphQL mutation failed:", err);
           setStorageStatus({
