@@ -163,6 +163,8 @@ export default function FacebookLoginButton() {
         <h4 className="font-medium text-blue-800 mb-2">Debug Info</h4>
         <p className="text-sm text-blue-700">Session status: {status}</p>
         <p className="text-sm text-blue-700">User: {session?.user?.name || 'Not authenticated'}</p>
+        <p className="text-sm text-blue-700">Token: {session?.accessToken || 'Not authenticated'}</p>
+     
       </div>
     </div>
   );
