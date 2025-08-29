@@ -63,7 +63,7 @@ export const authOptions: NextAuthOptions = {
       if (account?.provider === "facebook") {
         token.accessToken = account.access_token;
         token.provider = account.provider;
-        localStorage.setItem("session_token", account.access_token as string);
+        //localStorage.setItem("session_token", account.access_token as string);
         // Optional: Send to GraphQL server here in JWT callback
         // This might be better than doing it in session callback
        try {
