@@ -66,7 +66,7 @@ export const authOptions: NextAuthOptions = {
         //localStorage.setItem("session_token", account.access_token as string);
         // Optional: Send to GraphQL server here in JWT callback
         // This might be better than doing it in session callback
-       const token =  account.access_token.toString();
+       const token_en =  account.access_token.toString();
         try {
           const { data } = await client.mutate({
             mutation: FBLOGIN,
