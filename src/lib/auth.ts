@@ -195,6 +195,7 @@ export const authOptions: NextAuthOptions = {
 import FacebookProvider from "next-auth/providers/facebook";
 import { NextAuthOptions } from "next-auth";
 import { gql, ApolloClient, InMemoryCache, HttpLink } from "@apollo/client";
+
 export const FBLOGIN = gql`
   mutation LoginWithFacebook($input: GoogleLoginInput!) {
     loginWithFacebook(input: $input) {
@@ -204,7 +205,6 @@ export const FBLOGIN = gql`
   }
 `;
 
-// 🔸 Apollo Client Setup (kept but not used now)
 const client = new ApolloClient({
   link: new HttpLink({
     uri: process.env.NEXT_PUBLIC_SERVER_LINK!,
@@ -237,41 +237,50 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
 
-  secret: process.env.NEXTAUTH_SECRET,
+  // Fixed secret handling - ensure proper length
+  secret: process.env.NEXTAUTH_SECRET?.length >= 32 
+    ? process.env.NEXTAUTH_SECRET 
+    : Buffer.from(process.env.NEXTAUTH_SECRET || 'default-fallback-secret-32-chars-long').toString('base64').slice(0, 32),
 
   session: {
-    strategy: "jwt", // store info in JWT (no cookies needed)
-    maxAge: 30 * 24 * 60 * 60, // 30 days
+    strategy: "jwt",
+    maxAge: 30 * 24 * 60 * 60,
   },
 
   callbacks: {
     async jwt({ token, account }) {
       if (account?.provider === "facebook") {
-        // Save the FB access token in the JWT
         token.accessToken = account.access_token;
         token.provider = account.provider;
+        
+        // Optional: Send to GraphQL server here in JWT callback
+        // This might be better than doing it in session callback
+        try {
+          const { data } = await client.mutate({
+            mutation: FBLOGIN,
+            variables: { input: { idToken: account.access_token } },
+          });
+          
+          // Store your server token in JWT if needed
+          token.serverToken = data.loginWithFacebook.token;
+        } catch (error) {
+          console.error('GraphQL mutation error:', error);
+          token.error = 'Failed to authenticate with server';
+        }
       }
       return token;
     },
 
     async session({ session, token }) {
-      // Make the token available in session
-      //session.accessToken = token.accessToken as string;
-      //session.provider = token.provider as string;
+      // Make the tokens available in session
+      session.accessToken = token.accessToken as string;
+      session.provider = token.provider as string;
+      session.serverToken = token.serverToken as string; // If you want to store server token
 
-// 🚧 TEMPORARILY COMMENTED OUT GRAPHQL CALL
-      const { data } = await client.mutate({
-            mutation: FBLOGIN,
-             variables: { input: { idToken: token.accessToken } },
-      });
-      
-        
-      session.accessToken = data.loginWithFacebook.token as string;
-      
       if (token.error) session.error = token.error as string;
       return session;
     },
   },
 
-  debug: true,
+  debug: process.env.NODE_ENV !== 'production',
 };
