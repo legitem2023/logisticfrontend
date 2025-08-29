@@ -66,10 +66,11 @@ export const authOptions: NextAuthOptions = {
         //localStorage.setItem("session_token", account.access_token as string);
         // Optional: Send to GraphQL server here in JWT callback
         // This might be better than doing it in session callback
-       try {
+       const token =  account.access_token.toString();
+        try {
           const { data } = await client.mutate({
             mutation: FBLOGIN,
-            variables: { input: { idToken: account.access_token as string } },
+            variables: { input: { idToken: "EAA5BpUxFUHEBPWoH6pkrCXASSyj2UxbDxOJkwXoa2LaF6zzuZAuUVZA3Qk5iFKtu6Wh4jqRf3TmjM2qgZB4sZCZCMZB1cnRqI8AHL5CoIfhRTZBprUHNhV6hM92GIGU9WXZC6V8UMRzSjJl2w08zmEEwbrZAEbqqcZCPZCyzA1IygrG6BIaUYZBcI73ysfZCZADLFri4FJrcbqIWvCCzv2Yorxvf7zqRtguj8AC2VM8pDRE1Xa4DpwdBFTLKJ5W9XA" } },
           });
           
           // Store your server token in JWT if needed
