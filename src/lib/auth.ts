@@ -96,11 +96,8 @@ export const authOptions: NextAuthOptions = {
             // Set cookie for server token
             const res = NextResponse.next();
             res.cookies.set("token", data.loginWithFacebook.token, {
-              httpOnly: true,
-              secure: process.env.NODE_ENV === "production",
-              sameSite: "lax",
-              path: "/",
-              maxAge: 30 * 24 * 60 * 60,
+              secure:true,
+              sameSite: "lax"
             });
             console.log("Token cookie set successfully");
           } else {
