@@ -35,7 +35,7 @@ export async function deleteServerSession(request: Request) {
     }
     
     // Clear any server-side cookies
-    const cookieStore = cookies();
+    const cookieStore = Cookies();
     cookieStore.delete('next-auth.session-token');
     cookieStore.delete('next-auth.csrf-token');
     
@@ -75,7 +75,7 @@ export async function comprehensiveSessionCleanup() {
     }
     
     // If you need server-side cleanup in a component
-    const cookieStore = cookies();
+    const cookieStore = Cookies();
     const session = await getServerSession(authOptions);
     
     if (session?.serverToken) {
