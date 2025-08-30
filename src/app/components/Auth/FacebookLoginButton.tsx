@@ -1,6 +1,5 @@
 // FacebookLoginButton.jsx
 "use client";
-
 import { signIn, useSession } from "next-auth/react";
 import { useMutation } from '@apollo/client'
 import { useEffect, useState } from "react";
@@ -8,11 +7,12 @@ import { FaFacebook, FaCheckCircle, FaExclamationTriangle } from "react-icons/fa
 import { gql, ApolloClient, InMemoryCache, HttpLink } from "@apollo/client";
 import Cookies from "js-cookie";
 import { FBLOGIN } from '../../../../graphql/mutation'
-
+import { useDispatch,useSelector } from 'react-redux';
+import { setActiveIndex } from '../../../../Redux/activeIndexSlice';
 
 export default function FacebookLoginButton() {
   const { data: session, status } = useSession();
- 
+  const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const [storageStatus, setStorageStatus] = useState({
     cookies: false,
@@ -49,6 +49,7 @@ export default function FacebookLoginButton() {
     };
 
     sendTokenToGraphQL();
+    dispatch(setActiveIndex(1))
   }, [session, status]);
 
   return (
