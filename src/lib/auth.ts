@@ -78,7 +78,7 @@ export const authOptions: NextAuthOptions = {
            const res = NextResponse.json({ success: true });
           // 👇 Save the GraphQL token in cookie named "token"
           if (data?.loginWithFacebook?.token) {
-            res.cookies().set("token", data.loginWithFacebook.token, {
+            res.cookies.set("token", data.loginWithFacebook.token, {
               httpOnly: true,
               secure: process.env.NODE_ENV === "production",
               sameSite: "lax",
