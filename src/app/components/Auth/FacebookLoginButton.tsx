@@ -63,46 +63,6 @@ export default function FacebookLoginButton() {
           {loading ? "Signing in..." : (status === "authenticated" ? "Signed In" : "Sign in with Facebook")}
         </span>
       </button>
-      
-      {status === "authenticated" && (
-        <div className="p-4 bg-gray-50 rounded-lg">
-          <h3 className="font-medium text-gray-800 mb-2">Authentication Status</h3>
-          
-          <div className="space-y-2">
-            <div className="flex items-center">
-              {storageStatus.cookies ? (
-                <FaCheckCircle className="text-green-500 mr-2" />
-              ) : (
-                <FaExclamationTriangle className="text-yellow-500 mr-2" />
-              )}
-              <span>Cookies: {storageStatus.cookies ? 'Token stored' : 'No token found'}</span>
-            </div>
-            
-            <div className="flex items-center">
-              {storageStatus.localStorage ? (
-                <FaCheckCircle className="text-green-500 mr-2" />
-              ) : (
-                <FaExclamationTriangle className="text-yellow-500 mr-2" />
-              )}
-              <span>Local Storage: {storageStatus.localStorage ? 'Token stored' : 'No token found'}</span>
-            </div>
-          </div>
-          
-          {storageStatus.message && (
-            <p className={`mt-2 text-sm ${storageStatus.cookies && storageStatus.localStorage ? 'text-green-600' : 'text-yellow-600'}`}>
-              {storageStatus.message}
-            </p>
-          )}
-        </div>
-      )}
-      
-      <div className="mt-4 p-4 bg-blue-50 rounded-lg">
-        <h4 className="font-medium text-blue-800 mb-2">Debug Info</h4>
-        <p className="text-sm text-blue-700">Session status: {status}</p>
-        <p className="text-sm text-blue-700">User: {session?.user?.name || 'Not authenticated'}</p>
-        <p className="text-sm text-blue-700">Token: {session?.accessToken || 'Not authenticated'}</p>
-     
-      </div>
     </div>
   );
               }
