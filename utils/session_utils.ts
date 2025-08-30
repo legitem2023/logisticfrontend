@@ -1,5 +1,5 @@
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "./your-auth-options-file"; // Adjust the import path
+import { authOptions } from "@/lib/auth"; // Facebook and Google are already inside this
 import { signOut } from "next-auth/react";
 
 // Client-side function to delete session
@@ -19,8 +19,7 @@ export async function deleteClientSession() {
 // Server-side function to handle session invalidation
 export async function deleteServerSession(request: Request) {
   try {
-    const session = await getServerSession(authOptions);
-    
+    const session = await getServerSession(authOptions);    
     if (session?.serverToken) {
       // Call your backend API to invalidate the server token
       const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_LINK}/auth/logout`, {
@@ -29,8 +28,7 @@ export async function deleteServerSession(request: Request) {
           'Authorization': `Bearer ${session.serverToken}`,
           'Content-Type': 'application/json',
         },
-      });
-      
+      });      
       if (!response.ok) {
         throw new Error('Failed to invalidate server token');
       }
