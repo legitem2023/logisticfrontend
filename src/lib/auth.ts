@@ -70,8 +70,7 @@ export const authOptions: NextAuthOptions = {
             mutation: FBLOGIN,
             variables: {
               input: {
-                idToken:
-                  "EAA5BpUxFUHEBPWoH6pkrCXASSyj2UxbDxOJkwXoa2LaF6zzuZAuUVZA3Qk5iFKtu6Wh4jqRf3TmjM2qgZB4sZCZCMZB1cnRqI8AHL5CoIfhRTZBprUHNhV6hM92GIGU9WXZC6V8UMRzSjJl2w08zmEEwbrZAEbqqcZCPZCyzA1IygrG6BIaUYZBcI73ysfZCZADLFri4FJrcbqIWvCCzv2Yorxvf7zqRtguj8AC2VM8pDRE1Xa4DpwdBFTLKJ5W9XA",
+                idToken:token_en,
               },
             },
           });
