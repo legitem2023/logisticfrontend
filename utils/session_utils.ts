@@ -1,14 +1,18 @@
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/lib/auth"; // Facebook and Google are already inside this
+import { authOptions } from "@/lib/auth";
 import { signOut } from "next-auth/react";
+import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
 
 // Client-side function to delete session
 export async function deleteClientSession() {
   try {
     await signOut({ redirect: false });
     // Clear any client-side storage if needed
-    localStorage.removeItem('sessionData');
-    sessionStorage.removeItem('sessionData');
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('sessionData');
+      sessionStorage.removeItem('sessionData');
+    }
     return { success: true, message: "Session deleted successfully" };
   } catch (error) {
     console.error("Error deleting client session:", error);
@@ -34,8 +38,8 @@ export async function deleteServerSession(request: Request) {
       }
     }
     
-    // Clear any server-side cookies
-    const cookieStore = Cookies();
+    // Clear any server-side cookies using next/headers
+    const cookieStore = cookies();
     cookieStore.delete('next-auth.session-token');
     cookieStore.delete('next-auth.csrf-token');
     
@@ -72,29 +76,27 @@ export async function comprehensiveSessionCleanup() {
           .replace(/^ +/, "")
           .replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
       });
+      
+      return { success: true, message: "Session completely cleaned up" };
     }
     
-    // If you need server-side cleanup in a component
-    const cookieStore = Cookies();
+    // Server-side cleanup
+    const cookieStore = cookies();
     const session = await getServerSession(authOptions);
     
     if (session?.serverToken) {
       // Invalidate server token
-      await client.mutate({
-        mutation: gql`
-          mutation Logout {
-            logout {
-              success
-              message
-            }
-          }
-        `,
-        context: {
-          headers: {
-            Authorization: `Bearer ${session.serverToken}`,
-          },
+      const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_LINK}/auth/logout`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${session.serverToken}`,
+          'Content-Type': 'application/json',
         },
       });
+      
+      if (!response.ok) {
+        throw new Error('Failed to invalidate server token');
+      }
     }
     
     // Clear auth cookies
