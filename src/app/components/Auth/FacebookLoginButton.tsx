@@ -12,20 +12,7 @@ import { FBLOGIN } from '../../../../graphql/mutation'
 
 export default function FacebookLoginButton() {
   const { data: session, status } = useSession();
- const [loginWithFacebook] = useMutation(FBLOGIN,{
-   onCompleted:(result:any) =>{
-     console.log(result);
-     Cookies.set("Token", result.Token, {
-              expires: 7,
-              secure: process.env.NODE_ENV === "production",
-              sameSite: "lax",
-              path: "/",
-            });
-   },
-   onError:(e:any) =>{
-     console.log(e);
-   }
- })
+ 
   const [loading, setLoading] = useState(false);
   const [storageStatus, setStorageStatus] = useState({
     cookies: false,
@@ -42,12 +29,12 @@ export default function FacebookLoginButton() {
     const sendTokenToGraphQL = async () => {
       if (status === "authenticated" && session?.accessToken) {
         try {
-          await loginWithFacebook({
-            variables: {
-              input: { idToken: session.accessToken },
-            },
-          });
-       
+       Cookies.set("token", session.serverToken, {
+              expires: 7,
+              secure: process.env.NODE_ENV === "production",
+              sameSite: "lax",
+              path: "/",
+            });
         } catch (err) {
           console.error("GraphQL mutation failed:", err);
           setStorageStatus({
