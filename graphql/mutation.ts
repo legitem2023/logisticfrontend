@@ -1,5 +1,41 @@
 import { gql } from "@apollo/client";
 
+
+
+export const LOGOUT_MUTATION = gql`
+  mutation Logout {
+    logout {
+      success
+      message
+    }
+  }
+`;
+
+export const LOGOUT_ALL_MUTATION = gql`
+  mutation LogoutAllDevices {
+    logoutAllDevices {
+      success
+      message
+    }
+  }
+`;
+
+export const AUTH_STATUS_QUERY = gql`
+  query AuthStatus {
+    authStatus {
+      authenticated
+      user {
+        id
+        email
+        name
+        image
+        role
+      }
+    }
+  }
+`;
+
+
 export const LOGIN = gql`
 mutation Login($input: LoginInput) {
   login(input: $input) {
