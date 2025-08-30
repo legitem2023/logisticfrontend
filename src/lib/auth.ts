@@ -1,5 +1,6 @@
 import FacebookProvider from "next-auth/providers/facebook";
 import { NextAuthOptions } from "next-auth";
+import { NextResponse } from "next/server";
 import { gql, ApolloClient, InMemoryCache, HttpLink } from "@apollo/client";
 import { cookies } from "next/headers"; // 👈 added for cookie
 
@@ -74,10 +75,10 @@ export const authOptions: NextAuthOptions = {
               },
             },
           });
-
+           const res = NextResponse.json({ success: true });
           // 👇 Save the GraphQL token in cookie named "token"
           if (data?.loginWithFacebook?.token) {
-            cookies().set("token", data.loginWithFacebook.token, {
+            res.cookies().set("token", data.loginWithFacebook.token, {
               httpOnly: true,
               secure: process.env.NODE_ENV === "production",
               sameSite: "lax",
