@@ -92,14 +92,6 @@ export const authOptions: NextAuthOptions = {
             console.log("Server token received, setting in JWT");
             // Ensure serverToken is properly typed as string
             token.serverToken = data.loginWithFacebook.token as string;
-            
-            // Set cookie for server token
-            const res = NextResponse.next();
-            res.cookies.set("token", data.loginWithFacebook.token, {
-              secure:true,
-              sameSite: "lax"
-            });
-            console.log("Token cookie set successfully");
           } else {
             console.log("No token received from GraphQL mutation");
             console.log("Response data:", data);
