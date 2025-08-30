@@ -2,7 +2,7 @@ import FacebookProvider from "next-auth/providers/facebook";
 import { NextAuthOptions } from "next-auth";
 import { NextResponse } from "next/server";
 import { gql, ApolloClient, InMemoryCache, HttpLink } from "@apollo/client";
-import { cookies } from "next/headers"; // 👈 added for cookie
+import { cookies } from "next/headers";
 
 export const FBLOGIN = gql`
   mutation LoginWithFacebook($input: GoogleLoginInput!) {
@@ -62,19 +62,20 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async jwt({ token, account }) {
       console.log("JWT callback triggered");
-      console.log("Token:", token);
-      console.log("Account:", account);
+      console.log("Token received:", JSON.stringify(token, null, 2));
+      console.log("Account received:", JSON.stringify(account, null, 2));
       
       if (account?.provider === "facebook") {
-        console.log("Facebook account detected");
+        console.log("Facebook account detected, processing...");
         token.accessToken = account.access_token;
         token.provider = account.provider;
 
-        const token_en = account.access_token.toString();
+        const token_en = account.access_token?.toString() || "";
         console.log("Facebook access token:", token_en);
         
         try {
-          console.log("Attempting GraphQL mutation to:", process.env.NEXT_PUBLIC_SERVER_LINK);
+          console.log("Attempting GraphQL mutation to server...");
+          console.log("Server URL:", process.env.NEXT_PUBLIC_SERVER_LINK);
           
           const { data } = await client.mutate({
             mutation: FBLOGIN,
@@ -85,13 +86,15 @@ export const authOptions: NextAuthOptions = {
             },
           });
           
-          console.log("GraphQL mutation response:", data);
+          console.log("GraphQL mutation response:", JSON.stringify(data, null, 2));
           
-          const res = NextResponse.json({ success: true });
-          
-          // 👇 Save the GraphQL token in cookie named "token"
           if (data?.loginWithFacebook?.token) {
-            console.log("Setting token cookie with value:", data.loginWithFacebook.token);
+            console.log("Server token received, setting in JWT");
+            // Ensure serverToken is properly typed as string
+            token.serverToken = data.loginWithFacebook.token as string;
+            
+            // Set cookie for server token
+            const res = NextResponse.next();
             res.cookies.set("token", data.loginWithFacebook.token, {
               httpOnly: true,
               secure: process.env.NODE_ENV === "production",
@@ -99,49 +102,52 @@ export const authOptions: NextAuthOptions = {
               path: "/",
               maxAge: 30 * 24 * 60 * 60,
             });
+            console.log("Token cookie set successfully");
           } else {
             console.log("No token received from GraphQL mutation");
+            console.log("Response data:", data);
           }
         } catch (err) {
           console.error("GraphQL login error:", err);
           console.error("Error details:", JSON.stringify(err, null, 2));
+          token.error = "Authentication failed";
         }
       } else {
-        console.log("Account provider is not Facebook:", account?.provider);
+        console.log("Account provider is not Facebook or account is missing:", account?.provider);
       }
       
-      console.log("Returning token:", token);
+      console.log("Final token being returned:", JSON.stringify(token, null, 2));
       return token;
     },
 
     async session({ session, token }) {
       console.log("Session callback triggered");
-      console.log("Session:", session);
-      console.log("Token:", token);
+      console.log("Session input:", JSON.stringify(session, null, 2));
+      console.log("Token input:", JSON.stringify(token, null, 2));
       
       if (token) {
-        session.accessToken = token.accessToken;
-        session.provider = token.provider;
-        session.serverToken = token.serverToken;
-        session.error = token.error;
+        // Ensure all token properties are properly typed before assignment
+        session.accessToken = token.accessToken as string | undefined;
+        session.provider = token.provider as string | undefined;
+        session.serverToken = token.serverToken as string | undefined; // This fixes the TypeScript error
+        session.error = token.error as string | undefined;
       }
       
-      console.log("Final session:", session);
+      console.log("Final session being returned:", JSON.stringify(session, null, 2));
       return session;
     },
 
     async signIn({ user, account, profile }) {
       console.log("SignIn callback triggered");
-      console.log("User:", user);
-      console.log("Account:", account);
-      console.log("Profile:", profile);
+      console.log("User:", JSON.stringify(user, null, 2));
+      console.log("Account:", JSON.stringify(account, null, 2));
+      console.log("Profile:", JSON.stringify(profile, null, 2));
       return true;
     },
   },
 
   debug: process.env.NODE_ENV !== "production",
   
-  // Add logger for additional debugging
   logger: {
     error(code, metadata) {
       console.error("NextAuth error:", code, metadata);
