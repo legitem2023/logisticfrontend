@@ -42,6 +42,19 @@ export const authOptions: NextAuthOptions = {
 
   session: { strategy: "jwt", maxAge: 30 * 24 * 60 * 60 },
 
+  // ✅ FIX: Explicit cookie settings so Chrome/Safari don't drop them
+  cookies: {
+    sessionToken: {
+      name: `__Secure-next-auth.session-token`,
+      options: {
+        httpOnly: true,
+        sameSite: "lax",    // keeps cookie during Facebook redirect
+        path: "/",
+        secure: process.env.NODE_ENV === "production", // must be true in prod
+      },
+    },
+  },
+
   callbacks: {
     async jwt({ token, account }) {
       console.log("JWT callback triggered");
@@ -75,7 +88,7 @@ export const authOptions: NextAuthOptions = {
             // Set the server token in a cookie here
             const cookieStore = await cookies();
             cookieStore.set("token", data.loginWithFacebook.token, {
-              httpOnly:true,
+              httpOnly: true,
               expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
               secure: process.env.NODE_ENV === "production",
               sameSite: "lax",
