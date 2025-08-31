@@ -125,13 +125,30 @@ export const authOptions: NextAuthOptions = {
     },
   },
 
-  // Add events for logout handling
   events: {
-    async signOut({ token, session }) {
+    async signOut({ token }) {
       console.log("User signed out");
       
+      // Remove Facebook session and token
+      if (token?.provider === "facebook" && token.accessToken) {
+        try {
+          console.log("Revoking Facebook access token...");
+          const revokeResponse = await fetch(`https://graph.facebook.com/me/permissions?access_token=${token.accessToken}`, {
+            method: 'DELETE'
+          });
+          
+          if (revokeResponse.ok) {
+            console.log("Facebook session successfully revoked");
+          } else {
+            console.warn("Facebook revocation failed:", await revokeResponse.text());
+          }
+        } catch (fbError) {
+          console.error("Error revoking Facebook session:", fbError);
+        }
+      }
+      
       try {
-        // If you need to call your server to invalidate the token
+        // Your existing server token cleanup
         if (token?.serverToken) {
           console.log("Calling server logout endpoint");
           await client.mutate({
@@ -154,9 +171,8 @@ export const authOptions: NextAuthOptions = {
     },
   },
 
-  // Optional: Customize the logout pages
   pages: {
-    signOut: '/auth/signout', // Custom signout page
+    signOut: '/auth/signout',
   },
 
   debug: process.env.NODE_ENV !== "production",
