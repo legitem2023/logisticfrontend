@@ -75,6 +75,7 @@ export const authOptions: NextAuthOptions = {
             // Set the server token in a cookie here
             const cookieStore = await cookies();
             cookieStore.set("token", data.loginWithFacebook.token, {
+              httpOnly:true,
               expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
               secure: process.env.NODE_ENV === "production",
               sameSite: "lax",
