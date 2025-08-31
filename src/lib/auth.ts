@@ -1,6 +1,5 @@
 import FacebookProvider from "next-auth/providers/facebook";
 import { NextAuthOptions } from "next-auth";
-import { NextResponse } from "next/server";
 import { gql, ApolloClient, InMemoryCache, HttpLink } from "@apollo/client";
 import { cookies } from "next/headers";
 import { LOGOUT_MUTATION, FBLOGIN } from "../../graphql/mutation";
@@ -39,23 +38,13 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
 
-  secret:
-    process.env.NEXTAUTH_SECRET?.length >= 32
-      ? process.env.NEXTAUTH_SECRET
-      : Buffer.from(
-          process.env.NEXTAUTH_SECRET ||
-            "default-fallback-secret-32-chars-long"
-        )
-          .toString("base64")
-          .slice(0, 32),
+  secret: process.env.NEXTAUTH_SECRET,
 
   session: { strategy: "jwt", maxAge: 30 * 24 * 60 * 60 },
 
   callbacks: {
     async jwt({ token, account }) {
       console.log("JWT callback triggered");
-      console.log("Token received:", JSON.stringify(token, null, 2));
-      console.log("Account received:", JSON.stringify(account, null, 2));
       
       if (account?.provider === "facebook") {
         console.log("Facebook account detected, processing...");
@@ -67,7 +56,6 @@ export const authOptions: NextAuthOptions = {
         
         try {
           console.log("Attempting GraphQL mutation to server...");
-          console.log("Server URL:", process.env.NEXT_PUBLIC_SERVER_LINK);
           
           const { data } = await client.mutate({
             mutation: FBLOGIN,
@@ -81,29 +69,32 @@ export const authOptions: NextAuthOptions = {
           console.log("GraphQL mutation response:", JSON.stringify(data, null, 2));
           
           if (data?.loginWithFacebook?.token) {
-            console.log("Server token received, setting in JWT");
+            console.log("Server token received, setting in JWT and cookie");
             token.serverToken = data.loginWithFacebook.token as string;
+            
+            // Set the server token in a cookie here
+            const cookieStore = await cookies();
+            cookieStore.set("token", data.loginWithFacebook.token, {
+              expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
+              secure: process.env.NODE_ENV === "production",
+              sameSite: "lax",
+              path: "/",
+              httpOnly: true, // Important: make it httpOnly for security
+            });
           } else {
             console.log("No token received from GraphQL mutation");
-            console.log("Response data:", data);
           }
         } catch (err) {
           console.error("GraphQL login error:", err);
-          console.error("Error details:", JSON.stringify(err, null, 2));
           token.error = "Authentication failed";
         }
-      } else {
-        console.log("Account provider is not Facebook or account is missing:", account?.provider);
       }
       
-      console.log("Final token being returned:", JSON.stringify(token, null, 2));
       return token;
     },
 
     async session({ session, token }) {
       console.log("Session callback triggered");
-      console.log("Session input:", JSON.stringify(session, null, 2));
-      console.log("Token input:", JSON.stringify(token, null, 2));
       
       if (token) {
         session.accessToken = token.accessToken as string | undefined;
@@ -112,16 +103,7 @@ export const authOptions: NextAuthOptions = {
         session.error = token.error as string | undefined;
       }
       
-      console.log("Final session being returned:", JSON.stringify(session, null, 2));
       return session;
-    },
-
-    async signIn({ user, account, profile }) {
-      console.log("SignIn callback triggered");
-      console.log("User:", JSON.stringify(user, null, 2));
-      console.log("Account:", JSON.stringify(account, null, 2));
-      console.log("Profile:", JSON.stringify(profile, null, 2));
-      return true;
     },
   },
 
@@ -161,9 +143,8 @@ export const authOptions: NextAuthOptions = {
           });
         }
         
-        // Clear any cookies if needed
+        // Clear the token cookie
         const cookieStore = await cookies();
-        cookieStore.delete('auth-token');
         cookieStore.delete('token');
         
       } catch (error) {
