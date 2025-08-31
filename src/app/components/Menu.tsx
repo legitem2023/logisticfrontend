@@ -16,20 +16,25 @@ export default function Menu() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-
-
-// The httpOnly cookie is automatically sent with fetch
-const response = await fetch('/api/protected-data', {
-  method: 'GET',
-  credentials: 'include', // ← This sends the httpOnly cookie
-});
-
-const data = await response.json();
-    console.log(data);
-
-    
     const timer = setTimeout(() => setLoading(false), 1500); // 1.5 sec delay
     return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    // The httpOnly cookie is automatically sent with fetch requests
+    fetch('/api/protected', {
+      credentials: 'include' // Important: includes cookies
+    })
+      .then(response => {
+        if (response.status === 401) {
+          // Handle unauthorized access
+          throw new Error('Unauthorized');
+        }
+        return response.json();
+      })
+      .then(data => console.log(data))
+      .catch(error => console.error('Error:', error))
+      .finally(() => setLoading(false));
   }, []);
 
   const isUserActive = (): boolean => {
