@@ -68,7 +68,7 @@ export default function LogoutButton() {
     </button>
   )
 }
-*/
+
 'use client'
 
 import { useState } from 'react'
@@ -143,4 +143,24 @@ export default function LogoutButton() {
       )}
     </button>
   )
+}
+*/
+// components/LogoutButton.tsx
+'use client';
+
+import { signOut } from 'next-auth/react';
+
+export default function LogoutButton() {
+  const handleLogout = async () => {
+    await signOut({
+      redirect: true,
+      callbackUrl: '/', // Redirect to home after logout
+    });
+  };
+
+  return (
+    <button onClick={handleLogout} className="logout-button">
+      Logout
+    </button>
+  );
 }
