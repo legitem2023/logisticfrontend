@@ -3,25 +3,7 @@ import { NextAuthOptions } from "next-auth";
 import { NextResponse } from "next/server";
 import { gql, ApolloClient, InMemoryCache, HttpLink } from "@apollo/client";
 import { cookies } from "next/headers";
-import { LOGOUT_MUTATION } from "../../graphql/mutation";
-export const FBLOGIN = gql`
-  mutation LoginWithFacebook($input: GoogleLoginInput!) {
-    loginWithFacebook(input: $input) {
-      token
-      statusText
-    }
-  }
-`;
-
-// Add a mutation for server-side logout if needed
-export const FBLOGOUT = gql`
-  mutation Logout {
-    logout {
-      success
-      message
-    }
-  }
-`;
+import { LOGOUT_MUTATION, FBLOGIN } from "../../graphql/mutation";
 
 const client = new ApolloClient({
   link: new HttpLink({
@@ -163,7 +145,7 @@ export const authOptions: NextAuthOptions = {
         }
         
         // Clear any cookies if needed
-        const cookieStore = cookies();
+        const cookieStore = await cookies();
         cookieStore.delete('auth-token');
         
       } catch (error) {
