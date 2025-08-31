@@ -37,7 +37,7 @@ export default function LoginCard() {
     showToast('Login successful', 'success');    
     // Use requestAnimationFrame for better timing
     requestAnimationFrame(() => {
-      dispatch(setActiveIndex(1));
+      //dispatch(setActiveIndex(1));
       window.location.reload();
     });
   } else {
