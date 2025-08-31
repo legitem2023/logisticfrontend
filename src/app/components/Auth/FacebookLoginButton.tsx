@@ -26,32 +26,6 @@ export default function FacebookLoginButton() {
     dispatch(setActiveIndex(1));
   };
 
-  useEffect(() => {
-    const sendTokenToGraphQL = async () => {
-      if (status === "authenticated" && session?.accessToken) {
-        try {
-       Cookies.set("token", session.serverToken, {
-              expires: 7,
-              secure: process.env.NODE_ENV === "production",
-              sameSite: "lax",
-              path: "/",
-            });
-        } catch (err) {
-          console.error("GraphQL mutation failed:", err);
-          setStorageStatus({
-            cookies: false,
-            localStorage: false,
-            message: 'Authentication failed'
-          });
-        } finally {
-          setLoading(false);
-        }
-      }
-    };
-
-    sendTokenToGraphQL();
-  }, [session, status]);
-
   return (
     <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-lg">
       <button
