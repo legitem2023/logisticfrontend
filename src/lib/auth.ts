@@ -3,12 +3,22 @@ import { NextAuthOptions } from "next-auth";
 import { NextResponse } from "next/server";
 import { gql, ApolloClient, InMemoryCache, HttpLink } from "@apollo/client";
 import { cookies } from "next/headers";
-
+import { LOGOUT_MUTATION } from "../../graphql/mutation";
 export const FBLOGIN = gql`
   mutation LoginWithFacebook($input: GoogleLoginInput!) {
     loginWithFacebook(input: $input) {
       token
       statusText
+    }
+  }
+`;
+
+// Add a mutation for server-side logout if needed
+export const FBLOGOUT = gql`
+  mutation Logout {
+    logout {
+      success
+      message
     }
   }
 `;
@@ -90,7 +100,6 @@ export const authOptions: NextAuthOptions = {
           
           if (data?.loginWithFacebook?.token) {
             console.log("Server token received, setting in JWT");
-            // Ensure serverToken is properly typed as string
             token.serverToken = data.loginWithFacebook.token as string;
           } else {
             console.log("No token received from GraphQL mutation");
@@ -115,10 +124,9 @@ export const authOptions: NextAuthOptions = {
       console.log("Token input:", JSON.stringify(token, null, 2));
       
       if (token) {
-        // Ensure all token properties are properly typed before assignment
         session.accessToken = token.accessToken as string | undefined;
         session.provider = token.provider as string | undefined;
-        session.serverToken = token.serverToken as string | undefined; // This fixes the TypeScript error
+        session.serverToken = token.serverToken as string | undefined;
         session.error = token.error as string | undefined;
       }
       
@@ -133,6 +141,40 @@ export const authOptions: NextAuthOptions = {
       console.log("Profile:", JSON.stringify(profile, null, 2));
       return true;
     },
+  },
+
+  // Add events for logout handling
+  events: {
+    async signOut({ token, session }) {
+      console.log("User signed out");
+      
+      try {
+        // If you need to call your server to invalidate the token
+        if (token?.serverToken) {
+          console.log("Calling server logout endpoint");
+          await client.mutate({
+            mutation: FBLOGOUT,
+            context: {
+              headers: {
+                Authorization: `Bearer ${token.serverToken}`,
+              },
+            },
+          });
+        }
+        
+        // Clear any cookies if needed
+        const cookieStore = cookies();
+        cookieStore.delete('auth-token');
+        
+      } catch (error) {
+        console.error("Error during logout:", error);
+      }
+    },
+  },
+
+  // Optional: Customize the logout pages
+  pages: {
+    signOut: '/auth/signout', // Custom signout page
   },
 
   debug: process.env.NODE_ENV !== "production",
