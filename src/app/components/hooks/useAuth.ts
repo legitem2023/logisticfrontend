@@ -3,8 +3,7 @@ import { useRouter } from 'next/navigation';
 import { 
   LOGOUT_MUTATION, 
   LOGOUT_ALL_MUTATION, 
-  AUTH_STATUS_QUERY,
-  LOGIN_FACEBOOK_MUTATION 
+  AUTH_STATUS_QUERY
 } from "../../../../graphql/mutation";
 
 interface User {
