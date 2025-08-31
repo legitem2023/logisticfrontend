@@ -41,7 +41,6 @@ const Navigation = ({ userRole, isUserActive }) => {
   const router = useRouter(); 
   const pathname = usePathname();
   const isHome = pathname === "/";
-  console.log(isHome,"Home");
   useEffect(() => {
     const checkIsMobile = () => {
       setIsMobile(window.innerWidth < 768);
