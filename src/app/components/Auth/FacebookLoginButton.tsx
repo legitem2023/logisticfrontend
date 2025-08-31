@@ -23,6 +23,7 @@ export default function FacebookLoginButton() {
   const handleFBLogin = async () => {
     setLoading(true);
     await signIn("facebook", { redirect: false });
+    dispatch(setActiveIndex(1));
   };
 
   useEffect(() => {
@@ -49,7 +50,6 @@ export default function FacebookLoginButton() {
     };
 
     sendTokenToGraphQL();
-    dispatch(setActiveIndex(1))
   }, [session, status]);
 
   return (
