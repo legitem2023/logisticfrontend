@@ -5,7 +5,7 @@ import {
   LOGOUT_ALL_MUTATION, 
   AUTH_STATUS_QUERY,
   LOGIN_FACEBOOK_MUTATION 
-} from '../../../../graphql/mutations';
+} from '../../../../graphql/mutation';
 
 interface User {
   id: string;
