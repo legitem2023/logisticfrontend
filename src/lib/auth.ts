@@ -153,7 +153,7 @@ export const authOptions: NextAuthOptions = {
         if (token?.serverToken) {
           console.log("Calling server logout endpoint");
           await client.mutate({
-            mutation: FBLOGOUT,
+            mutation: LOGOUT_MUTATION,
             context: {
               headers: {
                 Authorization: `Bearer ${token.serverToken}`,
