@@ -164,6 +164,7 @@ export const authOptions: NextAuthOptions = {
         // Clear any cookies if needed
         const cookieStore = await cookies();
         cookieStore.delete('auth-token');
+        cookieStore.delete('token');
         
       } catch (error) {
         console.error("Error during logout:", error);
