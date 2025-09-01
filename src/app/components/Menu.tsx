@@ -27,7 +27,15 @@ const [loading, setLoading] = useState(true);
         }
         return response.json();
       })
-      .then(data => console.log(data))
+      .then(data => {
+        if (data?.user) {
+          setActive(true);
+        } else {
+          setActive(false);
+        }  
+       //################
+       console.log(data.user); 
+      })
       .catch(error => console.error('Error:', error))
       .finally(() => setLoading(false));
   }, []);
@@ -51,12 +59,13 @@ return (
 } else {
 return (
 <div className="min-h-screen flex flex-col bg-gray-50">
-<Navigation userRole={useRole} isUserActive={isUserActive} />
+<Navigation userRole={useRole} isUserActive={isUserActive} is_Active={isActive}/>
 <main className="p-0">
 <ActiveContentDisplay  
 activeTab={GlobalactiveIndex}  
 useRole={useRole}  
-isUserActive={isUserActive}  
+isUserActive={isUserActive} 
+is_Active={isActive}
 />
 </main>
 <Footer/>
