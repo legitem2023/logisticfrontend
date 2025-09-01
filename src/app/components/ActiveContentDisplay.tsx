@@ -51,10 +51,11 @@ const RiderList = dynamic(() => import('./Rider/RiderList'), {
 });
 
 
-export function ActiveContentDisplay({ activeTab, useRole, isUserActive }: {
+export function ActiveContentDisplay({ activeTab, useRole, isUserActive, is_Active }: {
   activeTab: number;
   useRole: string;
   isUserActive:()=>boolean;
+  is_Active:boolean;
 }) {
     console.log(useRole,"<<<<");
 
@@ -92,7 +93,7 @@ useEffect(() => {
         </div>
       ),
     },
-    ...(isUserActive()
+    ...(is_Active
       ? [
           {
             id:3,
@@ -115,7 +116,7 @@ useEffect(() => {
           },
         ]
       : []),
- ...(isUserActive() && (useRole === 'Sender' || useRole === 'SENDER')
+ ...(is_Active && (useRole === 'Sender' || useRole === 'SENDER')
   ? [
       {
         id:4,
@@ -130,7 +131,7 @@ useEffect(() => {
       },
     ]
   : []),
-     ...(isUserActive() && (useRole === 'Sender' || useRole === 'SENDER')
+     ...(is_Active && (useRole === 'Sender' || useRole === 'SENDER')
   ? [
       {
         id:5,
@@ -145,7 +146,7 @@ useEffect(() => {
       },
     ]
   : []),
-        ...(isUserActive() && (useRole === 'Administrator' || useRole === 'ADMINISTRATOR')
+        ...(is_Active && (useRole === 'Administrator' || useRole === 'ADMINISTRATOR')
       ? [
           {
             id:6,
@@ -160,7 +161,7 @@ useEffect(() => {
           },
         ]
       : []),
-      ...(isUserActive() && (useRole === 'Administrator' || useRole === 'ADMINISTRATOR')
+      ...(is_Active && (useRole === 'Administrator' || useRole === 'ADMINISTRATOR')
       ? [
           {
             id:7,
@@ -175,7 +176,7 @@ useEffect(() => {
           },
         ]
       : []),
-    ...(isUserActive() && (useRole === 'Administrator' || useRole === 'ADMINISTRATOR')
+    ...(is_Active && (useRole === 'Administrator' || useRole === 'ADMINISTRATOR')
       ? [
           {
             id:8,
@@ -190,7 +191,7 @@ useEffect(() => {
           },
         ]
       : []),
-      ...(isUserActive()
+      ...(is_Active
       ? [
           {
             id:9,
@@ -216,7 +217,7 @@ useEffect(() => {
         </div>
       ),
     },
-    ...(!isUserActive()
+    ...(!is_Active
       ? [
           {
             id:11,
@@ -231,7 +232,7 @@ useEffect(() => {
           },
         ]
       : []),
-    ...(!isUserActive()
+    ...(!is_Active
       ? [
           {
             id:12,
@@ -246,7 +247,7 @@ useEffect(() => {
           },
         ]
       : []),
-    ...(isUserActive()
+    ...(is_Active
       ? [
           {
             id:13,
@@ -261,7 +262,7 @@ useEffect(() => {
           },
         ]
       : []),
-        ...(!isUserActive()
+        ...(!is_Active
       ? [
           {
             id:14,
