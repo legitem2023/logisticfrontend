@@ -19,20 +19,20 @@ export default function Menu() {
     const timer = setTimeout(() => setLoading(false), 1500); // 1.5 sec delay
     return () => clearTimeout(timer);
   }, []);
-
+/*
   useEffect(() => {
     // Ask your backend (api/protected) if the httpOnly cookie is valid
     const checkAuth = async () => {
       try {
-        const res = await fetch("/api/protected", {
-          credentials: "include", // send cookies
-        });
-console.log(res);
-       /* if (res.ok) {
+  //      const res = await fetch("/api/protected", {
+  //        credentials: "include", // send cookies
+ //       });
+//console.log(res);
+       if (res.ok) {
           setActive(true); // cookie valid
         } else {
           setActive(false); // cookie invalid / missing
-        }*/
+        }
       } catch (err) {
         console.error("Failed to check auth:", err);
         setActive(false);
@@ -41,7 +41,7 @@ console.log(res);
 
    // checkAuth();
   }, []);
-
+*/
   const GlobalactiveIndex = useSelector((state: any) => state.activeIndex.value);
 
   if (loading) {
