@@ -16,7 +16,7 @@ export default function GlobalScripts() {
   const dispatch = useDispatch();
   const globalUserId = useSelector(selectTempUserId);
   const useRole = useSelector(selectRole);
-  const active = useSelector((state:any) => state.isActiveUser);
+  const active = useSelector((state:any) => state.isActiveUser.isActiveUser);
   // Get user role from token via API
   console.log(active,"session cookie");
   useEffect(() => {
