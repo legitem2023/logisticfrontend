@@ -14,7 +14,7 @@ const isUserActive = (): boolean => {
     const token = Cookies.get('token');
     return !!token;
   };
-
+console.log(isActiveUser,"<----");
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
       <Navigation
