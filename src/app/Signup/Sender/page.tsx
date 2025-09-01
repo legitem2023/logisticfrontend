@@ -16,6 +16,7 @@ const isUserActive = (): boolean => {
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
       <Navigation
+      is_Active={false}
       userRole={useRole}
       isUserActive={isUserActive}/>        
       {/* Sidebar with tab content */}
