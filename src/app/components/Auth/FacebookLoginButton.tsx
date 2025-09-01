@@ -27,17 +27,14 @@ export default function FacebookLoginButton() {
   };
 
   return (
-    <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-lg">
       <button
         onClick={handleFBLogin}
         disabled={loading || status === "authenticated"}
-        className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-[#1877F2] text-white rounded-lg shadow-sm hover:bg-[#165fce] transition-colors duration-200 disabled:opacity-50 mb-4"
-      >
+        className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-[#1877F2] text-white rounded-lg shadow-sm hover:bg-[#165fce] transition-colors duration-200 disabled:opacity-50 mb-4">
         <FaFacebook className="text-xl" />
         <span className="text-base font-medium">
           {loading ? "Signing in..." : (status === "authenticated" ? "Signed In" : "Sign in with Facebook")}
         </span>
-      </button>
-    </div>
+    </button>
   );
               }
