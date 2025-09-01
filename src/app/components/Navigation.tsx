@@ -30,7 +30,7 @@ import {
   ScrollText
 } from 'lucide-react';
 
-const Navigation = ({ userRole, isUserActive }) => {
+const Navigation = ({ userRole, isUserActive, is_Active }) => {
   const dispatch = useDispatch();
   const activeIndex = useSelector((state:any) => state.activeIndex.value);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -65,7 +65,7 @@ const Navigation = ({ userRole, isUserActive }) => {
       role: '',
       icon: <ChartBarIcon size={20} />
     },
-    ...(isUserActive()
+    ...(is_Active
       ? [
           {
             id: 3,
@@ -75,7 +75,7 @@ const Navigation = ({ userRole, isUserActive }) => {
           },
         ]
       : []),
-    ...(isUserActive() && (userRole === 'Sender' || userRole === 'SENDER')
+    ...(is_Active && (userRole === 'Sender' || userRole === 'SENDER')
       ? [
           {
             id: 4,
@@ -95,7 +95,7 @@ const Navigation = ({ userRole, isUserActive }) => {
           },
         ]
       : []),*/
-    ...(isUserActive() && (userRole === 'Administrator' || userRole === 'ADMINISTRATOR')
+    ...(is_Active && (userRole === 'Administrator' || userRole === 'ADMINISTRATOR')
       ? [
           {
             id: 6,
@@ -105,7 +105,7 @@ const Navigation = ({ userRole, isUserActive }) => {
           },
         ]
       : []),
-    ...(isUserActive() && (userRole === 'Administrator' || userRole === 'ADMINISTRATOR')
+    ...(is_Active && (userRole === 'Administrator' || userRole === 'ADMINISTRATOR')
       ? [
           {
             id: 7,
@@ -115,7 +115,7 @@ const Navigation = ({ userRole, isUserActive }) => {
           },
         ]
       : []),
-    ...(isUserActive() && (userRole === 'Administrator' || userRole === 'ADMINISTRATOR')
+    ...(is_Active && (userRole === 'Administrator' || userRole === 'ADMINISTRATOR')
       ? [
           {
             id: 8,
@@ -125,7 +125,7 @@ const Navigation = ({ userRole, isUserActive }) => {
           },
         ]
       : []),
-    ...(isUserActive()
+    ...(is_Active
       ? [
           {
             id: 9,
@@ -141,7 +141,7 @@ const Navigation = ({ userRole, isUserActive }) => {
       role: '',
       icon: <HelpCircle size={20} />
     },
-    ...(!isUserActive()
+    ...(!is_Active
       ? [
           {
             id: 11,
@@ -151,7 +151,7 @@ const Navigation = ({ userRole, isUserActive }) => {
           },
         ]
       : []),
-    ...(!isUserActive()
+    ...(!is_Active
       ? [
           {
             id: 12,
@@ -184,8 +184,7 @@ const Navigation = ({ userRole, isUserActive }) => {
           isActive ? 'bg-gradient-to-r from-gold-500/20 to-transparent text-white shadow-lg' : ''
         }`}
         onClick={(e) => {
-          e.preventDefault();
-          
+          e.preventDefault();   
           dispatch(setActiveIndex(item.id));
           if(!isHome){
             router.push('/');
@@ -247,7 +246,6 @@ const Navigation = ({ userRole, isUserActive }) => {
   );
 };
 
-
 const MobileSupportNavItem = ({ item }) => {
     // Check if current page matches the item's path (for support pages)
     const isActive = item.role && pathname === item.role;
@@ -271,9 +269,6 @@ const MobileSupportNavItem = ({ item }) => {
       </a>
     );
   };
-
-
-  
   // For desktop, we'll show up to 4 main items and put the rest in a dropdown
   const maxMainItems = 3;
   const mainItems = tabItems.slice(0, maxMainItems);
@@ -367,7 +362,7 @@ const MobileSupportNavItem = ({ item }) => {
             
             <div className="flex items-center">
               
-              {isUserActive() && (
+              {is_Active && (
                 <div className="relative">
                   <NotificationDropdown userId={globalUserId} />
                 </div>
@@ -393,7 +388,7 @@ const MobileSupportNavItem = ({ item }) => {
           <div className="fixed inset-0 bg-[rgba(0,0,0,0.5)] backdrop-blur-sm" onClick={() => setIsDrawerOpen(false)}></div>
           <div className="relative bg-white/80 backdrop-blur-md w-80 h-full overflow-y-auto luxury-shadow">
             <div className="customgrad h-20 flex items-center justify-between p-5 border-b border-green-500/20">
-          {isUserActive()?(
+          {is_Active?(
             <div className="px-4 py-6 border-b border-gray-200/50">
               <div className="flex items-center space-x-3">
                 <div className="relative h-10 w-10 rounded-full bg-gray-200 overflow-hidden">
@@ -441,8 +436,6 @@ const MobileSupportNavItem = ({ item }) => {
                 <MobileSupportNavItem key={item.id} item={item} />
               ))}
             </div>
-            
-
           </div>
         </div>
       )}
