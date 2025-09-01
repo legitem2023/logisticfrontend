@@ -9,6 +9,7 @@ import Footer from "../components/Footer";
 
 export default function Page() {
 const useRole = useSelector(selectRole); 
+const isActiveUser = useSelector((state:any) => state.isActiveUser.value);
 const isUserActive = (): boolean => {
     const token = Cookies.get('token');
     return !!token;
@@ -19,7 +20,7 @@ const isUserActive = (): boolean => {
       <Navigation
       userRole={useRole}
       isUserActive={isUserActive}
-      is_Active={false}
+      is_Active={isActiveUser}
     />       
       {/* Sidebar with tab content */}
       <LogisticContactFormPage />
