@@ -1,4 +1,5 @@
 // pages/api/auth/[...nextauth].js
+import{ NextAuthOptions } from "next-auth";
 import NextAuth from "next-auth";
 import FacebookProvider from "next-auth/providers/facebook";
 import { gql, ApolloClient, InMemoryCache, HttpLink } from "@apollo/client";
@@ -32,7 +33,7 @@ const client = new ApolloClient({
   ssrMode: true,
 });
 
-export default NextAuth({
+export const authOptions:NextAuthOptions = {
   providers: [
     FacebookProvider({
       clientId: process.env.FACEBOOK_CLIENT_ID,
@@ -242,4 +243,4 @@ export default NextAuth({
       console.log("NextAuth debug:", code, metadata);
     }
   }
-});
+};
