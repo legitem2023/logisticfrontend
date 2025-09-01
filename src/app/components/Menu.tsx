@@ -43,33 +43,36 @@ useEffect(() => {
 
 
   
-  const isUserActive = async (): boolean => {
-    //const token = Cookies.get('token');
-    //return !!token;
-    return await fetch('/api/protected', {
-  credentials: 'include' // Important: includes cookies
-})
-  .then(response => {
+  const isUserActive = async (): Promise<boolean> => {
+  try {
+    const response = await fetch('/api/protected', {
+      credentials: 'include', // important to include cookies
+    });
+
     if (response.status === 401) {
-      // Handle unauthorized access
       return false;
     }
-    return response.json();
-  })
-  .then(data => {
-    if (!data || !data.user || typeof data.user !== "string" || data.user.length < 10) {
-      // not a valid token/long string
-      return false;
+
+    const data = await response.json();
+
+    // Case 1: response itself is a token string
+    if (typeof data === "string" && data.length > 10) {
+      return true;
     }
-    // valid token/long string exists
-    return true;
-  })
-  .catch(error => {
-    console.error('Error:', error);
+
+    // Case 2: response is { user: "tokenstring..." }
+    if (data?.user && typeof data.user === "string" && data.user.length > 10) {
+      return true;
+    }
+
     return false;
-  })
-  .finally(() => setLoading(false));
-  };
+  } catch (error) {
+    console.error("Error:", error);
+    return false;
+  } finally {
+    setLoading(false);
+  }
+};
 
   const GlobalactiveIndex = useSelector((state: any) => state.activeIndex.value);
 
