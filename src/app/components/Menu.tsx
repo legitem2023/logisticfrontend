@@ -47,20 +47,28 @@ useEffect(() => {
     //const token = Cookies.get('token');
     //return !!token;
     return fetch('/api/protected', {
-      credentials: 'include' // Important: includes cookies
-    })
-      .then(response => {
-        if (response.status === 401) {
-          // Handle unauthorized access
-          throw new Error('Unauthorized');
-        }
-        return response.json();
-      })
-      .then(data => {console.log(data.user);
-                    return data.user
-                    })
-      .catch(error => console.error('Error:', error))
-      .finally(() => setLoading(false));
+  credentials: 'include' // Important: includes cookies
+})
+  .then(response => {
+    if (response.status === 401) {
+      // Handle unauthorized access
+      return false;
+    }
+    return response.json();
+  })
+  .then(data => {
+    if (!data || !data.user || typeof data.user !== "string" || data.user.length < 10) {
+      // not a valid token/long string
+      return false;
+    }
+    // valid token/long string exists
+    return true;
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    return false;
+  })
+  .finally(() => setLoading(false));
   };
 
   const GlobalactiveIndex = useSelector((state: any) => state.activeIndex.value);
