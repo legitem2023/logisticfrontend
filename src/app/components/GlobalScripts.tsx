@@ -141,7 +141,7 @@ import { setCurrentLocation } from '../../../Redux/locationSlice';
 import { setTempUserId, selectTempUserId } from '../../../Redux/tempUserSlice';
 import { setUsername } from '../../../Redux/usernameSlice';
 import { setRole, selectRole } from '../../../Redux/roleSlice';
-import { setIsActiveUser } '../../../Redux/isActiveUserSlice';
+import { setIsActiveUser } from '../../../Redux/isActiveUserSlice';
 export default function GlobalScripts() {
   const dispatch = useDispatch();
   const globalUserId = useSelector(selectTempUserId);
