@@ -9,7 +9,7 @@ import Footer from "../components/Footer";
 
 export default function Page() {
 const useRole = useSelector(selectRole); 
-const isActiveUser = useSelector((state:any) => state.isActiveUser.value);
+const isActiveUser = useSelector((state:any) => state.isActiveUser.isActiveUser);
 const isUserActive = (): boolean => {
     const token = Cookies.get('token');
     return !!token;
