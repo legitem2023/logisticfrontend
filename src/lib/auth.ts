@@ -26,9 +26,6 @@ declare module "next-auth" {
     provider?: string;
     serverToken?: string;
     error?: string;
-    exp?: number;
-    iat?: number;
-    jti?: string;
   }
 }
 
@@ -37,116 +34,131 @@ export const authOptions: NextAuthOptions = {
     FacebookProvider({
       clientId: process.env.FACEBOOK_CLIENT_ID!,
       clientSecret: process.env.FACEBOOK_CLIENT_SECRET!,
-      authorization: {
-        params: {
-          scope: "email,public_profile",
-        },
-      },
+      authorization: { params: { scope: "email,public_profile" } },
     }),
   ],
 
   secret: process.env.NEXTAUTH_SECRET,
 
-  session: {
-    strategy: "jwt",
-    maxAge: 30 * 24 * 60 * 60, // 30 days
-  },
-
-  cookies: {
-    sessionToken: {
-      name: "__Secure-next-auth.session-token",
-      options: {
-        httpOnly: true,
-        sameSite: "lax",
-        path: "/",
-        secure: process.env.NODE_ENV === "production",
-        domain:
-          process.env.NODE_ENV === "production"
-            ? ".yourdomain.com"
-            : undefined,
-      },
-    },
-    pkceCodeVerifier: {
-      name: "__Secure-next-auth.pkce.code_verifier",
-      options: {
-        httpOnly: true,
-        sameSite: "lax",
-        path: "/",
-        secure: process.env.NODE_ENV === "production",
-        maxAge: 900,
-      },
-    },
-    state: {
-      name: "__Secure-next-auth.state",
-      options: {
-        httpOnly: true,
-        sameSite: "lax",
-        path: "/",
-        secure: process.env.NODE_ENV === "production",
-        maxAge: 900,
-      },
-    },
-  },
+  session: { strategy: "jwt", maxAge: 30 * 24 * 60 * 60 },
 
   callbacks: {
-    async signIn({ user, account, profile }) {
-      if (account.provider === "facebook") {
+    async jwt({ token, account }) {
+      console.log("JWT callback triggered");
+      
+      if (account?.provider === "facebook") {
+        console.log("Facebook account detected, processing...");
+        token.accessToken = account.access_token;
+        token.provider = account.provider;
+
+        const token_en = account.access_token?.toString() || "";
+        console.log("Facebook access token:", token_en);
+        
         try {
-          // You can perform additional checks or operations here
-          return true;
-        } catch (error) {
-          console.error("Sign-in error:", error);
-          return false;
+          console.log("Attempting GraphQL mutation to server...");
+          
+          const { data } = await client.mutate({
+            mutation: FBLOGIN,
+            variables: {
+              input: {
+                idToken: token_en,
+              },
+            },
+          });
+          
+          console.log("GraphQL mutation response:", JSON.stringify(data, null, 2));
+          
+          if (data?.loginWithFacebook?.token) {
+            console.log("Server token received, setting in JWT and cookie");
+            token.serverToken = data.loginWithFacebook.token as string;
+            
+            // Set the server token in a cookie here
+            const cookieStore = await cookies();
+            cookieStore.set("token", data.loginWithFacebook.token, {
+              expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
+              secure: process.env.NODE_ENV === "production",
+              sameSite: "lax",
+              path: "/",
+              httpOnly: true, // Important: make it httpOnly for security
+            });
+          } else {
+            console.log("No token received from GraphQL mutation");
+          }
+        } catch (err) {
+          console.error("GraphQL login error:", err);
+          token.error = "Authentication failed";
         }
       }
-      return true;
+      
+      return token;
     },
 
     async session({ session, token }) {
-      if (typeof token.accessToken === "string") {
-        session.accessToken = token.accessToken;
+      console.log("Session callback triggered");
+      
+      if (token) {
+        session.accessToken = token.accessToken as string | undefined;
+        session.provider = token.provider as string | undefined;
+        session.serverToken = token.serverToken as string | undefined;
+        session.error = token.error as string | undefined;
       }
+      
       return session;
-    },
-
-    async redirect({ url, baseUrl }) {
-      if (url.startsWith("/")) return `${baseUrl}${url}`;
-      else if (new URL(url).origin === baseUrl) return url;
-      return baseUrl;
     },
   },
 
   events: {
     async signOut({ token }) {
-      try {
-        await client.mutate({
-          mutation: LOGOUT_MUTATION,
-          variables: { token: token.serverToken },
-        });
-      } catch (error) {
-        console.error("Logout mutation failed", error);
+      console.log("User signed out");
+      
+      // Remove Facebook session and token
+      if (token?.provider === "facebook" && token.accessToken) {
+        try {
+          console.log("Revoking Facebook access token...");
+          const revokeResponse = await fetch(`https://graph.facebook.com/me/permissions?access_token=${token.accessToken}`, {
+            method: 'DELETE'
+          });
+          
+          if (revokeResponse.ok) {
+            console.log("Facebook session successfully revoked");
+          } else {
+            console.warn("Facebook revocation failed:", await revokeResponse.text());
+          }
+        } catch (fbError) {
+          console.error("Error revoking Facebook session:", fbError);
+        }
       }
-    },
-
-    async linkAccount({ user, account, profile }) {
-      console.log("Account linked:", account.provider);
-    },
-
-    async session({ session, token }) {
-      // Session is active
+      
+      try {
+        // Your existing server token cleanup
+        if (token?.serverToken) {
+          console.log("Calling server logout endpoint");
+          await client.mutate({
+            mutation: LOGOUT_MUTATION,
+            context: {
+              headers: {
+                Authorization: `Bearer ${token.serverToken}`,
+              },
+            },
+          });
+        }
+        
+        // Clear the token cookie
+        const cookieStore = await cookies();
+        cookieStore.delete('token');
+        
+      } catch (error) {
+        console.error("Error during logout:", error);
+      }
     },
   },
 
   pages: {
-    signIn: "/auth/signin",
-    signOut: "/auth/signout",
-    error: "/auth/error", // Error code passed in query string as ?error=
-    verifyRequest: "/auth/verify-request", // (used for check email message)
-    newUser: "/auth/new-user", // New users will be directed here on first sign in
+    signOut: '/auth/signout',
   },
 
-  debug: process.env.NODE_ENV === "development",
-
+  debug: process.env.NODE_ENV !== "production",
+  
   logger: {
     error(code, metadata) {
       console.error("NextAuth error:", code, metadata);
@@ -156,6 +168,6 @@ export const authOptions: NextAuthOptions = {
     },
     debug(code, metadata) {
       console.log("NextAuth debug:", code, metadata);
-    },
-  },
+    }
+  }
 };
