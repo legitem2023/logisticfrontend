@@ -49,7 +49,7 @@ export const authOptions: NextAuthOptions = {
 
   session: { 
     strategy: "jwt", 
-    maxAge: 30 * 24 * 60 *60 // 30 days
+    maxAge: 30 * 24 * 60 * 60 // 30 days
   },
 
   cookies: {
@@ -87,10 +87,8 @@ export const authOptions: NextAuthOptions = {
 
   callbacks: {
     async signIn({ user, account, profile }) {
-      // Check if this sign in callback is being called in the credentials authentication flow.
       if (account.provider === "facebook") {
         try {
-          // You can perform additional checks or operations here
           return true;
         } catch (error) {
           console.error("Sign-in error:", error);
@@ -113,6 +111,17 @@ export const authOptions: NextAuthOptions = {
             variables: { accessToken: account.access_token },
           });
           token.serverToken = data.fbLogin.token;
+          
+          // Set the "token" cookie with the server token
+          const cookieStore = cookies();
+          cookieStore.set("token", data.fbLogin.token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "lax",
+            path: "/",
+            maxAge: 30 * 24 * 60 * 60, // 30 days
+            domain: process.env.NODE_ENV === "production" ? ".yourdomain.com" : undefined,
+          });
         } catch (error) {
           console.error("Failed to get server token:", error);
           token.error = "Failed to get server token";
@@ -120,37 +129,34 @@ export const authOptions: NextAuthOptions = {
       }
       
       // Return previous token if the access token has not expired yet
-      if (Date.now() < (token.exp as number) * 1000) {
+      if (token.exp && Date.now() < token.exp * 1000) {
         return token;
       }
       
-      // Refresh the token if it's expired
       return token;
     },
 
-  async session({ session, token }) {
-  // Send properties to the client with type checking
-    if (typeof token.accessToken === 'string') {
-      session.accessToken = token.accessToken;
-    }
-  
-    if (typeof token.provider === 'string') {
-      session.provider = token.provider;
-    }
-  
-    if (typeof token.serverToken === 'string') {
-     session.serverToken = token.serverToken;
-    }
-  
-    if (typeof token.error === 'string') {
-      session.error = token.error;
-    }
-  return session;
-},
+    async session({ session, token }) {
+      if (typeof token.accessToken === 'string') {
+        session.accessToken = token.accessToken;
+      }
+    
+      if (typeof token.provider === 'string') {
+        session.provider = token.provider;
+      }
+    
+      if (typeof token.serverToken === 'string') {
+        session.serverToken = token.serverToken;
+      }
+    
+      if (typeof token.error === 'string') {
+        session.error = token.error;
+      }
+      return session;
+    },
+
     async redirect({ url, baseUrl }) {
-      // Allows relative callback URLs
       if (url.startsWith("/")) return `${baseUrl}${url}`;
-      // Allows callback URLs on the same origin
       else if (new URL(url).origin === baseUrl) return url;
       return baseUrl;
     }
@@ -158,18 +164,20 @@ export const authOptions: NextAuthOptions = {
 
   events: {
     async signOut({ token }) {
-      // Call your GraphQL server's logout mutation
       try {
         await client.mutate({
           mutation: LOGOUT_MUTATION,
           variables: { token: token.serverToken },
         });
+        
+        // Clear the "tiken" cookie on signout
+        const cookieStore = cookies();
+        cookieStore.delete("tiken");
       } catch (error) {
         console.error("Logout mutation failed", error);
       }
     },
     async linkAccount({ user, account, profile }) {
-      // Account linked successfully
       console.log("Account linked:", account.provider);
     },
     async session({ session, token }) {
@@ -180,9 +188,9 @@ export const authOptions: NextAuthOptions = {
   pages: {
     signIn: '/auth/signin',
     signOut: '/auth/signout',
-    error: '/auth/error', // Error code passed in query string as ?error=
-    verifyRequest: '/auth/verify-request', // (used for check email message)
-    newUser: '/auth/new-user' // New users will be directed here on first sign in
+    error: '/auth/error',
+    verifyRequest: '/auth/verify-request',
+    newUser: '/auth/new-user'
   },
 
   debug: process.env.NODE_ENV === "development",
