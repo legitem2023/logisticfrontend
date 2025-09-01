@@ -1,5 +1,5 @@
 // app/api/protected/route.js
-import { getServerSession } from "next-auth/next";
+/*import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth"; // Facebook and Google are already inside this
 
 export async function GET(request) {
@@ -19,3 +19,4 @@ export async function GET(request) {
     user: session.serverToken 
   });
 }
+*/
