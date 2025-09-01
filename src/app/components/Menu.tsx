@@ -27,19 +27,19 @@ export default function Menu() {
         const res = await fetch("/api/protected", {
           credentials: "include", // send cookies
         });
-
-        if (res.ok) {
+console.log(res);
+       /* if (res.ok) {
           setActive(true); // cookie valid
         } else {
           setActive(false); // cookie invalid / missing
-        }
+        }*/
       } catch (err) {
         console.error("Failed to check auth:", err);
         setActive(false);
       }
     };
 
-    checkAuth();
+   // checkAuth();
   }, []);
 
   const GlobalactiveIndex = useSelector((state: any) => state.activeIndex.value);
