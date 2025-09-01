@@ -33,12 +33,12 @@ return (
 } else {
 return (
 <div className="min-h-screen flex flex-col bg-gray-50">
-<Navigation userRole={useRole} isUserActive={isActive} />
+<Navigation userRole={useRole} isUserActive={isUserActive} />
 <main className="p-0">
 <ActiveContentDisplay  
 activeTab={GlobalactiveIndex}  
 useRole={useRole}  
-isUserActive={isActive}  
+isUserActive={isUserActive}  
 />
 </main>
 <Footer/>
