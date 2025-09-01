@@ -44,8 +44,23 @@ useEffect(() => {
 
   
   const isUserActive = (): boolean => {
-    const token = Cookies.get('token');
-    return !!token;
+    //const token = Cookies.get('token');
+    //return !!token;
+    return fetch('/api/protected', {
+      credentials: 'include' // Important: includes cookies
+    })
+      .then(response => {
+        if (response.status === 401) {
+          // Handle unauthorized access
+          throw new Error('Unauthorized');
+        }
+        return response.json();
+      })
+      .then(data => {console.log(data.user);
+                    return data.user
+                    })
+      .catch(error => console.error('Error:', error))
+      .finally(() => setLoading(false));
   };
 
   const GlobalactiveIndex = useSelector((state: any) => state.activeIndex.value);
