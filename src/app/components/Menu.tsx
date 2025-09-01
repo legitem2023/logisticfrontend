@@ -34,7 +34,9 @@ useEffect(() => {
         }
         return response.json();
       })
-      .then(data => console.log(data))
+      .then(data => {console.log(data.user);
+                    return data.user
+                    })
       .catch(error => console.error('Error:', error))
       .finally(() => setLoading(false));
   }, []);
