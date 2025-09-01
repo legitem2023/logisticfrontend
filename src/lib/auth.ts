@@ -1,82 +1,97 @@
+// pages/api/auth/[...nextauth].js
+import NextAuth from "next-auth";
 import FacebookProvider from "next-auth/providers/facebook";
-import { NextAuthOptions } from "next-auth";
 import { gql, ApolloClient, InMemoryCache, HttpLink } from "@apollo/client";
 import { cookies } from "next/headers";
 import { LOGOUT_MUTATION, FBLOGIN } from "../../graphql/mutation";
 
+// Validate environment variables
+const validateEnv = () => {
+  const required = [
+    'FACEBOOK_CLIENT_ID',
+    'FACEBOOK_CLIENT_SECRET',
+    'NEXTAUTH_SECRET',
+    'NEXTAUTH_URL',
+    'NEXT_PUBLIC_SERVER_LINK'
+  ];
+  
+  const missing = required.filter(key => !process.env[key]);
+  if (missing.length > 0) {
+    throw new Error(`Missing environment variables: ${missing.join(', ')}`);
+  }
+};
+
+validateEnv();
+
 const client = new ApolloClient({
   link: new HttpLink({
-    uri: process.env.NEXT_PUBLIC_SERVER_LINK!,
+    uri: process.env.NEXT_PUBLIC_SERVER_LINK,
     credentials: "include",
   }),
   cache: new InMemoryCache(),
   ssrMode: true,
 });
 
-declare module "next-auth" {
-  interface Session {
-    accessToken?: string;
-    provider?: string;
-    serverToken?: string;
-    error?: string;
-  }
-
-  interface JWT {
-    accessToken?: string;
-    provider?: string;
-    serverToken?: string;
-    error?: string;
-  }
-}
-
-export const authOptions: NextAuthOptions = {
+export default NextAuth({
   providers: [
     FacebookProvider({
-      clientId: process.env.FACEBOOK_CLIENT_ID!,
-      clientSecret: process.env.FACEBOOK_CLIENT_SECRET!,
-      authorization: { params: { scope: "email,public_profile" } },
+      clientId: process.env.FACEBOOK_CLIENT_ID,
+      clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
+      authorization: { 
+        params: { 
+          scope: "email,public_profile",
+          // Additional parameters to prevent 400 errors
+          auth_type: 'rerequest',
+          display: 'popup'
+        } 
+      },
+      // Enhanced profile handling
+      profile: (profile) => {
+        return {
+          id: profile.id,
+          name: profile.name,
+          email: profile.email,
+          image: profile.picture?.data?.url,
+        };
+      },
     }),
   ],
 
   secret: process.env.NEXTAUTH_SECRET,
 
-  session: { strategy: "jwt", maxAge: 30 * 24 * 60 * 60 },
+  session: { 
+    strategy: "jwt", 
+    maxAge: 30 * 24 * 60 * 60 
+  },
 
-  // ✅ FIX: Explicit cookie settings so Chrome/Safari don't drop them
+  // Cookie configuration - simplified to avoid conflicts
   cookies: {
     sessionToken: {
-      name: `__Secure-next-auth.session-token`,
+      name: `${process.env.NODE_ENV === 'production' ? '__Secure-' : ''}next-auth.session-token`,
       options: {
         httpOnly: true,
         sameSite: "lax",
         path: "/",
         secure: process.env.NODE_ENV === "production",
-      },
-    },
-    pkceCodeVerifier: {
-      name: `__Secure-next-auth.pkce.code_verifier`,
-      options: {
-        httpOnly: true,
-        sameSite: "lax",
-        path: "/",
-        secure: process.env.NODE_ENV === "production",
-        maxAge: 900, // 15 minutes
-      },
-    },
-    state: {
-      name: `__Secure-next-auth.state`,
-      options: {
-        httpOnly: true,
-        sameSite: "lax",
-        path: "/",
-        secure: process.env.NODE_ENV === "production",
-        maxAge: 900, // 15 minutes
+        domain: process.env.NODE_ENV === "production" ? 
+          new URL(process.env.NEXTAUTH_URL).hostname : undefined
       },
     },
   },
 
   callbacks: {
-    async jwt({ token, account }) {
+    async signIn({ user, account, profile }) {
+      // Additional sign-in validation
+      if (account.provider === "facebook") {
+        if (!profile.email) {
+          // Email is required for our application
+          return "/auth/error?error=email_required";
+        }
+      }
+      return true;
+    },
+    
+    async jwt({ token, account, user }) {
       console.log("JWT callback triggered");
       
       if (account?.provider === "facebook") {
@@ -85,7 +100,7 @@ export const authOptions: NextAuthOptions = {
         token.provider = account.provider;
 
         const token_en = account.access_token?.toString() || "";
-        console.log("Facebook access token:", token_en);
+        console.log("Facebook access token received");
         
         try {
           console.log("Attempting GraphQL mutation to server...");
@@ -99,27 +114,37 @@ export const authOptions: NextAuthOptions = {
             },
           });
           
-          console.log("GraphQL mutation response:", JSON.stringify(data, null, 2));
+          console.log("GraphQL mutation response received");
           
           if (data?.loginWithFacebook?.token) {
-            console.log("Server token received, setting in JWT and cookie");
-            token.serverToken = data.loginWithFacebook.token as string;
+            console.log("Server token received, setting in JWT");
+            token.serverToken = data.loginWithFacebook.token;
             
-            // Set the server token in a cookie here
-            const cookieStore = await cookies();
+            // Set the server token in a cookie
+            const cookieStore = cookies();
             cookieStore.set("token", data.loginWithFacebook.token, {
               httpOnly: true,
-              expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
+              expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
               secure: process.env.NODE_ENV === "production",
               sameSite: "lax",
-              path: "/"
+              path: "/",
+              domain: process.env.NODE_ENV === "production" ? 
+                new URL(process.env.NEXTAUTH_URL).hostname : undefined
             });
           } else {
-            console.log("No token received from GraphQL mutation");
+            console.error("No token received from GraphQL mutation");
+            throw new Error("Authentication failed: No server token received");
           }
         } catch (err) {
           console.error("GraphQL login error:", err);
-          token.error = "Authentication failed";
+          // More specific error handling
+          if (err.networkError) {
+            throw new Error("Network error during authentication");
+          } else if (err.graphQLErrors && err.graphQLErrors.length > 0) {
+            throw new Error(`Authentication failed: ${err.graphQLErrors[0].message}`);
+          } else {
+            throw new Error("Authentication failed: Unknown error");
+          }
         }
       }
       
@@ -130,13 +155,19 @@ export const authOptions: NextAuthOptions = {
       console.log("Session callback triggered");
       
       if (token) {
-        session.accessToken = token.accessToken as string | undefined;
-        session.provider = token.provider as string | undefined;
-        session.serverToken = token.serverToken as string | undefined;
-        session.error = token.error as string | undefined;
+        session.accessToken = token.accessToken;
+        session.provider = token.provider;
+        session.serverToken = token.serverToken;
+        session.error = token.error;
       }
       
       return session;
+    },
+    
+    // Add redirect callback to handle potential issues
+    async redirect({ url, baseUrl }) {
+      // Ensure we always redirect to the baseUrl after auth
+      return baseUrl;
     },
   },
 
@@ -148,9 +179,10 @@ export const authOptions: NextAuthOptions = {
       if (token?.provider === "facebook" && token.accessToken) {
         try {
           console.log("Revoking Facebook access token...");
-          const revokeResponse = await fetch(`https://graph.facebook.com/me/permissions?access_token=${token.accessToken}`, {
-            method: 'DELETE'
-          });
+          const revokeResponse = await fetch(
+            `https://graph.facebook.com/me/permissions?access_token=${token.accessToken}`, 
+            { method: 'DELETE' }
+          );
           
           if (revokeResponse.ok) {
             console.log("Facebook session successfully revoked");
@@ -177,17 +209,24 @@ export const authOptions: NextAuthOptions = {
         }
         
         // Clear the token cookie
-        const cookieStore = await cookies();
+        const cookieStore = cookies();
         cookieStore.delete('token');
         
       } catch (error) {
         console.error("Error during logout:", error);
       }
     },
+    
+    // Add error handling event
+    async error({ error }) {
+      console.error("NextAuth error event:", error);
+    },
   },
 
   pages: {
+    signIn: '/auth/signin',
     signOut: '/auth/signout',
+    error: '/auth/error', // Error code passed in query string as ?error=
   },
 
   debug: process.env.NODE_ENV !== "production",
@@ -203,4 +242,4 @@ export const authOptions: NextAuthOptions = {
       console.log("NextAuth debug:", code, metadata);
     }
   }
-};
+});
