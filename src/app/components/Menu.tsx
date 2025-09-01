@@ -43,7 +43,7 @@ useEffect(() => {
 
 
   
-  const isUserActive = () => {
+  const isUserActive = ():boolean => {
   const result = Cookies.get("token");
   return result;
 };
