@@ -26,6 +26,7 @@ export default function LogoutButton() {
       redirect: true,
       callbackUrl: '/', // Redirect to home after logout
     });
+   dispatch(setActiveIndex(12));
   };
 
   return (
