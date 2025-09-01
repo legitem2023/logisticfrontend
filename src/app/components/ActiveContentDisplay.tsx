@@ -54,7 +54,7 @@ const RiderList = dynamic(() => import('./Rider/RiderList'), {
 export function ActiveContentDisplay({ activeTab, useRole, isUserActive }: {
   activeTab: number;
   useRole: string;
-  isUserActive:any;
+  isUserActive:()=>boolean;
 }) {
     console.log(useRole,"<<<<");
 
