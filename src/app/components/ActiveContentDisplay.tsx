@@ -92,7 +92,7 @@ useEffect(() => {
         </div>
       ),
     },
-    ...(isUserActive()
+    ...(isUserActive
       ? [
           {
             id:3,
@@ -115,7 +115,7 @@ useEffect(() => {
           },
         ]
       : []),
- ...(isUserActive() && (useRole === 'Sender' || useRole === 'SENDER')
+ ...(isUserActive && (useRole === 'Sender' || useRole === 'SENDER')
   ? [
       {
         id:4,
@@ -130,7 +130,7 @@ useEffect(() => {
       },
     ]
   : []),
-     ...(isUserActive() && (useRole === 'Sender' || useRole === 'SENDER')
+     ...(isUserActive && (useRole === 'Sender' || useRole === 'SENDER')
   ? [
       {
         id:5,
@@ -145,7 +145,7 @@ useEffect(() => {
       },
     ]
   : []),
-        ...(isUserActive() && (useRole === 'Administrator' || useRole === 'ADMINISTRATOR')
+        ...(isUserActive && (useRole === 'Administrator' || useRole === 'ADMINISTRATOR')
       ? [
           {
             id:6,
@@ -160,7 +160,7 @@ useEffect(() => {
           },
         ]
       : []),
-              ...(isUserActive() && (useRole === 'Administrator' || useRole === 'ADMINISTRATOR')
+              ...(isUserActive && (useRole === 'Administrator' || useRole === 'ADMINISTRATOR')
       ? [
           {
             id:7,
@@ -175,7 +175,7 @@ useEffect(() => {
           },
         ]
       : []),
-    ...(isUserActive() && (useRole === 'Administrator' || useRole === 'ADMINISTRATOR')
+    ...(isUserActive && (useRole === 'Administrator' || useRole === 'ADMINISTRATOR')
       ? [
           {
             id:8,
@@ -190,7 +190,7 @@ useEffect(() => {
           },
         ]
       : []),
-      ...(isUserActive()
+      ...(isUserActive
       ? [
           {
             id:9,
@@ -216,7 +216,7 @@ useEffect(() => {
         </div>
       ),
     },
-    ...(!isUserActive()
+    ...(!isUserActive
       ? [
           {
             id:11,
@@ -231,7 +231,7 @@ useEffect(() => {
           },
         ]
       : []),
-    ...(!isUserActive()
+    ...(!isUserActive
       ? [
           {
             id:12,
@@ -246,7 +246,7 @@ useEffect(() => {
           },
         ]
       : []),
-    ...(isUserActive()
+    ...(isUserActive
       ? [
           {
             id:13,
@@ -261,7 +261,7 @@ useEffect(() => {
           },
         ]
       : []),
-        ...(!isUserActive()
+        ...(!isUserActive
       ? [
           {
             id:14,
