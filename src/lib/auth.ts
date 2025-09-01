@@ -113,7 +113,7 @@ export const authOptions: NextAuthOptions = {
           token.serverToken = data.fbLogin.token;
           
           // Set the "token" cookie with the server token
-          const cookieStore = cookies();
+          const cookieStore = await cookies();
           cookieStore.set("token", data.fbLogin.token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
@@ -171,7 +171,7 @@ export const authOptions: NextAuthOptions = {
         });
         
         // Clear the "tiken" cookie on signout
-        const cookieStore = cookies();
+        const cookieStore = await cookies();
         cookieStore.delete("tiken");
       } catch (error) {
         console.error("Logout mutation failed", error);
