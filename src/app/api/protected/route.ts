@@ -16,6 +16,6 @@ export async function GET(request) {
   // You can access user data from the session
   return Response.json({ 
     message: "Protected data", 
-    user: session.user 
+    user: session.serverToken 
   });
 }
