@@ -1,6 +1,5 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import Cookies from 'js-cookie';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectTempUserId } from '../../../Redux/tempUserSlice';
 import { selectRole } from '../../../Redux/roleSlice';
@@ -14,33 +13,8 @@ const globalUserId = useSelector(selectTempUserId);
 const useRole = useSelector(selectRole);
 const [isActive,setActive] = useState(false);
 const [loading, setLoading] = useState(true);
-
- useEffect(() => {
-    // The httpOnly cookie is automatically sent with fetch requests
-    fetch('/api/protected', {
-      credentials: 'include' // Important: includes cookies
-    })
-      .then(response => {
-        if (response.status === 401) {
-          // Handle unauthorized access
-          throw new Error('Unauthorized');
-        }
-        return response.json();
-      })
-      .then(data => {
-        if (data?.user) {
-          setActive(true);
-        } else {
-          setActive(false);
-        }  
-       //################
-       console.log(data.user); 
-      })
-      .catch(error => console.error('Error:', error))
-      .finally(() => setLoading(false));
-  }, []);
-
-  
+const isActiveUser = useSelector((state:any) => state.isActiveUser.isActiveUser);
+ 
 useEffect(() => {
 const timer = setTimeout(() => setLoading(false), 1500); // 1.5 sec delay
 return () => clearTimeout(timer);
@@ -65,7 +39,7 @@ return (
 activeTab={GlobalactiveIndex}  
 useRole={useRole}  
 isUserActive={isUserActive} 
-is_Active={isActive}
+is_Active={isActiveUser}
 />
 </main>
 <Footer/>
