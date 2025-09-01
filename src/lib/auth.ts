@@ -56,7 +56,7 @@ export const authOptions: NextAuthOptions = {
     sessionToken: {
       name: `__Secure-next-auth.session-token`,
       options: {
-        httpOnly: true,
+        httpOnly: false,
         sameSite: "lax",
         path: "/",
         secure: process.env.NODE_ENV === "production",
@@ -66,7 +66,7 @@ export const authOptions: NextAuthOptions = {
     pkceCodeVerifier: {
       name: `__Secure-next-auth.pkce.code_verifier`,
       options: {
-        httpOnly: true,
+        httpOnly: false,
         sameSite: "lax",
         path: "/",
         secure: process.env.NODE_ENV === "production",
@@ -76,7 +76,7 @@ export const authOptions: NextAuthOptions = {
     state: {
       name: `__Secure-next-auth.state`,
       options: {
-        httpOnly: true,
+        httpOnly: false,
         sameSite: "lax",
         path: "/",
         secure: process.env.NODE_ENV === "production",
@@ -115,7 +115,7 @@ export const authOptions: NextAuthOptions = {
           // Set the "token" cookie with the server token
           const cookieStore = await cookies();
           cookieStore.set("token", data.fbLogin.token, {
-            httpOnly: true,
+            httpOnly:false,
             secure: process.env.NODE_ENV === "production",
             sameSite: "lax",
             path: "/",
@@ -172,7 +172,7 @@ export const authOptions: NextAuthOptions = {
         
         // Clear the "tiken" cookie on signout
         const cookieStore = await cookies();
-        cookieStore.delete("tiken");
+        cookieStore.delete("token");
       } catch (error) {
         console.error("Logout mutation failed", error);
       }
@@ -187,10 +187,7 @@ export const authOptions: NextAuthOptions = {
 
   pages: {
     signIn: '/auth/signin',
-    signOut: '/auth/signout',
-    error: '/auth/error',
-    verifyRequest: '/auth/verify-request',
-    newUser: '/auth/new-user'
+    signOut: '/auth/signout'
   },
 
   debug: process.env.NODE_ENV === "development",
