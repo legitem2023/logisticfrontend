@@ -45,6 +45,7 @@ export default function LoginCard() {
         console.error('Login error:', result.error)
       } else {
         showToast('Login successful', 'success')
+        dispatch(setActiveIndex(1))
         // Redirect or reload as needed
         window.location.reload()
       }
