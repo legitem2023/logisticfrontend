@@ -163,12 +163,14 @@ export default function GlobalScripts() {
         const data = await response.json();
         const token = data?.user;
         const secret = process.env.NEXT_PUBLIC_JWT_SECRET;
-        console.log(data.user,"Towken");
+        //console.log(data.user,"Towken");
         if (token && secret) {
+          const isValidToken = (data?.user && typeof data.user === "string" && data.user.length > 20) ? true: false;
           const payload = await decryptToken(token, secret);
           dispatch(setRole(payload.role));
           dispatch(setTempUserId(payload.userId));
           dispatch(setUsername(payload.name));
+          dispatch(setIsActiveUser(isValidToken));
         }
       } catch (err) {
         console.error('Error getting role:', err);
