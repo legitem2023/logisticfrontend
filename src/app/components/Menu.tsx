@@ -15,6 +15,24 @@ const useRole = useSelector(selectRole);
 const [isActive,setActive] = useState(false);
 const [loading, setLoading] = useState(true);
 
+ useEffect(() => {
+    // The httpOnly cookie is automatically sent with fetch requests
+    fetch('/api/protected', {
+      credentials: 'include' // Important: includes cookies
+    })
+      .then(response => {
+        if (response.status === 401) {
+          // Handle unauthorized access
+          throw new Error('Unauthorized');
+        }
+        return response.json();
+      })
+      .then(data => console.log(data))
+      .catch(error => console.error('Error:', error))
+      .finally(() => setLoading(false));
+  }, []);
+
+  
 useEffect(() => {
 const timer = setTimeout(() => setLoading(false), 1500); // 1.5 sec delay
 return () => clearTimeout(timer);
