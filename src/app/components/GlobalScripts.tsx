@@ -163,7 +163,7 @@ export default function GlobalScripts() {
         const data = await response.json();
         const token = data?.user;
         const secret = process.env.NEXT_PUBLIC_JWT_SECRET;
-        console.log(data);
+        console.log(data.user,"Towken");
         if (token && secret) {
           const payload = await decryptToken(token, secret);
           dispatch(setRole(payload.role));
