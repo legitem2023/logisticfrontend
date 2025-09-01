@@ -43,10 +43,10 @@ useEffect(() => {
 
 
   
-  const isUserActive = (): boolean => {
+  const isUserActive = async (): boolean => {
     //const token = Cookies.get('token');
     //return !!token;
-    return fetch('/api/protected', {
+    return await fetch('/api/protected', {
   credentials: 'include' // Important: includes cookies
 })
   .then(response => {
