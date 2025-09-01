@@ -45,7 +45,7 @@ useEffect(() => {
   
   const isUserActive = ():boolean => {
   const result = Cookies.get("token");
-  return result;
+  return !!result;
 };
   const GlobalactiveIndex = useSelector((state: any) => state.activeIndex.value);
 
