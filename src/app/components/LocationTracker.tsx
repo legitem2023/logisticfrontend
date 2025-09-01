@@ -163,10 +163,20 @@ export default function LocationTracker() {
 
           lastUpdateRef.current = now;
         
-        const token = Cookies.get('token');
+        const response = await fetch('/api/protected', {
+          credentials: 'include' // Important: includes cookies
+        });
+        
+        if (response.status === 401) {
+          // Handle unauthorized access
+          throw new Error('Unauthorized');
+        }
+        
+        const data = await response.json();
+        const token = data?.user;
         const secret = process.env.NEXT_PUBLIC_JWT_SECRET;
         const payload = await decryptToken(token, secret);
-          const location: LocationData = {
+        const location: LocationData = {
             latitude: position.coords.latitude,
             longitude: position.coords.longitude,
             accuracy: position.coords.accuracy,
