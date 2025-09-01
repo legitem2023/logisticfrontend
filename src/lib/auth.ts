@@ -128,26 +128,25 @@ export const authOptions: NextAuthOptions = {
       return token;
     },
 
-    async session({ session, token }) {
+  async session({ session, token }) {
   // Send properties to the client with type checking
-  if (typeof token.accessToken === 'string') {
-    session.accessToken = token.accessToken;
-  }
+    if (typeof token.accessToken === 'string') {
+      session.accessToken = token.accessToken;
+    }
   
-  if (typeof token.provider === 'string') {
-    session.provider = token.provider;
-  }
+    if (typeof token.provider === 'string') {
+      session.provider = token.provider;
+    }
   
-  if (typeof token.serverToken === 'string') {
-    session.serverToken = token.serverToken;
-  }
+    if (typeof token.serverToken === 'string') {
+     session.serverToken = token.serverToken;
+    }
   
-  if (typeof token.error === 'string') {
-    session.error = token.error;
-  }
-  
+    if (typeof token.error === 'string') {
+      session.error = token.error;
+    }
   return session;
-}
+},
     async redirect({ url, baseUrl }) {
       // Allows relative callback URLs
       if (url.startsWith("/")) return `${baseUrl}${url}`;
