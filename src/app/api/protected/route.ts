@@ -1,6 +1,6 @@
 // app/api/protected/route.js
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "../../../authOptions";
+import { authOptions } from "../../lib/authOptions";
 
 export async function GET(request) {
   const session = await getServerSession(authOptions);
