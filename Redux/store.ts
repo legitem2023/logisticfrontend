@@ -36,7 +36,7 @@ import tempUserReducer from './tempUserSlice';
 import activeIndexReducer from './activeIndexSlice';
 import roleReducer from './roleSlice';
 import usernameReducer from './usernameSlice';
-
+import isActiveUserReducer from './isActiveUserSlice';
 // Persist configuration for activeIndex only
 const activeIndexPersistConfig = {
   key: 'activeIndex',
@@ -56,7 +56,8 @@ export const store = configureStore({
     tempUser: tempUserReducer,
     activeIndex: persistedActiveIndexReducer, // Only this one is persisted
     role: roleReducer,
-    username: usernameReducer
+    username: usernameReducer,
+    isActiveUser: isActiveUserReducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
