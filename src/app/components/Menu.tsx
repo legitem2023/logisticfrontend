@@ -21,7 +21,7 @@ return () => clearTimeout(timer);
 }, []);
 
 const isUserActive = ():boolean => {
-const result = Cookies.get("token");
+//const result = Cookies.get("token");
 return false;//!!result;
 };
 const GlobalactiveIndex = useSelector((state: any) => state.activeIndex.value);
@@ -39,8 +39,7 @@ return (
 activeTab={GlobalactiveIndex}  
 useRole={useRole}  
 isUserActive={isUserActive} 
-is_Active={isActiveUser}
-/>
+is_Active={isActiveUser}/>
 </main>
 <Footer/>
 </div>
