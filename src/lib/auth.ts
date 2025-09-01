@@ -98,7 +98,7 @@ export const authOptions: NextAuthOptions = {
       return true;
     },
 
-    async jwt({ token, account, user }:{ {token:any, account:any, user:any } }) {
+    async jwt({ token, account, user }:{token:any, account:any, user:any }) {
       // Initial sign in
       if (account && user) {
         token.accessToken = account.access_token;
