@@ -141,7 +141,7 @@ import { setCurrentLocation } from '../../../Redux/locationSlice';
 import { setTempUserId, selectTempUserId } from '../../../Redux/tempUserSlice';
 import { setUsername } from '../../../Redux/usernameSlice';
 import { setRole, selectRole } from '../../../Redux/roleSlice';
-
+import { setIsActiveUser } '../../../Redux/isActiveUserSlice';
 export default function GlobalScripts() {
   const dispatch = useDispatch();
   const globalUserId = useSelector(selectTempUserId);
@@ -161,9 +161,9 @@ export default function GlobalScripts() {
         }
         
         const data = await response.json();
-        const token = data?.token || data?.user?.token;
+        const token = data?.user;
         const secret = process.env.NEXT_PUBLIC_JWT_SECRET;
-        
+        console.log(data);
         if (token && secret) {
           const payload = await decryptToken(token, secret);
           dispatch(setRole(payload.role));
