@@ -1,10 +1,8 @@
 'use client'
-import Cookies from 'js-cookie'
 import React, { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { useDispatch,useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { setActiveIndex } from '../../../Redux/activeIndexSlice';
-import { selectTempUserId } from "../../../Redux/tempUserSlice";
 import { Card, CardContent, CardHeader, CardTitle } from './ui/Card'
 import { Button } from './ui/Button'
 import { Input } from './ui/Input'
@@ -17,6 +15,7 @@ import { showToast } from '../../../utils/toastify'
 import { Eye, EyeOff } from 'lucide-react'
 import { FiMail, FiLock } from 'react-icons/fi'
 import CityScape from './AnimatedCityscape';
+
 export default function LoginCard() {
   const router = useRouter()
   const [email, setEmail] = useState('')
@@ -24,26 +23,31 @@ export default function LoginCard() {
   const [showPassword, setShowPassword] = useState(false)
 
   const dispatch = useDispatch()
-//  const globalUserId = useSelector(selectTempUserId);
- // const GlobalactiveIndex = useSelector((state: any) => state.activeIndex.value);
 
-
-  
   const [login, { loading, error }] = useMutation(LOGIN, {
-    onCompleted: (data) => {
-  const token = data?.login?.token
-  if (token) {
-    Cookies.set('token', token, { expires: 7, secure: true, sameSite: 'lax' })
-    showToast('Login successful', 'success');    
-    // Use requestAnimationFrame for better timing
-    requestAnimationFrame(() => {
-      //dispatch(setActiveIndex(1));
-      window.location.reload();
-    });
-  } else {
-    console.error('No token returned')
-  }
-},
+    onCompleted: async (data) => {
+      const token = data?.login?.token
+      if (token) {
+        try {
+          // send token to backend → backend sets httpOnly cookie
+          await fetch('/api/set-token', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ token }),
+            credentials: 'include',
+          })
+
+          showToast('Login successful', 'success');
+          requestAnimationFrame(() => {
+            window.location.reload();
+          })
+        } catch (err) {
+          console.error('Failed to set token cookie:', err)
+        }
+      } else {
+        console.error('No token returned')
+      }
+    },
     onError: (err) => {
       console.error('Login failed:', err.message)
     }
@@ -62,18 +66,13 @@ export default function LoginCard() {
   return (
     <div className="flex justify-center p-0">
       <Card className="w-full max-w-2xl shadow-xl border border-green-100 overflow-hidden relative bg-white">
-        {/* Header */}
         <CardHeader className="bg-gradient-to-r from-green-800 to-green-600 relative overflow-hidden p-0">
-          {/* Pattern */}
-          {/* <div className="absolute inset-0 opacity-10 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSIjZmZmIiBmaWxsLW9wYWNpdHk9IjAuNiI+PHBhdGggZD0iTTM2IDM0QzM2IDMxLjggMzcuOCAzMCA0MCAzMFM0NCAzMS44IDQ0IDM0QzQ0IDM2LjIgNDIuMiAzOCA0MCAzOFM0MCAzNi4yIDQwIDM0WiIvPjwvZz48L3N2Zz4=')]"></div>
-          */}
-      <CityScape>
-          <CardTitle className="text-3xl font-bold text-white text-center relative z-10">Welcome Back</CardTitle>
-          <p className="text-green-100 text-center mt-2 relative z-10">Sign in to your account</p>
-       </CityScape>   
-         </CardHeader>
+          <CityScape>
+            <CardTitle className="text-3xl font-bold text-white text-center relative z-10">Welcome Back</CardTitle>
+            <p className="text-green-100 text-center mt-2 relative z-10">Sign in to your account</p>
+          </CityScape>
+        </CardHeader>
       
-        {/* Form */}
         <CardContent className="p-8 space-y-6">
           {/* Email */}
           <div className="relative">
@@ -166,4 +165,4 @@ export default function LoginCard() {
       </Card>
     </div>
   )
-            }
+}
