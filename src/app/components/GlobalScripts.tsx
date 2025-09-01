@@ -48,11 +48,24 @@ export default function GlobalScripts() {
     },
   });
 
+
+ 
   // Get user role from token
   useEffect(() => {
     const getRole = async () => {
       try {
-        const token = Cookies.get('token');
+        const token = fetch('/api/protected', {
+                        credentials: 'include' // Important: includes cookies
+                      }).then(response => {
+                   if (response.status === 401) {
+                      // Handle unauthorized access
+                       throw new Error('Unauthorized');
+                    }
+                    return response.json();
+                   }).then(data => {
+                    return data?.user; 
+                   }).catch(error => console.error('Error:', error)).finally(() => {});
+        //Cookies.get('token');
         const secret = process.env.NEXT_PUBLIC_JWT_SECRET;
         if (token && secret) {
           const payload = await decryptToken(token, secret);
