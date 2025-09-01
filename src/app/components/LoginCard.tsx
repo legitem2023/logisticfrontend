@@ -7,10 +7,9 @@ import { Card, CardContent, CardHeader, CardTitle } from './ui/Card'
 import { Button } from './ui/Button'
 import { Input } from './ui/Input'
 import { Label } from './ui/Label'
-import { useMutation } from '@apollo/client'
+import { signIn } from 'next-auth/react'; // Import signIn from next-auth
 import FacebookLoginButton from './Auth/FacebookLoginButton'
 import GoogleLoginButton from './Auth/GoogleLoginButton'
-import { LOGIN } from '../../../graphql/mutation'
 import { showToast } from '../../../utils/toastify'
 import { Eye, EyeOff } from 'lucide-react'
 import { FiMail, FiLock } from 'react-icons/fi'
@@ -21,44 +20,40 @@ export default function LoginCard() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
+  const [loading, setLoading] = useState(false) // Local loading state
 
   const dispatch = useDispatch()
 
-  const [login, { loading, error }] = useMutation(LOGIN, {
-    onCompleted: async (data) => {
-      const token = data?.login?.token
-      if (token) {
-        try {
-          // send token to backend → backend sets httpOnly cookie
-          await fetch('/api/set-token', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ token }),
-            credentials: 'include',
-          })
-
-          showToast('Login successful', 'success');
-          requestAnimationFrame(() => {
-            window.location.reload();
-          })
-        } catch (err) {
-          console.error('Failed to set token cookie:', err)
-        }
-      } else {
-        console.error('No token returned')
-      }
-    },
-    onError: (err) => {
-      console.error('Login failed:', err.message)
-    }
-  })
-
-  const handleLogin = () => {
+  const handleLogin = async () => {
     if (!email || !password) {
       showToast('Please enter email and password.', 'error')
       return
     }
-    login({ variables: { input: { email, password } } })
+
+    setLoading(true)
+    
+    try {
+      // Use NextAuth's signIn function with credentials
+      const result = await signIn('credentials', {
+        email,
+        password,
+        redirect: false, // Don't redirect automatically
+      })
+
+      if (result?.error) {
+        showToast('Login failed: ' + result.error, 'error')
+        console.error('Login error:', result.error)
+      } else {
+        showToast('Login successful', 'success')
+        // Redirect or reload as needed
+        window.location.reload()
+      }
+    } catch (err) {
+      console.error('Login failed:', err)
+      showToast('Login failed', 'error')
+    } finally {
+      setLoading(false)
+    }
   }
 
   const togglePasswordVisibility = () => setShowPassword(!showPassword)
@@ -136,13 +131,6 @@ export default function LoginCard() {
             ) : 'Login'}
           </Button>
 
-          {/* Error */}
-          {error && (
-            <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded">
-              <p className="text-red-700 text-sm">{error.message}</p>
-            </div>
-          )}
-
           {/* Divider */}
           <div className="flex items-center gap-3 my-6">
             <hr className="flex-grow border-gray-200" />
@@ -165,4 +153,4 @@ export default function LoginCard() {
       </Card>
     </div>
   )
-}
+          }
