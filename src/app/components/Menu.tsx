@@ -43,43 +43,10 @@ useEffect(() => {
 
 
   
-  const isUserActive = async (): Promise<boolean> => {
-  try {
-    const response = await fetch('/api/protected', {
-      credentials: 'include', // important to include cookies
-    });
-
-    if (response.status === 401) {
-      return false;
-    }
-
-    const data = await response.json();
-
-    // Case 1: response itself is a token string
-    if (typeof data === "string" && data.length > 10) {
-      return true;
-    }
-
-    // Case 2: response is { user: "tokenstring..." }
-    if (data?.user && typeof data.user === "string" && data.user.length > 10) {
-      return true;
-    }
-
-    return false;
-  } catch (error) {
-    console.error("Error:", error);
-    return false;
-  } finally {
-    setLoading(false);
-  }
+  const isUserActive = () => {
+  const result = Cookies.get("token");
+  return result;
 };
-useEffect(() => {
-  const checkUser = async () => {
-    const active = await isUserActive();
-    setActive(active);
-  };
-  checkUser();
-}, []);
   const GlobalactiveIndex = useSelector((state: any) => state.activeIndex.value);
 
   if (loading) {
