@@ -8,7 +8,7 @@ import Footer from "../components/Footer";
 
 export default function Page() {
  const useRole = useSelector(selectRole); 
-
+const isActiveUser = useSelector((state:any) => state.isActiveUser.isActiveUser);
  const isUserActive = (): boolean => {
     const token = Cookies.get('token');
     return !!token;
@@ -17,7 +17,7 @@ export default function Page() {
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
       <Navigation
-      is_Active={false}
+      is_Active={isActiveUser}
       userRole={useRole}
       isUserActive={isUserActive}/>  
       {/* Sidebar with tab content */}
