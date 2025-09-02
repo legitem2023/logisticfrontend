@@ -200,7 +200,7 @@ cookies: {
     csrfToken: {
       name: `__Host-next-auth.csrf-token`,
       options: {
-        httpOnly: true,
+        httpOnly: false,
         sameSite: "none",
         path: "/",
         secure: true,
