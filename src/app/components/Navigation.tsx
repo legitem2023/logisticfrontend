@@ -178,8 +178,9 @@ const Navigation = ({ userRole, isUserActive, is_Active }) => {
   const NavItem = ({ item }) => {
     const isActive = activeIndex === item.id; 
     return (
-      <a
-        href="#"
+      <Link
+        href="/"
+        prefetch
         className={`relative flex items-center px-4 py-3 text-gold-100 hover:bg-gradient-to-r from-gold-500/10 to-transparent hover:text-white rounded-lg transition-all duration-300 group ${
           isActive ? 'bg-gradient-to-r from-gold-500/20 to-transparent text-white shadow-lg' : ''
         }`}
@@ -198,19 +199,20 @@ const Navigation = ({ userRole, isUserActive, is_Active }) => {
           <div className="absolute bottom-0 left-0 w-full h-0.5 bg-gold-500 rounded-full"></div>
         )}
         <Sparkles size={12} className="absolute -top-1 -right-1 text-gold-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-      </a>
+      </Link>
     );
   };
 
   const SupportNavItem = ({ item }) => (
-    <a
+    <Link
       href={item.role}
+      prefetch
       className="flex items-center px-4 py-3 text-gold-100 hover:bg-gradient-to-r from-gold-500/10 to-transparent hover:text-white rounded-lg transition-all duration-300 group"
       onClick={() => setIsDrawerOpen(false)}
     >
       <span className="mr-3 text-gold-400 group-hover:scale-110 transition-transform duration-300">{item.icon}</span>
       <span className="font-medium">{item.label}</span>
-    </a>
+    </Link>
   );
 
   // Mobile-specific components with green active tabs
@@ -218,8 +220,9 @@ const Navigation = ({ userRole, isUserActive, is_Active }) => {
   const isActive = isHome?activeIndex === item.id:false; 
   
   return (
-    <a
-      href="#"
+    <Link
+      href="/"
+      prefetch
       className={`relative flex items-center px-4 py-3 text-gray-800 hover:bg-green-500/20 hover:text-green-700 rounded-lg transition-all duration-300 group ${
         isActive ? 'bg-green-500/30 text-green-800 shadow-lg' : ''
       }`}
@@ -242,7 +245,7 @@ const Navigation = ({ userRole, isUserActive, is_Active }) => {
         <div className="absolute bottom-0 left-0 w-full h-0.5 bg-green-600 rounded-full"></div>
       )}
       <Sparkles size={12} className="absolute -top-1 -right-1 text-green-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-    </a>
+    </Link>
   );
 };
 
@@ -251,8 +254,9 @@ const MobileSupportNavItem = ({ item }) => {
     const isActive = item.role && pathname === item.role;
     
     return (
-      <a
+      <Link
         href={item.role}
+        prefetch
         className={`relative flex items-center px-4 py-3 text-gray-700 hover:bg-green-500/20 hover:text-green-700 rounded-lg transition-all duration-300 group ${
           isActive ? 'bg-green-500/30 text-green-800 shadow-lg' : ''
         }`}
@@ -266,7 +270,7 @@ const MobileSupportNavItem = ({ item }) => {
           <div className="absolute bottom-0 left-0 w-full h-0.5 bg-green-600 rounded-full"></div>
         )}
         <Sparkles size={12} className="absolute -top-1 -right-1 text-green-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-      </a>
+      </Link>
     );
   };
   // For desktop, we'll show up to 4 main items and put the rest in a dropdown
@@ -303,7 +307,7 @@ const MobileSupportNavItem = ({ item }) => {
           <div className="flex justify-between h-20">
             <div className="flex items-center">
               <div className="flex-shrink-0 flex items-center">
-                <Link href="/" className="flex items-center group">
+                <Link href="/" prefetch className="flex items-center group">
                   <div className="relative h-12 w-12 transition-all duration-500 group-hover:rotate-6 group-hover:scale-110">
                     <Image
                       src="/Motogo.svg"
@@ -336,9 +340,10 @@ const MobileSupportNavItem = ({ item }) => {
                       {isMoreOpen && (
                         <div className="absolute right-0 mt-2 w-56 bg-gray-900 bg-opacity-95 backdrop-blur-lg rounded-lg shadow-xl luxury-shadow py-2 z-10 border border-gold-500/20">
                           {dropdownItems.map((item) => (
-                            <a
+                            <Link
                               key={item.id}
-                              href="#"
+                              href="/"
+                              prefetch
                               className={`flex items-center px-4 py-3 text-sm text-gold-100 hover:bg-gradient-to-r from-gold-500/10 to-transparent hover:text-white transition-all duration-200 ${
                                 activeIndex === item.id ? 'bg-gradient-to-r from-gold-500/20 to-transparent text-white' : ''
                               }`}
@@ -350,7 +355,7 @@ const MobileSupportNavItem = ({ item }) => {
                             >
                               <span className="mr-3 text-gold-400">{item.icon}</span>
                               <span>{item.label}</span>
-                            </a>
+                            </Link>
                           ))}
                         </div>
                       )}
@@ -398,7 +403,9 @@ const MobileSupportNavItem = ({ item }) => {
                   <p className="text-sm font-medium text-white-900 truncate">
                     {username || 'User'}
                   </p>
-                  <span 
+                  <Link 
+                    href="/"
+                    prefetch
                     className="text-xs text-green-200 hover:underline"
                     onClick={() => {
   if (!isHome) {
@@ -408,7 +415,7 @@ const MobileSupportNavItem = ({ item }) => {
 }}
                   >
                     View Profile
-                  </span>
+                  </Link>
                 </div>
               </div>
             </div>
