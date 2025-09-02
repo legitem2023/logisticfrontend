@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-
+import Link from 'next/link
 const Footer = () => {
   const currentYear = new Date().getFullYear();
 
@@ -12,10 +12,10 @@ const Footer = () => {
           <div>
             <h3 className="text-lg font-semibold text-white tracking-wide mb-4">Company</h3>
             <ul className="space-y-3 text-sm">
-              <li><a href="/Privacy" className="hover:text-white transition">Privacy Policy</a></li>
-              <li><a href="/FAQ" className="hover:text-white transition">FAQs</a></li>
-              <li><a href="/Contact" className="hover:text-white transition">Contact Us</a></li>
-              <li><a href="/Terms" className="hover:text-white transition">Terms of Service</a></li>
+              <li><Link href="/Privacy" prefetch className="hover:text-white transition">Privacy Policy</Link></li>
+              <li><Link href="/FAQ" prefetch className="hover:text-white transition">FAQs</Link></li>
+              <li><Link href="/Contact" prefetch className="hover:text-white transition">Contact Us</Link></li>
+              <li><Link href="/Terms" prefetch className="hover:text-white transition">Terms of Service</Link></li>
            
             </ul>
           </div>
