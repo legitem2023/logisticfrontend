@@ -34,27 +34,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    //const cookieStore = await cookies();
-    //const token = cookieStore.get('token')?.value;
-       
-    const response = await fetch('/api/protected', {
-          credentials: 'include' // Important: includes cookies
-    });
-        
-    if (response.status === 401) {
-          // Handle unauthorized access
-        throw new Error('Unauthorized');
-    }
-        
-      const data = await response.json();
-      const token = data?.user;
-    
-    if (!token) {
-      return NextResponse.json(
-        { error: 'Authentication token not found' },
-        { status: 401 }
-      );
-    }
 
     const secret = process.env.NEXT_PUBLIC_JWT_SECRET;
     if (!secret) {
@@ -64,7 +43,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const payload = await decryptToken(token, secret);
+    const payload = await decryptToken(locationData.token, secret);
     const client = getApolloClient();
 
     await client.mutate({
@@ -82,13 +61,7 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    console.log('Received location:', {
-      latitude: locationData.latitude,
-      longitude: locationData.longitude,
-      accuracy: locationData.accuracy,
-      timestamp: new Date(locationData.timestamp).toISOString(),
-      userID: payload.userId,
-    });
+    
 
     return NextResponse.json({ 
       success: true, 
