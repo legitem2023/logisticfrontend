@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import { selectTempUserId } from '../../../Redux/tempUserSlice';
 import { useQuery } from "@apollo/client"; 
 import { ACCOUNT } from "../../../graphql/query"; 
+import AccountLoading from "./Loadings/AccountLoading";
 import RiderCard from './Administrator/RiderCard'; 
 
 export default function Profile() { 
@@ -14,7 +15,7 @@ export default function Profile() {
     skip: !globalUserId, // don't run until we have an ID
   });
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <AccountLoading/>;
   if (error) {
     console.error(error);
     return <p>Error loading user</p>;
