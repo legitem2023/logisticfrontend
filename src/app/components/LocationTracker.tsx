@@ -100,12 +100,11 @@ export default function LocationTracker() {
           },
           body: JSON.stringify(locationWithToken),
         });
-        console.log(response,"<<<]]]");
+
         if (!response.ok) {
           throw new Error('Failed to send location');
         }
 
-        console.log('Location sent successfully');
       } else {
         // Store offline
         await dbRef.current?.addLocation({
@@ -154,7 +153,6 @@ export default function LocationTracker() {
     }
 
     const config = getCurrentConfig();
-    console.log(`Starting tracking in ${state} mode`, config);
 
     try {
       watchIdRef.current = navigator.geolocation.watchPosition(
@@ -202,7 +200,7 @@ export default function LocationTracker() {
       );
 
       setIsTracking(true);
-      console.log('Location tracking started in mode:', state);
+      //console.log('Location tracking started in mode:', state);
     } catch (error) {
       console.error('Failed to start tracking:', error);
     }
