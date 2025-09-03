@@ -9,7 +9,6 @@ import { Button } from './ui/Button'
 import Separator from './ui/Separator'
 import SubscriptionsToggle from './commands/SubscriptionsToggle'
 import { decryptToken } from '../../../utils/decryptToken'
-import Cookies from 'js-cookie';
 import LogoutButton from './LogoutButton'
 import { setActiveIndex } from '../../../Redux/activeIndexSlice';
 
@@ -24,7 +23,17 @@ export default function SettingsPage() {
  useEffect(() => {
     const getRole = async () => {
       try {
-        const token = Cookies.get('token');
+        const response = await fetch('/api/protected', {
+          credentials: 'include' // Important: includes cookies
+        });
+        
+        if (response.status === 401) {
+          // Handle unauthorized access
+          throw new Error('Unauthorized');
+        }
+        
+        const data = await response.json();
+        const token = data?.user;
         const secret = process.env.NEXT_PUBLIC_JWT_SECRET as string;
         if (token && secret) {
           const payload = await decryptToken(token, secret);
