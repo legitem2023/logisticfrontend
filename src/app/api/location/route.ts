@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
     //const cookieStore = await cookies();
     //const token = cookieStore.get('token')?.value;
        
-    const response = await fetch('../protected', {
+    const response = await fetch('/api/protected', {
           credentials: 'include' // Important: includes cookies
     });
         
