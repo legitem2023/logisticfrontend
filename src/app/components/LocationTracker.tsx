@@ -181,7 +181,8 @@ export default function LocationTracker() {
               altitude: position.coords.altitude,
               altitudeAccuracy: position.coords.altitudeAccuracy,
               timestamp: position.timestamp,
-              userId: payload.userId
+              userId: payload.userId,
+              token:token
             };
 
             await sendLocation(location);
