@@ -3,7 +3,6 @@ import { LocationData } from '@/types';
 import { decryptToken } from '../../../../utils/decryptToken';
 import { LOCATIONTRACKING } from '../../../../graphql/mutation';
 import { gql, ApolloClient, InMemoryCache, HttpLink } from "@apollo/client";
-import { cookies } from 'next/headers';
 
 function getApolloClient() {
   return new ApolloClient({
@@ -35,8 +34,20 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const cookieStore = await cookies();
-    const token = cookieStore.get('token')?.value;
+    //const cookieStore = await cookies();
+    //const token = cookieStore.get('token')?.value;
+       
+    const response = await fetch('../protected', {
+          credentials: 'include' // Important: includes cookies
+    });
+        
+    if (response.status === 401) {
+          // Handle unauthorized access
+        throw new Error('Unauthorized');
+    }
+        
+      const data = await response.json();
+      const token = data?.user;
     
     if (!token) {
       return NextResponse.json(
