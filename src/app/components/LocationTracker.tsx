@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { LocationDB } from '@/lib/database';
 import { LocationData } from '@/types';
-import Cookies from 'js-cookie';
 import { decryptToken } from '../../../utils/decryptToken';
 
 // Battery-friendly configuration
@@ -68,33 +67,28 @@ export default function LocationTracker() {
     }
   }, [appState, batteryLevel]);
 
+  const getTokenFromAPI = useCallback(async (): Promise<string> => {
+    const response = await fetch('/api/protected', {
+      credentials: 'include' // Important: includes cookies
+    });
+    
+    if (response.status === 401) {
+      throw new Error('Unauthorized');
+    }
+    
+    const data = await response.json();
+    const token = data?.user;
+    
+    if (!token) {
+      throw new Error('No authentication token found');
+    }
+    
+    return token;
+  }, []);
+
   const sendLocation = useCallback(async (location: LocationData) => {
     try {
-      // Get token from cookies or storage
-      /*const token = document.cookie
-        .split('; ')
-        .find(row => row.startsWith('token='))
-        ?.split('=')[1];
-
-      if (!token) {
-        throw new Error('No authentication token found');
-      }*/
-
-
-        const response = await fetch('/api/protected', {
-          credentials: 'include' // Important: includes cookies
-        });
-        
-        if (response.status === 401) {
-          // Handle unauthorized access
-          throw new Error('Unauthorized');
-        }
-        
-        const data = await response.json();
-        const token = data?.user;
-
-
-      
+      const token = await getTokenFromAPI();
       const locationWithToken = { ...location, token };
 
       if (navigator.onLine) {
@@ -136,18 +130,14 @@ export default function LocationTracker() {
       }
     } catch (error) {
       console.error('Failed to send location:', error);
-      // Store for later retry
+      // Store for later retry without token (will need to fetch token when syncing)
       await dbRef.current?.addLocation({
         ...location,
-        token: document.cookie
-          .split('; ')
-          .find(row => row.startsWith('token='))
-          ?.split('=')[1],
         synced: false,
         createdAt: Date.now(),
       });
     }
-  }, []);
+  }, [getTokenFromAPI]);
 
   const restartTrackingWithConfig = useCallback((state: string) => {
     if (watchIdRef.current !== null) {
@@ -178,33 +168,26 @@ export default function LocationTracker() {
 
           lastUpdateRef.current = now;
         
-        const response = await fetch('/api/protected', {
-          credentials: 'include' // Important: includes cookies
-        });
-        
-        if (response.status === 401) {
-          // Handle unauthorized access
-          throw new Error('Unauthorized');
-        }
-        
-        const data = await response.json();
-        const token = data?.user;
+          try {
+            const token = await getTokenFromAPI();
+            const secret = process.env.NEXT_PUBLIC_JWT_SECRET;
+            const payload = await decryptToken(token, secret);
+            const location: LocationData = {
+              latitude: position.coords.latitude,
+              longitude: position.coords.longitude,
+              accuracy: position.coords.accuracy,
+              speed: position.coords.speed,
+              heading: position.coords.heading,
+              altitude: position.coords.altitude,
+              altitudeAccuracy: position.coords.altitudeAccuracy,
+              timestamp: position.timestamp,
+              userId: payload.userId
+            };
 
-        const secret = process.env.NEXT_PUBLIC_JWT_SECRET;
-        const payload = await decryptToken(token, secret);
-        const location: LocationData = {
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
-            accuracy: position.coords.accuracy,
-            speed: position.coords.speed,
-            heading: position.coords.heading,
-            altitude: position.coords.altitude,
-            altitudeAccuracy: position.coords.altitudeAccuracy,
-            timestamp: position.timestamp,
-            userId:payload.userId
-          };
-
-          await sendLocation(location);
+            await sendLocation(location);
+          } catch (error) {
+            console.error('Failed to get token or process location:', error);
+          }
         },
         (error) => {
           console.error('Geolocation error:', error);
@@ -222,7 +205,7 @@ export default function LocationTracker() {
     } catch (error) {
       console.error('Failed to start tracking:', error);
     }
-  }, [getCurrentConfig, sendLocation, restartTrackingWithConfig]);
+  }, [getCurrentConfig, sendLocation, restartTrackingWithConfig, getTokenFromAPI]);
 
   const startTracking = useCallback(() => {
     startTrackingWithConfig(appState);
