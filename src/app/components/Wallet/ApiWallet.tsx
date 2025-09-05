@@ -1,16 +1,66 @@
 // components/DigitalWallet.tsx
 import { useState, useEffect } from 'react';
+import { useQuery, gql } from '@apollo/client';
 import { FiPlus, FiMinus, FiArrowUp, FiArrowDown, FiCreditCard, FiShoppingBag, FiTruck, FiRefreshCw, FiCheck, FiX, FiLock, FiDollarSign } from 'react-icons/fi';
 
-export default function ApiWallet() {
-  const [balance, setBalance] = useState(245.75);
-  const [transactions, setTransactions] = useState([
-    { id: 1, type: 'topup', amount: 100.00, date: '2025-08-07', description: 'Credit Card Top-up', status: 'completed', icon: <FiCreditCard /> },
-    { id: 2, type: 'payment', amount: -35.50, date: '2025-08-05', description: 'Food Delivery', status: 'completed', icon: <FiShoppingBag /> },
-    { id: 3, type: 'payment', amount: -89.25, date: '2025-08-03', description: 'Furniture Delivery', status: 'completed', icon: <FiTruck /> },
-    { id: 4, type: 'topup', amount: 200.00, date: '2025-08-01', description: 'Bank Transfer', status: 'completed', icon: <FiCreditCard /> },
-    { id: 5, type: 'payment', amount: -20.00, date: '2025-07-29', description: 'Document Courier', status: 'completed', icon: <FiTruck /> },
-  ]);
+// Define the GraphQL query
+export const WALLET = gql`
+  query GetWallet($userId: String) {
+    getWallet(userId: $userId) {
+      id
+      userId        
+      user
+      balance       
+      currency      
+      transactions {
+        id
+        deliveryId
+        delivery
+        type
+        amount
+        description
+        status
+        referenceId
+        paymentMethod
+        createdAt
+      }
+      createdAt
+      updatedAt        
+    }
+  }
+`;
+
+interface Transaction {
+  id: string;
+  deliveryId: string;
+  delivery: string;
+  type: string;
+  amount: number;
+  description: string;
+  status: string;
+  referenceId: string;
+  paymentMethod: string;
+  createdAt: string;
+}
+
+interface WalletData {
+  getWallet: {
+    id: string;
+    userId: string;
+    user: string;
+    balance: number;
+    currency: string;
+    transactions: Transaction[];
+    createdAt: string;
+    updatedAt: string;
+  };
+}
+
+interface ApiWalletProps {
+  userId: string;
+}
+
+export default function ApiWallet({ userId }: ApiWalletProps) {
   const [showTopupModal, setShowTopupModal] = useState(false);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [topupAmount, setTopupAmount] = useState(50);
@@ -25,23 +75,25 @@ export default function ApiWallet() {
     { id: 3, title: 'Referral Bonus', description: 'Get $5 for each friend you refer', validUntil: '2025-09-15' },
   ]);
 
+  // Use the GraphQL query
+  const { data, loading, error, refetch } = useQuery<WalletData>(WALLET, {
+    variables: { userId },
+    fetchPolicy: 'cache-and-network'
+  });
+
+  const wallet = data?.getWallet;
+  const balance = wallet?.balance || 0;
+  const currencySymbol = wallet?.currency === 'PHP' ? '₱' : '$';
+  const transactions = wallet?.transactions || [];
+
   const handleTopup = () => {
     if (topupAmount <= 0) return;
     
     setIsProcessing(true);
     setTimeout(() => {
-      const newTransaction = {
-        id: transactions.length + 1,
-        type: 'topup',
-        amount: topupAmount,
-        date: new Date().toISOString().split('T')[0],
-        description: 'Credit Card Top-up',
-        status: 'completed',
-        icon: <FiCreditCard />
-      };
-      
-      setBalance(prev => prev + topupAmount);
-      setTransactions([newTransaction, ...transactions]);
+      // In a real app, you would call a mutation here
+      // After successful topup, refetch the wallet data
+      refetch();
       setIsProcessing(false);
       setShowTopupModal(false);
       setTopupAmount(50);
@@ -53,24 +105,57 @@ export default function ApiWallet() {
     
     setIsProcessing(true);
     setTimeout(() => {
-      const newTransaction = {
-        id: transactions.length + 1,
-        type: 'payment',
-        amount: -paymentAmount,
-        date: new Date().toISOString().split('T')[0],
-        description: paymentDescription,
-        status: 'completed',
-        icon: <FiTruck />
-      };
-      
-      setBalance(prev => prev - paymentAmount);
-      setTransactions([newTransaction, ...transactions]);
+      // In a real app, you would call a mutation here
+      // After successful payment, refetch the wallet data
+      refetch();
       setIsProcessing(false);
       setShowPaymentModal(false);
       setPaymentAmount(0);
       setPaymentDescription('');
     }, 1500);
   };
+
+  // Format transactions for display
+  const formatTransactions = (transactions: Transaction[]) => {
+    return transactions.map(txn => ({
+      id: txn.id,
+      type: txn.type.toLowerCase(),
+      amount: txn.amount,
+      date: new Date(txn.createdAt).toISOString().split('T')[0],
+      description: txn.description,
+      status: txn.status.toLowerCase(),
+      icon: txn.type.toUpperCase() === 'TOPUP' ? <FiCreditCard /> : <FiTruck />
+    }));
+  };
+
+  const formattedTransactions = formatTransactions(transactions);
+
+  if (loading && !wallet) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-4 sm:p-6 flex items-center justify-center">
+        <div className="text-center">
+          <FiRefreshCw className="animate-spin text-3xl text-green-600 mx-auto mb-4" />
+          <p>Loading wallet data...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-4 sm:p-6 flex items-center justify-center">
+        <div className="text-center text-red-600">
+          <p>Error loading wallet: {error.message}</p>
+          <button 
+            onClick={() => refetch()}
+            className="mt-4 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-4 sm:p-6">
@@ -79,14 +164,17 @@ export default function ApiWallet() {
         <div className="flex justify-between items-center mb-8">
           <div>
             <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
-              <span className="text-green-600" >₱</span> Logistics Wallet
+              <span className="text-green-600">{currencySymbol}</span> Logistics Wallet
             </h1>
             <p className="text-gray-600 mt-2">Manage your funds for seamless logistics payments</p>
           </div>
           <div className="flex items-center gap-3">
-            <div className="bg-white rounded-full p-2 shadow">
+            <button 
+              onClick={() => refetch()}
+              className="bg-white rounded-full p-2 shadow hover:bg-gray-50"
+            >
               <FiRefreshCw className="text-gray-600" />
-            </div>
+            </button>
             <div className="w-10 h-10 rounded-full bg-gray-200 border-2 border-dashed"></div>
           </div>
         </div>
@@ -96,7 +184,7 @@ export default function ApiWallet() {
           <div className="flex justify-between items-start">
             <div>
               <p className="text-lg">Available Balance</p>
-              <h2 className="text-4xl font-bold mt-2">₱{balance.toFixed(2)}</h2>
+              <h2 className="text-4xl font-bold mt-2">{currencySymbol}{balance.toFixed(2)}</h2>
               <p className="mt-4 text-emerald-100">Logistics Wallet</p>
             </div>
             <div className="bg-white/20 p-3 rounded-xl">
@@ -150,8 +238,8 @@ export default function ApiWallet() {
             </div>
             
             <div className="divide-y divide-gray-100">
-              {transactions.length > 0 ? (
-                transactions.map((txn) => (
+              {formattedTransactions.length > 0 ? (
+                formattedTransactions.map((txn) => (
                   <div key={txn.id} className="px-5 py-4 hover:bg-gray-50">
                     <div className="flex items-center">
                       <div className={`w-10 h-10 rounded-full flex items-center justify-center mr-4 ${
@@ -164,7 +252,7 @@ export default function ApiWallet() {
                         <div className="text-sm text-gray-500">{txn.date}</div>
                       </div>
                       <div className={`font-medium ${txn.type === 'topup' ? 'text-green-600' : 'text-red-600'}`}>
-                        {txn.type === 'topup' ? '+' : ''}{txn.amount.toFixed(2)}
+                        {txn.type === 'topup' ? '+' : ''}{currencySymbol}{Math.abs(txn.amount).toFixed(2)}
                       </div>
                     </div>
                   </div>
@@ -275,7 +363,7 @@ export default function ApiWallet() {
                   Top-up Amount
                 </label>
                 <div className="relative">
-                  <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">$</span>
+                  <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">{currencySymbol}</span>
                   <input
                     type="number"
                     value={topupAmount}
@@ -285,7 +373,7 @@ export default function ApiWallet() {
                   />
                 </div>
                 <p className="text-xs text-gray-500 mt-2">
-                  Minimum top-up amount is $5
+                  Minimum top-up amount is {currencySymbol}5
                 </p>
               </div>
               
@@ -334,7 +422,7 @@ export default function ApiWallet() {
                   </>
                 ) : (
                   <>
-                    <FiPlus /> Top-up ${topupAmount}
+                    <FiPlus /> Top-up {currencySymbol}{topupAmount}
                   </>
                 )}
               </button>
@@ -362,7 +450,7 @@ export default function ApiWallet() {
                   Payment Amount
                 </label>
                 <div className="relative">
-                  <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">₱</span>
+                  <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">{currencySymbol}</span>
                   <input
                     type="number"
                     value={paymentAmount}
@@ -373,7 +461,7 @@ export default function ApiWallet() {
                   />
                 </div>
                 <p className="text-xs text-gray-500 mt-2">
-                  Available balance: ₱{balance.toFixed(2)}
+                  Available balance: {currencySymbol}{balance.toFixed(2)}
                 </p>
               </div>
               
@@ -421,7 +509,7 @@ export default function ApiWallet() {
                   </>
                 ) : (
                   <>
-                    <FiArrowUp /> Pay ₱{paymentAmount}
+                    <FiArrowUp /> Pay {currencySymbol}{paymentAmount}
                   </>
                 )}
               </button>
@@ -431,4 +519,4 @@ export default function ApiWallet() {
       </div>
     </div>
   );
-}
+    }
