@@ -1,28 +1,24 @@
 import { gql } from "@apollo/client";
 
 export const WALLET = gql`
-query GetWallet ($userId: String) {
-   getWallet(userId:$userId) {
+query GetWallet($userId: String!) {
+  getWallet(userId: $userId) {
+    id
+    balance
+    currency
+    createdAt
+    updatedAt
+    transactions {
       id
-      userId        
-      user
-      balance       
-      currency      
-      transactions {
-         id
-         deliveryId
-         delivery
-         type
-         amount
-         description
-         status
-         referenceId
-         paymentMethod
-         createdAt
-      }
+      type
+      amount
+      description
+      status
+      referenceId
+      paymentMethod
       createdAt
-      updatedAt        
-   }
+    }
+  }
 }
 `
 
