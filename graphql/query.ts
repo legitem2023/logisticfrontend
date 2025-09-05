@@ -8,7 +8,18 @@ query GetWallet (userId: String) {
       user
       balance       
       currency      
-      transactions
+      transactions {
+         id
+         deliveryId
+         delivery
+         type
+         amount
+         description
+         status
+         referenceId
+         paymentMethod
+         createdAt
+      }
       createdAt
       updatedAt        
    }
