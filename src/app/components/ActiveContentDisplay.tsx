@@ -58,7 +58,8 @@ export function ActiveContentDisplay({ activeTab, useRole, isUserActive, is_Acti
   is_Active:boolean;
 }) {
     console.log(useRole,"<<<<");
-
+const globalUserId = useSelector(selectTempUserId);
+  
 useEffect(() => {
      window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [activeTab]);
@@ -140,7 +141,7 @@ useEffect(() => {
         icon: <WalletMinimal color="green" />,
         content: (
           <div className="px-1 py-1 space-y-1">
-            <ApiWallet/>
+            <ApiWallet userId={globalUserId}/>
           </div>
         ),
       },
