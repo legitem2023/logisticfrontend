@@ -141,7 +141,7 @@ useEffect(() => {
         icon: <WalletMinimal color="green" />,
         content: (
           <div className="px-1 py-1 space-y-1">
-            <ApiWallet userId={globalUserId}/>
+            {/* <ApiWallet userId={globalUserId}/>*/}
           </div>
         ),
       },
