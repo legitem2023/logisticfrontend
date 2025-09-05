@@ -2,7 +2,7 @@
 'use client';
 import React,{useEffect} from 'react';
 
-import ApiWallet from './Wallet/ApiWallet';
+//import ApiWallet from './Wallet/ApiWallet';
 import HomeDataCarousel from './HomeDataCarousel';
 import Transactions from './Transactions';
 import LogisticsHomePage from './LogisticsHomePage';
