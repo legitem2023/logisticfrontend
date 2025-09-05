@@ -1,9 +1,9 @@
 // components/DigitalWallet.tsx
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useQuery, gql } from '@apollo/client';
-import { FiPlus, FiMinus, FiArrowUp, FiArrowDown, FiCreditCard, FiShoppingBag, FiTruck, FiRefreshCw, FiCheck, FiX, FiLock, FiDollarSign } from 'react-icons/fi';
+import { FiPlus, FiArrowUp, FiCreditCard, FiTruck, FiRefreshCw, FiX, FiLock, FiArrowDown } from 'react-icons/fi';
 
-// Define the GraphQL query
+// Define the GraphQL query (CORRECTED)
 export const WALLET = gql`
   query GetWallet($userId: String) {
     getWallet(userId: $userId) {
@@ -69,7 +69,7 @@ export default function ApiWallet({ userId }: ApiWalletProps) {
   const [securityCode, setSecurityCode] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
   const [activeTab, setActiveTab] = useState('wallet');
-  const [promotions, setPromotions] = useState([
+  const [promotions] = useState([
     { id: 1, title: 'First Top-up Bonus', description: 'Get 10% extra on your first top-up', validUntil: '2025-08-31' },
     { id: 2, title: 'Free Delivery', description: 'Free delivery on orders above $30', validUntil: '2025-08-20' },
     { id: 3, title: 'Referral Bonus', description: 'Get $5 for each friend you refer', validUntil: '2025-09-15' },
@@ -91,8 +91,6 @@ export default function ApiWallet({ userId }: ApiWalletProps) {
     
     setIsProcessing(true);
     setTimeout(() => {
-      // In a real app, you would call a mutation here
-      // After successful topup, refetch the wallet data
       refetch();
       setIsProcessing(false);
       setShowTopupModal(false);
@@ -105,8 +103,6 @@ export default function ApiWallet({ userId }: ApiWalletProps) {
     
     setIsProcessing(true);
     setTimeout(() => {
-      // In a real app, you would call a mutation here
-      // After successful payment, refetch the wallet data
       refetch();
       setIsProcessing(false);
       setShowPaymentModal(false);
