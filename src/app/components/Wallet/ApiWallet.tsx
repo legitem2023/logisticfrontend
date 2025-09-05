@@ -2,33 +2,7 @@
 import { useState } from 'react';
 import { useQuery, gql } from '@apollo/client';
 import { FiPlus, FiArrowUp, FiCreditCard, FiTruck, FiRefreshCw, FiX, FiLock, FiArrowDown } from 'react-icons/fi';
-
-// Define the GraphQL query (CORRECTED)
-export const WALLET = gql`
-  query GetWallet($userId: String) {
-    getWallet(userId: $userId) {
-      id
-      userId        
-      user
-      balance       
-      currency      
-      transactions {
-        id
-        deliveryId
-        delivery
-        type
-        amount
-        description
-        status
-        referenceId
-        paymentMethod
-        createdAt
-      }
-      createdAt
-      updatedAt        
-    }
-  }
-`;
+import { WALLET } from '../../../../graphql/query';
 
 interface Transaction {
   id: string;
