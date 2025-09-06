@@ -57,7 +57,7 @@ export function ActiveContentDisplay({ activeTab, useRole, isUserActive, is_Acti
   isUserActive:()=>boolean;
   is_Active:boolean;
 }) {
-    console.log(useRole,"<<<<");
+    
 const globalUserId = useSelector(selectTempUserId);
   
 useEffect(() => {
