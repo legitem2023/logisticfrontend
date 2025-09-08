@@ -25,7 +25,7 @@ import dynamic from "next/dynamic";
 import FilterBar from "./Filterbar";
 import Collapsible from "../ui/Collapsible";
 
-const RiderMap = dynamic(() => import("./RiderMap"), { ssr: false });
+const RiderMap = dynamic(() => import("./GoogleMap/RiderMap"), { ssr: false });
 type Indicator = {
   loadingText:string;
   enable:boolean;
