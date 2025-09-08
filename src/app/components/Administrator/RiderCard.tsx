@@ -113,7 +113,7 @@ const RiderCard = ({ rider, onViewDetails, onSave }) => {
   ];
 
   return (
-    <div className="w-full max-w-md mx-auto bg-white  shadow-md overflow-hidden border border-gray-200">
+    <div className="w-full max-w-2xl mx-auto bg-white  shadow-md overflow-hidden border border-gray-200">
       {/* Cover Photo - Facebook style */}
       <div className="h-40 customgrad relative">
         <div className="absolute bottom-3 right-3">
