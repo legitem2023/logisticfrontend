@@ -320,7 +320,7 @@ const RiderCard = ({ rider, onViewDetails, onSave }) => {
 
         {/* License Image */}
         <div className="mt-6">
-          <h3 className="font-semibold text-gray-700 mb-2">Driver's License</h3>
+          <h3 className="font-semibold text-gray-700 mb-2">Drivers License</h3>
           {editableData.license ? (
             <div className="relative group rounded-lg overflow-hidden shadow-sm border border-gray-200">
               <img
