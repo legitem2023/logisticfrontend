@@ -109,9 +109,9 @@ const RiderCard = ({ rider, onViewDetails, onSave }) => {
   ];
 
   return (
-    <div className="w-full max-w-md mx-auto bg-white rounded-lg shadow-md overflow-hidden border border-gray-200">
+    <div className="w-full max-w-md mx-auto bg-white  shadow-md overflow-hidden border border-gray-200">
       {/* Cover Photo - Facebook style */}
-      <div className="h-40 bg-gradient-to-r from-blue-500 to-blue-700 relative">
+      <div className="h-40 customgrad relative">
         <div className="absolute bottom-3 right-3">
           <span className={`px-3 py-1 rounded-full text-xs font-medium ${statusColors[editableData.status] || "bg-blue-100 text-blue-800"}`}>
             {editableData.status}
