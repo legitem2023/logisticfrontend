@@ -363,7 +363,7 @@ const RiderCard = ({ rider, onViewDetails, onSave }) => {
               onClick={handleSave}
               className="flex-1 px-4 py-2.5 rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300 transition font-medium text-sm"
             >
-              Cancel
+              Save
             </button>
           )}
         </div>
