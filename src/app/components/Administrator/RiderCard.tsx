@@ -53,6 +53,7 @@ function toValidDate(input) {
 }
 
 const RiderCard = ({ rider, onViewDetails, onSave }) => {
+  const useRole = useSelector(selectRole);
   const [isEditing, setIsEditing] = useState(false);
   const [editableData, setEditableData] = useState({ ...rider });
   const { loading: vehicloading, error, data } = useQuery(VEHICLEQUERY);
@@ -165,7 +166,7 @@ const RiderCard = ({ rider, onViewDetails, onSave }) => {
         </div>
 
         <div>
-          {isEditing ? (
+          {isEditing && useRole==="Administrator" ? (
             <Select
               id="role"
               name="role"
