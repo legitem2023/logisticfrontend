@@ -75,8 +75,8 @@ const DeliveryTracker = () => {
       </div>
 
       {/* Tracking Section */}
-      <div className="container mx-auto p-0 relative z-10 mt-1 w-full">
-        <div className="customgrad p-8 mx-auto">
+      <div className="container mx-auto p-0 relative z-10 mt-1">
+        <div className="customgrad p-8 mx-auto w-[100%]">
           <div className="text-center mb-8">
             <h2 className="text-3xl font-bold text-white">Track Your Shipment</h2>
             <p className="text-white mt-2">Enter your tracking number to get real-time updates</p>
