@@ -4,6 +4,8 @@ import { useEffect, useRef, useState, useCallback } from 'react';
 import { LocationDB } from '@/lib/database';
 import { LocationData } from '@/types';
 import { decryptToken } from '../../../utils/decryptToken';
+import { useDispatch, useSelector } from 'react-redux';
+import { setCurrentLocation } from '../../../Redux/locationSlice';
 
 // Battery-friendly configuration
 const LOCATION_CONFIG = {
