@@ -112,7 +112,7 @@ export default function SenderDashboard() {
   ];
   
   return (
-    <div className="max-w-2xl bg-gray-50 flex flex-col md:flex-row">
+    <div className="w-full bg-gray-50 flex flex-col md:flex-row">
       {/* Sidebar */}
       <aside className="hidden md:block md:w-10 bg-white/80 backdrop-blur-md border-r border-gray-200 shadow-inner p-2">
         <nav> 
