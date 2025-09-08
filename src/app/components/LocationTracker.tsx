@@ -33,7 +33,7 @@ export default function LocationTracker() {
   const watchIdRef = useRef<number | null>(null);
   const dbRef = useRef<LocationDB | null>(null);
   const lastUpdateRef = useRef<number>(0);
-
+  const dispatch = useDispatch();
   // Memoized functions to avoid dependency issues
   const setupBatteryMonitoring = useCallback(async () => {
     if ('getBattery' in navigator) {
@@ -169,6 +169,10 @@ export default function LocationTracker() {
           lastUpdateRef.current = now;
         
           try {
+            dispatch(setCurrentLocation({
+              longitude:position.coords.longitude,
+              latitude:position.coords.latitude
+            }))
             const token = await getTokenFromAPI();
             const secret = process.env.NEXT_PUBLIC_JWT_SECRET;
             const payload = await decryptToken(token, secret);
