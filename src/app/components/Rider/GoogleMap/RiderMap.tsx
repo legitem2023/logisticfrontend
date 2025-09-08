@@ -1,23 +1,20 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { Button } from "../../ui/Button"; 
+import { Button } from "../../ui/Button";
 import { XIcon, Sun, Moon, Clock, MapPin, Navigation } from "lucide-react";
-import { showToast } from '../../../../../utils/toastify'; 
+import { showToast } from '../../../../../utils/toastify';
 import { useSelector } from 'react-redux';
 import { selectTempUserId } from '../../../../../Redux/tempUserSlice';
-import { SENDNOTIFICATION } from "../../../../../graphql/mutation"; 
+import { SENDNOTIFICATION } from "../../../../../graphql/mutation";
 import { useMutation, useSubscription } from "@apollo/client";
 import { LocationTracking } from '../../../../../graphql/subscription';
-import { FaMotorcycle, FaMapMarkerAlt, FaCrown, FaChevronUp,FaChevronDown, FaExclamationTriangle, FaStore, FaRoute } from 'react-icons/fa';
+import { FaMotorcycle, FaMapMarkerAlt, FaCrown, FaChevronUp, FaChevronDown, FaExclamationTriangle, FaStore, FaRoute } from 'react-icons/fa';
 import { GiPathDistance } from 'react-icons/gi';
 import { MdOutlineDeliveryDining } from 'react-icons/md';
 import { calculateEta, convertMinutesToHours } from '../../../../../utils/calculateEta';
 
-type Coordinates = {
-  lat: number;
-  lng: number;
-}
+type Coordinates = { lat: number; lng: number; }
 
 // Google Maps types
 interface GoogleMapRef {
@@ -29,13 +26,173 @@ interface GoogleMapRef {
   receiverMarker: google.maps.Marker | null;
 }
 
-export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, deliveryId, senderId, setMap, delivery }: { 
-  PickUpCoordinates: Coordinates,
-  DropOffCoordinates: Coordinates,
-  deliveryId: any,
-  senderId: any,
-  setMap: () => void,
-  delivery:any
+// Map styles
+const darkMapStyle: google.maps.MapTypeStyle[] = [
+  { elementType: "geometry", stylers: [{ color: "#242f3e" }] },
+  { elementType: "labels.text.stroke", stylers: [{ color: "#242f3e" }] },
+  { elementType: "labels.text.fill", stylers: [{ color: "#746855" }] },
+  {
+    featureType: "administrative.locality",
+    elementType: "labels.text.fill",
+    stylers: [{ color: "#d59563" }]
+  },
+  {
+    featureType: "poi",
+    elementType: "labels.text.fill",
+    stylers: [{ color: "#d59563" }]
+  },
+  {
+    featureType: "poi.park",
+    elementType: "geometry",
+    stylers: [{ color: "#263c3f" }]
+  },
+  {
+    featureType: "poi.park",
+    elementType: "labels.text.fill",
+    stylers: [{ color: "#6b9a76" }]
+  },
+  {
+    featureType: "road",
+    elementType: "geometry",
+    stylers: [{ color: "#38414e" }]
+  },
+  {
+    featureType: "road",
+    elementType: "geometry.stroke",
+    stylers: [{ color: "#212a37" }]
+  },
+  {
+    featureType: "road",
+    elementType: "labels.text.fill",
+    stylers: [{ color: "#9ca5b3" }]
+  },
+  {
+    featureType: "road.highway",
+    elementType: "geometry",
+    stylers: [{ color: "#746855" }]
+  },
+  {
+    featureType: "road.highway",
+    elementType: "geometry.stroke",
+    stylers: [{ color: "#1f2835" }]
+  },
+  {
+    featureType: "road.highway",
+    elementType: "labels.text.fill",
+    stylers: [{ color: "#f3d19c" }]
+  },
+  {
+    featureType: "transit",
+    elementType: "geometry",
+    stylers: [{ color: "#2f3948" }]
+  },
+  {
+    featureType: "transit.station",
+    elementType: "labels.text.fill",
+    stylers: [{ color: "#d59563" }]
+  },
+  {
+    featureType: "water",
+    elementType: "geometry",
+    stylers: [{ color: "#17263c" }]
+  },
+  {
+    featureType: "water",
+    elementType: "labels.text.fill",
+    stylers: [{ color: "#515c6d" }]
+  },
+  {
+    featureType: "water",
+    elementType: "labels.text.stroke",
+    stylers: [{ color: "#17263c" }]
+  }
+];
+
+const lightMapStyle: google.maps.MapTypeStyle[] = [
+  {
+    featureType: "all",
+    elementType: "geometry",
+    stylers: [{ color: "#f5f5f5" }]
+  },
+  {
+    featureType: "administrative",
+    elementType: "labels.text.fill",
+    stylers: [{ color: "#666666" }]
+  },
+  {
+    featureType: "poi",
+    elementType: "labels.text.fill",
+    stylers: [{ color: "#666666" }]
+  },
+  {
+    featureType: "poi.park",
+    elementType: "geometry",
+    stylers: [{ color: "#e5e5e5" }]
+  },
+  {
+    featureType: "poi.park",
+    elementType: "labels.text.fill",
+    stylers: [{ color: "#6b9a76" }]
+  },
+  {
+    featureType: "road",
+    elementType: "geometry",
+    stylers: [{ color: "#ffffff" }]
+  },
+  {
+    featureType: "road",
+    elementType: "geometry.stroke",
+    stylers: [{ color: "#dedede" }]
+  },
+  {
+    featureType: "road",
+    elementType: "labels.text.fill",
+    stylers: [{ color: "#666666" }]
+  },
+  {
+    featureType: "road.highway",
+    elementType: "geometry",
+    stylers: [{ color: "#e8e8e8" }]
+  },
+  {
+    featureType: "road.highway",
+    elementType: "geometry.stroke",
+    stylers: [{ color: "#c6c6c6" }]
+  },
+  {
+    featureType: "road.highway",
+    elementType: "labels.text.fill",
+    stylers: [{ color: "#666666" }]
+  },
+  {
+    featureType: "transit",
+    elementType: "geometry",
+    stylers: [{ color: "#f2f2f2" }]
+  },
+  {
+    featureType: "transit.station",
+    elementType: "labels.text.fill",
+    stylers: [{ color: "#666666" }]
+  },
+  {
+    featureType: "water",
+    elementType: "geometry",
+    stylers: [{ color: "#c6e6ff" }]
+  },
+  {
+    featureType: "water",
+    elementType: "labels.text.fill",
+    stylers: [{ color: "#666666" }]
+  }
+];
+
+export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, deliveryId, senderId, setMap, delivery }: {  
+  PickUpCoordinates: Coordinates, 
+  DropOffCoordinates: Coordinates, 
+  deliveryId: any, 
+  senderId: any, 
+  setMap: () => void, 
+  delivery: any 
 }) {
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
   const panelRef = useRef<HTMLDivElement>(null);
@@ -47,7 +204,7 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
     senderMarker: null,
     receiverMarker: null
   });
-  
+
   // Tracking state
   const [acceptancePoint, setAcceptancePoint] = useState<google.maps.LatLng | null>(null);
   const [notificationSent, setNotificationSent] = useState(false);
@@ -65,7 +222,7 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
     onCompleted: () => showToast("Notification sent", "success"),
     onError: (e: any) => console.log('Notification Error', e)
   });
-  
+
   const location = useSelector((state: any) => state.location.current);
   const globalUserId = useSelector(selectTempUserId);
   const [status, setStatus] = useState<'pending' | 'arrived' | 'failed' | 'delivered' | null>(null);
@@ -77,7 +234,7 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
   // Load Google Maps API
   useEffect(() => {
     if (typeof window === 'undefined' || !mapContainerRef.current) return;
-
+    
     // Check if Google Maps is already loaded
     if (window.google && window.google.maps) {
       setIsGoogleMapsLoaded(true);
@@ -86,49 +243,52 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
 
     // Load Google Maps API script
     const script = document.createElement('script');
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&libraries=geometry`;
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&libraries=geometry,places`;
     script.async = true;
     script.defer = true;
     script.onload = () => setIsGoogleMapsLoaded(true);
+    script.onerror = () => console.error('Google Maps failed to load');
     document.head.appendChild(script);
 
     return () => {
-      document.head.removeChild(script);
+      if (document.head.contains(script)) {
+        document.head.removeChild(script);
+      }
     };
   }, []);
 
   const handleNotification = async (message: string) => {
     await sendNotification({
-      variables: {
+      variables: { 
         userId: globalUserId, 
-        title: message, 
+        title: "Delivery Update", 
         message: message, 
-        type: 'Status Update'
+        type: 'Status Update' 
       }
     });
   };
 
   // Create Google Maps LatLng objects
-  const riderLatLng = locationData?.LocationTracking 
+  const riderLatLng = locationData?.LocationTracking  
     ? new google.maps.LatLng(locationData.LocationTracking.latitude, locationData.LocationTracking.longitude)
-    : location 
-      ? new google.maps.LatLng(location.latitude, location.longitude)
-      : null;
+    : location  
+    ? new google.maps.LatLng(location.latitude, location.longitude)
+    : null;
 
   const proofOfPickup = delivery.proofOfPickup.length;
-  
+
   // Conditionally set sender and receiver based on proofOfPickup
   const senderLatLng = proofOfPickup === 0 
-    ? new google.maps.LatLng(PickUpCoordinates?.lat, PickUpCoordinates?.lng) 
+    ? new google.maps.LatLng(PickUpCoordinates?.lat, PickUpCoordinates?.lng)
     : null;
-    
+
   const receiverLatLng = proofOfPickup > 0 
-    ? new google.maps.LatLng(DropOffCoordinates?.lat, DropOffCoordinates?.lng) 
+    ? new google.maps.LatLng(DropOffCoordinates?.lat, DropOffCoordinates?.lng)
     : null;
 
   // Calculate ETA based on current target
   const targetLatLng = proofOfPickup === 0 ? senderLatLng : receiverLatLng;
-  
+
   // Helper function to calculate distance between two LatLng points
   const calculateDistance = (point1: google.maps.LatLng | null, point2: google.maps.LatLng | null) => {
     if (!point1 || !point2) return 0;
@@ -138,7 +298,7 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
   const distanceInKm = targetLatLng && riderLatLng 
     ? parseFloat((calculateDistance(riderLatLng, targetLatLng) / 1000).toFixed(2))
     : 0;
-    
+
   const { eta, etaInMinutes } = calculateEta(distanceInKm, "Priority");
   const ETA = convertMinutesToHours(etaInMinutes);
 
@@ -151,90 +311,11 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
   useEffect(() => {
     if (!googleMapRef.current.map || !isGoogleMapsLoaded) return;
 
-    const mapStyle = mapTheme === 'dark' 
-      ? [
-          { elementType: "geometry", stylers: [{ color: "#242f3e" }] },
-          { elementType: "labels.text.stroke", stylers: [{ color: "#242f3e" }] },
-          { elementType: "labels.text.fill", stylers: [{ color: "#746855" }] },
-          {
-            featureType: "administrative.locality",
-            elementType: "labels.text.fill",
-            stylers: [{ color: "#d59563" }]
-          },
-          {
-            featureType: "poi",
-            elementType: "labels.text.fill",
-            stylers: [{ color: "#d59563" }]
-          },
-          {
-            featureType: "poi.park",
-            elementType: "geometry",
-            stylers: [{ color: "#263c3f" }]
-          },
-          {
-            featureType: "poi.park",
-            elementType: "labels.text.fill",
-            stylers: [{ color: "#6b9a76" }]
-          },
-          {
-            featureType: "road",
-            elementType: "geometry",
-            stylers: [{ color: "#38414e" }]
-          },
-          {
-            featureType: "road",
-            elementType: "geometry.stroke",
-            stylers: [{ color: "#212a37" }]
-          },
-          {
-            featureType: "road",
-            elementType: "labels.text.fill",
-            stylers: [{ color: "#9ca5b3" }]
-          },
-          {
-            featureType: "road.highway",
-            elementType: "geometry",
-            stylers: [{ color: "#746855" }]
-          },
-          {
-            featureType: "road.highway",
-            elementType: "geometry.stroke",
-            stylers: [{ color: "#1f2835" }]
-          },
-          {
-            featureType: "road.highway",
-            elementType: "labels.text.fill",
-            stylers: [{ color: "#f3d19c" }]
-          },
-          {
-            featureType: "transit",
-            elementType: "geometry",
-            stylers: [{ color: "#2f3948" }]
-          },
-          {
-            featureType: "transit.station",
-            elementType: "labels.text.fill",
-            stylers: [{ color: "#d59563" }]
-          },
-          {
-            featureType: "water",
-            elementType: "geometry",
-            stylers: [{ color: "#17263c" }]
-          },
-          {
-            featureType: "water",
-            elementType: "labels.text.fill",
-            stylers: [{ color: "#515c6d" }]
-          },
-          {
-            featureType: "water",
-            elementType: "labels.text.stroke",
-            stylers: [{ color: "#17263c" }]
-          }
-        ]
-      : [];
-
-    googleMapRef.current.map.setOptions({ styles: mapStyle });
+    const mapOptions: google.maps.MapOptions = {
+      styles: mapTheme === 'dark' ? darkMapStyle : lightMapStyle
+    };
+    
+    googleMapRef.current.map.setOptions(mapOptions);
   }, [mapTheme, isGoogleMapsLoaded]);
 
   // 1. Set acceptance point when rider first appears
@@ -243,282 +324,102 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
       setAcceptancePoint(riderLatLng);
       progressRef.current.totalDistance = calculateDistance(riderLatLng, senderLatLng);
       console.log(`Total distance to pickup: ${progressRef.current.totalDistance?.toFixed(0)} meters`);
-      
-      // Calculate estimated time (1.5 minutes per 100 meters)
-      const timeEstimate = (progressRef.current.totalDistance / 100) * 1.5;
-      setEstimatedTime(Math.round(timeEstimate));
     }
-  }, [riderLatLng]);
+  }, [riderLatLng, acceptancePoint, senderLatLng]);
 
   // 2. Automatic progress tracking
   useEffect(() => {
     if (!riderLatLng || !acceptancePoint || !progressRef.current.totalDistance || notificationSent || !senderLatLng) return;
 
-    const checkProgress = () => {
-      const currentDistance = calculateDistance(acceptancePoint, riderLatLng);
-      const progressRatio = currentDistance / progressRef.current.totalDistance!;
+    // Clear any existing interval
+    if (progressRef.current.checkInterval) {
+      clearInterval(progressRef.current.checkInterval);
+    }
 
-      console.log(`Progress: ${(progressRatio * 100).toFixed(1)}%`);
+    // Set up new interval to check progress
+    progressRef.current.checkInterval = setInterval(() => {
+      const currentDistance = calculateDistance(riderLatLng, senderLatLng);
+      const progress = ((progressRef.current.totalDistance! - currentDistance) / progressRef.current.totalDistance!) * 100;
 
-      if (progressRatio >= 0.25) {
-        handleNotification("🚀 Rider is on the way to pick up your order!");
+      // Check if rider is close to the pickup location
+      if (currentDistance < 100 && !notificationSent) { // 100 meters threshold
+        handleNotification("Your delivery rider is approaching your location!");
         setNotificationSent(true);
-        
-        // Clean up interval
+        setStatus('arrived');
         if (progressRef.current.checkInterval) {
           clearInterval(progressRef.current.checkInterval);
         }
       }
-    };
-
-    // Check every 10 seconds
-    progressRef.current.checkInterval = setInterval(checkProgress, 10000);
-    
-    // Initial check
-    checkProgress();
+    }, 5000); // Check every 5 seconds
 
     return () => {
       if (progressRef.current.checkInterval) {
         clearInterval(progressRef.current.checkInterval);
       }
     };
-  }, [acceptancePoint, notificationSent]);
+  }, [acceptancePoint, notificationSent, riderLatLng, senderLatLng]);
 
   // Initialize Google Map
   useEffect(() => {
     if (!isGoogleMapsLoaded || !mapContainerRef.current) return;
 
-    // Set initial view based on current target
-    const initialView = proofOfPickup === 0 ? senderLatLng : receiverLatLng;
-    
-    // Create map
-    const map = new google.maps.Map(mapContainerRef.current, {
-      center: initialView || riderLatLng || { lat: 0, lng: 0 },
+    // Initialize map with theme
+    const mapOptions: google.maps.MapOptions = {
+      center: PickUpCoordinates,
       zoom: 13,
+      styles: mapTheme === 'dark' ? darkMapStyle : lightMapStyle,
+      disableDefaultUI: true,
       zoomControl: false,
-      mapTypeControl: false,
-      streetViewControl: false,
-      fullscreenControl: false,
-      styles: mapTheme === 'dark' ? [
-        { elementType: "geometry", stylers: [{ color: "#242f3e" }] },
-        { elementType: "labels.text.stroke", stylers: [{ color: "#242f3e" }] },
-        { elementType: "labels.text.fill", stylers: [{ color: "#746855" }] },
-        {
-          featureType: "administrative.locality",
-          elementType: "labels.text.fill",
-          stylers: [{ color: "#d59563" }]
-        },
-        {
-          featureType: "poi",
-          elementType: "labels.text.fill",
-          stylers: [{ color: "#d59563" }]
-        },
-        {
-          featureType: "poi.park",
-          elementType: "geometry",
-          stylers: [{ color: "#263c3f" }]
-        },
-        {
-          featureType: "poi.park",
-          elementType: "labels.text.fill",
-          stylers: [{ color: "#6b9a76" }]
-        },
-        {
-          featureType: "road",
-          elementType: "geometry",
-          stylers: [{ color: "#38414e" }]
-        },
-        {
-          featureType: "road",
-          elementType: "geometry.stroke",
-          stylers: [{ color: "#212a37" }]
-        },
-        {
-          featureType: "road",
-          elementType: "labels.text.fill",
-          stylers: [{ color: "#9ca5b3" }]
-        },
-        {
-          featureType: "road.highway",
-          elementType: "geometry",
-          stylers: [{ color: "#746855" }]
-        },
-        {
-          featureType: "road.highway",
-          elementType: "geometry.stroke",
-          stylers: [{ color: "#1f2835" }]
-        },
-        {
-          featureType: "road.highway",
-          elementType: "labels.text.fill",
-          stylers: [{ color: "#f3d19c" }]
-        },
-        {
-          featureType: "transit",
-          elementType: "geometry",
-          stylers: [{ color: "#2f3948" }]
-        },
-        {
-          featureType: "transit.station",
-          elementType: "labels.text.fill",
-          stylers: [{ color: "#d59563" }]
-        },
-        {
-          featureType: "water",
-          elementType: "geometry",
-          stylers: [{ color: "#17263c" }]
-        },
-        {
-          featureType: "water",
-          elementType: "labels.text.fill",
-          stylers: [{ color: "#515c6d" }]
-        },
-        {
-          featureType: "water",
-          elementType: "labels.text.stroke",
-          stylers: [{ color: "#17263c" }]
-        }
-      ] : [],
-    });
+    };
 
-    // Add zoom control
-    const zoomControlDiv = document.createElement('div');
-    const zoomControl = createZoomControl(mapTheme);
-    zoomControlDiv.appendChild(zoomControl);
-    map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(zoomControlDiv);
-
-    // Create directions service and renderer
-    const directionsService = new google.maps.DirectionsService();
-    const directionsRenderer = new google.maps.DirectionsRenderer({
+    googleMapRef.current.map = new google.maps.Map(mapContainerRef.current, mapOptions);
+    
+    // Initialize directions service and renderer
+    googleMapRef.current.directionsService = new google.maps.DirectionsService();
+    googleMapRef.current.directionsRenderer = new google.maps.DirectionsRenderer({
+      map: googleMapRef.current.map,
       suppressMarkers: true,
-      polylineOptions: {
-        strokeColor: '#fbbf24',
-        strokeWeight: 6,
-        strokeOpacity: 0.8
-      }
+      preserveViewport: true
     });
 
-    directionsRenderer.setMap(map);
-
-    // Create custom markers
-    const createCustomMarker = (iconSvg: string, position: google.maps.LatLng, title: string) => {
-      return new google.maps.Marker({
-        position,
-        map,
-        title,
+    // Create markers
+    if (senderLatLng) {
+      googleMapRef.current.senderMarker = new google.maps.Marker({
+        position: senderLatLng,
+        map: googleMapRef.current.map,
         icon: {
-          url: `data:image/svg+xml;base64,${btoa(iconSvg)}`,
-          scaledSize: new google.maps.Size(48, 48),
-          anchor: new google.maps.Point(24, 48)
-        }
+          url: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iI0ZGN0YwMCI+PHBhdGggZD0iTTEyIDJDNy4wMyAyIDMgNi4wMyAzIDExYzAgMy4yNSAxLjg0IDYuMDIgNC41IDcuOTNsMy41IDQuMDcgMy41LTQuMDdjMi42Ni0xLjkxIDQuNS00LjY4IDQuNS03LjkzIDAtNC45Ny00LjAzLTktOS05em0wIDExLjVjLTEuMzggMC0yLjUtMS4xMi0yLjUtMi41czEuMTItMi41IDIuNS0yLjUgMi41IDEuMTIgMi41IDIuNS0xLjEyIDIuNS0yLjUgMi41eiIvPjwvc3ZnPg==',
+          scaledSize: new google.maps.Size(32, 32)
+        },
+        title: "Pickup Location"
       });
-    };
-
-    // Create rider marker
-    let riderMarker: google.maps.Marker | null = null;
-    if (riderLatLng) {
-      const riderSvg = `
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
-          <circle cx="24" cy="24" r="24" fill="url(#riderGradient)"/>
-          <path d="M19 7c0-1.1-.9-2-2-2h-3v2h3v2.65L13.52 14H10V9H6c-2.21 0-4 1.79-4 4v3h2c0 1.66 1.34 3 3 3s3-1.34 3-3h4.48L19 10.35V7zM7 17c-.55 0-1-.45-1-1h2c0 .55-.45 1-1 1z" fill="#fef3c7"/>
-          <path d="M5 6h5v2H5zm14 7c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3zm0 4c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1z" fill="#fef3c7"/>
-          <defs>
-            <linearGradient id="riderGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="#065f46"/>
-              <stop offset="100%" stop-color="#064e3b"/>
-            </linearGradient>
-          </defs>
-        </svg>
-      `;
-      riderMarker = createCustomMarker(riderSvg, riderLatLng, "Rider");
     }
 
-    // Create sender marker if needed
-    let senderMarker: google.maps.Marker | null = null;
-    if (proofOfPickup === 0 && senderLatLng) {
-      const senderSvg = `
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
-          <circle cx="24" cy="24" r="24" fill="url(#senderGradient)"/>
-          <path d="M19 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h4l3 3 3-3h4c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-3 12H8v-2h8v2zm0-3H8V9h8v2zm0-3H8V6h8v2z" fill="white"/>
-          <defs>
-            <linearGradient id="senderGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="#065f46"/>
-              <stop offset="100%" stop-color="#047857"/>
-            </linearGradient>
-          </defs>
-        </svg>
-      `;
-      senderMarker = createCustomMarker(senderSvg, senderLatLng, "Pickup Point");
+    if (receiverLatLng) {
+      googleMapRef.current.receiverMarker = new google.maps.Marker({
+        position: receiverLatLng,
+        map: googleMapRef.current.map,
+        icon: {
+          url: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzM3ODgzMSI+PHBhdGggZD0iTTEyIDJDNy4wMyAyIDMgNi4wMyAzIDExYzAgMy4yNSAxLjg0IDYuMDIgNC41IDcuOTNsMy41IDQuMDcgMy41LTQuMDdjMi42Ni0xLjkxIDQuNS00LjY4IDQuNS03LjkzIDAtNC45Ny00LjAzLTktOS05em0wIDExLjVjLTEuMzggMC0yLjUtMS4xMi0yLjUtMi41czEuMTItMi41IDIuNS0yLjUgMi41IDEuMTIgMi41IDIuNS0xLjEyIDIuNS0yLjUgMi41eiIvPjwvc3ZnPg==',
+          scaledSize: new google.maps.Size(32, 32)
+        },
+        title: "Drop-off Location"
+      });
     }
 
-    // Create receiver marker if needed
-    let receiverMarker: google.maps.Marker | null = null;
-    if (proofOfPickup > 0 && receiverLatLng) {
-      const receiverSvg = `
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
-          <circle cx="24" cy="24" r="24" fill="url(#receiverGradient)"/>
-          <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" fill="white"/>
-          <defs>
-            <linearGradient id="receiverGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="#047857"/>
-              <stop offset="100%" stop-color="#059669"/>
-            </linearGradient>
-          </defs>
-        </svg>
-      `;
-      receiverMarker = createCustomMarker(receiverSvg, receiverLatLng, "Delivery Point");
+    // Add custom zoom control
+    const zoomControl = createZoomControl(mapTheme);
+    googleMapRef.current.map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(zoomControl);
+
+    // Calculate and display route if we have both points
+    if (senderLatLng && receiverLatLng) {
+      calculateRoute(senderLatLng, receiverLatLng);
     }
-
-    // Calculate and display route
-    if (riderLatLng && (senderLatLng || receiverLatLng)) {
-      const waypoints = [];
-      
-      if (proofOfPickup === 0 && senderLatLng) {
-        waypoints.push(senderLatLng);
-      }
-      
-      if (proofOfPickup > 0 && receiverLatLng) {
-        waypoints.push(receiverLatLng);
-      }
-
-      if (waypoints.length > 0) {
-        directionsService.route(
-          {
-            origin: riderLatLng,
-            destination: waypoints[0],
-            travelMode: google.maps.TravelMode.DRIVING
-          },
-          (result, status) => {
-            if (status === google.maps.DirectionsStatus.OK) {
-              directionsRenderer.setDirections(result);
-            } else {
-              console.error(`Error fetching directions: ${status}`);
-            }
-          }
-        );
-      }
-    }
-
-    // Store references
-    googleMapRef.current = {
-      map,
-      directionsService,
-      directionsRenderer,
-      riderMarker,
-      senderMarker,
-      receiverMarker
-    };
-
-    // Update map on window resize
-    const handleResize = () => {
-      google.maps.event.trigger(map, 'resize');
-    };
-    window.addEventListener('resize', handleResize);
 
     return () => {
-      window.removeEventListener('resize', handleResize);
-      // Clean up map
+      // Clean up map on component unmount
       if (googleMapRef.current.map) {
+        googleMapRef.current.directionsRenderer?.setMap(null);
         googleMapRef.current.map = null;
       }
     };
@@ -527,23 +428,13 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
   // Update rider position when location changes
   useEffect(() => {
     if (!googleMapRef.current.riderMarker || !riderLatLng) return;
-    
+
+    // Update rider marker position
     googleMapRef.current.riderMarker.setPosition(riderLatLng);
     
-    // Update route if rider moves
-    if (googleMapRef.current.directionsService && targetLatLng) {
-      googleMapRef.current.directionsService.route(
-        {
-          origin: riderLatLng,
-          destination: targetLatLng,
-          travelMode: google.maps.TravelMode.DRIVING
-        },
-        (result, status) => {
-          if (status === google.maps.DirectionsStatus.OK && googleMapRef.current.directionsRenderer) {
-            googleMapRef.current.directionsRenderer.setDirections(result);
-          }
-        }
-      );
+    // Pan map to follow rider if map exists
+    if (googleMapRef.current.map) {
+      googleMapRef.current.map.panTo(riderLatLng);
     }
   }, [riderLatLng]);
 
@@ -551,53 +442,38 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
   useEffect(() => {
     if (!panelRef.current) return;
 
-    const panel = panelRef.current;
-    let startY: number, startHeight: number;
+    let startY = 0;
+    let startHeight = 0;
 
-    const initDrag = (e: MouseEvent | TouchEvent) => {
-      startY = 'touches' in e ? e.touches[0].clientY : e.clientY;
+    const onMouseDown = (e: MouseEvent) => {
+      startY = e.clientY;
       startHeight = panelHeight;
-      document.addEventListener('mousemove', drag);
-      document.addEventListener('touchmove', drag);
-      document.addEventListener('mouseup', stopDrag);
-      document.addEventListener('touchend', stopDrag);
-      panel.classList.add('transition-none');
+      document.addEventListener('mousemove', onMouseMove);
+      document.addEventListener('mouseup', onMouseUp);
     };
 
-    const drag = (e: MouseEvent | TouchEvent) => {
-      const currentY = 'touches' in e ? e.touches[0].clientY : e.clientY;
-      const deltaY = startY - currentY;
-      const newHeight = Math.min(Math.max(startHeight + deltaY, 120), window.innerHeight - 100);
-      
+    const onMouseMove = (e: MouseEvent) => {
+      const delta = startY - e.clientY;
+      const newHeight = Math.min(Math.max(200, startHeight + delta), 500);
       setPanelHeight(newHeight);
     };
 
-    const stopDrag = () => {
-      document.removeEventListener('mousemove', drag);
-      document.removeEventListener('touchmove', drag);
-      document.removeEventListener('mouseup', stopDrag);
-      document.removeEventListener('touchend', stopDrag);
-      panel.classList.remove('transition-none');
-      
-      // Snap to open/closed positions
-      if (panelHeight < 200) {
-        setIsPanelOpen(false);
-      } else {
-        setIsPanelOpen(true);
-      }
+    const onMouseUp = () => {
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
     };
 
-    const dragHandle = panel.querySelector('.drag-handle');
+    const dragHandle = panelRef.current.querySelector('.drag-handle');
     if (dragHandle) {
-      dragHandle.addEventListener('mousedown', initDrag);
-      dragHandle.addEventListener('touchstart', initDrag);
+      dragHandle.addEventListener('mousedown', onMouseDown);
     }
 
     return () => {
       if (dragHandle) {
-        dragHandle.removeEventListener('mousedown', initDrag);
-        dragHandle.removeEventListener('touchstart', initDrag);
+        dragHandle.removeEventListener('mousedown', onMouseDown);
       }
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
     };
   }, [panelHeight]);
 
@@ -605,54 +481,101 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
   const createZoomControl = (theme: 'dark' | 'light') => {
     const controlDiv = document.createElement('div');
     controlDiv.style.margin = '10px';
-    
+    controlDiv.style.display = 'flex';
+    controlDiv.style.flexDirection = 'column';
+    controlDiv.style.gap = '2px';
+
     // Zoom in button
     const zoomInButton = document.createElement('button');
     zoomInButton.innerHTML = '+';
-    zoomInButton.style.cssText = `
-      background-color: ${theme === 'dark' ? '#002000' : '#088936'};
-      border: none;
-      color: ${theme === 'dark' ? '#fef3c7' : 'white'};
-      width: 30px;
-      height: 30px;
-      border-radius: 2px;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-      margin-bottom: 4px;
-      display: block;
-    `;
+    zoomInButton.style.width = '30px';
+    zoomInButton.style.height = '30px';
+    zoomInButton.style.borderRadius = '2px';
+    zoomInButton.style.border = 'none';
+    zoomInButton.style.background = theme === 'dark' ? '#242f3e' : '#ffffff';
+    zoomInButton.style.color = theme === 'dark' ? '#ffffff' : '#000000';
+    zoomInButton.style.fontSize = '18px';
+    zoomInButton.style.cursor = 'pointer';
+    zoomInButton.style.boxShadow = '0 2px 6px rgba(0,0,0,0.3)';
     zoomInButton.onclick = () => {
       if (googleMapRef.current.map) {
-        googleMapRef.current.map.setZoom(googleMapRef.current.map.getZoom() + 1);
+        googleMapRef.current.map.setZoom(googleMapRef.current.map.getZoom()! + 1);
       }
     };
-    
+
     // Zoom out button
     const zoomOutButton = document.createElement('button');
     zoomOutButton.innerHTML = '-';
-    zoomOutButton.style.cssText = `
-      background-color: ${theme === 'dark' ? '#002000' : '#088936'};
-      border: none;
-      color: ${theme === 'dark' ? '#fef3c7' : 'white'};
-      width: 30px;
-      height: 30px;
-      border-radius: 2px;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-      display: block;
-    `;
+    zoomOutButton.style.width = '30px';
+    zoomOutButton.style.height = '30px';
+    zoomOutButton.style.borderRadius = '2px';
+    zoomOutButton.style.border = 'none';
+    zoomOutButton.style.background = theme === 'dark' ? '#242f3e' : '#ffffff';
+    zoomOutButton.style.color = theme === 'dark' ? '#ffffff' : '#000000';
+    zoomOutButton.style.fontSize = '18px';
+    zoomOutButton.style.cursor = 'pointer';
+    zoomOutButton.style.boxShadow = '0 2px 6px rgba(0,0,0,0.3)';
     zoomOutButton.onclick = () => {
       if (googleMapRef.current.map) {
-        googleMapRef.current.map.setZoom(googleMapRef.current.map.getZoom() - 1);
+        googleMapRef.current.map.setZoom(googleMapRef.current.map.getZoom()! - 1);
       }
     };
-    
+
     controlDiv.appendChild(zoomInButton);
     controlDiv.appendChild(zoomOutButton);
-    
+
     return controlDiv;
+  };
+
+  // Function to calculate and display route
+  const calculateRoute = (origin: google.maps.LatLng, destination: google.maps.LatLng) => {
+    if (!googleMapRef.current.directionsService || !googleMapRef.current.directionsRenderer) return;
+
+    googleMapRef.current.directionsService.route(
+      {
+        origin: origin,
+        destination: destination,
+        travelMode: google.maps.TravelMode.DRIVING
+      },
+      (response, status) => {
+        if (status === 'OK' && response) {
+          googleMapRef.current.directionsRenderer?.setDirections(response);
+          
+          // Calculate and set estimated time
+          const route = response.routes[0];
+          if (route.legs.length > 0) {
+            setEstimatedTime(route.legs[0].duration?.value || null);
+          }
+        } else {
+          console.error('Directions request failed due to ' + status);
+        }
+      }
+    );
+  };
+
+  // Create rider marker when map is ready
+  useEffect(() => {
+    if (!googleMapRef.current.map || !riderLatLng) return;
+
+    // Create rider marker if it doesn't exist
+    if (!googleMapRef.current.riderMarker) {
+      googleMapRef.current.riderMarker = new google.maps.Marker({
+        position: riderLatLng,
+        map: googleMapRef.current.map,
+        icon: {
+          url: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iI0ZGN0YwMCI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiIGZpbGw9IiMzNzg4MzEiLz48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSI2IiBmaWxsPSIjRkZGIi8+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMiIgZmlsbD0iIzM3ODgzMSIvPjwvc3ZnPg==',
+          scaledSize: new google.maps.Size(40, 40),
+          anchor: new google.maps.Point(20, 20)
+        },
+        title: "Rider Position"
+      });
+    }
+  }, [googleMapRef.current.map, riderLatLng]);
+
+  // Toggle panel open/close
+  const togglePanel = () => {
+    setIsPanelOpen(!isPanelOpen);
+    setPanelHeight(isPanelOpen ? 80 : 320);
   };
 
   return (
@@ -665,201 +588,121 @@ export default function RiderMap({ PickUpCoordinates, DropOffCoordinates, delive
       }`}>
         <h2 className={`text-lg font-semibold ${mapTheme === 'dark' ? 'text-yellow-100' : 'text-yellow-100'}`}>
           <span className="flex items-center gap-2">
-            Delivery
+            <MdOutlineDeliveryDining className="w-5 h-5" />
+            Delivery #{deliveryId.slice(-6)}
           </span>
         </h2>
         <div className="flex gap-2">
           {/* Theme Toggle Button */}
-          <button
-            onClick={toggleMapTheme}
-            className={`p-2 rounded-full transition-colors shadow-lg ${
-              mapTheme === 'dark' 
-                ? 'text-yellow-300 bg-[#002000]/80 hover:bg-[#001800]/80' 
-                : 'text-yellow-200 bg-green-800/80 hover:bg-green-700/80'
-            }`}
-            title={`Switch to ${mapTheme === 'dark' ? 'light' : 'dark'} mode`}
-          >
+          <button onClick={toggleMapTheme} className={`p-2 rounded-full transition-colors shadow-lg ${
+            mapTheme === 'dark' 
+              ? 'text-yellow-300 bg-[#002000]/80 hover:bg-[#001800]/80' 
+              : 'text-yellow-200 bg-green-800/80 hover:bg-green-700/80'
+          }`} title={`Switch to ${mapTheme === 'dark' ? 'light' : 'dark'} mode`}>
             {mapTheme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
           </button>
-          <button
-            onClick={setMap}
-            className={`p-2 rounded-full transition-colors shadow-lg ${
-              mapTheme === 'dark' 
-                ? 'text-yellow-300 bg-[#002000]/80 hover:bg-[#001800]/80' 
-                : 'text-yellow-200 bg-green-800/80 hover:bg-green-700/80'
-            }`}
-          >
+          <button onClick={setMap} className={`p-2 rounded-full transition-colors shadow-lg ${
+            mapTheme === 'dark' 
+              ? 'text-yellow-300 bg-[#002000]/80 hover:bg-[#001800]/80' 
+              : 'text-yellow-200 bg-green-800/80 hover:bg-green-700/80'
+          }`}>
             <XIcon className="w-5 h-5" />
           </button>
         </div>
       </div>
 
       {/* Map container */}
+      <div ref={mapContainerRef} className="w-full h-full" />
+
+      {/* Bottom panel */}
       <div 
-        ref={mapContainerRef}
-        id="map"
-        className="w-full h-full pt-14 z-0"
-      />
-
-      {/* Luxury Control Panel */}
-      <div className="absolute top-20 left-4 z-10">
-        <div className={`rounded-2xl p-4 shadow-2xl border backdrop-blur-xl ${
-          mapTheme === 'dark' 
-            ? 'bg-gradient-to-br from-[#002000]/80 to-[#001800]/80 border-lime-400/30' 
-            : 'bg-[linear-gradient(301deg,rgba(8,137,54,0.6)_0%,rgba(0,44,16,0.6)_50%)] backdrop-blur-md border-lime-300/30'
-        }`}>
-          <div className="flex items-center mb-3">
-            <div className={`w-3 h-3 rounded-full mr-2 ${
-              mapTheme === 'dark' ? 'bg-yellow-400 animate-pulse' : 'bg-yellow-300'
-            }`}></div>
-            <h3 className={`font-bold text-lg ${
-              mapTheme === 'dark' ? 'text-yellow-100' : 'text-yellow-100'
-            }`}>Delivery #{deliveryId.slice(0, 8)}</h3>
-          </div>
-          
-          <div className="flex items-center text-sm mb-2">
-            <GiPathDistance className={`mr-2 ${
-              mapTheme === 'dark' ? 'text-yellow-300' : 'text-yellow-200'
-            }`} />
-            <span className={mapTheme === 'dark' ? 'text-yellow-200' : 'text-yellow-200'}>
-              {distanceInKm > 0 ? `${distanceInKm} km away` : 'Calculating...'}
-            </span>
-          </div>
-          
-          <div className="flex items-center text-sm">
-            <Clock className={`mr-2 w-4 h-4 ${
-              mapTheme === 'dark' ? 'text-yellow-300' : 'text-yellow-200'
-            }`} />
-            <span className={mapTheme === 'dark' ? 'text-yellow-200' : 'text-yellow-200'}>
-              {ETA}
-            </span>
-          </div>
-        </div>
-      </div>
-
-      {/* Luxury Status Panel - Fixed height and z-index */}
-      <div
         ref={panelRef}
-        className={`
-          fixed bottom-0 left-0 right-0 z-50 px-6 pb-8 backdrop-blur-2xl
-          rounded-t-3xl shadow-[0_-20px_50px_-10px_rgba(0,30,0,0.7)]
-          transition-all duration-300 ease-out
-          ${isPanelOpen ? 'translate-y-0' : 'translate-y-[calc(100%-60px)]'}
-          ${mapTheme === 'dark' 
-            ? 'bg-gradient-to-t from-[#001a00]/95 to-[#001200]/95 border-t border-yellow-400/30' 
-            : 'bg-[linear-gradient(301deg,rgba(8,137,54,0.6)_0%,rgba(0,44,16,0.6)_50%)] backdrop-blur-md border-t border-yellow-300/30'}
-        `}
-        style={{ height: `${panelHeight}px` }}
+        className={`fixed left-4 right-4 rounded-t-xl shadow-lg transition-all duration-300 ${
+          mapTheme === 'dark' 
+            ? 'bg-gradient-to-b from-[#002000] to-[#001800] border border-yellow-400/20' 
+            : 'bg-gradient-to-b from-green-800 to-green-900 border border-yellow-300/20'
+        }`}
+        style={{ 
+          height: `${panelHeight}px`, 
+          bottom: isPanelOpen ? '0' : `-${panelHeight - 80}px` 
+        }}
       >
-        {/* Draggable Handle */}
-        {isPanelOpen && (
-        <button
-          onClick={() => setIsPanelOpen(false)}
-          className="mb-10 fixed left-1/2 transform z-50 -translate-x-1/2 
-            rounded-full p-3 shadow-lg hover:shadow-xl animate-bounce
-            flex items-center justify-center w-12 h-12"
-          style={{
-            background: mapTheme === 'dark' 
-              ? 'linear-gradient(to right, rgba(0, 32, 0, 0.9), rgba(0, 24, 0, 0.9))' 
-              : 'linear-gradient(to right, rgba(0, 100, 0, 0.9), rgba(0, 80, 0, 0.9))',
-            color: 'white'
-          }}
+        {/* Drag handle */}
+        <div 
+          className="drag-handle absolute top-0 left-0 right-0 h-8 flex justify-center items-center cursor-row-resize"
+          onClick={togglePanel}
         >
-          <FaChevronDown className="text-lg" />
-        </button>
-      )}
+          <div className={`w-12 h-1 rounded-full ${mapTheme === 'dark' ? 'bg-yellow-400/50' : 'bg-yellow-300/50'}`}></div>
+        </div>
 
-        <div className="pt-8 h-full flex flex-col">
-          <div className="text-center mb-6">
-            <h2 className="text-2xl font-bold text-yellow-100 mb-1">Delivery Operations</h2>
-            <p className="text-sm" style={{ color: mapTheme === 'dark' ? '#d9f99d' : '#d9f99d' }}>Premium Express Service</p>
+        {/* Panel content */}
+        <div className="pt-6 px-4 pb-4 h-full overflow-y-auto">
+          <div className="flex justify-between items-center mb-4">
+            <h3 className={`text-lg font-semibold ${mapTheme === 'dark' ? 'text-yellow-100' : 'text-yellow-100'}`}>
+              Delivery Details
+            </h3>
+            <button onClick={togglePanel} className={`p-1 rounded-full ${mapTheme === 'dark' ? 'text-yellow-300' : 'text-yellow-200'}`}>
+              {isPanelOpen ? <FaChevronDown /> : <FaChevronUp />}
+            </button>
           </div>
 
-          <div className="grid grid-cols-1 gap-4 mb-6">
-            <button
-              onClick={() => {
-                setStatus('arrived');
-                handleNotification("🏍️ Rider has arrived at pickup location");
-                setIsPanelOpen(false);
-              }}
-              className={`
-                ${proofOfPickup > 0 ? 'hidden' : 'flex' }
-                items-center justify-center gap-3 py-4 rounded-xl
-                text-white font-semibold shadow-lg
-                transition-all duration-300 hover:shadow-xl hover:scale-[1.02]
-                focus:ring-2 focus:ring-opacity-50
-                border
-                ${status === 'arrived' ? 'ring-2' : ''}
-                ${mapTheme === 'dark' 
-                  ? 'bg-gradient-to-r from-[#002000]/90 to-[#001800]/90 border-yellow-400/30 focus:ring-yellow-500 ring-yellow-400' 
-                  : 'bg-gradient-to-r from-cyan-700/90 to-cyan-800/90 border-yellow-300/30 focus:ring-yellow-400 ring-yellow-300'}
-              `}>
-              <FaStore className="text-xl" />
-              <span>Arrived at Pickup Location</span>
-            </button>
-            
-            <button
-              onClick={() => {
-                setStatus('delivered');
-                handleNotification("📦 Package has been successfully delivered");
-                setIsPanelOpen(false);
-              }}
-              className={`
-                flex items-center justify-center gap-3 py-4 rounded-xl
-                text-white font-semibold shadow-lg
-                transition-all duration-300 hover:shadow-xl hover:scale-[1.02]
-                focus:ring-2 focus:ring-opacity-50
-                border
-                ${status === 'delivered' ? 'ring-2' : ''}
-                ${mapTheme === 'dark' 
-                  ? 'bg-gradient-to-r from-[#001800]/90 to-[#001400]/90 border-yellow-300/30 focus:ring-yellow-400 ring-yellow-300' 
-                  : 'bg-gradient-to-r from-green-600/90 to-green-700/90 border-yellow-300/30 focus:ring-yellow-400 ring-yellow-300'}
-              `}>
-              <MdOutlineDeliveryDining className="text-xl" />
-              <span>Mark as Delivered</span>
-            </button>
-            
-            <button
-              onClick={() => {
-                setStatus('failed');
-                handleNotification("⚠️ Delivery attempt failed - Package not delivered");
-                setIsPanelOpen(false);
-              }}
-              className={`
-                flex items-center justify-center gap-3 py-4 rounded-xl
-                text-white font-semibold shadow-lg
-                transition-all duration-300 hover:shadow-xl hover:scale-[1.02]
-                focus:ring-2 focus:ring-opacity-50
-                border
-                ${status === 'failed' ? 'ring-2' : ''}
-                ${mapTheme === 'dark' 
-                  ? 'bg-gradient-to-r from-rose-800/90 to-rose-700/90 border-rose-400/30 focus:ring-rose-500 ring-rose-400' 
-                  : 'bg-gradient-to-r from-rose-700/90 to-rose-600/90 border-rose-300/30 focus:ring-rose-400 ring-rose-300'}
-              `}>
-              <FaExclamationTriangle className="text-xl" />
-              <span>Delivery Attempt Failed</span>
-            </button>
+          <div className="grid grid-cols-2 gap-4 mb-4">
+            <div className={`p-3 rounded-lg ${mapTheme === 'dark' ? 'bg-[#001a00]' : 'bg-green-700'}`}>
+              <div className="flex items-center gap-2 mb-1">
+                <GiPathDistance className={`w-4 h-4 ${mapTheme === 'dark' ? 'text-yellow-400' : 'text-yellow-300'}`} />
+                <span className={`text-sm ${mapTheme === 'dark' ? 'text-yellow-200' : 'text-yellow-100'}`}>Distance</span>
+              </div>
+              <p className={`text-lg font-bold ${mapTheme === 'dark' ? 'text-yellow-100' : 'text-white'}`}>
+                {distanceInKm.toFixed(1)} km
+              </p>
+            </div>
+
+            <div className={`p-3 rounded-lg ${mapTheme === 'dark' ? 'bg-[#001a00]' : 'bg-green-700'}`}>
+              <div className="flex items-center gap-2 mb-1">
+                <Clock className={`w-4 h-4 ${mapTheme === 'dark' ? 'text-yellow-400' : 'text-yellow-300'}`} />
+                <span className={`text-sm ${mapTheme === 'dark' ? 'text-yellow-200' : 'text-yellow-100'}`}>ETA</span>
+              </div>
+              <p className={`text-lg font-bold ${mapTheme === 'dark' ? 'text-yellow-100' : 'text-white'}`}>
+                {ETA}
+              </p>
+            </div>
+          </div>
+
+          <div className={`p-3 rounded-lg mb-4 ${mapTheme === 'dark' ? 'bg-[#001a00]' : 'bg-green-700'}`}>
+            <div className="flex items-center gap-2 mb-2">
+              <FaRoute className={`w-4 h-4 ${mapTheme === 'dark' ? 'text-yellow-400' : 'text-yellow-300'}`} />
+              <span className={`text-sm font-semibold ${mapTheme === 'dark' ? 'text-yellow-200' : 'text-yellow-100'}`}>Route Status</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className={`w-3 h-3 rounded-full ${
+                status === 'arrived' ? 'bg-green-500' : 
+                status === 'delivered' ? 'bg-green-500' : 
+                'bg-yellow-500'
+              }`}></div>
+              <span className={`text-sm ${mapTheme === 'dark' ? 'text-yellow-100' : 'text-white'}`}>
+                {status === 'arrived' ? 'Rider has arrived at pickup' : 
+                 status === 'delivered' ? 'Package delivered' : 
+                 'Rider is on the way'}
+              </span>
+            </div>
+          </div>
+
+          <div className="flex gap-2">
+            <Button className="flex-1 bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white">
+              <FaMotorcycle className="mr-2" />
+              Contact Rider
+            </Button>
+            <Button className={`flex-1 ${
+              mapTheme === 'dark' 
+                ? 'bg-gradient-to-r from-[#002000] to-[#001800] border border-yellow-400/30 text-yellow-300 hover:from-[#001800] hover:to-[#001400]' 
+                : 'bg-gradient-to-r from-green-700 to-green-800 border border-yellow-300/30 text-yellow-200 hover:from-green-800 hover:to-green-900'
+            }`}>
+              <Navigation className="mr-2" />
+              Directions
+            </Button>
           </div>
         </div>
       </div>
-
-      {/* Floating Open Panel Button (when minimized) */}
-      {!isPanelOpen && (
-        <button
-          onClick={() => setIsPanelOpen(true)}
-          className="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-50
-            rounded-full p-3 shadow-lg hover:shadow-xl animate-bounce
-            flex items-center justify-center w-12 h-12"
-          style={{
-            background: mapTheme === 'dark' 
-              ? 'linear-gradient(to right, rgba(0, 32, 0, 0.9), rgba(0, 24, 0, 0.9))' 
-              : 'linear-gradient(to right, rgba(0, 100, 0, 0.9), rgba(0, 80, 0, 0.9))',
-            color: 'white'
-          }}
-        >
-          <FaChevronUp className="text-lg" />
-        </button>
-      )}
     </div>
   );
-}
+        }
