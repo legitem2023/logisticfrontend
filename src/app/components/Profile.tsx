@@ -26,7 +26,7 @@ export default function Profile() {
   if (!rider) return <p>No user found</p>;
 
   return ( 
-    <div className="min-h-screen bg-gray-50 flex flex-col md:flex-row"> 
+    <div className=" bg-gray-50 flex flex-col md:flex-row"> 
       <RiderCard 
         key={rider.id}
         rider={rider}
