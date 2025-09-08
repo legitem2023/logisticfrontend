@@ -104,6 +104,7 @@ const RiderCard = ({ rider, onViewDetails, onSave }) => {
   const lastUpdatedDate = toValidDate(editableData.lastUpdatedAt);
 
   const Accountrole = [
+    { name: "Administrator" },
     { name: "Sender" },
     { name: "Rider" }
   ];
