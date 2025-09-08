@@ -223,7 +223,7 @@ const tabs = [
 ];
 
   return ( 
-    <div className="max-w-2xl bg-gray-50 flex flex-col md:flex-row"> 
+    <div className="w-full bg-gray-50 flex flex-col md:flex-row"> 
       <aside className="hidden md:block md:w-64 bg-white/70 backdrop-blur-lg border-r border-gray-200 shadow-md p-6 rounded-r-3xl"> 
         <nav> 
  <ul className="space-y-4 text-[15px] font-medium">
