@@ -165,9 +165,11 @@ const filteredDeliveries = useMemo(() => {
         delivery.recipientName.toLowerCase().includes(searchTerm.toLowerCase()) ||
         (delivery.sender?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ?? false)
       : true;
+     console.log(new Date(delivery.createdAt).toDateString());
+     console.log(selectedDate).toDateString());
 
     const matchesDate = selectedDate
-      ? new Date(delivery.createdAt).toDateString() === selectedDate.toDateString()
+      ? new Date(delivery.createdAt).toDateString() === new Date(selectedDate).toDateString()
       : true;
 
     return matchesSearch && matchesDate;
