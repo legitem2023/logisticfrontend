@@ -105,17 +105,17 @@ const handleFilter = ({ search, date }: { search: string; date: Date | null }) =
       );
     }
 }
-/*  
+  
   if (loading) return (
     <div className="w-full mx-auto p-0">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 items-center justify-center gap-6">
           {Array(10).map((rider: any,idx:number) => (
-           <ShimmerRiderCard key={idx}/>
+           <AccountLoading key={idx}/>
           ))}
         </div>
       </div>
   );
-  */
+  
 
   if (error) return (
     <div className="bg-rose-50 border-l-4 border-rose-500 p-4">
@@ -137,7 +137,7 @@ const handleFilter = ({ search, date }: { search: string; date: Date | null }) =
       <div className="w-full mx-auto p-0">
         <FilterBar onFilter={handleFilter} />
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 items-center justify-center gap-6">
-          {loading?(<AccountLoading/>):updatedRiders.map((rider: Rider) => (
+          {updatedRiders.map((rider: Rider) => (
             <RiderCard 
               key={rider.id}
               rider={rider}
