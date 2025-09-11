@@ -106,15 +106,15 @@ const handleFilter = ({ search, date }: { search: string; date: Date | null }) =
     }
 }
   
-  if (loading) return (
-    <div className="w-full mx-auto p-0">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 items-center justify-center gap-6">
+  const loadingAccounts = (() =>{
+    return (
+        <>
           {Array(10).map((rider: any,idx:number) => (
            <AccountLoading key={idx}/>
           ))}
-        </div>
-      </div>
-  );
+        </>
+      )
+    });
   
 
   if (error) return (
@@ -137,7 +137,7 @@ const handleFilter = ({ search, date }: { search: string; date: Date | null }) =
       <div className="w-full mx-auto p-0">
         <FilterBar onFilter={handleFilter} />
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 items-center justify-center gap-6">
-          {updatedRiders.map((rider: Rider) => (
+          {loading?loadingAccounts():updatedRiders.map((rider: Rider) => (
             <RiderCard 
               key={rider.id}
               rider={rider}
