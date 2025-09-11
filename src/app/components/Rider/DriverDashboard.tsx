@@ -170,7 +170,7 @@ const filteredDeliveries = useMemo(() => {
     const date = new Date(timestamp);
     
     
-     console.log(date.toDateString);
+     console.log(date.toDateString());
      console.log(new Date(selectedDate).toDateString());
 
     const matchesDate = selectedDate
