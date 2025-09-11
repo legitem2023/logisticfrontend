@@ -82,7 +82,7 @@ export default function SenderDashboard() {
     if (selectedDate) {
       const targetDate = new Date(selectedDate).toDateString();
       result = result.filter(delivery => 
-        new Date(delivery.createdAt).toDateString() === targetDate
+        new Date(Number(delivery.createdAt)).toDateString() === targetDate
       );
     }
 
