@@ -1,4 +1,4 @@
-'use client';
+//'use client';
 
 /*import { useQuery, useMutation } from '@apollo/client';
 import { GETDELIVERIESADMIN, RIDERS } from '../../../../graphql/query';
