@@ -166,12 +166,11 @@ const filteredDeliveries = useMemo(() => {
         (delivery.sender?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ?? false)
       : true;
     
-    const timestamp = delivery.createdAt; // milliseconds
-    const date = new Date(timestamp * 1000);
-    
-    
-     console.log(date.toDateString());
-     console.log(new Date(selectedDate).toDateString());
+    const timestamp = Number(delivery.createdAt); // ensure it's a number
+    const date = new Date(timestamp);
+
+    console.log(date.toDateString());
+    console.log(new Date(selectedDate).toDateString());
 
     const matchesDate = selectedDate
       ? date.toDateString() === new Date(selectedDate).toDateString()
