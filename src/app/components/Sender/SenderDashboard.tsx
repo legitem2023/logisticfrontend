@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from "react"; 
+import { useState, useEffect, useMemo } from "react"; 
 import { Card, CardContent } from "../ui/Card";
 import { Button } from "../ui/Button"; 
 import Collapsible from "../ui/Collapsible";
@@ -32,14 +32,15 @@ export default function SenderDashboard() {
   const globalUserId = useSelector(selectTempUserId);
   const GlobalactiveIndex = useSelector((state: any) => state.activeIndex.value);
 
-  const [search, setSearch] = useState("");
-  const [filteredDeliveries, setFilteredDeliveries] = useState<any[]>([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [activeTab, setActiveTab] = useState("Deliveries"); 
   const [showMap, setMap] = useState(false); 
-  const [selectedDelivery, setSelectedDelivery] = useState(null); 
+  const [selectedDelivery, setSelectedDelivery] = useState<any>(null); 
 
   const { data: locationData } = useSubscription(LocationTracking, {
     variables: { userId: selectedDelivery?.assignedRiderId },
+    skip: !selectedDelivery?.assignedRiderId,
   });
 
   const [cancelDelivery] = useMutation(CANCELEDDELIVERY, {
@@ -60,38 +61,41 @@ export default function SenderDashboard() {
     skip: !globalUserId,
   });
 
-  const acceptedDeliveries = data?.getDispatch.filter(
-    (delivery: any) => delivery.deliveryStatus !== "Delivered" && delivery.deliveryStatus !== "Cancelled"
-  ) || [];
+  const acceptedDeliveries = useMemo(() => 
+    data?.getDispatch?.filter(
+      (delivery: any) => delivery.deliveryStatus !== "Delivered" && delivery.deliveryStatus !== "Cancelled"
+    ) || [],
+    [data]
+  );
 
-  useEffect(() => {
-    refetch();
-  }, [GlobalactiveIndex]);
+  const filteredDeliveries = useMemo(() => {
+    let result = [...acceptedDeliveries];
 
-  useEffect(() => {
-    if (acceptedDeliveries.length) {
-      setFilteredDeliveries(acceptedDeliveries);
-    }
-  }, [acceptedDeliveries]);
-
-  const handleFilter = ({ search, date }: { search: string; date: Date | null }) => {
-    let filtered = [...acceptedDeliveries];
-
-    if (search) {
-      filtered = filtered.filter(delivery =>
-        delivery.trackingNumber?.toLowerCase().includes(search.toLowerCase()) ||
-        delivery.assignedRider?.name?.toLowerCase().includes(search.toLowerCase())
+    if (searchTerm) {
+      const searchLower = searchTerm.toLowerCase();
+      result = result.filter(delivery =>
+        delivery.trackingNumber?.toLowerCase().includes(searchLower) ||
+        delivery.assignedRider?.name?.toLowerCase().includes(searchLower)
       );
     }
 
-    if (date) {
-      const targetDate = new Date(date).toDateString();
-      filtered = filtered.filter(delivery => 
+    if (selectedDate) {
+      const targetDate = new Date(selectedDate).toDateString();
+      result = result.filter(delivery => 
         new Date(delivery.createdAt).toDateString() === targetDate
       );
     }
 
-    setFilteredDeliveries(filtered);
+    return result;
+  }, [acceptedDeliveries, searchTerm, selectedDate]);
+
+  useEffect(() => {
+    refetch();
+  }, [GlobalactiveIndex, refetch]);
+
+  const handleFilter = ({ search, date }: { search: string; date: Date | null }) => {
+    setSearchTerm(search);
+    setSelectedDate(date);
   };
 
   const handleCancel = (delivery: any) => {
@@ -405,4 +409,4 @@ export default function SenderDashboard() {
       )}
     </div>
   );
-      }
+        }
