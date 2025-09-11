@@ -138,9 +138,7 @@ const RiderCard = ({ rider, onViewDetails, onSave }) => {
                 <User size={40} />
               </div>
             )}
-            <button className="absolute bottom-1 right-1 bg-blue-500 p-1.5 rounded-full text-white shadow-md hover:bg-blue-600 transition">
-              <Camera size={14} />
-            </button>
+ 
           </div>
           
           <button
