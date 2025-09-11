@@ -83,7 +83,7 @@ export default function SenderShipmentHistory({ status }: any) {
         : true;
 
       const dateMatch = date
-        ? new Date(d.estimatedDeliveryTime).toDateString() === date.toDateString()
+        ? new Date(Number(d.createdAt)).toDateString() === date.toDateString()
         : true;
 
       return searchMatch && dateMatch;
