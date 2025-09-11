@@ -4,13 +4,13 @@ import { Icon } from '@iconify/react';
 import { useQuery, useMutation } from '@apollo/client';
 import { Card, CardContent } from '../ui/Card';
 import { Loader2, AlertTriangle, Plus, X } from 'lucide-react';
-import { VEHICLEQUERY, CREATE_VEHICLE_MUTATION } from '../../../../graphql/query';
+import { VEHICLEQUERY } from '../../../../graphql/query';
 
 export default function VehicleTypes() {
   const { data, loading, error } = useQuery(VEHICLEQUERY);
-  const [createVehicle] = useMutation(CREATE_VEHICLE_MUTATION, {
-    refetchQueries: [{ query: VEHICLEQUERY }],
-  });
+ // const [createVehicle] = useMutation(CREATE_VEHICLE_MUTATION, {
+//    refetchQueries: [{ query: VEHICLEQUERY }],
+//  });
   
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({
@@ -25,7 +25,7 @@ export default function VehicleTypes() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await createVehicle({
+   /*   await createVehicle({
         variables: {
           input: {
             name: formData.name,
@@ -45,7 +45,7 @@ export default function VehicleTypes() {
         maxVolumeM3: '',
         cost: ''
       });
-      setShowForm(false);
+      setShowForm(false);*/
     } catch (err) {
       console.error('Error creating vehicle:', err);
     }
