@@ -259,7 +259,7 @@ const tabs = [
                 <Card key={delivery.id} className="transition duration-300 ease-in-out hover:shadow-xl hover:scale-[1.01] border border-gray-200">
                   <CardContent className="flex flex-col justify-between items-start sm:items-center gap-4 p-4">
                     <div>
-                      <div>Created: {formatDate(delivery.createdAt)}</div>
+                      <div className="text-gray-500">Created: {formatDate(delivery.createdAt)}</div>
                       <div className="text-lg font-semibold text-gray-800">{delivery.deliveryType}</div>
                       <div className="text-lg font-semibold text-gray-800">{delivery.trackingNumber}</div>
                       <div className="text-sm text-gray-500 mt-1">
