@@ -178,9 +178,7 @@ const Accounts = () => {
               </button>
             </div>
             
-            {/* Rider Profile Details */}
-            <RiderProfileCard rider={selectedRider} />
-        
+                    
             {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row gap-3 pt-6">
               {selectedRider.phone && (
