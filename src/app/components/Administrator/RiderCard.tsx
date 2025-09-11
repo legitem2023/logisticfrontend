@@ -146,7 +146,7 @@ const RiderCard = ({ rider, onViewDetails, onSave }) => {
             className="bg-gray-200 px-3 py-2 rounded-md text-gray-700 hover:bg-gray-300 transition flex items-center gap-1"
           >
             {isEditing ? <Check size={16} /> : <Edit3 size={16} />}
-            <span className="text-sm font-medium">{isEditing ? "Save" : "Edit"}</span>
+            <span className="text-sm font-medium">{isEditing ? "Editing" : "Edit"}</span>
           </button>
         </div>
 
@@ -350,7 +350,7 @@ const RiderCard = ({ rider, onViewDetails, onSave }) => {
         <div className="mt-6 flex gap-3">
           <button
             onClick={() => onViewDetails?.(editableData)}
-            className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-blue-500 text-white hover:bg-blue-600 transition font-medium text-sm"
+            className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-green-500 text-white hover:bg-green-600 transition font-medium text-sm"
           >
             <span>View Details</span>
             <ChevronRight size={16} />
