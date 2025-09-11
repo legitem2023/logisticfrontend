@@ -166,7 +166,7 @@ const filteredDeliveries = useMemo(() => {
         (delivery.sender?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ?? false)
       : true;
      console.log(new Date(delivery.createdAt).toDateString());
-     console.log(selectedDate).toDateString());
+     console.log(new Data(selectedDate).toDateString());
 
     const matchesDate = selectedDate
       ? new Date(delivery.createdAt).toDateString() === new Date(selectedDate).toDateString()
