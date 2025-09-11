@@ -14,6 +14,8 @@ import RiderCard from './RiderCard'; // Import the card component
 import RiderProfileCard from './RiderProfileCard'; // Import the profile card component
 import FilterBar from "../Rider/Filterbar";
 import ShimmerRiderCard from "./ShimmerRiderCard";
+import AccountLoading from "../Loadings/AccountLoading";
+
 type Rider = {
   id: string;
   name: string;
@@ -135,7 +137,7 @@ const handleFilter = ({ search, date }: { search: string; date: Date | null }) =
       <div className="w-full mx-auto p-0">
         <FilterBar onFilter={handleFilter} />
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 items-center justify-center gap-6">
-          {loading?(<ShimmerRiderCard/>):updatedRiders.map((rider: Rider) => (
+          {loading?(<AccountLoading/>):updatedRiders.map((rider: Rider) => (
             <RiderCard 
               key={rider.id}
               rider={rider}
