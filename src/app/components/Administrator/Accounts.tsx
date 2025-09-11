@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { 
   X,
   MessageSquare,
@@ -10,8 +10,8 @@ import { gql, useQuery, useSubscription } from '@apollo/client';
 import { LocationTracking } from '../../../../graphql/subscription';
 import { ACCOUNTS } from '../../../../graphql/query';
 import Image from "next/image";
-import RiderCard from './RiderCard'; // Import the card component
-import RiderProfileCard from './RiderProfileCard'; // Import the profile card component
+import RiderCard from './RiderCard';
+import RiderProfileCard from './RiderProfileCard';
 import FilterBar from "../Rider/Filterbar";
 import ShimmerRiderCard from "./ShimmerRiderCard";
 import AccountLoading from "../Loadings/AccountLoading";
@@ -23,8 +23,8 @@ type Rider = {
   avatarUrl?: string;
   phone?: string;
   phoneNumber?: string;
-  license?:string;
-  vehicleTypeId?:string
+  license?: string;
+  vehicleTypeId?: string;
   vehicleType?: {
     name: string;
     maxCapacityKg: number;
@@ -46,6 +46,8 @@ type Rider = {
 
 const Accounts = () => {
   const [selectedRider, setSelectedRider] = useState<Rider | null>(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredRiders, setFilteredRiders] = useState<Rider[]>([]);
 
   const { loading, error, data } = useQuery(ACCOUNTS);
   const { data: subscriptionData } = useSubscription(LocationTracking);
@@ -57,10 +59,10 @@ const Accounts = () => {
     avatarUrl: r.image,
     phone: r.phoneNumber,
     phoneNumber: r.phoneNumber,
-    vehicleTypeId:r.vehicleTypeId,
+    vehicleTypeId: r.vehicleTypeId,
     vehicleType: r.vehicleType,
     licensePlate: r.licensePlate,
-    license:r.license,
+    license: r.license,
     status: r.status,
     currentLatitude: r.currentLatitude,
     currentLongitude: r.currentLongitude,
@@ -95,17 +97,24 @@ const Accounts = () => {
     );
   }, [baseRiders, subscriptionData]);
 
-const handleFilter = ({ search, date }: { search: string; date: Date | null }) => {
-    let filtered = [...baseRiders];
-    console.log(search,filtered);
-    if (search) {
-      filtered = filtered.filter(delivery =>
-        delivery.name?.toLowerCase().includes(search.toLowerCase())
+  // Update filtered riders when base riders or search term changes
+  useEffect(() => {
+    if (searchTerm) {
+      const filtered = updatedRiders.filter(rider =>
+        rider.name?.toLowerCase().includes(searchTerm.toLowerCase())
       );
+      setFilteredRiders(filtered);
+    } else {
+      setFilteredRiders(updatedRiders);
     }
-}
-  
-   if (loading) return (
+  }, [updatedRiders, searchTerm]);
+
+  const handleFilter = ({ search, date }: { search: string; date: Date | null }) => {
+    setSearchTerm(search);
+    // You can extend this to handle date filtering as well
+  };
+
+  if (loading) return (
     <div className="w-full mx-auto p-0">
       <FilterBar onFilter={handleFilter} />
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 items-center justify-center gap-6">
@@ -115,7 +124,6 @@ const handleFilter = ({ search, date }: { search: string; date: Date | null }) =
       </div>
     </div>
   );
-  
 
   if (error) return (
     <div className="bg-rose-50 border-l-4 border-rose-500 p-4">
@@ -137,14 +145,19 @@ const handleFilter = ({ search, date }: { search: string; date: Date | null }) =
       <div className="w-full mx-auto p-0">
         <FilterBar onFilter={handleFilter} />
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 items-center justify-center gap-6">
-          {updatedRiders.map((rider: Rider) => (
+          {filteredRiders.map((rider: Rider) => (
             <RiderCard 
               key={rider.id}
               rider={rider}
               onViewDetails={() => setSelectedRider(rider)}
               onSave={() => setSelectedRider(rider)}
-              />
+            />
           ))}
+          {filteredRiders.length === 0 && !loading && (
+            <div className="col-span-full text-center py-8">
+              <p className="text-gray-500">No riders found matching your search.</p>
+            </div>
+          )}
         </div>
       </div>
 
@@ -164,6 +177,9 @@ const handleFilter = ({ search, date }: { search: string; date: Date | null }) =
                 <X className="w-5 h-5 text-gray-600" />
               </button>
             </div>
+            
+            {/* Rider Profile Details */}
+            <RiderProfileCard rider={selectedRider} />
         
             {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row gap-3 pt-6">
