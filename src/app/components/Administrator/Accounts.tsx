@@ -97,11 +97,10 @@ const Accounts = () => {
 
 const handleFilter = ({ search, date }: { search: string; date: Date | null }) => {
     let filtered = [...baseRiders];
-
+    console.log(search,delivery.name);
     if (search) {
       filtered = filtered.filter(delivery =>
         delivery.name?.toLowerCase().includes(search.toLowerCase())
-        
       );
     }
 }
