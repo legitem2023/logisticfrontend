@@ -167,7 +167,7 @@ const filteredDeliveries = useMemo(() => {
       : true;
 
     const matchesDate = selectedDate
-      ? new Date(delivery.estimatedDeliveryTime).toDateString() === selectedDate.toDateString()
+      ? new Date(delivery.createdAt).toDateString() === selectedDate.toDateString()
       : true;
 
     return matchesSearch && matchesDate;
