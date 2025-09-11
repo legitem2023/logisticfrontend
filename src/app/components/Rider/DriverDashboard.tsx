@@ -167,7 +167,7 @@ const filteredDeliveries = useMemo(() => {
       : true;
     
     const timestamp = delivery.createdAt; // milliseconds
-    const date = new Date(timestamp);
+    const date = new Date(timestamp * 1000);
     
     
      console.log(date.toDateString());
