@@ -158,7 +158,7 @@ export default function SenderDashboard() {
                   className="bg-white/80 backdrop-blur-lg border border-gray-200 shadow-md hover:shadow-xl transition-all duration-300"
                 >
                   <CardContent className="p-5 space-y-4">
-                    <div>Created: {formatDate(delivery.createdAt)}</div>
+                    <div className="text-gray-500">Created: {formatDate(delivery.createdAt)}</div>
                     <div className="text-lg font-semibold text-gray-800">{delivery.trackingNumber}</div>
 
                     <div className="flex items-center gap-2 text-sm text-gray-700 font-medium">
