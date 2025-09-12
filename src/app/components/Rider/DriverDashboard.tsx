@@ -19,6 +19,7 @@ import { DashboardLoading } from "../Loadings/DashboardLoading";
 import { capitalize, formatDate } from "../../../../utils/decryptToken"; 
 import { ACCEPTDELIVERY, SKIPDELIVERY, CANCELEDDELIVERY,FINISHDELIVERY,SENDNOTIFICATION, MARKPAID } from "../../../../graphql/mutation"; 
 import { calculateEta, convertMinutesToHours } from '../../../../utils/calculateEta';
+import LuxuryErrorUI from '../LuxuryErrorUI';
 
 import DeliveryDetailCard from "./DeliveryDetailCard"; 
 import dynamic from "next/dynamic"; 
@@ -70,7 +71,7 @@ export default function DriverDashboard() {
     setSelectedDelivery(null); 
   };
 
-  const { data, loading, refetch } = useQuery(DELIVERIES, { 
+  const { data, loading, refetch, error } = useQuery(DELIVERIES, { 
     variables: { getRidersDeliveryId: globalUserId }, 
     skip: !globalUserId, 
   });
@@ -223,6 +224,28 @@ const handleSkip = async (id: string, riderId: string) => {
 
   
   if (loading || !data) return <DashboardLoading />;
+   // Handle error state
+  if (error) {
+    return (
+      <LuxuryErrorUI 
+        errorCode={500} 
+        errorMessage={error.message || "Failed to load delivery data"}
+        onRetry={() => refetch()}
+      />
+    );
+  }
+
+  // Handle case where no data is returned
+  if (!data || !data.deliveries) {
+    return (
+      <LuxuryErrorUI 
+        errorCode={404} 
+        errorMessage="No delivery data found"
+        onRetry={() => refetch()}
+      />
+    );
+  }
+  
 const tabs = [
   { label: "Deliveries", icon: Truck },
   { label: "History", icon: Clock }
