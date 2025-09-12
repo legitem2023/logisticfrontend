@@ -131,7 +131,7 @@ export default function SenderDashboard() {
                     : 'text-gray-600 hover:text-gray-800 hover:bg-gray-100'
                 }`}
               >
-                <icon size={18} />
+                <Icon size={18} />
               </li>
             ))}
           </ul>
