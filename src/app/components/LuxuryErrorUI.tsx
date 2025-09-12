@@ -2,12 +2,12 @@
 import { useState, useEffect } from 'react';
 import Head from 'next/head';
 
-const LuxuryErrorUI = ({ errorCode = 500, errorMessage = "Something went wrong" }) => {
+const LuxuryErrorUI = ({ 
+  errorCode = 500, 
+  errorMessage = "Something went wrong", 
+  onRetry 
+}) => {
   const [showDetails, setShowDetails] = useState(false);
-
-  useEffect(() => {
-    // Add any side effects if needed
-  }, []);
 
   return (
     <>
@@ -35,7 +35,7 @@ const LuxuryErrorUI = ({ errorCode = 500, errorMessage = "Something went wrong" 
             <div className="action-buttons">
               <button 
                 className="primary-button"
-                onClick={() => window.location.reload()}
+                onClick={onRetry || (() => window.location.reload())}
               >
                 <i className="icon-refresh"></i>
                 Retry Connection
@@ -67,10 +67,10 @@ const LuxuryErrorUI = ({ errorCode = 500, errorMessage = "Something went wrong" 
         </div>
         
         <div className="error-footer">
-          <p>LuxLogistics ® | Premium Global Shipping Solutions</p>
+          <p>Motogo ® | Shipping Solutions</p>
         </div>
         
-        <style jsx>{`
+          <style jsx>{`
           .error-container {
             min-height: 100vh;
             background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
