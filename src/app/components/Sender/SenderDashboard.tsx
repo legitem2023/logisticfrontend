@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import HistoryContainer from "../History/HistoryContainer"; 
 import { calculateEta, convertMinutesToHours } from '../../../../utils/calculateEta';
+import LuxuryErrorUI from '../LuxuryErrorUI';
 
 import { LocationTracking } from '../../../../graphql/subscription';
 import Image from 'next/image';
@@ -114,6 +115,8 @@ export default function SenderDashboard() {
     { label: "Deliveries", icon: Truck },
     { label: "History", icon: Clock }
   ];
+
+ 
   
   return (
     <div className="w-full bg-gray-50 flex flex-col md:flex-row">
@@ -145,8 +148,11 @@ export default function SenderDashboard() {
         {loading ? (
           <SenderDashboardLoading/>
         ) : error ? (
-          <div className="text-center mt-8 text-red-500">Error loading deliveries</div>
-        ) : (
+      <LuxuryErrorUI 
+        errorCode={500} 
+        errorMessage={error.message || "Failed to load delivery data"}
+        onRetry={() => refetch()}
+      />) : (
           <>
             {activeTab === "Deliveries" && filteredDeliveries.length === 0 && (
               <div className="text-center mt-8 text-gray-500">No deliveries found</div>
