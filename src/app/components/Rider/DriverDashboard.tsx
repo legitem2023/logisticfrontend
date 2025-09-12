@@ -258,6 +258,7 @@ const tabs = [
       }`}
     >
       <Icon size={18} />
+      {label}
     </li>
   ))}
 </ul>
