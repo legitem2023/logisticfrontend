@@ -135,6 +135,7 @@ export default function SenderDashboard() {
                 }`}
               >
                 <Icon size={18} />
+                {label}
               </li>
             ))}
           </ul>
