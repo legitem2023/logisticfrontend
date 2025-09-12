@@ -235,16 +235,7 @@ const handleSkip = async (id: string, riderId: string) => {
     );
   }
 
-  // Handle case where no data is returned
-  if (!data || !data.deliveries) {
-    return (
-      <LuxuryErrorUI 
-        errorCode={404} 
-        errorMessage="No delivery data found"
-        onRetry={() => refetch()}
-      />
-    );
-  }
+  
   
 const tabs = [
   { label: "Deliveries", icon: Truck },
