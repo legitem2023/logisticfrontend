@@ -70,11 +70,11 @@ const LuxuryErrorUI = ({
           <p>Motogo ® | Shipping Solutions</p>
         </div>
         
-          <style jsx>{`
+        <style jsx>{`
           .error-container {
             min-height: 100vh;
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-            color: #e2e8f0;
+            background: linear-gradient(135deg, #0a1a14 0%, #15261e 100%);
+            color: #d8e2dc;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -89,12 +89,12 @@ const LuxuryErrorUI = ({
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 3rem;
-            background: rgba(30, 41, 59, 0.7);
+            background: rgba(21, 38, 30, 0.8);
             backdrop-filter: blur(10px);
             border-radius: 24px;
             padding: 3rem;
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.08);
           }
           
           .error-graphic {
@@ -117,13 +117,13 @@ const LuxuryErrorUI = ({
             position: relative;
             width: 200px;
             height: 200px;
-            background: linear-gradient(135deg, #7877d8 0%, #4f46e5 100%);
+            background: linear-gradient(135deg, #2d6a4f 0%, #1b4332 100%);
             display: flex;
             justify-content: center;
             align-items: center;
             clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
             z-index: 2;
-            box-shadow: 0 10px 30px rgba(79, 70, 229, 0.4);
+            box-shadow: 0 10px 30px rgba(45, 106, 79, 0.4);
           }
           
           .error-code {
@@ -136,7 +136,7 @@ const LuxuryErrorUI = ({
             position: absolute;
             width: 250px;
             height: 250px;
-            border: 2px solid rgba(120, 119, 216, 0.6);
+            border: 2px solid rgba(45, 106, 79, 0.6);
             border-radius: 50%;
             animation: pulse 2s infinite;
             z-index: 1;
@@ -167,7 +167,7 @@ const LuxuryErrorUI = ({
             font-size: 2.5rem;
             font-weight: 700;
             margin-bottom: 1.5rem;
-            background: linear-gradient(to right, #e2e8f0, #94a3b8);
+            background: linear-gradient(to right, #d8e2dc, #a3b18a);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
           }
@@ -176,7 +176,7 @@ const LuxuryErrorUI = ({
             font-size: 1.1rem;
             line-height: 1.6;
             margin-bottom: 2.5rem;
-            color: #cbd5e1;
+            color: #b7c9b7;
           }
           
           .action-buttons {
@@ -201,34 +201,34 @@ const LuxuryErrorUI = ({
           }
           
           .primary-button {
-            background: linear-gradient(to right, #4f46e5, #7c73dc);
+            background: linear-gradient(to right, #2d6a4f, #40916c);
             color: white;
           }
           
           .primary-button:hover {
-            background: linear-gradient(to right, #7c73dc, #4f46e5);
+            background: linear-gradient(to right, #40916c, #2d6a4f);
             transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(79, 70, 229, 0.3);
+            box-shadow: 0 10px 25px rgba(45, 106, 79, 0.3);
           }
           
           .secondary-button {
-            background: rgba(255, 255, 255, 0.1);
-            color: #e2e8f0;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.08);
+            color: #d8e2dc;
+            border: 1px solid rgba(255, 255, 255, 0.15);
           }
           
           .secondary-button:hover {
-            background: rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.12);
             transform: translateY(-2px);
           }
           
           .tertiary-button {
             background: transparent;
-            color: #94a3b8;
+            color: #a3b18a;
           }
           
           .tertiary-button:hover {
-            color: #e2e8f0;
+            color: #d8e2dc;
             background: rgba(255, 255, 255, 0.05);
           }
           
@@ -236,25 +236,25 @@ const LuxuryErrorUI = ({
             background: rgba(0, 0, 0, 0.2);
             padding: 1.5rem;
             border-radius: 12px;
-            border-left: 4px solid #4f46e5;
+            border-left: 4px solid #2d6a4f;
           }
           
           .technical-details h3 {
             margin-bottom: 1rem;
-            color: #e2e8f0;
+            color: #d8e2dc;
             font-size: 1.2rem;
           }
           
           .technical-details p {
             margin-bottom: 0.5rem;
             font-family: monospace;
-            color: #94a3b8;
+            color: #a3b18a;
           }
           
           .error-footer {
             margin-top: 3rem;
             text-align: center;
-            color: #64748b;
+            color: #7a8c69;
             font-size: 0.9rem;
           }
           
@@ -301,11 +301,11 @@ const LuxuryErrorUI = ({
           }
           
           ::-webkit-scrollbar-track {
-            background: #1e293b;
+            background: #15261e;
           }
           
           ::-webkit-scrollbar-thumb {
-            background: #4f46e5;
+            background: #2d6a4f;
             border-radius: 4px;
           }
         `}</style>
