@@ -118,7 +118,7 @@ export default function SenderDashboard() {
   return (
     <div className="w-full bg-gray-50 flex flex-col md:flex-row">
       {/* Sidebar */}
-      <aside className="hidden md:block md:w-10 bg-white/80 backdrop-blur-md border-r border-gray-200 shadow-inner p-2">
+      <aside className="hidden md:block bg-white/80 backdrop-blur-md border-r border-gray-200 shadow-inner p-2">
         <nav> 
           <ul className="space-y-4 text-[15px] font-medium">
             {tabs.map(({ label, icon: Icon }) => (
