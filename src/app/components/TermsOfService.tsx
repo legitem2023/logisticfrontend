@@ -7,7 +7,7 @@ import AnimatedCityscape from './AnimatedCityscape';
 export default function TermsOfService() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-white via-slate-50 to-slate-100 p-1">
-      <div className="max-w-8xl mx-auto">
+      <div className="max-w-7xl mx-auto">
         <Card className="shadow-2xl border border-slate-200 bg-white/80 backdrop-blur-md overflow-hidden">
           {/* Header */}
           <CardHeader className="relative bg-gradient-to-r from-blue-800 to-blue-600 p-0 text-white">
