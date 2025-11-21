@@ -68,14 +68,14 @@ const DeliveryTracker = () => {
   };
 
   return (
-    <div className="w-full mx-auto bg-white mt-5 shadow-lg overflow-hidden">
+    <div className="w-full mx-auto bg-white mt-5 shadow-lg">
       {/* Carousel Section */}
       <div className="relative">
         <HomeDataCarousel items={mockItems} />
       </div>
 
       {/* Tracking Section */}
-      <div className="container mx-auto p-0 relative z-10 mt-1">
+      <div className="w-full container mx-auto p-0 relative z-10 mt-1">
         <div className="customgrad p-8 mx-auto w-[100%]">
           <div className="text-center mb-8">
             <h2 className="text-3xl font-bold text-white">Track Your Shipment</h2>
