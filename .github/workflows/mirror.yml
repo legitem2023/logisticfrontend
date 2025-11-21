@@ -1,23 +1,26 @@
 name: Mirror Repository
 
+# Trigger manually or on push to main branch
 on:
   workflow_dispatch:
   push:
     branches:
-      - main  # or your default branch
+      - main  # change if your default branch is different
 
 jobs:
   mirror:
     runs-on: ubuntu-latest
 
     steps:
+      # Step 1: Checkout the source repository (legitem2023)
       - name: Checkout source repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
-          token: ${{ secrets.MIRROR_TOKEN }}   # <-- important
+          fetch-depth: 0  # required for full mirror
+          token: ${{ secrets.MIRROR_TOKEN }}  # your PAT must have repo scope
 
-      - name: Add mirror remote and push
+      # Step 2: Add mirror remote and push
+      - name: Push to mirror repository
         env:
           MIRROR_TOKEN: ${{ secrets.MIRROR_TOKEN }}
         run: |
