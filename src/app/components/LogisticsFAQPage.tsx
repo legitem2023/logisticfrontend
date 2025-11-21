@@ -45,7 +45,7 @@ export default function LogisticsFAQPage() {
 
   return (
     <div className="bg-gradient-to-br from-green-50 to-green-100 p-1">
-      <div className="max-w-8xl mx-auto shadow-xl border border-green-100 overflow-hidden">
+      <div className="max-w-7xl mx-auto shadow-xl border border-green-100 overflow-hidden">
         
         {/* Header */}
         <div className="bg-gradient-to-r from-green-800 to-green-600 p-0 relative">
