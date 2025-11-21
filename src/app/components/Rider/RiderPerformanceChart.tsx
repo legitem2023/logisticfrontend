@@ -104,7 +104,7 @@ const RiderPerformanceChart = () => {
 
   return (
     <div className="p-0">
-      <div className="w-full max-w-6xl mx-auto shadow-lg overflow-hidden">
+      <div className="w-full max-w-7xl mx-auto shadow-lg overflow-hidden">
         {/* Header */}
         <div className="bg-gradient-to-r from-green-800 to-green-600 relative">
          <AnimatedCityscape>
