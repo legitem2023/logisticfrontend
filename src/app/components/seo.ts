@@ -1,5 +1,7 @@
 // lib/seo.ts
-import type { Metadata, Viewport } from 'next'; // Import Viewport type
+import type { Metadata, Viewport } from 'next'; 
+// Import Viewport type
+
 
 export const metadata: Metadata = {
   title: 'Pramatiso Express - We move what matters',
