@@ -13,5 +13,5 @@ jobs:
 
       - name: Push to mirror repo
         run: |
-          git remote add mirror https://$MIRROR_TOKEN@github.com/adiviso-droid/logisticfrontend.git
+          git remote add mirror https://$MIRROR_TOKEN@github.com/adivisojay-droid/logisticfrontend.git
           git push --mirror mirror
