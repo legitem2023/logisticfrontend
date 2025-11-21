@@ -1,0 +1,17 @@
+name: Auto Mirror
+
+on:
+  push:
+    branches:
+      - '**'
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Push to mirror repo
+        run: |
+          git remote add mirror https://$MIRROR_TOKEN@github.com/adiviso-droid/logisticfrontend.git
+          git push --mirror mirror
