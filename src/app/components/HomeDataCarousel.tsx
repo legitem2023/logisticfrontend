@@ -21,7 +21,7 @@ type Props = {
 
 const HomeDataCarousel: FC<Props> = ({ items }) => {
   return (
-    <div className="w-full max-w-7xl mx-auto relative group">
+    <div className="w-full mx-auto relative group">
       <InstallPWAButton/>
       <Swiper
         spaceBetween={24}
