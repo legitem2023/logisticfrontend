@@ -136,9 +136,9 @@ const DeliveryTracker = () => {
 
         {/* Results */}
         {filteredDeliveries.map((delivery: any) => (
-          <div key={delivery.id} className="bg-white rounded-xl shadow-lg overflow-hidden mx-auto">
+          <div key={delivery.id} className="bg-white shadow-lg overflow-hidden mx-auto">
             {/* Status Header */}
-            <div className="p-6 bg-green-700 text-white">
+            <div className="p-6 customgrad text-white">
               <div className="flex justify-between items-center">
                 <h2 className="text-xl font-semibold">Delivery Status</h2>
                 <span className="px-3 py-1 rounded-full text-sm font-medium bg-white bg-opacity-20">
@@ -156,9 +156,9 @@ const DeliveryTracker = () => {
               <div className="bg-gray-50 p-5 rounded-lg">
                 <h3 className="text-lg font-medium text-green-800 mb-3">Recipient Information</h3>
                 <div className="space-y-2">
-                  <p><span className="font-semibold">Name:</span> {delivery.recipientName}</p>
-                  <p><span className="font-semibold">Phone:</span> {delivery.recipientPhone}</p>
-                  <p><span className="font-semibold">Delivery Address:</span> {delivery.dropoffAddress}</p>
+                  <p><span className="font-semibold text-gray-500">Name:</span> {delivery.recipientName}</p>
+                  <p><span className="font-semibold text-gray-500">Phone:</span> {delivery.recipientPhone}</p>
+                  <p><span className="font-semibold text-gray-500">Delivery Address:</span> {delivery.dropoffAddress}</p>
                 </div>
               </div>
 
@@ -167,18 +167,18 @@ const DeliveryTracker = () => {
                 <h3 className="text-lg font-medium text-green-800 mb-3">Delivery Information</h3>
                 <div className="space-y-2">
                   {delivery.estimatedDeliveryTime && (
-                    <p><span className="font-semibold">Estimated Delivery:</span> {formatDate(delivery.estimatedDeliveryTime)}</p>
+                    <p><span className="font-semibold text-gray-500 ">Estimated Delivery:</span> {formatDate(delivery.estimatedDeliveryTime)}</p>
                   )}
                   {delivery.actualDeliveryTime && (
-                    <p><span className="font-semibold">Delivered At:</span> {formatDate(delivery.actualDeliveryTime)}</p>
+                    <p><span className="font-semibold text-gray-500">Delivered At:</span> {formatDate(delivery.actualDeliveryTime)}</p>
                   )}
-                  <p><span className="font-semibold">Delivery Fee:</span> ${delivery.deliveryFee}</p>
-                  <p><span className="font-semibold">Payment Status:</span> 
+                  <p><span className="font-semibold text-gray-500">Delivery Fee:</span> ${delivery.deliveryFee}</p>
+                  <p><span className="font-semibold text-gray-500">Payment Status:</span> 
                     <span className={`ml-2 px-2 py-1 rounded-full text-xs ${delivery.paymentStatus === 'PAID' ? 'bg-green-100 text-green-800' : 'bg-amber-100 text-amber-800'}`}>
                       {delivery.paymentStatus}
                     </span>
                   </p>
-                  <button onClick={()=>{setMap(true);
+                  <button className="font-semibold text-gray-500" onClick={()=>{setMap(true);
                                         setSelectedDelivery(delivery)}}>Show Map</button>
                 </div>
               </div>
@@ -188,11 +188,11 @@ const DeliveryTracker = () => {
                 <h3 className="text-lg font-medium text-green-800 mb-3">Package Details</h3>
                 {delivery.packages.map((pkg: any) => (
                   <div key={pkg.id} className="space-y-2">
-                    <p><span className="font-semibold">Type:</span> {pkg.packageType}</p>
-                    <p><span className="font-semibold">Weight:</span> {pkg.weight} kg</p>
-                    <p><span className="font-semibold">Dimensions:</span> {pkg.dimensions}</p>
+                    <p><span className="font-semibold text-gray-500">Type:</span> {pkg.packageType}</p>
+                    <p><span className="font-semibold text-gray-500">Weight:</span> {pkg.weight} kg</p>
+                    <p><span className="font-semibold text-gray-500">Dimensions:</span> {pkg.dimensions}</p>
                     {pkg.specialInstructions && (
-                      <p><span className="font-semibold">Special Instructions:</span> {pkg.specialInstructions}</p>
+                      <p><span className="font-semibold text-gray-500">Special Instructions:</span> {pkg.specialInstructions}</p>
                     )}
                   </div>
                 ))}
