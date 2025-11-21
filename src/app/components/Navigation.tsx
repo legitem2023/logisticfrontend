@@ -198,7 +198,6 @@ const Navigation = ({ userRole, isUserActive, is_Active }) => {
         {isActive && (
           <div className="absolute bottom-0 left-0 w-full h-0.5 bg-gold-500 rounded-full"></div>
         )}
-        <Sparkles size={12} className="absolute -top-1 -right-1 text-gold-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
       </Link>
     );
   };
@@ -244,7 +243,6 @@ const Navigation = ({ userRole, isUserActive, is_Active }) => {
       {isActive && (
         <div className="absolute bottom-0 left-0 w-full h-0.5 bg-green-600 rounded-full"></div>
       )}
-      <Sparkles size={12} className="absolute -top-1 -right-1 text-green-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
     </Link>
   );
 };
@@ -269,7 +267,6 @@ const MobileSupportNavItem = ({ item }) => {
         {isActive && (
           <div className="absolute bottom-0 left-0 w-full h-0.5 bg-green-600 rounded-full"></div>
         )}
-        <Sparkles size={12} className="absolute -top-1 -right-1 text-green-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
       </Link>
     );
   };
