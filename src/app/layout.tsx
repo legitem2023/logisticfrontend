@@ -12,7 +12,7 @@ import 'swiper/css/pagination';
 import ReduxWrapper from "./components/ApolloProvider/ReduxWrapper"; 
 import AuthProvider from "./components/Auth/AuthProvider";
 import TokenSyncer from "./components/TokenSyncer";
-// ✅ Toastify import
+
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
