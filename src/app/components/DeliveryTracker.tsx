@@ -155,7 +155,7 @@ const DeliveryTracker = () => {
               {/* Recipient Info */}
               <div className="bg-gray-50 p-5 rounded-lg">
                 <h3 className="text-lg font-medium text-green-800 mb-3">Recipient Information</h3>
-                <div className="space-y-2">
+                <div className="space-y-2 text-gray-500">
                   <p><span className="font-semibold text-gray-500">Name:</span> {delivery.recipientName}</p>
                   <p><span className="font-semibold text-gray-500">Phone:</span> {delivery.recipientPhone}</p>
                   <p><span className="font-semibold text-gray-500">Delivery Address:</span> {delivery.dropoffAddress}</p>
@@ -165,7 +165,7 @@ const DeliveryTracker = () => {
               {/* Delivery Info */}
               <div className="bg-gray-50 p-5 rounded-lg">
                 <h3 className="text-lg font-medium text-green-800 mb-3">Delivery Information</h3>
-                <div className="space-y-2">
+                <div className="space-y-2 text-gray-500">
                   {delivery.estimatedDeliveryTime && (
                     <p><span className="font-semibold text-gray-500 ">Estimated Delivery:</span> {formatDate(delivery.estimatedDeliveryTime)}</p>
                   )}
@@ -187,7 +187,7 @@ const DeliveryTracker = () => {
               <div className="bg-gray-50 p-5 rounded-lg">
                 <h3 className="text-lg font-medium text-green-800 mb-3">Package Details</h3>
                 {delivery.packages.map((pkg: any) => (
-                  <div key={pkg.id} className="space-y-2">
+                  <div key={pkg.id} className="space-y-2 text-gray-500">
                     <p><span className="font-semibold text-gray-500">Type:</span> {pkg.packageType}</p>
                     <p><span className="font-semibold text-gray-500">Weight:</span> {pkg.weight} kg</p>
                     <p><span className="font-semibold text-gray-500">Dimensions:</span> {pkg.dimensions}</p>
@@ -206,7 +206,7 @@ const DeliveryTracker = () => {
                     <div className="bg-green-200 w-12 h-12 rounded-full flex items-center justify-center mr-4">
                       <i className="fas fa-user text-green-700"></i>
                     </div>
-                    <div>
+                    <div className="text-gray-500">
                       <p className="font-semibold">{delivery.assignedRider.name}</p>
                       <p>{delivery.assignedRider.phoneNumber}</p>
                       {delivery.deliveryStatus === 'OUT_FOR_DELIVERY' && (
