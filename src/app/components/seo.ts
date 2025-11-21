@@ -2,7 +2,6 @@
 import type { Metadata, Viewport } from 'next'; 
 // Import Viewport type
 
-
 export const metadata: Metadata = {
   title: 'Pramatiso Express - We move what matters',
   description: 'Pramatiso Express is a modern logistics platform connecting senders, couriers, and recipients with real-time delivery tracking, seamless route management, and smart geolocation services.',
