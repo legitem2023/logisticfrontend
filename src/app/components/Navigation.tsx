@@ -305,7 +305,7 @@ const MobileSupportNavItem = ({ item }) => {
             <div className="flex items-center">
               <div className="flex-shrink-0 flex items-center">
                 <Link href="/" prefetch className="flex items-center group">
-                  <div className="relative h-16 w-16">
+                  <div className="relative h-20 w-20">
                     <Image
                       src="/Motogo.svg"
                       alt="MotoGo Logo"
