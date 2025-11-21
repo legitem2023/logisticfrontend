@@ -1,6 +1,5 @@
 import { metadata as baseMetadata, viewport as baseViewport } from './components/seo';
 // Import both
-
 import GlobalScripts from "./components/GlobalScripts";
 import LocationTracker from "./components/LocationTracker";
 export const metadata = baseMetadata;
@@ -17,7 +16,6 @@ import TokenSyncer from "./components/TokenSyncer";
 // ✅ Toastify import
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
