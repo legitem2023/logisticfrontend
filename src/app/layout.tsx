@@ -3,7 +3,6 @@ import GlobalScripts from "./components/GlobalScripts";
 import LocationTracker from "./components/LocationTracker";
 export const metadata = baseMetadata;
 export const viewport = baseViewport; // Add viewport export
-
 import LoadEruda from './LoadEruda';
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
