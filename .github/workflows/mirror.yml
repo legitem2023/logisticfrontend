@@ -1,6 +1,5 @@
-name: Mirror Repository
+name: Mirror Repository Incremental
 
-# Trigger manually or on push to main branch
 on:
   workflow_dispatch:
   push:
@@ -12,17 +11,25 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout the source repository (legitem2023)
+      # Step 1: Checkout the source repository
       - name: Checkout source repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # required for full mirror
-          token: ${{ secrets.MIRROR_TOKEN }}  # your PAT must have repo scope
+          fetch-depth: 0
+          token: ${{ secrets.MIRROR_TOKEN }}  # PAT of legitem2023
 
-      # Step 2: Add mirror remote and push
-      - name: Push to mirror repository
+      # Step 2: Add mirror remote
+      - name: Add mirror remote
         env:
           MIRROR_TOKEN: ${{ secrets.MIRROR_TOKEN }}
         run: |
           git remote add mirror https://legitem2023:${MIRROR_TOKEN}@github.com/adivisojay-droid/logisticfrontend.git
-          git push --mirror mirror
+
+      # Step 3: Push only branches and tags
+      - name: Push branches
+        run: |
+          git push mirror --all
+
+      - name: Push tags
+        run: |
+          git push mirror --tags
