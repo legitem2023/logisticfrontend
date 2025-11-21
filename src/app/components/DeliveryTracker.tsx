@@ -68,7 +68,7 @@ const DeliveryTracker = () => {
   };
 
   return (
-    <div className="w-full mx-auto bg-white mt-5 shadow-lg">
+    <div className="w-full mx-auto bg-white mt-5 shadow-lg min-h-screen">
       {/* Carousel Section */}
       <div className="relative">
         <HomeDataCarousel items={mockItems} />
