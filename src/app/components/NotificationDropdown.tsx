@@ -185,7 +185,7 @@ export default function NotificationDropdown({ userId }: { userId: string | null
         {isVisible && (
           <>
             {/* Desktop */}
-            <div className={`absolute right-0 mt-2 w-80 bg-white/60 backdrop-blur border border-gray-200 rounded-2xl shadow-2xl overflow-hidden hidden sm:block transition-all duration-300 ease-in-out ${
+            <div className={`absolute z-50 right-0 mt-2 w-80 bg-white/60 backdrop-blur border border-gray-200 rounded-2xl shadow-2xl overflow-hidden hidden sm:block transition-all duration-300 ease-in-out ${
               open ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-[-10px]'
             }`}>
               {dropdownContent}
