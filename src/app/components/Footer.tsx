@@ -23,13 +23,13 @@ const Footer = () => {
           <div>
             <h3 className="text-lg font-semibold text-white tracking-wide mb-4">Payments</h3>
             <p className="text-sm text-gray-400 leading-relaxed">
-              We support GCash, PayPal, and secure bank transfers. All transactions are encrypted and protected.
+              We support GCash, Maya, and secure bank transfers. All transactions are encrypted and protected.
             </p>
           </div>
         </div>
 
         <div className="mt-8 text-center text-sm text-gray-500 tracking-wide">
-          © {currentYear} <span className="text-[#ffffff] font-semibold">Motogo</span>. All rights reserved.
+          © {currentYear} <span className="text-[#ffffff] font-semibold">Pramatiso Express</span>. All rights reserved.
         </div>
       </div>
     </footer>
