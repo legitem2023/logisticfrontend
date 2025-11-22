@@ -164,7 +164,7 @@ const RiderCard = ({ rider, onViewDetails, onSave }) => {
         </div>
 
         <div>
-          {isEditing && useRole==="Administrator" ? (
+          {isEditing && useRole!=="Administrator" ? (
             <Select
               id="role"
               name="role"
