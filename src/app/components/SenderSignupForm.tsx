@@ -83,7 +83,7 @@ const SenderSignupForm = () => {
                 {/* Left column */}
                 <div className="space-y-4">
                   <div>
-                    <Label htmlFor="fullName">Full Name</Label>
+                    <Label htmlFor="fullName" className="text-gray-700">Full Name</Label>
                     <div className="relative">
                       <FiUser className="absolute left-3 top-1/2 -translate-y-1/2 text-green-600" />
                       <Input
@@ -98,7 +98,7 @@ const SenderSignupForm = () => {
                   </div>
 
                   <div>
-                    <Label htmlFor="email">Email</Label>
+                    <Label htmlFor="email" className="text-gray-700">Email</Label>
                     <div className="relative">
                       <FiMail className="absolute left-3 top-1/2 -translate-y-1/2 text-green-600" />
                       <Input
@@ -114,7 +114,7 @@ const SenderSignupForm = () => {
                   </div>
 
                   <div>
-                    <Label htmlFor="phone">Phone Number</Label>
+                    <Label htmlFor="phone"  className="text-gray-700">Phone Number</Label>
                     <div className="relative">
                       <FiPhone className="absolute left-3 top-1/2 -translate-y-1/2 text-green-600" />
                       <Input
@@ -133,7 +133,7 @@ const SenderSignupForm = () => {
                 {/* Right column */}
                 <div className="space-y-4">
                   <div>
-                    <Label htmlFor="password">Password</Label>
+                    <Label htmlFor="password" className="text-gray-700">Password</Label>
                     <div className="relative">
                       <FiLock className="absolute left-3 top-1/2 -translate-y-1/2 text-green-600" />
                       <Input
@@ -149,7 +149,7 @@ const SenderSignupForm = () => {
                   </div>
 
                   <div>
-                    <Label htmlFor="pickupAddress">Pickup Address</Label>
+                    <Label htmlFor="pickupAddress"  className="text-gray-700">Pickup Address</Label>
                     <div className="relative">
                       <FiMapPin className="absolute left-3 top-1/2 -translate-y-1/2 text-green-600" />
                       <Input
