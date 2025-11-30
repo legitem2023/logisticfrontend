@@ -207,7 +207,7 @@ const SignupCard = () => {
                       value={form.vehicleType}
                       onChange={handleChange}
                       required
-                      className="pl-2 border-gray-300 focus:border-green-500 focus:ring-green-400"
+                      className="text-gray-700 pl-2 border-gray-300 focus:border-green-500 focus:ring-green-400"
                     >
                       <option value="">Select a vehicle type</option>
                       {data.getVehicleTypes.map((vehicle: any) => (
