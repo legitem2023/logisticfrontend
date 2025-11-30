@@ -456,7 +456,7 @@ const LogisticsForm = () => {
   if (error) return <p>Error: {error.message}</p>;
 
   return (
-    <div className="w-[100%] mx-auto">
+    <div className="w-full max-w-7xl mx-auto">
       <div className="bg-white shadow-xl overflow-hidden">
         <div className="bg-green-600 customgrad text-white">
           <AnimatedCityscape>
