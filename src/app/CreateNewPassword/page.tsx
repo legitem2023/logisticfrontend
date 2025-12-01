@@ -1,0 +1,31 @@
+'use client';
+import Image from 'next/image';
+import ForgotPasswordCard from '../components/ForgotPasswordCard';
+
+import Navigation from '../components/Navigation';
+import { setRole, clearRole, selectRole } from '../../../Redux/roleSlice';
+import { useDispatch,useSelector } from 'react-redux';
+import Cookies from 'js-cookie';
+import Footer from "../components/Footer";
+
+export default function Page() {
+const useRole = useSelector(selectRole); 
+const isActiveUser = useSelector((state:any) => state.isActiveUser.isActiveUser);
+const isUserActive = (): boolean => {
+    const token = Cookies.get('token');
+    return !!token;
+  };
+
+  return (
+    <div className="min-h-screen flex flex-col bg-gray-50">
+      <Navigation
+      userRole={useRole}
+      isUserActive={isUserActive}
+      is_Active={isActiveUser}
+    />       
+      {/* Sidebar with tab content */}
+       <ForgotPasswordCard/>
+        <Footer/>
+    </div>
+  );
+}
