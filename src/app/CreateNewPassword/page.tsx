@@ -1,6 +1,6 @@
 'use client';
 import Image from 'next/image';
-import ForgotPasswordCard from '../components/ForgotPasswordCard';
+import CreateNewPasswordCard from '../components/CreateNewPasswordCard';
 
 import Navigation from '../components/Navigation';
 import { setRole, clearRole, selectRole } from '../../../Redux/roleSlice';
@@ -24,7 +24,7 @@ const isUserActive = (): boolean => {
       is_Active={isActiveUser}
     />       
       {/* Sidebar with tab content */}
-       <ForgotPasswordCard/>
+       <CreateNewPasswordCard/>
         <Footer/>
     </div>
   );
