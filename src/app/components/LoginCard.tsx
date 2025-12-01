@@ -132,17 +132,17 @@ export default function LoginCard() {
             ) : 'Login'}
           </Button>
 
-          {/* Divider */}
+          {/*
           <div className="flex items-center gap-3 my-6">
             <hr className="flex-grow border-gray-200" />
             <span className="text-gray-400 text-xs font-medium uppercase tracking-wider">OR</span>
             <hr className="flex-grow border-gray-200" />
           </div>
-
-          {/* Social login */}
+          
           <GoogleLoginButton />
           <FacebookLoginButton />
-
+          */}
+          
           {/* Footer link */}
           <div className="text-center text-sm text-gray-500 mt-6">
             Dont have an account?{' '}
