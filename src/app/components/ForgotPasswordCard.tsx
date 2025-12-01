@@ -118,11 +118,11 @@ export default function ForgotPasswordCard() {
                 </div>
                 <h3 className="text-lg font-semibold text-gray-800 mb-2">Check Your Email</h3>
                 <p className="text-gray-600 mb-4">
-                  We've sent password reset instructions to:<br />
+                  Weve sent password reset instructions to:<br />
                   <span className="font-medium text-green-700">{email}</span>
                 </p>
                 <p className="text-sm text-gray-500">
-                  Didn't receive the email? Check your spam folder or try again.
+                  Didnt receive the email? Check your spam folder or try again.
                 </p>
               </div>
 
