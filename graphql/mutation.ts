@@ -1,4 +1,5 @@
-import { gql } from "@apollo/client";
+// graphql/mutations/auth.ts
+import { gql } from '@apollo/client'
 
 export const REQUESTPASSWORDRESET = gql`
   mutation RequestPasswordReset($email: String!) {
@@ -11,9 +12,9 @@ export const REQUESTPASSWORDRESET = gql`
 
 export const RESETPASSWORD = gql`
   mutation ResetPassword($token: String!, $newPassword: String!) {
-    resetPassword(input: { 
-      token: $token, 
-      newPassword: $newPassword 
+    resetPassword(input: {
+      token: $token,
+      newPassword: $newPassword
     }) {
       success
       message
