@@ -70,7 +70,8 @@ export default function CreateNewPasswordCard() {
   }
 
   const handleBackToLogin = () => {
-    dispatch(setActiveIndex(0)) // Assuming 0 is login index
+    dispatch(setActiveIndex(12)) // Assuming 0 is login index
+    router.push('/');
   }
 
   const togglePasswordVisibility = () => setShowPassword(!showPassword)
