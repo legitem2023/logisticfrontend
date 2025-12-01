@@ -53,7 +53,7 @@ export default function ForgotPasswordCard() {
     } catch (err: any) {
       console.error('Reset password failed:', err)
       // Check for GraphQL errors
-      const errorMessage = err.message || 'Failed to send reset instructions'
+      const errorMessage = err.message;// || 'Failed to send reset instructions'
       showToast(errorMessage, 'error')
     } finally {
       setLoading(false)
