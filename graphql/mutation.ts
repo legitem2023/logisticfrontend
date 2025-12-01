@@ -1,32 +1,35 @@
 import { gql } from "@apollo/client";
 
 export const REQUESTPASSWORDRESET = gql`
-mutation {
-  requestPasswordReset(input: { email: "user@example.com" }) {
-    success
-    message
+  mutation RequestPasswordReset($email: String!) {
+    requestPasswordReset(input: { email: $email }) {
+      success
+      message
+    }
   }
-}`
+`
 
-export const RESETPASSWORD =gql`
-mutation {
-  resetPassword(input: { 
-    token: "abc123", 
-    newPassword: "NewPassword123!" 
-  }) {
-    success
-    message
+export const RESETPASSWORD = gql`
+  mutation ResetPassword($token: String!, $newPassword: String!) {
+    resetPassword(input: { 
+      token: $token, 
+      newPassword: $newPassword 
+    }) {
+      success
+      message
+    }
   }
-}`
+`
 
 export const VALIDATERESETTOKEN = gql`
-mutation {
-  validateResetToken(input: { token: "abc123" }) {
-    valid
-    email
-    message
+  mutation ValidateResetToken($token: String!) {
+    validateResetToken(input: { token: $token }) {
+      valid
+      email
+      message
+    }
   }
-}`
+`
 
 export const LOGOUT_MUTATION = gql`
   mutation Logout {
