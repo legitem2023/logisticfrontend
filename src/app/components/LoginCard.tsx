@@ -112,6 +112,11 @@ export default function LoginCard() {
             </button>
           </div>
 
+  <div className="flex justify-end">
+  <a href='/ForgotPassword' className="text-sm text-green-600 hover:text-green-800 font-medium transition-colors">
+    Forgot your password?
+  </a>
+</div>
           {/* Login button */}
           <Button
             className="w-full py-3 bg-gradient-to-r from-green-700 to-green-600 hover:from-green-800 hover:to-green-700 text-white font-bold rounded-lg shadow-lg transition-all duration-300 hover:shadow-xl relative overflow-hidden group"
