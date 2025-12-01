@@ -10,6 +10,8 @@ import { Label } from './ui/Label'
 import { showToast } from '../../../utils/toastify'
 import { FiMail, FiArrowLeft } from 'react-icons/fi'
 import CityScape from './AnimatedCityscape'
+import { useMutation } from '@apollo/client'
+import { REQUESTPASSWORDRESET } from '../../../graphql/mutations'
 
 export default function ForgotPasswordCard() {
   const router = useRouter()
@@ -18,26 +20,41 @@ export default function ForgotPasswordCard() {
   const [loading, setLoading] = useState(false)
   const [emailSent, setEmailSent] = useState(false)
 
+  // GraphQL mutation hook
+  const [requestPasswordReset] = useMutation(REQUESTPASSWORDRESET)
+
   const handleResetPassword = async () => {
     if (!email) {
       showToast('Please enter your email address.', 'error')
       return
     }
 
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailRegex.test(email)) {
+      showToast('Please enter a valid email address.', 'error')
+      return
+    }
+
     setLoading(true)
     
     try {
-      // Simulate API call to send reset password email
-      await new Promise(resolve => setTimeout(resolve, 1500))
-      
-      // In a real app, you would call your API here
-      // await api.sendResetPasswordEmail(email)
-      
-      setEmailSent(true)
-      showToast('Reset instructions sent to your email', 'success')
-    } catch (err) {
+      // Call the GraphQL mutation
+      const { data } = await requestPasswordReset({
+        variables: { email }
+      })
+
+      if (data?.requestPasswordReset?.success) {
+        setEmailSent(true)
+        showToast('Reset instructions sent to your email', 'success')
+      } else {
+        showToast(data?.requestPasswordReset?.message || 'Failed to send reset instructions', 'error')
+      }
+    } catch (err: any) {
       console.error('Reset password failed:', err)
-      showToast('Failed to send reset instructions', 'error')
+      // Check for GraphQL errors
+      const errorMessage = err.message || 'Failed to send reset instructions'
+      showToast(errorMessage, 'error')
     } finally {
       setLoading(false)
     }
@@ -45,6 +62,13 @@ export default function ForgotPasswordCard() {
 
   const handleBackToLogin = () => {
     dispatch(setActiveIndex(0)) // Assuming 0 is login index
+  }
+
+  // Handle form submission on Enter key
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !loading) {
+      handleResetPassword()
+    }
   }
 
   return (
@@ -77,7 +101,9 @@ export default function ForgotPasswordCard() {
                   placeholder="Enter your email address"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  onKeyPress={handleKeyPress}
                   className="pl-10 border-gray-300 focus:border-green-500 focus:ring-green-400 transition-all duration-200"
+                  disabled={loading}
                 />
               </div>
 
@@ -102,7 +128,8 @@ export default function ForgotPasswordCard() {
               <div className="text-center">
                 <button
                   onClick={handleBackToLogin}
-                  className="inline-flex items-center text-green-600 hover:text-green-800 font-medium transition-colors"
+                  className="inline-flex items-center text-green-600 hover:text-green-800 font-medium transition-colors disabled:opacity-50"
+                  disabled={loading}
                 >
                   <FiArrowLeft className="mr-2" />
                   Back to Login
@@ -129,7 +156,10 @@ export default function ForgotPasswordCard() {
               <div className="flex gap-4">
                 <Button
                   variant="outline"
-                  onClick={() => setEmailSent(false)}
+                  onClick={() => {
+                    setEmailSent(false)
+                    setEmail('')
+                  }}
                   className="flex-1 py-3"
                 >
                   Try Different Email
@@ -147,4 +177,4 @@ export default function ForgotPasswordCard() {
       </Card>
     </div>
   )
-}
+              }
