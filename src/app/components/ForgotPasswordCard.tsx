@@ -62,7 +62,8 @@ console.table(data);
   }
 
   const handleBackToLogin = () => {
-    dispatch(setActiveIndex(0)) // Assuming 0 is login index
+    dispatch(setActiveIndex(12)) // Assuming 0 is login index
+    router.push('/');
   }
 
   // Handle form submission on Enter key
