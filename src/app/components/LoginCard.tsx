@@ -113,7 +113,7 @@ export default function LoginCard() {
           </div>
 
   <div className="flex justify-end">
-  <a href='/ForgotPassword' className="text-sm text-green-600 hover:text-green-800 font-medium transition-colors">
+  <a href='/Forgotpassword' className="text-sm text-green-600 hover:text-green-800 font-medium transition-colors">
     Forgot your password?
   </a>
 </div>
