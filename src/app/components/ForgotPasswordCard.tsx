@@ -11,7 +11,7 @@ import { showToast } from '../../../utils/toastify'
 import { FiMail, FiArrowLeft } from 'react-icons/fi'
 import CityScape from './AnimatedCityscape'
 import { useMutation } from '@apollo/client'
-import { REQUESTPASSWORDRESET } from '../../../graphql/mutations'
+import { REQUESTPASSWORDRESET } from '../../../graphql/mutation'
 
 export default function ForgotPasswordCard() {
   const router = useRouter()
