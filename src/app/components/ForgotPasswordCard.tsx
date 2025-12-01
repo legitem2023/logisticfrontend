@@ -43,7 +43,8 @@ export default function ForgotPasswordCard() {
       const { data } = await requestPasswordReset({
         variables: { email }
       })
-
+console.log(data);
+console.table(data);
       if (data?.requestPasswordReset?.success) {
         setEmailSent(true)
         showToast('Reset instructions sent to your email', 'success')
