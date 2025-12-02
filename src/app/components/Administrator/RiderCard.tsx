@@ -75,27 +75,49 @@ const RiderCard = ({ rider, onViewDetails, onSave }) => {
   });
   
   // Password change mutation
-  const [changePassword, { loading: passwordLoading }] = useMutation(CHANGEPASSWORD, {
-    onCompleted: (data) => {
-      if (data.editpassword.success) {
-        setPasswordMessage({ type: 'success', text: data.editpassword.message || 'Password changed successfully!' });
-        setPasswordData({
-          newPassword: '',
-          confirmPassword: ''
-        });
-        // Auto-close modal after success
-        setTimeout(() => {
-          setShowPasswordModal(false);
-          setPasswordMessage({ type: '', text: '' });
-        }, 2000);
-      } else {
-        setPasswordMessage({ type: 'error', text: data.editpassword.message || 'Failed to change password' });
-      }
-    },
-    onError: (error) => {
-      setPasswordMessage({ type: 'error', text: error.message || 'Network error. Please try again.' });
+// Password change mutation
+const [changePassword, { loading: passwordLoading }] = useMutation(CHANGEPASSWORD, {
+  onCompleted: (data) => {
+    console.log('Mutation response:', data);
+    
+    // Check if statusText indicates success
+    if (data.editpassword.statusText === 'Successful') {
+      setPasswordMessage({ 
+        type: 'success', 
+        text: 'Password changed successfully!' 
+      });
+      
+      setPasswordData({
+        newPassword: '',
+        confirmPassword: ''
+      });
+      
+      // Auto-close modal after success
+      setTimeout(() => {
+        setShowPasswordModal(false);
+        setPasswordMessage({ type: '', text: '' });
+      }, 2000);
+    } else {
+      setPasswordMessage({ 
+        type: 'error', 
+        text: data.editpassword.statusText || 'Failed to update password' 
+      });
     }
-  });
+  },
+  onError: (error) => {
+    console.error('GraphQL Error:', error);
+    
+    // Extract a readable error message
+    let errorMessage = 'Network error. Please try again.';
+    if (error.graphQLErrors && error.graphQLErrors.length > 0) {
+      errorMessage = error.graphQLErrors[0].message;
+    } else if (error.networkError) {
+      errorMessage = 'Network error. Check your connection.';
+    }
+    
+    setPasswordMessage({ type: 'error', text: errorMessage });
+  }
+});
   
   const [passwordMessage, setPasswordMessage] = useState({ type: '', text: '' });
   
@@ -138,34 +160,34 @@ const RiderCard = ({ rider, onViewDetails, onSave }) => {
    })
   };
 
-  const handlePasswordChange = async (e) => {
-    e.preventDefault();
-    setPasswordMessage({ type: '', text: '' });
+const handlePasswordChange = async (e) => {
+  e.preventDefault();
+  setPasswordMessage({ type: '', text: '' });
 
-    // Validation
-    if (passwordData.newPassword !== passwordData.confirmPassword) {
-      setPasswordMessage({ type: 'error', text: 'New passwords do not match!' });
-      return;
-    }
+  // Validation
+  if (passwordData.newPassword !== passwordData.confirmPassword) {
+    setPasswordMessage({ type: 'error', text: 'New passwords do not match!' });
+    return;
+  }
 
-    if (passwordData.newPassword.length < 8) {
-      setPasswordMessage({ type: 'error', text: 'Password must be at least 8 characters long!' });
-      return;
-    }
+  if (passwordData.newPassword.length < 8) {
+    setPasswordMessage({ type: 'error', text: 'Password must be at least 8 characters long!' });
+    return;
+  }
 
-    try {
-      // Call the GraphQL mutation
-      await changePassword({
-        variables: {
-          email: editableData.email, // Using rider's email
-          password: passwordData.newPassword // New password
-        }
-      });
-    } catch (error) {
-      // Error is handled in onError callback
-      console.error('Password change error:', error);
-    }
-  };
+  try {
+    // Call the GraphQL mutation
+    await changePassword({
+      variables: {
+        email: editableData.email, // Using rider's email
+        password: passwordData.newPassword // New password
+      }
+    });
+  } catch (error) {
+    // Error is already handled in onError callback
+    console.error('Password change error:', error);
+  }
+};
 
   const handlePasswordInputChange = (e) => {
     const { name, value } = e.target;
