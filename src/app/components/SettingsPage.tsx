@@ -85,24 +85,6 @@ export default function SettingsPage() {
         </CardContent>
       </Card>
 
-      {/* Vehicle Type */}
-      <Card className="bg-white/70 backdrop-blur-lg border border-gray-200 shadow-lg rounded-2xl transition hover:shadow-xl">
-        <CardHeader>
-          <CardTitle className="text-xl font-semibold text-gray-800">🚚 Vehicle Preference</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <select
-            value={vehicleType}
-            onChange={(e) => setVehicleType(e.target.value)}
-            className="w-full p-3 border border-gray-300 rounded-lg text-gray-800 bg-white shadow-sm focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="motorcycle">🏍️ Motorcycle</option>
-            <option value="car">🚗 Car</option>
-            <option value="van">🚐 Van</option>
-          </select>
-        </CardContent>
-      </Card>
-
       {/* Notifications */}
       <Card className="bg-white/70 backdrop-blur-lg border border-gray-200 shadow-lg rounded-2xl transition hover:shadow-xl">
         <CardHeader>
