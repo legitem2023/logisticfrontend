@@ -458,13 +458,15 @@ const handlePasswordChange = async (e) => {
 
           {/* Buttons */}
           <div className="mt-6 flex gap-3">
-            {activeIndex!==13(<button
-              onClick={() => onViewDetails?.(editableData)}
-              className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-green-500 text-white hover:bg-green-600 transition font-medium text-sm"
-            >
-              <span>View Details</span>
-              <ChevronRight size={16} />
-            </button>):""}
+            {activeIndex !== 13 && (
+  <button
+    onClick={() => onViewDetails?.(editableData)}
+    className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-green-500 text-white hover:bg-green-600 transition font-medium text-sm"
+  >
+    <span>View Details</span>
+    <ChevronRight size={16} />
+  </button>
+)}
 
             {isEditing && (
               <button
