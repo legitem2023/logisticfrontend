@@ -32,8 +32,8 @@ interface ValidateResetTokenInput {
 
 // Initialize the password reset service
 const emailConfig: EmailServiceConfig = {
-  service: 'nodemailer,
-  apiKey: process.env.EMAIL_APIKEY,
+  service: 'nodemailer',
+  apiKey: 'bqbtblpnwsllnaze',
   fromEmail: 'robert_sanco_marquez1988@yahoo.com',//'robertsancomarquez1988@gmail.com',// process.env.FROM_EMAIL || 'noreply@adiviso.com',
   appName: 'Pramatiso Express',
   baseUrl: 'https://adiviso.com'
@@ -74,11 +74,14 @@ export default function ForgotPasswordCard() {
       const { data } = await requestPasswordReset({
         variables: { email }
       })
-console.log(data);
-console.table(data);
+
       if (data?.requestPasswordReset?.success) {
         setEmailSent(true)
         showToast('Reset instructions sent to your email', 'success')
+        const sendInemail = async()=>{
+            await passwordResetService.requestPasswordReset(email); 
+        }
+        sendInemail();
       } else {
         showToast(data?.requestPasswordReset?.message || 'Failed to send reset instructions', 'error')
       }
