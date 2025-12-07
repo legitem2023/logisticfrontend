@@ -13,8 +13,8 @@ import CityScape from './AnimatedCityscape'
 import { useMutation } from '@apollo/client'
 import { REQUESTPASSWORDRESET } from '../../../graphql/mutation'
 
-import { PasswordResetService } from '../../Services/PasswordResetService';
-import { EmailServiceConfig } from '../../Services/EmailService';
+//import { PasswordResetService } from '../../Services/PasswordResetService';
+//import { EmailServiceConfig } from '../../Services/EmailService';
 
 // Define input types for TypeScript
 interface RequestPasswordResetInput {
@@ -78,10 +78,10 @@ export default function ForgotPasswordCard() {
       if (data?.requestPasswordReset?.success) {
         setEmailSent(true)
         showToast('Reset instructions sent to your email', 'success')
-        const sendInemail = async()=>{
-            await passwordResetService.requestPasswordReset(email); 
-        }
-        sendInemail();
+       // const sendInemail = async()=>{
+       //     await passwordResetService.requestPasswordReset(email); 
+      //  }
+       // sendInemail();
       } else {
         showToast(data?.requestPasswordReset?.message || 'Failed to send reset instructions', 'error')
       }
