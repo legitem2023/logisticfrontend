@@ -13,8 +13,8 @@ import CityScape from './AnimatedCityscape'
 import { useMutation } from '@apollo/client'
 import { REQUESTPASSWORDRESET } from '../../../graphql/mutation'
 
-import { PasswordResetService } from '../../Services/PasswordResetService.js';
-import { EmailServiceConfig } from '../../Services/EmailService.js';
+import { PasswordResetService } from '../../Services/PasswordResetService';
+import { EmailServiceConfig } from '../../Services/EmailService';
 
 // Define input types for TypeScript
 interface RequestPasswordResetInput {
