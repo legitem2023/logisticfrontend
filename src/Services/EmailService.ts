@@ -1,5 +1,5 @@
 // src/services/EmailService.ts
-import { generatePasswordResetEmail } from '../emailTemplates/passwordResetEmail.js';
+import { generatePasswordResetEmail } from '../emailTemplates/passwordResetEmail';
 
 export interface EmailOptions {
   to: string;
