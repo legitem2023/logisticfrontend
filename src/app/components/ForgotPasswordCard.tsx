@@ -13,6 +13,37 @@ import CityScape from './AnimatedCityscape'
 import { useMutation } from '@apollo/client'
 import { REQUESTPASSWORDRESET } from '../../../graphql/mutation'
 
+import { PasswordResetService } from '../../Services/PasswordResetService.js';
+import { EmailServiceConfig } from '../../Services/EmailService.js';
+
+// Define input types for TypeScript
+interface RequestPasswordResetInput {
+  email: string;
+}
+
+interface ResetPasswordInput {
+  token: string;
+  newPassword: string;
+}
+
+interface ValidateResetTokenInput {
+  token: string;
+}
+
+// Initialize the password reset service
+const emailConfig: EmailServiceConfig = {
+  service: process.env.EMAIL_SERVICE as 'sendgrid' | 'resend' | 'nodemailer' | 'console' || 'console',
+  apiKey: process.env.EMAIL_APIKEY,
+  fromEmail: 'onboarding@resend.dev',//'robertsancomarquez1988@gmail.com',// process.env.FROM_EMAIL || 'noreply@adiviso.com',
+  appName: process.env.APP_NAME || 'Pramatiso Express',
+  baseUrl: process.env.BASE_URL || 'https://adiviso.com'
+};
+
+const passwordResetService = new PasswordResetService(emailConfig);
+
+
+
+
 export default function ForgotPasswordCard() {
   const router = useRouter()
   const dispatch = useDispatch()
