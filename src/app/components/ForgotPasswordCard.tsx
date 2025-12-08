@@ -31,6 +31,7 @@ interface ValidateResetTokenInput {
 }
 
 // Initialize the password reset service
+/*
 const emailConfig: EmailServiceConfig = {
   service: 'nodemailer',
   apiKey: 'bqbtblpnwsllnaze',
@@ -40,8 +41,7 @@ const emailConfig: EmailServiceConfig = {
 };
 
 const passwordResetService = new PasswordResetService(emailConfig);
-
-
+*/
 
 
 export default function ForgotPasswordCard() {
