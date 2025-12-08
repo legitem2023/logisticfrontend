@@ -121,14 +121,15 @@ async function handleRequestPasswordReset(
     const result = await passwordResetService.requestPasswordReset(email);
     
     if (result.success) {
-      res.status(200).json({
+     console.log(result);
+      /* res.status(200).json({
         success: true,
         message: 'Password reset email sent successfully',
         data: {
           email: result.email,
           expiresAt: result.expiresAt
         }
-      });
+      });*/
     } else {
       res.status(400).json({
         success: false,
@@ -169,14 +170,14 @@ async function handleResetPassword(
     const result = await passwordResetService.resetPassword(token, newPassword);
     
     if (result.success) {
-      res.status(200).json({
+      /*res.status(200).json({
         success: true,
         message: 'Password has been reset successfully',
         data: {
           userId: result.userId,
           email: result.email
         }
-      });
+      });*/
     } else {
       res.status(400).json({
         success: false,
@@ -210,7 +211,7 @@ async function handleValidateToken(
     const result = await passwordResetService.validateResetToken(token);
     
     if (result.valid) {
-      res.status(200).json({
+     /* res.status(200).json({
         success: true,
         valid: true,
         message: 'Token is valid',
@@ -218,7 +219,7 @@ async function handleValidateToken(
           email: result.email,
           expiresAt: result.expiresAt
         }
-      });
+      });*/
     } else {
       res.status(400).json({
         success: false,
