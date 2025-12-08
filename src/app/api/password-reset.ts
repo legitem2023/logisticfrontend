@@ -28,6 +28,22 @@ interface ValidateResetTokenInput {
   token: string;
 }
 
+// Type definitions for results
+interface PasswordResetResult {
+  success: boolean;
+  message?: string;
+  email?: string;
+  expiresAt?: Date;
+  userId?: string | number;
+}
+
+interface TokenValidationResult {
+  valid: boolean;
+  message?: string;
+  email?: string;
+  expiresAt?: Date;
+}
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -93,7 +109,7 @@ export default async function handler(
           message: `Method ${req.method} not allowed` 
         });
     }
-  } catch (error) {
+  } catch (error: any) {
     console.error('Password reset API error:', error);
     res.status(500).json({ 
       success: false, 
@@ -118,16 +134,18 @@ async function handleRequestPasswordReset(
   }
 
   try {
-    const result = await passwordResetService.requestPasswordReset(email);
+    const result = await passwordResetService.requestPasswordReset(email) as PasswordResetResult;
     
     if (result.success) {
-     console.log(result);
+      console.log('Password reset result:', result);
+      
       res.status(200).json({
         success: true,
         message: 'Password reset email sent successfully',
         data: {
-          email: result.email,
-          expiresAt: result.expiresAt
+          // Only include email and expiresAt if they exist in the result
+          email: result.email || email, // Fall back to the input email
+          expiresAt: result.expiresAt || null
         }
       });
     } else {
@@ -167,17 +185,17 @@ async function handleResetPassword(
   }
 
   try {
-    const result = await passwordResetService.resetPassword(token, newPassword);
+    const result = await passwordResetService.resetPassword(token, newPassword) as PasswordResetResult;
     
     if (result.success) {
-      /*res.status(200).json({
+      res.status(200).json({
         success: true,
         message: 'Password has been reset successfully',
         data: {
-          userId: result.userId,
-          email: result.email
+          userId: result.userId || null,
+          email: result.email || null
         }
-      });*/
+      });
     } else {
       res.status(400).json({
         success: false,
@@ -208,18 +226,18 @@ async function handleValidateToken(
   }
 
   try {
-    const result = await passwordResetService.validateResetToken(token);
+    const result = await passwordResetService.validateResetToken(token) as TokenValidationResult;
     
     if (result.valid) {
-     /* res.status(200).json({
+      res.status(200).json({
         success: true,
         valid: true,
         message: 'Token is valid',
         data: {
-          email: result.email,
-          expiresAt: result.expiresAt
+          email: result.email || null,
+          expiresAt: result.expiresAt || null
         }
-      });*/
+      });
     } else {
       res.status(400).json({
         success: false,
