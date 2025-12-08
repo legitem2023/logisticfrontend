@@ -10,7 +10,9 @@ import { Label } from './ui/Label'
 import { showToast } from '../../../utils/toastify'
 import { FiMail, FiArrowLeft, FiCheckCircle } from 'react-icons/fi'
 import CityScape from './AnimatedCityscape'
-import { usePasswordReset } from './hooks/usePasswordReset' // Import your existing hook
+import { useMutation } from '@apollo/client'
+import { REQUESTPASSWORDRESET } from '../../../graphql/mutation'
+import { usePasswordReset } from '../../../hooks/usePasswordReset' // Import your email hook
 
 export default function ForgotPasswordCard() {
   const router = useRouter()
@@ -20,8 +22,11 @@ export default function ForgotPasswordCard() {
   const [resendCooldown, setResendCooldown] = useState(false)
   const [cooldownSeconds, setCooldownSeconds] = useState(0)
 
-  // Use your existing password reset hook
-  const { requestReset, loading: apiLoading, error: apiError } = usePasswordReset()
+  // GraphQL mutation hook
+  const [requestPasswordReset, { loading: gqlLoading, error: gqlError }] = useMutation(REQUESTPASSWORDRESET)
+  
+  // Email API hook
+  const { requestReset: sendEmail, loading: emailLoading, error: emailError } = usePasswordReset()
 
   const handleResetPassword = async () => {
     if (!email) {
@@ -37,33 +42,51 @@ export default function ForgotPasswordCard() {
     }
 
     try {
-      // Use the imported hook
-      const result = await requestReset(email)
+      // Step 1: Call GraphQL mutation first
+      const { data } = await requestPasswordReset({
+        variables: { email }
+      })
 
-      if (result.success) {
-        setEmailSent(true)
-        showToast('Reset instructions sent to your email', 'success')
-        
-        // Set cooldown for resend (60 seconds)
-        setResendCooldown(true)
-        let seconds = 60
-        setCooldownSeconds(seconds)
-        
-        const interval = setInterval(() => {
-          seconds -= 1
-          setCooldownSeconds(seconds)
-          
-          if (seconds <= 0) {
-            clearInterval(interval)
-            setResendCooldown(false)
+      if (data?.requestPasswordReset?.success) {
+        // Step 2: If GraphQL is successful, trigger email sending
+        try {
+          const emailResult = await sendEmail(email)
+          console.log(emailResult);
+          if (emailResult.success) {
+            setEmailSent(true)
+            showToast('Reset instructions sent to your email', 'success')
+            
+            // Set cooldown for resend (60 seconds)
+            setResendCooldown(true)
+            let seconds = 60
+            setCooldownSeconds(seconds)
+            
+            const interval = setInterval(() => {
+              seconds -= 1
+              setCooldownSeconds(seconds)
+              
+              if (seconds <= 0) {
+                clearInterval(interval)
+                setResendCooldown(false)
+              }
+            }, 1000)
+          } else {
+            // GraphQL succeeded but email failed
+            showToast('Account found but email sending failed. Please try again.', 'error')
           }
-        }, 1000)
+        } catch (emailError) {
+          // Email API failed
+          showToast('Reset link generated but email delivery failed. Please try again.', 'warning')
+        }
       } else {
-        showToast(result.message || 'Failed to send reset instructions', 'error')
+        // GraphQL returned failure
+        showToast(data?.requestPasswordReset?.message || 'Failed to process reset request', 'error')
       }
     } catch (err: any) {
       console.error('Reset password failed:', err)
-      showToast(err.message || 'Failed to send reset instructions', 'error')
+      // Handle GraphQL errors
+      const errorMessage = err.graphQLErrors?.[0]?.message || err.message || 'Failed to send reset instructions'
+      showToast(errorMessage, 'error')
     }
   }
 
@@ -71,30 +94,40 @@ export default function ForgotPasswordCard() {
     if (resendCooldown) return
     
     try {
-      const result = await requestReset(email)
-      
-      if (result.success) {
-        showToast('Reset instructions sent again', 'success')
+      // Resend both GraphQL and email
+      const { data } = await requestPasswordReset({
+        variables: { email }
+      })
+
+      if (data?.requestPasswordReset?.success) {
+        const emailResult = await sendEmail(email)
         
-        // Reset cooldown
-        setResendCooldown(true)
-        let seconds = 60
-        setCooldownSeconds(seconds)
-        
-        const interval = setInterval(() => {
-          seconds -= 1
+        if (emailResult.success) {
+          showToast('Reset instructions sent again', 'success')
+          
+          // Reset cooldown
+          setResendCooldown(true)
+          let seconds = 60
           setCooldownSeconds(seconds)
           
-          if (seconds <= 0) {
-            clearInterval(interval)
-            setResendCooldown(false)
-          }
-        }, 1000)
+          const interval = setInterval(() => {
+            seconds -= 1
+            setCooldownSeconds(seconds)
+            
+            if (seconds <= 0) {
+              clearInterval(interval)
+              setResendCooldown(false)
+            }
+          }, 1000)
+        } else {
+          showToast('Failed to resend email. Please try again.', 'error')
+        }
       } else {
-        showToast(result.message || 'Failed to resend email', 'error')
+        showToast(data?.requestPasswordReset?.message || 'Failed to resend reset instructions', 'error')
       }
     } catch (err: any) {
-      showToast(err.message || 'Failed to resend email', 'error')
+      const errorMessage = err.graphQLErrors?.[0]?.message || err.message || 'Failed to resend email'
+      showToast(errorMessage, 'error')
     }
   }
 
@@ -105,16 +138,12 @@ export default function ForgotPasswordCard() {
 
   // Handle form submission on Enter key
   const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !apiLoading) {
+    if (e.key === 'Enter' && !gqlLoading && !emailLoading) {
       handleResetPassword()
     }
   }
 
-  // Display API error if any
-  if (apiError) {
-    // You can show the error in a toast or UI element
-    // showToast(apiError, 'error') - or display inline
-  }
+  const loading = gqlLoading || emailLoading
 
   return (
     <div className="flex justify-center p-0">
@@ -148,11 +177,13 @@ export default function ForgotPasswordCard() {
                   onChange={(e) => setEmail(e.target.value)}
                   onKeyPress={handleKeyPress}
                   className="pl-10 border-gray-300 focus:border-green-500 focus:ring-green-400 transition-all duration-200"
-                  disabled={apiLoading}
+                  disabled={loading}
                 />
-                {/* Show API error inline if needed */}
-                {apiError && (
-                  <p className="text-red-500 text-sm mt-1">{apiError}</p>
+                {/* Show errors if any */}
+                {(gqlError || emailError) && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {gqlError?.message || emailError || 'An error occurred'}
+                  </p>
                 )}
               </div>
 
@@ -160,15 +191,15 @@ export default function ForgotPasswordCard() {
               <Button
                 className="w-full py-3 bg-gradient-to-r from-green-700 to-green-600 hover:from-green-800 hover:to-green-700 text-white font-bold rounded-lg shadow-lg transition-all duration-300 hover:shadow-xl relative overflow-hidden group"
                 onClick={handleResetPassword}
-                disabled={apiLoading}
+                disabled={loading}
               >
-                {apiLoading ? (
+                {loading ? (
                   <span className="flex items-center justify-center">
                     <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
-                    Sending...
+                    Processing...
                   </span>
                 ) : 'Send Reset Instructions'}
               </Button>
@@ -178,7 +209,7 @@ export default function ForgotPasswordCard() {
                 <button
                   onClick={handleBackToLogin}
                   className="inline-flex items-center text-green-600 hover:text-green-800 font-medium transition-colors disabled:opacity-50"
-                  disabled={apiLoading}
+                  disabled={loading}
                 >
                   <FiArrowLeft className="mr-2" />
                   Back to Login
@@ -194,7 +225,7 @@ export default function ForgotPasswordCard() {
                 </div>
                 <h3 className="text-lg font-semibold text-gray-800 mb-2">Check Your Email</h3>
                 <p className="text-gray-600 mb-4">
-                  Weve sent password reset instructions to:<br />
+                  We've sent password reset instructions to:<br />
                   <span className="font-medium text-green-700">{email}</span>
                 </p>
                 
@@ -202,7 +233,7 @@ export default function ForgotPasswordCard() {
                 <div className="mt-4">
                   <Button
                     onClick={handleResendEmail}
-                    disabled={resendCooldown || apiLoading}
+                    disabled={resendCooldown || loading}
                     variant="outline"
                     className="w-full py-2"
                   >
@@ -214,13 +245,13 @@ export default function ForgotPasswordCard() {
                         </svg>
                         Resend available in {cooldownSeconds}s
                       </span>
-                    ) : apiLoading ? (
+                    ) : loading ? (
                       <span className="flex items-center justify-center">
                         <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-green-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                           <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                           <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                         </svg>
-                        Sending...
+                        Processing...
                       </span>
                     ) : (
                       'Resend Email'
@@ -229,7 +260,7 @@ export default function ForgotPasswordCard() {
                 </div>
                 
                 <p className="text-sm text-gray-500 mt-4">
-                  Didnt receive the email? Check your spam folder or click resend above.
+                  Didn't receive the email? Check your spam folder or click resend above.
                 </p>
               </div>
 
@@ -242,14 +273,14 @@ export default function ForgotPasswordCard() {
                     setResendCooldown(false)
                   }}
                   className="flex-1 py-3"
-                  disabled={apiLoading}
+                  disabled={loading}
                 >
                   Try Different Email
                 </Button>
                 <Button
                   onClick={handleBackToLogin}
                   className="flex-1 py-3 bg-gradient-to-r from-green-700 to-green-600 hover:from-green-800 hover:to-green-700 text-white"
-                  disabled={apiLoading}
+                  disabled={loading}
                 >
                   Back to Login
                 </Button>
@@ -260,4 +291,4 @@ export default function ForgotPasswordCard() {
       </Card>
     </div>
   )
-}
+              }
