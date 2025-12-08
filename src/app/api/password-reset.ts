@@ -1,7 +1,7 @@
 // api/password-reset.ts
 import { NextApiRequest, NextApiResponse } from 'next';
-import { PasswordResetService } from '../../services/PasswordResetService';
-import { EmailServiceConfig } from '../../services/EmailService';
+import { PasswordResetService } from '../../Services/PasswordResetService';
+import { EmailServiceConfig } from '../../Services/EmailService';
 
 // Configuration for email service
 const emailConfig: EmailServiceConfig = {
