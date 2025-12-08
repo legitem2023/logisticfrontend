@@ -47,7 +47,8 @@ export default function ForgotPasswordCard() {
         variables: { email }
       })
 
-      if (data?.requestPasswordReset?.success) {
+      // Check if the mutation was successful based on statusText
+      if (data?.requestPasswordReset?.statusText === "Successful") {
         // Step 2: If GraphQL is successful, trigger email sending
         try {
           const emailResult = await sendEmail(email)
@@ -99,7 +100,8 @@ export default function ForgotPasswordCard() {
         variables: { email }
       })
 
-      if (data?.requestPasswordReset?.success) {
+      // Check if the mutation was successful based on statusText
+      if (data?.requestPasswordReset?.statusText === "Successful") {
         const emailResult = await sendEmail(email)
         
         if (emailResult.success) {
@@ -291,4 +293,4 @@ export default function ForgotPasswordCard() {
       </Card>
     </div>
   )
-              }
+}
