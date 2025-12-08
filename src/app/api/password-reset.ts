@@ -122,14 +122,14 @@ async function handleRequestPasswordReset(
     
     if (result.success) {
      console.log(result);
-      /* res.status(200).json({
+      res.status(200).json({
         success: true,
         message: 'Password reset email sent successfully',
         data: {
           email: result.email,
           expiresAt: result.expiresAt
         }
-      });*/
+      });
     } else {
       res.status(400).json({
         success: false,
