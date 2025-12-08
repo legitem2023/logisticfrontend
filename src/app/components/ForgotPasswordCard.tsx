@@ -12,7 +12,7 @@ import { FiMail, FiArrowLeft, FiCheckCircle } from 'react-icons/fi'
 import CityScape from './AnimatedCityscape'
 import { useMutation } from '@apollo/client'
 import { REQUESTPASSWORDRESET } from '../../../graphql/mutation'
-import { usePasswordReset } from '../../../hooks/usePasswordReset' // Import your email hook
+import { usePasswordReset } from './hooks/usePasswordReset' // Import your email hook
 
 export default function ForgotPasswordCard() {
   const router = useRouter()
@@ -225,7 +225,7 @@ export default function ForgotPasswordCard() {
                 </div>
                 <h3 className="text-lg font-semibold text-gray-800 mb-2">Check Your Email</h3>
                 <p className="text-gray-600 mb-4">
-                  We've sent password reset instructions to:<br />
+                  Weve sent password reset instructions to:<br />
                   <span className="font-medium text-green-700">{email}</span>
                 </p>
                 
@@ -260,7 +260,7 @@ export default function ForgotPasswordCard() {
                 </div>
                 
                 <p className="text-sm text-gray-500 mt-4">
-                  Didn't receive the email? Check your spam folder or click resend above.
+                  Didnt receive the email? Check your spam folder or click resend above.
                 </p>
               </div>
 
