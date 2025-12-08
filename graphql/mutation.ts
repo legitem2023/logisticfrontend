@@ -12,8 +12,7 @@ export const CHANGEPASSWORD = gql`
 export const REQUESTPASSWORDRESET = gql`
   mutation RequestPasswordReset($email: String!) {
     requestPasswordReset(input: { email: $email }) {
-      success
-      message
+      statusText
     }
   }
 `
