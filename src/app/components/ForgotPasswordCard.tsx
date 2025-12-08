@@ -46,7 +46,7 @@ export default function ForgotPasswordCard() {
       const { data } = await requestPasswordReset({
         variables: { email }
       })
-console.log(data);
+
       // Check if the mutation was successful based on statusText
       if (data?.requestPasswordReset?.statusText === "Success") {
         // Step 2: If GraphQL is successful, trigger email sending
