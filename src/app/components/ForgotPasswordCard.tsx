@@ -50,12 +50,7 @@ export default function ForgotPasswordCard() {
       // Check if the mutation was successful based on statusText
       if (data?.requestPasswordReset?.statusText === "Success") {
         // Step 2: If GraphQL is successful, trigger email sending
-        try {
-          const emailResult = await sendEmail(email)
-          if (emailResult.success) {
-            setEmailSent(true)
-            showToast('Reset instructions sent to your email', 'success')
-            
+            showToast('Reset instructions sent to your email', 'success') 
             // Set cooldown for resend (60 seconds)
             setResendCooldown(true)
             let seconds = 60
@@ -70,17 +65,11 @@ export default function ForgotPasswordCard() {
                 setResendCooldown(false)
               }
             }, 1000)
-          } else {
-            // GraphQL succeeded but email failed
-            showToast(data?.requestPasswordReset?.statusText, 'warning')
-          }
-        } catch (emailError) {
-          // Email API failed
-          showToast('Reset link generated but email delivery failed. Please try again.', 'warning')
-        }
+
+        
       } else {
         // GraphQL returned failure
-        showToast(data?.requestPasswordReset?.message || 'Failed to process reset request', 'error')
+        showToast(data?.requestPasswordReset?.statusText, 'error')
       }
     } catch (err: any) {
       console.error('Reset password failed:', err)
