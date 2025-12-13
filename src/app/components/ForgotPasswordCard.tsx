@@ -145,7 +145,7 @@ console.log(data.requestPasswordReset);
    // }
   }
 
-  const loading = gqlLoading || emailLoading
+  const loading = gqlLoading;
 
   return (
     <div className="flex justify-center p-0">
