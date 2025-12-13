@@ -91,7 +91,7 @@ console.log(data.requestPasswordReset);
     }
   }
 
-  const handleResendEmail = async () => {
+  /*const handleResendEmail = async () => {
     if (resendCooldown) return
     
     try {
@@ -131,7 +131,7 @@ console.log(data.requestPasswordReset);
       const errorMessage = err.graphQLErrors?.[0]?.message || err.message || 'Failed to resend email'
       showToast(errorMessage, 'error')
     }
-  }
+  }*/
 
   const handleBackToLogin = () => {
     dispatch(setActiveIndex(12)) // Assuming 12 is login index
@@ -234,7 +234,7 @@ console.log(data.requestPasswordReset);
                 {/* Resend Email Button */}
                 <div className="mt-4">
                   <Button
-                    onClick={handleResendEmail}
+                    
                     disabled={resendCooldown || loading}
                     variant="outline"
                     className="w-full py-2"
