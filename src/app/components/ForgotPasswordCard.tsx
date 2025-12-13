@@ -134,15 +134,15 @@ console.log(data.requestPasswordReset);
   }*/
 
   const handleBackToLogin = () => {
-    dispatch(setActiveIndex(12)) // Assuming 12 is login index
-    router.push('/')
+   dispatch(setActiveIndex(12)) // Assuming 12 is login index
+   router.push('/')
   }
 
   // Handle form submission on Enter key
   const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !gqlLoading && !emailLoading) {
-      handleResetPassword()
-    }
+   // if (e.key === 'Enter' && !gqlLoading && !emailLoading) {
+   //   handleResetPassword()
+   // }
   }
 
   const loading = gqlLoading || emailLoading
