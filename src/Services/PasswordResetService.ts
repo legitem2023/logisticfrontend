@@ -189,4 +189,93 @@ export class PasswordResetService {
       activeTokens: this.resetTokens.size
     };
   }
+
+  // ============ STATIC METHODS ADDED BELOW ============
+  
+  /**
+   * Static method to generate a reset token
+   * This is used by resolvers expecting static methods
+   */
+  static async generateResetToken(userId: string): Promise<string> {
+    // Create a temporary instance with minimal config
+    const tempConfig: EmailServiceConfig = {
+      host: process.env.EMAIL_HOST || '',
+      port: parseInt(process.env.EMAIL_PORT || '587'),
+      secure: process.env.EMAIL_SECURE === 'true',
+      auth: {
+        user: process.env.EMAIL_USER || '',
+        pass: process.env.EMAIL_PASS || ''
+      },
+      from: process.env.EMAIL_FROM || 'noreply@example.com'
+    };
+    
+    try {
+      const tempService = new PasswordResetService(tempConfig);
+      // Access the private method via type assertion
+      const token = (tempService as any).generateResetToken();
+      return token;
+    } catch (error) {
+      console.error('Error generating reset token:', error);
+      // Fallback token generation
+      return Math.random().toString(36).substring(2) + Date.now().toString(36);
+    }
+  }
+
+  /**
+   * Static method to send reset email
+   * This is used by resolvers expecting static methods
+   */
+  static async sendResetEmail(email: string, token: string): Promise<void> {
+    // Create a temporary instance with minimal config
+    const tempConfig: EmailServiceConfig = {
+      host: process.env.EMAIL_HOST || '',
+      port: parseInt(process.env.EMAIL_PORT || '587'),
+      secure: process.env.EMAIL_SECURE === 'true',
+      auth: {
+        user: process.env.EMAIL_USER || '',
+        pass: process.env.EMAIL_PASS || ''
+      },
+      from: process.env.EMAIL_FROM || 'noreply@example.com'
+    };
+    
+    try {
+      const tempService = new PasswordResetService(tempConfig);
+      const emailSent = await tempService.emailService.sendPasswordResetEmail(email, token);
+      
+      if (!emailSent) {
+        throw new Error('Failed to send reset email');
+      }
+    } catch (error) {
+      console.error('Error sending reset email:', error);
+      throw error;
+    }
+  }
 }
+
+// Singleton instance for convenience
+let _passwordResetServiceInstance: PasswordResetService | null = null;
+
+/**
+ * Helper function to get or create singleton instance
+ */
+export function getPasswordResetService(): PasswordResetService {
+  if (!_passwordResetServiceInstance) {
+    const config: EmailServiceConfig = {
+      host: process.env.EMAIL_HOST || '',
+      port: parseInt(process.env.EMAIL_PORT || '587'),
+      secure: process.env.EMAIL_SECURE === 'true',
+      auth: {
+        user: process.env.EMAIL_USER || '',
+        pass: process.env.EMAIL_PASS || ''
+      },
+      from: process.env.EMAIL_FROM || 'noreply@example.com'
+    };
+    _passwordResetServiceInstance = new PasswordResetService(config);
+  }
+  return _passwordResetServiceInstance;
+}
+
+/**
+ * Convenience export of singleton instance
+ */
+export const passwordResetService = getPasswordResetService();
