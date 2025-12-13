@@ -46,13 +46,12 @@ export default function ForgotPasswordCard() {
       const { data } = await requestPasswordReset({
         variables: { email }
       })
-console.log(data.requestPasswordReset);
+      //console.log(data.requestPasswordReset);
       // Check if the mutation was successful based on statusText
-   /*   if (data?.requestPasswordReset?.statusText === "Success") {
+      if (data?.requestPasswordReset?.statusText === "Success") {
         // Step 2: If GraphQL is successful, trigger email sending
         try {
           const emailResult = await sendEmail(email)
-          console.log(emailResult);
           if (emailResult.success) {
             setEmailSent(true)
             showToast('Reset instructions sent to your email', 'success')
@@ -73,7 +72,7 @@ console.log(data.requestPasswordReset);
             }, 1000)
           } else {
             // GraphQL succeeded but email failed
-            showToast('Account found but email sending failed. Please try again.', 'error')
+            showToast(data?.requestPasswordReset?.statusText, 'warning')
           }
         } catch (emailError) {
           // Email API failed
@@ -82,7 +81,7 @@ console.log(data.requestPasswordReset);
       } else {
         // GraphQL returned failure
         showToast(data?.requestPasswordReset?.message || 'Failed to process reset request', 'error')
-      }*/
+      }
     } catch (err: any) {
       console.error('Reset password failed:', err)
       // Handle GraphQL errors
@@ -91,7 +90,7 @@ console.log(data.requestPasswordReset);
     }
   }
 
-  /*const handleResendEmail = async () => {
+ /* const handleResendEmail = async () => {
     if (resendCooldown) return
     
     try {
