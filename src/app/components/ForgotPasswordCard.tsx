@@ -23,7 +23,7 @@ export default function ForgotPasswordCard() {
   const [cooldownSeconds, setCooldownSeconds] = useState(0)
 
   // GraphQL mutation hook
- // const [requestPasswordReset, { loading: gqlLoading, error: gqlError }] = useMutation(REQUESTPASSWORDRESET)
+ const [requestPasswordReset, { loading: gqlLoading, error: gqlError }] = useMutation(REQUESTPASSWORDRESET)
   
   // Email API hook
   //const { requestReset: sendEmail, loading: emailLoading, error: emailError } = usePasswordReset()
