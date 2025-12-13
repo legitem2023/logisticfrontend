@@ -12,7 +12,7 @@ import { FiMail, FiArrowLeft, FiCheckCircle } from 'react-icons/fi'
 import CityScape from './AnimatedCityscape'
 import { useMutation } from '@apollo/client'
 import { REQUESTPASSWORDRESET } from '../../../graphql/mutation'
-import { usePasswordReset } from './hooks/usePasswordReset' // Import your email hook
+//import { usePasswordReset } from './hooks/usePasswordReset' // Import your email hook
 
 export default function ForgotPasswordCard() {
   const router = useRouter()
@@ -23,10 +23,10 @@ export default function ForgotPasswordCard() {
   const [cooldownSeconds, setCooldownSeconds] = useState(0)
 
   // GraphQL mutation hook
-  const [requestPasswordReset, { loading: gqlLoading, error: gqlError }] = useMutation(REQUESTPASSWORDRESET)
+ // const [requestPasswordReset, { loading: gqlLoading, error: gqlError }] = useMutation(REQUESTPASSWORDRESET)
   
   // Email API hook
-  const { requestReset: sendEmail, loading: emailLoading, error: emailError } = usePasswordReset()
+  //const { requestReset: sendEmail, loading: emailLoading, error: emailError } = usePasswordReset()
 
   const handleResetPassword = async () => {
     if (!email) {
