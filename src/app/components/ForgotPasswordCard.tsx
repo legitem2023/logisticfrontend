@@ -184,7 +184,7 @@ console.log(data.requestPasswordReset);
                 {/* Show errors if any */}
                 {(gqlError) && (
                   <p className="text-red-500 text-sm mt-1">
-                    {gqlError?.message || emailError || 'An error occurred'}
+                    {gqlError?.message || 'An error occurred'}
                   </p>
                 )}
               </div>
