@@ -182,7 +182,7 @@ console.log(data.requestPasswordReset);
                   disabled={loading}
                 />
                 {/* Show errors if any */}
-                {(gqlError || emailError) && (
+                {(gqlError) && (
                   <p className="text-red-500 text-sm mt-1">
                     {gqlError?.message || emailError || 'An error occurred'}
                   </p>
