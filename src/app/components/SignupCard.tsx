@@ -41,6 +41,8 @@ const SignupCard = () => {
     },
     onError: (err) => {
       console.log("Signup failed Please Try again:", err.message);
+      setloading(false);
+      showToast("Signup failed. Please try again.", "error");
     },
   });
 
@@ -54,7 +56,15 @@ const SignupCard = () => {
     photo: "",
     license: "",
   });
- const [loading,setloading] = useState(false);
+  
+  const [errors, setErrors] = useState({
+    email: "",
+    password: "",
+    phone: "",
+  });
+  
+  const [loading, setloading] = useState(false);
+
   const handleChange = async (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -66,11 +76,63 @@ const SignupCard = () => {
       setForm((prev) => ({ ...prev, [name]: base64 }));
     } else {
       setForm((prev) => ({ ...prev, [name]: value }));
+      
+      // Clear error for this field when user starts typing
+      if (errors[name as keyof typeof errors]) {
+        setErrors(prev => ({ ...prev, [name]: "" }));
+      }
     }
+  };
+
+  // Email validation regex
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  
+  // Password validation regex (example: at least 8 chars, 1 uppercase, 1 lowercase, 1 number)
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+  
+  // Phone validation regex (basic format)
+  const phoneRegex = /^[\+]?[1-9][\d]{0,15}$/;
+
+  const validateForm = () => {
+    const newErrors = {
+      email: "",
+      password: "",
+      phone: "",
+    };
+    
+    let isValid = true;
+    
+    // Email validation
+    if (!emailRegex.test(form.email)) {
+      newErrors.email = "Please enter a valid email address.";
+      isValid = false;
+    }
+    
+    // Password validation
+    if (!passwordRegex.test(form.password)) {
+      newErrors.password = "Password must be at least 8 characters with uppercase, lowercase, and number.";
+      isValid = false;
+    }
+    
+    // Phone validation
+    if (!phoneRegex.test(form.phone.replace(/\s+/g, ''))) {
+      newErrors.phone = "Please enter a valid phone number.";
+      isValid = false;
+    }
+    
+    setErrors(newErrors);
+    return isValid;
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validate form
+    if (!validateForm()) {
+      showToast("Please fix the errors in the form.", "error");
+      return;
+    }
+    
     setloading(true);
     const input = {
       email: form.email,
@@ -83,6 +145,36 @@ const SignupCard = () => {
       license: form.license, // already Base64
     };
     createRider({ variables: { input } });
+  };
+
+  const handleBlur = (field: keyof typeof form) => {
+    // Validate on blur
+    switch (field) {
+      case 'email':
+        if (form.email && !emailRegex.test(form.email)) {
+          setErrors(prev => ({ ...prev, email: "Please enter a valid email address." }));
+        } else {
+          setErrors(prev => ({ ...prev, email: "" }));
+        }
+        break;
+      case 'password':
+        if (form.password && !passwordRegex.test(form.password)) {
+          setErrors(prev => ({ 
+            ...prev, 
+            password: "Password must be at least 8 characters with uppercase, lowercase, and number." 
+          }));
+        } else {
+          setErrors(prev => ({ ...prev, password: "" }));
+        }
+        break;
+      case 'phone':
+        if (form.phone && !phoneRegex.test(form.phone.replace(/\s+/g, ''))) {
+          setErrors(prev => ({ ...prev, phone: "Please enter a valid phone number." }));
+        } else {
+          setErrors(prev => ({ ...prev, phone: "" }));
+        }
+        break;
+    }
   };
 
   if (vehicloading)
@@ -154,9 +246,13 @@ const SignupCard = () => {
                       type="email"
                       value={form.email}
                       onChange={handleChange}
+                      onBlur={() => handleBlur('email')}
                       required
-                      className="pl-2 border-gray-300 focus:border-green-500 focus:ring-green-400"
+                      className={`pl-2 border-gray-300 focus:border-green-500 focus:ring-green-400 ${errors.email ? 'border-red-500 focus:border-red-500 focus:ring-red-400' : ''}`}
                     />
+                    {errors.email && (
+                      <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+                    )}
                   </div>
 
                   <div className="relative">
@@ -169,9 +265,13 @@ const SignupCard = () => {
                       type="tel"
                       value={form.phone}
                       onChange={handleChange}
+                      onBlur={() => handleBlur('phone')}
                       required
-                      className="pl-2 border-gray-300 focus:border-green-500 focus:ring-green-400"
+                      className={`pl-2 border-gray-300 focus:border-green-500 focus:ring-green-400 ${errors.phone ? 'border-red-500 focus:border-red-500 focus:ring-red-400' : ''}`}
                     />
+                    {errors.phone && (
+                      <p className="text-red-500 text-sm mt-1">{errors.phone}</p>
+                    )}
                   </div>
 
                   <div className="relative">
@@ -184,9 +284,16 @@ const SignupCard = () => {
                       type="password"
                       value={form.password}
                       onChange={handleChange}
+                      onBlur={() => handleBlur('password')}
                       required
-                      className="pl-2 border-gray-300 focus:border-green-500 focus:ring-green-400"
+                      className={`pl-2 border-gray-300 focus:border-green-500 focus:ring-green-400 ${errors.password ? 'border-red-500 focus:border-red-500 focus:ring-red-400' : ''}`}
                     />
+                    {errors.password && (
+                      <p className="text-red-500 text-sm mt-1">{errors.password}</p>
+                    )}
+                    <p className="text-xs text-gray-500 mt-1">
+                      Must be at least 8 characters with uppercase, lowercase, and number
+                    </p>
                   </div>
                 </div>
 
