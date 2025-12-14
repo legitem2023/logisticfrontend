@@ -118,7 +118,7 @@ const AnimatedCityScape = ({
       </div>
 
       {/* Motorcycle - Animated to overtake the truck */}
-      <div 
+      {/*  <div 
         className="absolute animate-overtake z-20"
         style={{ 
           bottom: '0.7rem', // Positioned slightly lower than truck
@@ -126,7 +126,7 @@ const AnimatedCityScape = ({
         }}
       >
         <EmojioneMotorcycle className="h-14 w-14 transform scale-x-[-1]" />
-      </div>
+      </div>*/}
 
       {/* Ground */}
       <div className="absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-b from-green-950 to-black" />
