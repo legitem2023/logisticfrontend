@@ -11,6 +11,8 @@ import { showToast } from '../../../utils/toastify'
 import { FiLock, FiCheck, FiArrowLeft } from 'react-icons/fi'
 import { Eye, EyeOff } from 'lucide-react'
 import CityScape from './AnimatedCityscape'
+import { useMutation } from '@apollo/client'
+import { RESETPASSWORD } from '../../../graphql/mutations/auth' // Adjust path as needed
 
 export default function CreateNewPasswordCard() {
   const router = useRouter()
@@ -21,6 +23,9 @@ export default function CreateNewPasswordCard() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [loading, setLoading] = useState(false)
   const [passwordChanged, setPasswordChanged] = useState(false)
+  
+  // Add token state (you'll likely get this from URL params or props)
+  const [token, setToken] = useState('') // You should set this from URL params
 
   // Password strength criteria
   const passwordCriteria = {
@@ -33,6 +38,24 @@ export default function CreateNewPasswordCard() {
 
   const allCriteriaMet = Object.values(passwordCriteria).every(Boolean)
   const passwordsMatch = password === confirmPassword && confirmPassword.length > 0
+
+  // GraphQL mutation
+  const [resetPasswordMutation] = useMutation(RESETPASSWORD)
+
+  // Get token from URL (add this effect)
+  React.useEffect(() => {
+    // Extract token from URL query parameters
+    const urlParams = new URLSearchParams(window.location.search)
+    const tokenFromUrl = urlParams.get('token')
+    if (tokenFromUrl) {
+      setToken(tokenFromUrl)
+    } else {
+      // Or you might get it from props or other sources
+      showToast('Invalid or missing reset token', 'error')
+      // Optionally redirect back to forgot password
+      // router.push('/forgot-password')
+    }
+  }, [])
 
   const handleCreateNewPassword = async () => {
     if (!password || !confirmPassword) {
@@ -50,20 +73,34 @@ export default function CreateNewPasswordCard() {
       return
     }
 
+    if (!token) {
+      showToast('Reset token is missing or invalid', 'error')
+      return
+    }
+
     setLoading(true)
     
     try {
-      // Simulate API call to reset password
-      await new Promise(resolve => setTimeout(resolve, 1500))
+      // Call GraphQL mutation
+      const { data } = await resetPasswordMutation({
+        variables: {
+          token: token,
+          newPassword: password
+        }
+      })
+
+      if (data?.resetPassword?.statusText === 'success') {
+        setPasswordChanged(true)
+        showToast('Password updated successfully!', 'success')
+      } else {
+        throw new Error('Password reset failed')
+      }
       
-      // In a real app, you would call your API here
-      // await api.resetPassword(token, password)
-      
-      setPasswordChanged(true)
-      showToast('Password updated successfully!', 'success')
-    } catch (err) {
+    } catch (err: any) {
       console.error('Password reset failed:', err)
-      showToast('Failed to update password', 'error')
+      // Handle specific GraphQL errors
+      const errorMessage = err.message || 'Failed to update password'
+      showToast(errorMessage, 'error')
     } finally {
       setLoading(false)
     }
@@ -210,7 +247,7 @@ export default function CreateNewPasswordCard() {
           <Button
             className="w-full py-3 bg-gradient-to-r from-green-700 to-green-600 hover:from-green-800 hover:to-green-700 text-white font-bold rounded-lg shadow-lg transition-all duration-300 hover:shadow-xl relative overflow-hidden group"
             onClick={handleCreateNewPassword}
-            disabled={loading || !allCriteriaMet || !passwordsMatch}
+            disabled={loading || !allCriteriaMet || !passwordsMatch || !token}
           >
             {loading ? (
               <span className="flex items-center justify-center">
@@ -237,4 +274,4 @@ export default function CreateNewPasswordCard() {
       </Card>
     </div>
   )
-}
+                }
