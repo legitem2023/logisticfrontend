@@ -23,8 +23,7 @@ export const RESETPASSWORD = gql`
       token: $token,
       newPassword: $newPassword
     }) {
-      success
-      message
+      statusText
     }
   }
 `
