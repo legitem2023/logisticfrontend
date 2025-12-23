@@ -12,7 +12,7 @@ import { FiLock, FiCheck, FiArrowLeft } from 'react-icons/fi'
 import { Eye, EyeOff } from 'lucide-react'
 import CityScape from './AnimatedCityscape'
 import { useMutation } from '@apollo/client'
-import { RESETPASSWORD } from '../../../graphql/mutations/auth' // Adjust path as needed
+import { RESETPASSWORD } from '../../../graphql/mutation' // Adjust path as needed
 
 export default function CreateNewPasswordCard() {
   const router = useRouter()
