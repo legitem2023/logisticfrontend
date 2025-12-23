@@ -88,7 +88,7 @@ export default function CreateNewPasswordCard() {
           newPassword: password
         }
       })
-
+      console.log(data?.resetPassword,"<==");
       if (data?.resetPassword?.statusText === 'success') {
         setPasswordChanged(true)
         showToast('Password updated successfully!', 'success')
