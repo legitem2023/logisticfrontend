@@ -43,10 +43,8 @@ export default function RootLayout({
             {children}
           </ReduxWrapper>
         </AuthProvider>
-        
         {/* ✅ Toast container here */}
         <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} newestOnTop />
-      
       </body>
     </html>
   );
