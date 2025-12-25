@@ -1,4 +1,19 @@
 export async function GET(request) {
+  // -------- SECURITY CHECK: Verify the Cron Secret --------
+  const authHeader = request.headers.get('Authorization');
+  // Ensure you have set the CRON_SECRET environment variable in Vercel
+  if (process.env.CRON_SECRET && authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+    // Return 401 Unauthorized if the secret doesn't match
+    return new Response(JSON.stringify({ 
+      error: 'Unauthorized',
+      message: 'Invalid or missing cron secret.' 
+    }), {
+      status: 401,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
+  // ---------------------------------------------------------
+
   const targetUrl = 'https://logisticbackend-bkc3.onrender.com/graphql';
   
   // Simple GraphQL query to check if server is alive
