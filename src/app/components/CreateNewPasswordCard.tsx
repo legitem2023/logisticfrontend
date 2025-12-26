@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useDispatch } from 'react-redux'
 import { setActiveIndex } from '../../../Redux/activeIndexSlice'
@@ -12,8 +12,9 @@ import { FiLock, FiCheck, FiArrowLeft } from 'react-icons/fi'
 import { Eye, EyeOff } from 'lucide-react'
 import CityScape from './AnimatedCityscape'
 import { useMutation, useQuery } from '@apollo/client'
-import { RESETPASSWORD } from '../../../graphql/mutation' // Adjust path as needed
-import { PASSWORDRESETREPO  } from '../../../graphql/query'
+import { RESETPASSWORD } from '../../../graphql/mutation'
+import { PASSWORDRESETREPO } from '../../../graphql/query'
+
 export default function CreateNewPasswordCard() {
   const router = useRouter()
   const dispatch = useDispatch()
@@ -23,9 +24,7 @@ export default function CreateNewPasswordCard() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [loading, setLoading] = useState(false)
   const [passwordChanged, setPasswordChanged] = useState(false)
-  
-  // Add token state (you'll likely get this from URL params or props)
-  const [token, setToken] = useState('') // You should set this from URL params
+  const [token, setToken] = useState('')
 
   // Password strength criteria
   const passwordCriteria = {
@@ -39,28 +38,107 @@ export default function CreateNewPasswordCard() {
   const allCriteriaMet = Object.values(passwordCriteria).every(Boolean)
   const passwordsMatch = password === confirmPassword && confirmPassword.length > 0
 
-  // GraphQL mutation
+  // GraphQL query and mutation
+  const { 
+    data: queryData, 
+    loading: queryLoading, 
+    error: queryError,
+    refetch: refetchQuery 
+  } = useQuery(PASSWORDRESETREPO, {
+    fetchPolicy: 'network-only', // Always fetch fresh data
+    onCompleted: (data) => {
+      console.log('✅ PASSWORDRESETREPO Query Completed Successfully!')
+      console.log('📊 Full Query Response:', JSON.stringify(data, null, 2))
+      
+      // Log specific fields if they exist
+      if (data.passwordResetRepo) {
+        console.log('🎯 passwordResetRepo data:', data.passwordResetRepo)
+        console.log('🔑 Token status:', data.passwordResetRepo.tokenStatus || 'N/A')
+        console.log('👤 User info:', data.passwordResetRepo.user || 'N/A')
+        console.log('📅 Expiry:', data.passwordResetRepo.expiry || 'N/A')
+        console.log('✅ Valid:', data.passwordResetRepo.isValid || 'N/A')
+      }
+    },
+    onError: (error) => {
+      console.error('❌ PASSWORDRESETREPO Query Error:')
+      console.error('Error name:', error.name)
+      console.error('Error message:', error.message)
+      console.error('Full error:', error)
+      
+      if (error.graphQLErrors) {
+        error.graphQLErrors.forEach((gqlError, index) => {
+          console.error(`GraphQL Error ${index + 1}:`, gqlError)
+          console.error(`  Message: ${gqlError.message}`)
+          console.error(`  Locations:`, gqlError.locations)
+          console.error(`  Path:`, gqlError.path)
+        })
+      }
+      
+      if (error.networkError) {
+        console.error('🌐 Network Error:', error.networkError)
+      }
+    }
+  })
 
-  const {data,loading:temploading,error} = useQuery(PASSWORDRESETREPO);
-  
-  const [resetPasswordMutation] = useMutation(RESETPASSWORD)
+  const [resetPasswordMutation, { 
+    loading: mutationLoading, 
+    error: mutationError, 
+    data: mutationData 
+  }] = useMutation(RESETPASSWORD)
 
-  // Get token from URL (add this effect)
-  React.useEffect(() => {
-    // Extract token from URL query parameters
-    const urlParams = new URLSearchParams(window.location.search)
-    const tokenFromUrl = urlParams.get('token')
-    if (tokenFromUrl) {
-      setToken(tokenFromUrl)
-    } else {
-      // Or you might get it from props or other sources
-      showToast('Invalid or missing reset token', 'error')
-      // Optionally )redirect back to forgot password
-      // router.push('/forgot-password')
+  // Get token from URL
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search)
+      const tokenFromUrl = urlParams.get('token')
+      if (tokenFromUrl) {
+        console.log('🔗 Token extracted from URL:', tokenFromUrl)
+        console.log('📝 Full URL:', window.location.href)
+        setToken(tokenFromUrl)
+        
+        // If query needs variables (like token), you might need to refetch with token
+        // Example: refetchQuery({ token: tokenFromUrl })
+      } else {
+        console.error('❌ No token found in URL')
+        console.log('🔍 URL Search Params:', window.location.search)
+        showToast('Invalid or missing reset token', 'error')
+      }
     }
   }, [])
 
+  // Log query data on mount and when it changes
+  useEffect(() => {
+    console.log('🔄 Query Loading State:', queryLoading)
+    console.log('📥 Query Data:', queryData)
+    console.log('❓ Query Error:', queryError)
+    
+    if (queryData) {
+      console.log('📋 Query Data Structure:')
+      Object.keys(queryData).forEach(key => {
+        console.log(`  ${key}:`, queryData[key])
+      })
+    }
+  }, [queryData, queryLoading, queryError])
+
+  // Log mutation states
+  useEffect(() => {
+    if (mutationData) {
+      console.log('✅ Mutation Successful - Full Data:', mutationData)
+      console.log('🔑 Reset Password Response:', mutationData.resetPassword)
+    }
+    if (mutationError) {
+      console.error('❌ Mutation Error:', mutationError)
+    }
+  }, [mutationData, mutationError])
+
   const handleCreateNewPassword = async () => {
+    console.log('🟢 handleCreateNewPassword triggered')
+    console.log('🔐 Password:', password)
+    console.log('🔏 Confirm Password:', confirmPassword)
+    console.log('🎫 Token:', token)
+    console.log('📊 Criteria met:', allCriteriaMet)
+    console.log('🔁 Passwords match:', passwordsMatch)
+
     if (!password || !confirmPassword) {
       showToast('Please fill in all fields.', 'error')
       return
@@ -81,28 +159,66 @@ export default function CreateNewPasswordCard() {
       return
     }
 
+    // Log current query data before mutation
+    console.log('📈 Current PASSWORDRESETREPO query data:', queryData)
+
     setLoading(true)
     
     try {
-      // Call GraphQL mutation
-      const { data } = await resetPasswordMutation({
+      console.log('🚀 Calling resetPasswordMutation with:', {
+        token,
+        newPassword: password,
+        timestamp: new Date().toISOString()
+      })
+
+      const response = await resetPasswordMutation({
         variables: {
           token: token,
           newPassword: password
         }
       })
-      console.log(data?.resetPassword,"<==");
-      if (data?.resetPassword?.statusText === 'success') {
+
+      console.log('🎯 Mutation Response:', response)
+      console.log('📦 Response Data:', response.data)
+      console.log('🔐 Reset Password Result:', response.data?.resetPassword)
+
+      if (response.data?.resetPassword?.statusText === 'success') {
         setPasswordChanged(true)
         showToast('Password updated successfully!', 'success')
+        
+        console.log('✅ Password reset successful! Details:', {
+          timestamp: new Date().toISOString(),
+          tokenUsed: token,
+          response: response.data?.resetPassword
+        })
       } else {
-        throw new Error('Password reset failed')
+        console.warn('⚠️ Unexpected response format:', response.data)
+        throw new Error(response.data?.resetPassword?.message || 'Password reset failed')
       }
       
     } catch (err: any) {
-      console.error('Password reset failed:', err)
-      // Handle specific GraphQL errors
-      const errorMessage = err.message || 'Failed to update password'
+      console.error('❌ Password reset failed:', err)
+      
+      console.error('🔍 Error Details:', {
+        name: err.name,
+        message: err.message,
+        networkError: err.networkError,
+        graphQLErrors: err.graphQLErrors,
+        stack: err.stack
+      })
+
+      let errorMessage = 'Failed to update password'
+      
+      if (err.graphQLErrors && err.graphQLErrors.length > 0) {
+        errorMessage = err.graphQLErrors[0].message
+        console.error('📝 GraphQL Error Details:', err.graphQLErrors[0])
+      } else if (err.networkError) {
+        errorMessage = 'Network error. Please check your connection.'
+        console.error('🌐 Network Error Details:', err.networkError)
+      } else if (err.message) {
+        errorMessage = err.message
+      }
+      
       showToast(errorMessage, 'error')
     } finally {
       setLoading(false)
@@ -110,17 +226,53 @@ export default function CreateNewPasswordCard() {
   }
 
   const handleBackToLogin = () => {
-    dispatch(setActiveIndex(12)) // Assuming 0 is login index
-    router.push('/');
+    dispatch(setActiveIndex(12))
+    router.push('/')
   }
 
   const togglePasswordVisibility = () => setShowPassword(!showPassword)
   const toggleConfirmPasswordVisibility = () => setShowConfirmPassword(!showConfirmPassword)
- 
-  if(temploading) return 
-  console.log(data);
-  
+
+  if (queryLoading) {
+    console.log('⏳ PASSWORDRESETREPO query is loading...')
+    return (
+      <div className="flex justify-center p-0">
+        <Card className="w-full max-w-2xl shadow-xl border border-green-100 overflow-hidden relative bg-white">
+          <CardContent className="p-8">
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
+              <p className="mt-4 text-gray-600">Loading password reset data...</p>
+              <p className="text-sm text-gray-500 mt-2">(Check console for query logs)</p>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  if (queryError) {
+    console.log('❌ Query error state - rendering error UI')
+    return (
+      <div className="flex justify-center p-0">
+        <Card className="w-full max-w-2xl shadow-xl border border-red-100 overflow-hidden relative bg-white">
+          <CardHeader className="bg-gradient-to-r from-red-800 to-red-600 p-0">
+            <CardTitle className="text-3xl font-bold text-white text-center p-6">
+              Error Loading
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="p-8">
+            <div className="text-center text-red-600">
+              <p>Error loading password reset data. Check console for details.</p>
+              <p className="text-sm mt-2">{queryError.message}</p>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
   if (passwordChanged) {
+    console.log('✅ Password changed successfully - rendering success UI')
     return (
       <div className="flex justify-center p-0">
         <Card className="w-full max-w-2xl shadow-xl border border-green-100 overflow-hidden relative bg-white">
@@ -160,6 +312,9 @@ export default function CreateNewPasswordCard() {
     )
   }
 
+  console.log('🎨 Rendering password reset form')
+  console.log('📊 Current query data available:', queryData ? 'Yes' : 'No')
+
   return (
     <div className="flex justify-center p-0">
       <Card className="w-full max-w-2xl shadow-xl border border-green-100 overflow-hidden relative bg-white">
@@ -175,6 +330,15 @@ export default function CreateNewPasswordCard() {
         </CardHeader>
       
         <CardContent className="p-8 space-y-6">
+          {/* Query Data Info - Optional display */}
+          {queryData && (
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+              <p className="text-sm text-blue-700">
+                <strong>Query Loaded:</strong> Check console for detailed logs
+              </p>
+            </div>
+          )}
+
           {/* New Password */}
           <div className="relative">
             <Label htmlFor="password" className="text-gray-700">New Password</Label>
@@ -280,4 +444,4 @@ export default function CreateNewPasswordCard() {
       </Card>
     </div>
   )
-                }
+}
