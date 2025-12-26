@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
 import AnimatedCityscape from './AnimatedCityscape';
-import AnimatedEarthAtom from './AnimatedEarthAtom';
+
 export default function LogisticsFAQPage() {
   const [activeCategory, setActiveCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
