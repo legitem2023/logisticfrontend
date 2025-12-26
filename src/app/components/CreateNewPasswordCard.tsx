@@ -41,8 +41,8 @@ export default function CreateNewPasswordCard() {
 
   // GraphQL mutation
 
-  const {data,loading,error} = useQuery(PASSWORDRESETREPO);
-  if(loading) return 
+  const {data,loading:temploading,error} = useQuery(PASSWORDRESETREPO);
+  if(temploading) return 
   console.log(data);
   const [resetPasswordMutation] = useMutation(RESETPASSWORD)
 
