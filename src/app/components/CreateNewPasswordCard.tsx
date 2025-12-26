@@ -11,9 +11,9 @@ import { showToast } from '../../../utils/toastify'
 import { FiLock, FiCheck, FiArrowLeft } from 'react-icons/fi'
 import { Eye, EyeOff } from 'lucide-react'
 import CityScape from './AnimatedCityscape'
-import { useMutation } from '@apollo/client'
+import { useMutation, useQuery } from '@apollo/client'
 import { RESETPASSWORD } from '../../../graphql/mutation' // Adjust path as needed
-
+import { PASSWORDRESETREPO  } from '../../../graphql/query'
 export default function CreateNewPasswordCard() {
   const router = useRouter()
   const dispatch = useDispatch()
@@ -40,6 +40,10 @@ export default function CreateNewPasswordCard() {
   const passwordsMatch = password === confirmPassword && confirmPassword.length > 0
 
   // GraphQL mutation
+
+  const {data,loading,error} = useQuery(PASSWORDRESETREPO);
+  if (loading) return
+  console.log(data);
   const [resetPasswordMutation] = useMutation(RESETPASSWORD)
 
   // Get token from URL (add this effect)
@@ -52,7 +56,7 @@ export default function CreateNewPasswordCard() {
     } else {
       // Or you might get it from props or other sources
       showToast('Invalid or missing reset token', 'error')
-      // Optionally redirect back to forgot password
+      // Optionally )redirect back to forgot password
       // router.push('/forgot-password')
     }
   }, [])
