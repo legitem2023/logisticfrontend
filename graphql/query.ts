@@ -1,5 +1,21 @@
 import { gql } from "@apollo/client";
 
+export const PASSWORDRESETREPO = gql`
+query GetAllPasswordResets {
+  getAllPasswordResets {
+    id
+    userId
+    userEmail
+    token
+    expiresAt
+    used
+    createdAt
+  }
+}
+`
+
+
+
 export const WALLET = gql`
 query GetWallet($userId: String!) {
   getWallet(userId: $userId) {
