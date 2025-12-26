@@ -42,8 +42,7 @@ export default function CreateNewPasswordCard() {
   // GraphQL mutation
 
   const {data,loading:temploading,error} = useQuery(PASSWORDRESETREPO);
-  if(temploading) return 
-  console.log(data);
+  
   const [resetPasswordMutation] = useMutation(RESETPASSWORD)
 
   // Get token from URL (add this effect)
@@ -117,7 +116,10 @@ export default function CreateNewPasswordCard() {
 
   const togglePasswordVisibility = () => setShowPassword(!showPassword)
   const toggleConfirmPasswordVisibility = () => setShowConfirmPassword(!showConfirmPassword)
-
+ 
+  if(temploading) return 
+  console.log(data);
+  
   if (passwordChanged) {
     return (
       <div className="flex justify-center p-0">
