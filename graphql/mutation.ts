@@ -1,6 +1,20 @@
 // graphql/mutation.ts
 import { gql } from '@apollo/client';
 
+
+export const SUBMIT_LOGISTICS_CONTACT_FORM = gql`
+  mutation SubmitLogisticsContactForm($formData: ContactFormInput!) {
+    submitLogisticsContactForm(formData: $formData) {
+      success
+      message
+      referenceNumber
+      emailSent
+    }
+  }
+`;
+
+
+
 export const CHANGEPASSWORD = gql`
   mutation ChangePassword($email: String!, $password: String!) {
     editpassword(email: $email, password: $password) {
