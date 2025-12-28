@@ -169,7 +169,7 @@ const LogisticContactFormPage = () => {
               Contact Our Logistics Team
             </CardTitle>
             <p className="text-green-100 text-center mt-2 relative z-10">
-              We're here to help you move forward
+              Were here to help you move forward
             </p>
           </AnimatedCityscape>
         </CardHeader>
