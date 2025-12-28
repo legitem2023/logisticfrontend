@@ -19,24 +19,18 @@ const LogisticContactFormPage = () => {
     service: "",
     message: "",
   });
+  
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitResult, setSubmitResult] = useState(null);
-  const [errors, setErrors] = useState({});
+  
+  // Properly type the errors object
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   // Apollo Mutation Hook
   const [submitContactForm] = useMutation(SUBMIT_LOGISTICS_CONTACT_FORM);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-    // Clear error when user starts typing
-    if (errors[name]) {
-      setErrors((prev) => ({ ...prev, [name]: "" }));
-    }
-  };
-
   const validateForm = () => {
-    const newErrors = {};
+    const newErrors: Record<string, string> = {};
     
     if (!formData.name.trim()) newErrors.name = "Name is required";
     if (!formData.email.trim()) {
@@ -49,6 +43,15 @@ const LogisticContactFormPage = () => {
     
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    // Clear error when user starts typing
+    if (errors[name]) {
+      setErrors((prev) => ({ ...prev, [name]: "" }));
+    }
   };
 
   const handleSubmit = async (e) => {
