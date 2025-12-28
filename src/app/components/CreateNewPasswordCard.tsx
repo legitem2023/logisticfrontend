@@ -182,7 +182,7 @@ export default function CreateNewPasswordCard() {
       console.log('📦 Response Data:', response.data)
       console.log('🔐 Reset Password Result:', response.data?.resetPassword)
 
-      if (response.data?.resetPassword?.statusText === 'success') {
+      if (response.data?.resetPassword?.statusText === 'Password has been successfully reset') {
         setPasswordChanged(true)
         showToast('Password updated successfully!', 'success')
         
