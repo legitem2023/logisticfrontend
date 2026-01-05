@@ -124,6 +124,9 @@ const LogisticsForm = () => {
   const [distances, setDistances] = useState<number[]>([]);
   const [vehicleName, setvehicleName] = useState<string[]>([]);
 
+  // Add address cache ref
+  const addressCache = useRef<Map<string, Suggestion[]>>(new Map());
+
   const closeDetails = () => {
     setShowDetails(false);
   };
@@ -171,17 +174,25 @@ const LogisticsForm = () => {
     setSuggestions([]);
   };
 
-  // Geocoding function using OpenStreetMap Nominatim
-  const geocodeAddress = async (query: string) => {
+  // Enhanced geocoding function with better reliability for Philippine addresses
+  const geocodeAddress = async (query: string): Promise<Suggestion[]> => {
     if (!query || query.length < 3) {
       setSuggestions([]);
       return [];
     }
 
+    const cacheKey = query.toLowerCase().trim();
+    
+    // Check cache first
+    if (addressCache.current.has(cacheKey)) {
+      return addressCache.current.get(cacheKey) || [];
+    }
+
     setIsLoading(true);
     try {
+      // Enhanced Nominatim query specifically for Philippine addresses
       const response = await fetch(
-        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=5`
+        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=8&addressdetails=1&countrycodes=ph&accept-language=en&bounded=1`
       );
 
       if (!response.ok) {
@@ -189,8 +200,9 @@ const LogisticsForm = () => {
       }
 
       const data = await response.json();
-
-      return data.map((result: any) => ({
+      
+      // Process and prioritize results
+      const results = data.map((result: any) => ({
         formatted_address: result.display_name,
         geometry: {
           location: {
@@ -199,15 +211,101 @@ const LogisticsForm = () => {
           }
         }
       }));
+
+      // Cache the results
+      addressCache.current.set(cacheKey, results);
+      
+      // Limit cache size
+      if (addressCache.current.size > 100) {
+        const firstKey = addressCache.current.keys().next().value;
+        addressCache.current.delete(firstKey);
+      }
+
+      return results;
+      
     } catch (error) {
       console.error('Geocoding error:', error);
+      
+      // Fallback to a broader search if the first fails
+      try {
+        const fallbackResponse = await fetch(
+          `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=5&accept-language=en`
+        );
+        
+        if (fallbackResponse.ok) {
+          const fallbackData = await fallbackResponse.json();
+          return fallbackData.map((result: any) => ({
+            formatted_address: result.display_name,
+            geometry: {
+              location: {
+                lat: parseFloat(result.lat),
+                lng: parseFloat(result.lon)
+              }
+            }
+          }));
+        }
+      } catch (fallbackError) {
+        console.error('Fallback geocoding also failed:', fallbackError);
+      }
+      
       return [];
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Debounced address search
+  // Enhanced function to get current location and reverse geocode
+  const getCurrentLocation = async (): Promise<Location | null> => {
+    if (!navigator.geolocation) {
+      showToast("Geolocation is not supported by your browser", 'error');
+      return null;
+    }
+
+    setIsLoading(true);
+    
+    try {
+      const position = await new Promise<GeolocationPosition>((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(resolve, reject, {
+          enableHighAccuracy: true,
+          timeout: 10000,
+          maximumAge: 0
+        });
+      });
+
+      const { latitude, longitude } = position.coords;
+      
+      // Reverse geocode the coordinates to get address
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1`
+      );
+      
+      if (!response.ok) {
+        throw new Error('Reverse geocoding failed');
+      }
+      
+      const data = await response.json();
+      
+      const location: Location = {
+        address: data.display_name,
+        houseNumber: data.address?.house_number || data.address?.house || '',
+        contact: '',
+        name: '',
+        lat: latitude,
+        lng: longitude
+      };
+      
+      return location;
+      
+    } catch (error: any) {
+      console.error('Location error:', error);
+      showToast(`Location error: ${error.message}`, 'error');
+      return null;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Debounced address search with enhanced error handling
   const handleAddressSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
 
@@ -232,7 +330,7 @@ const LogisticsForm = () => {
       } else {
         setSuggestions([]);
       }
-    }, 500);
+    }, 600); // Increased debounce time for better performance
   };
 
   const vehicleDetails = (id: string, data: any) => {
@@ -243,7 +341,7 @@ const LogisticsForm = () => {
     setSelectedVehicle(data.name);
   }
 
-  // Select a suggestion
+  // Select a suggestion with validation
   const selectSuggestion = (suggestion: Suggestion) => {
     const address = suggestion.formatted_address;
 
@@ -266,6 +364,57 @@ const LogisticsForm = () => {
     }
 
     setSuggestions([]);
+    showToast("Address selected successfully", 'success');
+  };
+
+  // Handle current location selection
+  const handleUseCurrentLocation = async () => {
+    const currentLocation = await getCurrentLocation();
+    
+    if (currentLocation && activeLocation) {
+      if (activeLocation.type === 'pickup') {
+        setPickup({
+          ...pickup,
+          address: currentLocation.address,
+          lat: currentLocation.lat,
+          lng: currentLocation.lng,
+          houseNumber: currentLocation.houseNumber
+        });
+      } else if (activeLocation.index !== null) {
+        const updatedDropoffs = [...dropoffs];
+        updatedDropoffs[activeLocation.index] = {
+          ...updatedDropoffs[activeLocation.index],
+          address: currentLocation.address,
+          lat: currentLocation.lat,
+          lng: currentLocation.lng,
+          houseNumber: currentLocation.houseNumber
+        };
+        setDropoffs(updatedDropoffs);
+      }
+      
+      showToast("Current location set successfully", 'success');
+    }
+  };
+
+  // Enhanced validation with coordinate fallback
+  const validateCoordinates = async (location: Location): Promise<Location | null> => {
+    if (location.lat && location.lng) {
+      return location; // Already has coordinates
+    }
+
+    if (location.address && location.address.length >= 3) {
+      // Try to geocode the address to get coordinates
+      const results = await geocodeAddress(location.address);
+      if (results.length > 0) {
+        return {
+          ...location,
+          lat: results[0].geometry.location.lat,
+          lng: results[0].geometry.location.lng
+        };
+      }
+    }
+    
+    return null;
   };
 
   // Generate map preview URL
@@ -385,11 +534,39 @@ const LogisticsForm = () => {
     return true;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!validatePickup(pickup)) return;
-    if (!validateDropoffs(dropoffs)) return;
+    
+    // Validate and get coordinates if missing
+    const validatedPickup = await validateCoordinates(pickup);
+    if (!validatedPickup) {
+      showToast("Could not find coordinates for pickup address. Please select from suggestions or use current location.", 'warning');
+      return;
+    }
+    
+    const validatedDropoffs = await Promise.all(
+      dropoffs.map(async (dropoff) => {
+        const validated = await validateCoordinates(dropoff);
+        if (!validated) {
+          showToast(`Could not find coordinates for dropoff: ${dropoff.address}. Please select from suggestions.`, 'warning');
+        }
+        return validated;
+      })
+    );
+    
+    if (validatedDropoffs.includes(null)) return;
+    
+    // Update with validated coordinates
+    const updatedPickup = validatedPickup as Location;
+    const updatedDropoffs = validatedDropoffs as Location[];
+    
+    setPickup(updatedPickup);
+    setDropoffs(updatedDropoffs);
+    
+    if (!validatePickup(updatedPickup)) return;
+    if (!validateDropoffs(updatedDropoffs)) return;
     if (!validateVehicle(selectedVehicle)) return;
+    
     setShowDetails(true);
   }
 
@@ -445,6 +622,15 @@ const LogisticsForm = () => {
       inputRef.current.focus();
     }
   }, [activeLocation]);
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
 
   // Service data
   const services = [
@@ -690,6 +876,19 @@ const LogisticsForm = () => {
               </div>
             </div>
             <div className="p-5 overflow-y-auto flex-grow space-y-6 bg-white/70 backdrop-blur-md">
+              {/* Current Location Button */}
+              <div className="flex justify-end">
+                <button
+                  type="button"
+                  onClick={handleUseCurrentLocation}
+                  className="flex items-center text-sm text-blue-600 hover:text-blue-800 bg-blue-50 hover:bg-blue-100 px-3 py-2 rounded-lg transition-colors"
+                  disabled={isLoading}
+                >
+                  <LocateFixed className="h-4 w-4 mr-2" />
+                  {isLoading ? "Getting location..." : "Use Current Location"}
+                </button>
+              </div>
+
               {/* Full Address */}
               <div>
                 <label className="block text-sm font-medium mb-2 flex items-center text-gray-700">
@@ -723,7 +922,7 @@ const LogisticsForm = () => {
                 )}
 
                 {suggestions.length > 0 && (
-                  <div className="absolute left-0 right-0 mx-2 mt-2 border border-gray-200 rounded-xl overflow-hidden z-50 shadow-lg bg-white">
+                  <div className="absolute left-0 right-0 mx-2 mt-2 border border-gray-200 rounded-xl overflow-hidden z-50 shadow-lg bg-white max-h-60 overflow-y-auto">
                     {suggestions.map((suggestion, index) => (
                       <div
                         key={index}
@@ -731,7 +930,7 @@ const LogisticsForm = () => {
                         className="p-3 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-none flex items-start"
                       >
                         <MapPin className="h-4 w-4 text-blue-500 mr-2 mt-0.5 flex-shrink-0" />
-                        <span className="truncate text-gray-800">{suggestion.formatted_address}</span>
+                        <span className="text-gray-800 text-sm">{suggestion.formatted_address}</span>
                       </div>
                     ))}
                   </div>
