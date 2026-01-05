@@ -12,7 +12,7 @@ import RiderActivityChart from './Administrator/RiderActivityChart';
 
 import Accounts from './Administrator/Accounts';
 import Profile from './Profile';
-import LogisticsForm from './Sender/LogisticsForm';
+import LogisticsForm from './Sender/LogisticsFormJoined';
 import SettingsPage from './SettingsPage';
 import HelpPage from './HelpPage';
 import LoginCard from './LoginCard';
