@@ -200,7 +200,7 @@ const LogisticsFormJoined = () => {
     setActiveLocation(null);
     setSuggestions([]);
   };
-
+console.log(GEOCODING_CONFIG);
 // Helper functions for hybrid geocoding
 const geocodeWithNominatim = async (query: string): Promise<Suggestion[]> => {
   const params = new URLSearchParams({
