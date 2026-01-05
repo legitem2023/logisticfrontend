@@ -112,10 +112,11 @@ const AnimatedCityScape = ({
         </div>
       </div>
 
-      {/* Delivery Truck - Positioned at 45% left */}
+      {/* Delivery Truck - Positioned at 45% left
       <div className="absolute bottom-4 left-[25%] z-10">
-        <DeliveryTruck className="h-16 w-16" />
+        <DeliveryTruck className="h-16 w-16" /> 
       </div>
+      */}
 
       {/* Motorcycle - Animated to overtake the truck */}
       {/*  <div 
