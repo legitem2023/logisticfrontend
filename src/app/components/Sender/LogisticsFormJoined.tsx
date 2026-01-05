@@ -201,40 +201,46 @@ const LogisticsFormJoined = () => {
     setSuggestions([]);
   };
 
-  // Helper functions for hybrid geocoding
-  const geocodeWithNominatim = async (query: string): Promise<Suggestion[]> => {
-    const params = new URLSearchParams({
-      ...GEOCODING_CONFIG.NOMINATIM.params,
-      q: encodeURIComponent(query)
-    });
+// Helper functions for hybrid geocoding
+const geocodeWithNominatim = async (query: string): Promise<Suggestion[]> => {
+  const params = new URLSearchParams({
+    q: encodeURIComponent(query),
+    format: String(GEOCODING_CONFIG.NOMINATIM.params.format),
+    addressdetails: String(GEOCODING_CONFIG.NOMINATIM.params.addressdetails),
+    countrycodes: String(GEOCODING_CONFIG.NOMINATIM.params.countrycodes),
+    'accept-language': String(GEOCODING_CONFIG.NOMINATIM.params['accept-language']),
+    bounded: String(GEOCODING_CONFIG.NOMINATIM.params.bounded),
+    limit: String(GEOCODING_CONFIG.NOMINATIM.params.limit)
+  });
 
+  try {
     const response = await fetch(
-      `${GEOCODING_CONFIG.NOMINATIM.baseUrl}?${params}`,
-      {
-        headers: {
-          'User-Agent': 'Logistics-App/1.0'
-        }
-      }
+      `${GEOCODING_CONFIG.NOMINATIM.baseUrl}?${params}`
     );
-
-    if (!response.ok) {
-      throw new Error('Nominatim geocoding failed');
-    }
-
-    const data = await response.json();
     
-    return data.map((result: any) => ({
-      formatted_address: result.display_name,
-      geometry: {
-        location: {
-          lat: parseFloat(result.lat),
-          lng: parseFloat(result.lon)
-        }
-      },
-      provider: 'nominatim',
-      confidence: calculateNominatimConfidence(result)
+    if (!response.ok) {
+      throw new Error(`Nominatim geocoding failed: ${response.statusText}`);
+    }
+    
+    const data = await response.json();
+    return data.map((item: any) => ({
+      id: item.place_id,
+      name: item.display_name,
+      lat: parseFloat(item.lat),
+      lng: parseFloat(item.lon),
+      address: {
+        street: item.address?.road || '',
+        city: item.address?.city || item.address?.town || item.address?.village || '',
+        state: item.address?.state || '',
+        country: item.address?.country || '',
+        postalCode: item.address?.postcode || ''
+      }
     }));
-  };
+  } catch (error) {
+    console.error('Nominatim geocoding error:', error);
+    return [];
+  }
+};
 
   const geocodeWithGoogle = async (query: string): Promise<Suggestion[]> => {
     if (!GEOCODING_CONFIG.GOOGLE.apiKey) {
