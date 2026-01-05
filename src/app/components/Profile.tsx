@@ -22,7 +22,7 @@ export default function Profile() {
   }
 
   const rider = data?.getUser;
-
+  console.log(rider);
   if (!rider) return <p>No user found</p>;
 
   return ( 
