@@ -479,7 +479,7 @@ const geocodeWithNominatim = async (query: string): Promise<Suggestion[]> => {
         lat: latitude,
         lng: longitude
       };
-      
+      console.log('Address',location);
       return location;
       
     } catch (error: any) {
