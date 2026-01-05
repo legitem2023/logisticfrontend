@@ -47,6 +47,7 @@ query GetUsers {
     email
     phoneNumber
     vehicleTypeId
+    percentShare
     vehicleType {
       id
       name
@@ -80,6 +81,7 @@ query GetUser($id: String) {
     email
     phoneNumber
     vehicleTypeId
+    percentShare
     vehicleType {
       id
       name
@@ -131,6 +133,7 @@ query GetRiders {
     email
     phoneNumber
     vehicleTypeId
+    percentShare
     vehicleType {
       id
       name
