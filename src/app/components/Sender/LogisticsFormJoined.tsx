@@ -467,7 +467,7 @@ const geocodeWithNominatim = async (query: string): Promise<Suggestion[]> => {
       
       // Try Google first for better accuracy, fallback to Nominatim
       let address = await reverseGeocode(latitude, longitude, 'google');
-      if (!address && GEOCODING_CONFIG.GOOGLE.apiKey) {
+      if (address===null || address==="") {
         address = await reverseGeocode(latitude, longitude, 'nominatim');
       }
       
@@ -479,7 +479,7 @@ const geocodeWithNominatim = async (query: string): Promise<Suggestion[]> => {
         lat: latitude,
         lng: longitude
       };
-      console.log('Address',location);
+      console.log('Address',address);
       return location;
       
     } catch (error: any) {
