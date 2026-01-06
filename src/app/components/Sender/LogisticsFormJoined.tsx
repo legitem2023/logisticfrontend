@@ -50,6 +50,8 @@ interface ActiveLocation {
 }
 
 interface Suggestion {
+  id?: string;
+  name?: string;
   formatted_address: string;
   geometry: {
     location: {
@@ -59,6 +61,13 @@ interface Suggestion {
   };
   provider?: string;
   confidence?: string;
+  address?: {
+    street: string;
+    city: string;
+    state: string;
+    country: string;
+    postalCode: string;
+  };
 }
 
 // Add cache interface
@@ -200,47 +209,76 @@ const LogisticsFormJoined = () => {
     setActiveLocation(null);
     setSuggestions([]);
   };
-console.log(GEOCODING_CONFIG);
-// Helper functions for hybrid geocoding
-const geocodeWithNominatim = async (query: string): Promise<Suggestion[]> => {
-  const params = new URLSearchParams({
-    q: encodeURIComponent(query),
-    format: String(GEOCODING_CONFIG.NOMINATIM.params.format),
-    addressdetails: String(GEOCODING_CONFIG.NOMINATIM.params.addressdetails),
-    countrycodes: String(GEOCODING_CONFIG.NOMINATIM.params.countrycodes),
-    'accept-language': String(GEOCODING_CONFIG.NOMINATIM.params['accept-language']),
-    bounded: String(GEOCODING_CONFIG.NOMINATIM.params.bounded),
-    limit: String(GEOCODING_CONFIG.NOMINATIM.params.limit)
-  });
 
-  try {
-    const response = await fetch(
-      `${GEOCODING_CONFIG.NOMINATIM.baseUrl}?${params}`
-    );
+  // Helper function for confidence calculation
+  const calculateNominatimConfidence = (result: any): string => {
+    let confidence = 'low';
     
-    if (!response.ok) {
-      throw new Error(`Nominatim geocoding failed: ${response.statusText}`);
+    if (result.address) {
+      const hasHouseNumber = result.address.house_number || result.address.house;
+      const hasStreet = result.address.road || result.address.street;
+      const hasCity = result.address.city || result.address.town || result.address.village;
+      
+      if (hasHouseNumber && hasStreet && hasCity) {
+        confidence = 'high';
+      } else if ((hasHouseNumber || hasStreet) && hasCity) {
+        confidence = 'medium';
+      }
     }
     
-    const data = await response.json();
-    return data.map((item: any) => ({
-      id: item.place_id,
-      name: item.display_name,
-      lat: parseFloat(item.lat),
-      lng: parseFloat(item.lon),
-      address: {
-        street: item.address?.road || '',
-        city: item.address?.city || item.address?.town || item.address?.village || '',
-        state: item.address?.state || '',
-        country: item.address?.country || '',
-        postalCode: item.address?.postcode || ''
+    return confidence;
+  };
+
+  // Helper functions for hybrid geocoding
+  const geocodeWithNominatim = async (query: string): Promise<Suggestion[]> => {
+    const params = new URLSearchParams({
+      q: encodeURIComponent(query),
+      format: String(GEOCODING_CONFIG.NOMINATIM.params.format),
+      addressdetails: String(GEOCODING_CONFIG.NOMINATIM.params.addressdetails),
+      countrycodes: String(GEOCODING_CONFIG.NOMINATIM.params.countrycodes),
+      'accept-language': String(GEOCODING_CONFIG.NOMINATIM.params['accept-language']),
+      bounded: String(GEOCODING_CONFIG.NOMINATIM.params.bounded),
+      limit: String(GEOCODING_CONFIG.NOMINATIM.params.limit)
+    });
+
+    try {
+      const response = await fetch(
+        `${GEOCODING_CONFIG.NOMINATIM.baseUrl}?${params}`
+      );
+      
+      if (!response.ok) {
+        throw new Error(`Nominatim geocoding failed: ${response.statusText}`);
       }
-    }));
-  } catch (error) {
-    console.error('Nominatim geocoding error:', error);
-    return [];
-  }
-};
+      
+      const data = await response.json();
+      
+      // Return data that matches the Suggestion interface
+      return data.map((item: any) => ({
+        id: item.place_id,
+        name: item.display_name,
+        formatted_address: item.display_name,
+        geometry: {
+          location: {
+            lat: parseFloat(item.lat),
+            lng: parseFloat(item.lon)
+          }
+        },
+        provider: 'nominatim',
+        confidence: calculateNominatimConfidence(item),
+        address: {
+          street: item.address?.road || '',
+          city: item.address?.city || item.address?.town || item.address?.village || '',
+          state: item.address?.state || '',
+          country: item.address?.country || '',
+          postalCode: item.address?.postcode || ''
+        }
+      }));
+      
+    } catch (error) {
+      console.error('Nominatim geocoding error:', error);
+      return [];
+    }
+  };
 
   const geocodeWithGoogle = async (query: string): Promise<Suggestion[]> => {
     if (!GEOCODING_CONFIG.GOOGLE.apiKey) {
@@ -279,24 +317,6 @@ const geocodeWithNominatim = async (query: string): Promise<Suggestion[]> => {
       provider: 'google',
       confidence: result.geometry.location_type === 'ROOFTOP' ? 'high' : 'medium'
     }));
-  };
-
-  const calculateNominatimConfidence = (result: any): string => {
-    let confidence = 'low';
-    
-    if (result.address) {
-      const hasHouseNumber = result.address.house_number || result.address.house;
-      const hasStreet = result.address.road || result.address.street;
-      const hasCity = result.address.city || result.address.town || result.address.village;
-      
-      if (hasHouseNumber && hasStreet && hasCity) {
-        confidence = 'high';
-      } else if ((hasHouseNumber || hasStreet) && hasCity) {
-        confidence = 'medium';
-      }
-    }
-    
-    return confidence;
   };
 
   const shouldFallbackToGoogle = (nominatimResults: Suggestion[], query: string): boolean => {
@@ -479,7 +499,7 @@ const geocodeWithNominatim = async (query: string): Promise<Suggestion[]> => {
         lat: latitude,
         lng: longitude
       };
-      console.log('Address',address);
+      console.log('Address',location);
       return location;
       
     } catch (error: any) {
