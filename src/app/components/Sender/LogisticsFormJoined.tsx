@@ -1278,12 +1278,12 @@ const LogisticsFormJoined = () => {
                     )}
                   </div>
 
-                  {isLoading && (
+                  {/*isLoading && (
                     <div className="mt-2 text-sm text-gray-500 flex items-center">
                       <Loader2 className="animate-spin h-4 w-4 mr-2 text-blue-500" />
                       Searching for suggestions...
                     </div>
-                  )}
+                  )*/}
 
                   {/* Suggestions Dropdown */}
                   {suggestions.length > 0 && (
