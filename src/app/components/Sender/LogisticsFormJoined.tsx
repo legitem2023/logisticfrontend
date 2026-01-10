@@ -1161,9 +1161,7 @@ const LogisticsFormJoined = () => {
       {/* COMPLETED: Location Details Panel with Real-time Geocoding Map */}
       {activeLocation && (
         <div className="fixed inset-0 z-50 flex items-end md:items-center justify-end md:justify-center bg-black/40 backdrop-blur-sm transition-opacity duration-300">
-          <div className="bg-white/95 backdrop-blur-lg w-full max-w-md rounded-t-3xl md:rounded-3xl shadow-2xl animate-slide-up md:animate-scale-in fixed bottom-0 md:relative h-[85vh] md:h-auto flex flex-col overflow-hidden border border-gray-200">
-            {/* Header */}
-            {showMapCoords && (
+          {showMapCoords && (
                 <div className="absolute top-0 left-0 h-full w-full border-b border-gray-200 flex-shrink-0">
                   <div className="h-full w-full bg-gray-100 relative">
                     {/* OpenStreetMap Preview */}
@@ -1203,6 +1201,9 @@ const LogisticsFormJoined = () => {
                   </div>
                 </div>
               )}
+          <div className="bg-white/95 backdrop-blur-lg w-full max-w-md rounded-t-3xl md:rounded-3xl shadow-2xl animate-slide-up md:animate-scale-in fixed bottom-0 md:relative h-[85vh] md:h-auto flex flex-col overflow-hidden border border-gray-200">
+            {/* Header */}
+            
             <div className="p-5 border-b border-gray-200 bg-white/90 backdrop-blur-lg sticky top-0 z-10">
               <div className="flex justify-between items-center">
                 <h2 className="text-xl font-semibold flex items-center text-gray-800">
