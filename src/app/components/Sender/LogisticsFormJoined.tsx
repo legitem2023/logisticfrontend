@@ -154,12 +154,15 @@ const LogisticsFormJoined = () => {
   const [mapPreview, setMapPreview] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const geocodeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [showDetails, setShowDetails] = useState<boolean>(false);
   const [useBaseCost, setBaseCost] = useState<number | null>(data?.getVehicleTypes[0]?.cost || null);
   const [usePerKmCost, setPerKmCost] = useState<number | null>(data?.getVehicleTypes[0]?.perKmRate || null);
   const [distances, setDistances] = useState<number[]>([]);
   const [vehicleName, setvehicleName] = useState<string[]>([]);
   const [selectedSuggestionCoords, setSelectedSuggestionCoords] = useState<{lat: number, lng: number} | null>(null);
+  const [typingCoordinates, setTypingCoordinates] = useState<{lat: number, lng: number} | null>(null);
+  const [isGeocodingTyping, setIsGeocodingTyping] = useState<boolean>(false);
 
   // Add address cache ref with proper typing
   const addressCache = useRef<Map<string, CacheEntry>>(new Map());
@@ -205,12 +208,14 @@ const LogisticsFormJoined = () => {
     setActiveLocation({ type, index });
     setSuggestions([]);
     setSelectedSuggestionCoords(null);
+    setTypingCoordinates(null);
   };
 
   const closeLocationDetails = () => {
     setActiveLocation(null);
     setSuggestions([]);
     setSelectedSuggestionCoords(null);
+    setTypingCoordinates(null);
   };
 
   // Helper function for confidence calculation
@@ -412,6 +417,58 @@ const LogisticsFormJoined = () => {
     }
   };
 
+  // NEW: Real-time geocoding while typing
+  const geocodeWhileTyping = async (query: string) => {
+    if (!query || query.length < 5) { // Increased minimum length for better accuracy
+      setTypingCoordinates(null);
+      return;
+    }
+
+    setIsGeocodingTyping(true);
+    
+    try {
+      const results = await geocodeAddress(query, 'auto');
+      
+      if (results.length > 0) {
+        // Get the best result (highest confidence)
+        const bestResult = results.reduce((best, current) => {
+          const bestScore = best.confidence === 'high' ? 3 : best.confidence === 'medium' ? 2 : 1;
+          const currentScore = current.confidence === 'high' ? 3 : current.confidence === 'medium' ? 2 : 1;
+          return currentScore > bestScore ? current : best;
+        }, results[0]);
+
+        setTypingCoordinates({
+          lat: bestResult.geometry.location.lat,
+          lng: bestResult.geometry.location.lng
+        });
+
+        // Also update the location state with coordinates
+        if (activeLocation?.type === 'pickup') {
+          setPickup(prev => ({
+            ...prev,
+            lat: bestResult.geometry.location.lat,
+            lng: bestResult.geometry.location.lng
+          }));
+        } else if (activeLocation?.index !== null) {
+          const updatedDropoffs = [...dropoffs];
+          updatedDropoffs[activeLocation.index] = {
+            ...updatedDropoffs[activeLocation.index],
+            lat: bestResult.geometry.location.lat,
+            lng: bestResult.geometry.location.lng
+          };
+          setDropoffs(updatedDropoffs);
+        }
+      } else {
+        setTypingCoordinates(null);
+      }
+    } catch (error) {
+      console.error('Real-time geocoding error:', error);
+      setTypingCoordinates(null);
+    } finally {
+      setIsGeocodingTyping(false);
+    }
+  };
+
   // Enhanced reverse geocoding function
   const reverseGeocode = async (lat: number, lng: number, provider: 'nominatim' | 'google' = 'nominatim'): Promise<string> => {
     const cacheKey = `reverse:${lat.toFixed(6)}:${lng.toFixed(6)}:${provider}`;
@@ -514,7 +571,7 @@ const LogisticsFormJoined = () => {
     }
   };
 
-  // Debounced address search with hybrid geocoding
+  // Debounced address search with hybrid geocoding AND real-time geocoding
   const handleAddressSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
 
@@ -526,10 +583,15 @@ const LogisticsFormJoined = () => {
       setDropoffs(updatedDropoffs);
     }
 
+    // Clear existing timeouts
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
     }
+    if (geocodeTimeoutRef.current) {
+      clearTimeout(geocodeTimeoutRef.current);
+    }
 
+    // Timeout for suggestions
     timeoutRef.current = setTimeout(async () => {
       if (value.length > 2) {
         const results = await geocodeAddress(value, 'auto');
@@ -538,6 +600,11 @@ const LogisticsFormJoined = () => {
         setSuggestions([]);
       }
     }, 600);
+
+    // Separate timeout for real-time geocoding (slower to avoid too many API calls)
+    geocodeTimeoutRef.current = setTimeout(async () => {
+      await geocodeWhileTyping(value);
+    }, 1000);
   };
 
   const vehicleDetails = (id: string, data: any) => {
@@ -575,6 +642,7 @@ const LogisticsFormJoined = () => {
       lat: suggestion.geometry.location.lat,
       lng: suggestion.geometry.location.lng
     });
+    setTypingCoordinates(null); // Clear typing coordinates
 
     // Show which provider was used (optional)
     if (suggestion.provider) {
@@ -602,6 +670,7 @@ const LogisticsFormJoined = () => {
           lat: currentLocation.lat!,
           lng: currentLocation.lng!
         });
+        setTypingCoordinates(null);
       } else if (activeLocation.index !== null) {
         const updatedDropoffs = [...dropoffs];
         updatedDropoffs[activeLocation.index] = {
@@ -616,6 +685,7 @@ const LogisticsFormJoined = () => {
           lat: currentLocation.lat!,
           lng: currentLocation.lng!
         });
+        setTypingCoordinates(null);
       }
       
       showToast("Current location set successfully", 'success');
@@ -849,11 +919,14 @@ const LogisticsFormJoined = () => {
     }
   }, [activeLocation]);
 
-  // Cleanup timeout on unmount
+  // Cleanup timeouts on unmount
   useEffect(() => {
     return () => {
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
+      }
+      if (geocodeTimeoutRef.current) {
+        clearTimeout(geocodeTimeoutRef.current);
       }
     };
   }, []);
@@ -867,6 +940,9 @@ const LogisticsFormJoined = () => {
 
   if (loading) return <LogisticFormLoading />;
   if (error) return <p>Error: {error.message}</p>;
+
+  // Determine which coordinates to show on map
+  const showMapCoords = selectedSuggestionCoords || typingCoordinates;
 
   return (
     <div className="w-full max-w-7xl mx-auto">
@@ -1082,11 +1158,12 @@ const LogisticsFormJoined = () => {
         </form>
       </div>
 
-      {/* Location Details Slide-up Panel - MAP ONLY SHOWS WHEN COORDINATES ARE FOUND */}
+      {/* COMPLETED: Location Details Panel with Real-time Geocoding Map */}
       {activeLocation && (
         <div className="fixed inset-0 z-50 flex items-end md:items-center justify-end md:justify-center bg-black/40 backdrop-blur-sm transition-opacity duration-300">
-          <div className="bg-white/90 backdrop-blur-lg w-full max-w-md rounded-t-3xl md:rounded-3xl shadow-2xl animate-slide-up md:animate-scale-in fixed bottom-0 h-auto flex flex-col overflow-hidden border border-gray-200">
-            <div className="p-5 border-b border-gray-200 bg-white/80 backdrop-blur-lg">
+          <div className="bg-white/95 backdrop-blur-lg w-full max-w-md rounded-t-3xl md:rounded-3xl shadow-2xl animate-slide-up md:animate-scale-in fixed bottom-0 md:relative h-[85vh] md:h-auto flex flex-col overflow-hidden border border-gray-200">
+            {/* Header */}
+            <div className="p-5 border-b border-gray-200 bg-white/90 backdrop-blur-lg sticky top-0 z-10">
               <div className="flex justify-between items-center">
                 <h2 className="text-xl font-semibold flex items-center text-gray-800">
                   {activeLocation.type === 'pickup'
@@ -1102,198 +1179,229 @@ const LogisticsFormJoined = () => {
               </div>
             </div>
             
-            {/* MAP PREVIEW SECTION - Only shows when coordinates are found */}
-            {selectedSuggestionCoords && (
-              <div className="h-48 border-b border-gray-200">
-                <div className="h-full w-full bg-gray-100">
-                  {/* OpenStreetMap Preview */}
-                  <iframe
-                    width="100%"
-                    height="100%"
-                    frameBorder="0"
-                    scrolling="no"
-                    marginHeight={0}
-                    marginWidth={0}
-                    src={`https://www.openstreetmap.org/export/embed.html?bbox=${
-                      selectedSuggestionCoords.lng - 0.01
-                    },${
-                      selectedSuggestionCoords.lat - 0.01
-                    },${
-                      selectedSuggestionCoords.lng + 0.01
-                    },${
-                      selectedSuggestionCoords.lat + 0.01
-                    }&marker=${selectedSuggestionCoords.lat},${selectedSuggestionCoords.lng}&layer=mapnik`}
-                    style={{ border: 0 }}
-                    title="Location Preview"
-                  />
-                  <div className="text-xs text-gray-500 p-2 bg-white/80 text-center">
-                    <small>OpenStreetMap Preview - Address located</small>
+            {/* Scrollable Content Area */}
+            <div className="overflow-y-auto flex-1">
+              {/* Map Preview Section - Shows coordinates from EITHER suggestions OR typing */}
+              {showMapCoords && (
+                <div className="h-48 border-b border-gray-200 flex-shrink-0">
+                  <div className="h-full w-full bg-gray-100 relative">
+                    {/* OpenStreetMap Preview */}
+                    <iframe
+                      width="100%"
+                      height="100%"
+                      frameBorder="0"
+                      scrolling="no"
+                      marginHeight={0}
+                      marginWidth={0}
+                      src={`https://www.openstreetmap.org/export/embed.html?bbox=${
+                        showMapCoords.lng - 0.01
+                      },${
+                        showMapCoords.lat - 0.01
+                      },${
+                        showMapCoords.lng + 0.01
+                      },${
+                        showMapCoords.lat + 0.01
+                      }&marker=${showMapCoords.lat},${showMapCoords.lng}&layer=mapnik`}
+                      style={{ border: 0 }}
+                      title="Location Preview"
+                      className="absolute inset-0"
+                    />
+                    <div className="absolute bottom-0 left-0 right-0 text-xs text-gray-500 p-2 bg-white/80 text-center">
+                      <small>
+                        {selectedSuggestionCoords 
+                          ? "OpenStreetMap Preview - Address selected" 
+                          : "OpenStreetMap Preview - Detected from typing"}
+                      </small>
+                    </div>
+                    {isGeocodingTyping && (
+                      <div className="absolute top-2 left-2 bg-white/90 px-2 py-1 rounded text-xs flex items-center">
+                        <Loader2 className="animate-spin h-3 w-3 mr-1" />
+                        Detecting location...
+                      </div>
+                    )}
                   </div>
                 </div>
-              </div>
-            )}
-            
-            <div className="p-5 overflow-y-auto flex-grow space-y-6 bg-white/70 backdrop-blur-md">
-              {/* Current Location Button */}
-              <div className="flex justify-end">
-                <button
-                  type="button"
-                  onClick={handleUseCurrentLocation}
-                  className="flex items-center text-sm text-blue-600 hover:text-blue-800 bg-blue-50 hover:bg-blue-100 px-3 py-2 rounded-lg transition-colors"
-                  disabled={isLoading}
-                >
-                  <LocateFixed className="h-4 w-4 mr-2" />
-                  {isLoading ? "Getting location..." : "Use Current Location"}
-                </button>
-              </div>
+              )}
+              
+              {/* Form Fields */}
+              <div className="p-5 space-y-6">
+                {/* Current Location Button */}
+                <div className="flex justify-end">
+                  <button
+                    type="button"
+                    onClick={handleUseCurrentLocation}
+                    className="flex items-center text-sm text-blue-600 hover:text-blue-800 bg-blue-50 hover:bg-blue-100 px-3 py-2 rounded-lg transition-colors"
+                    disabled={isLoading}
+                  >
+                    <LocateFixed className="h-4 w-4 mr-2" />
+                    {isLoading ? "Getting location..." : "Use Current Location"}
+                  </button>
+                </div>
 
-              {/* Full Address */}
-              <div>
-                <label className="block text-sm font-medium mb-2 flex items-center text-gray-700">
-                  <MapPin className="h-4 w-4 mr-1 text-gray-500" />
-                  Full Address
-                </label>
+                {/* Full Address Input - Kept at top for mobile keyboard */}
                 <div className="relative">
-                  <input
-                    ref={inputRef}
-                    type="text"
-                    name="address"
-                    value={
-                      activeLocation.type === 'pickup'
-                        ? pickup.address
-                        : dropoffs[activeLocation.index!].address
-                    }
-                    onChange={handleAddressSearch}
-                    className="w-full p-3 border border-gray-300 rounded-xl pl-10 shadow-sm focus:ring-2 focus:ring-blue-400 transition"
-                    placeholder="Search address..."
-                  />
-                  <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
-                    <MapPin className="h-5 w-5" />
+                  <label className="block text-sm font-medium mb-2 flex items-center text-gray-700">
+                    <MapPin className="h-4 w-4 mr-1 text-gray-500" />
+                    Full Address
+                    {typingCoordinates && !selectedSuggestionCoords && (
+                      <span className="ml-2 text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">
+                        Location detected
+                      </span>
+                    )}
+                  </label>
+                  <div className="relative">
+                    <input
+                      ref={inputRef}
+                      type="text"
+                      name="address"
+                      value={
+                        activeLocation.type === 'pickup'
+                          ? pickup.address
+                          : dropoffs[activeLocation.index!].address
+                      }
+                      onChange={handleAddressSearch}
+                      className="w-full p-3 border border-gray-300 rounded-xl pl-10 shadow-sm focus:ring-2 focus:ring-blue-400 transition text-base"
+                      placeholder="Search address..."
+                      autoComplete="off"
+                    />
+                    <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                      <MapPin className="h-5 w-5" />
+                    </div>
+                    {isGeocodingTyping && (
+                      <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                        <Loader2 className="animate-spin h-4 w-4 text-blue-500" />
+                      </div>
+                    )}
                   </div>
+
+                  {isLoading && (
+                    <div className="mt-2 text-sm text-gray-500 flex items-center">
+                      <Loader2 className="animate-spin h-4 w-4 mr-2 text-blue-500" />
+                      Searching for suggestions...
+                    </div>
+                  )}
+
+                  {/* Suggestions Dropdown */}
+                  {suggestions.length > 0 && (
+                    <div className="absolute left-0 right-0 mt-2 border border-gray-200 rounded-xl overflow-hidden z-50 shadow-lg bg-white max-h-60 overflow-y-auto">
+                      {suggestions.map((suggestion, index) => (
+                        <div
+                          key={index}
+                          onClick={() => selectSuggestion(suggestion)}
+                          className="p-3 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-none flex items-start"
+                        >
+                          <MapPin className="h-4 w-4 text-blue-500 mr-2 mt-0.5 flex-shrink-0" />
+                          <div className="flex-1">
+                            <span className="text-gray-800 text-sm block">{suggestion.formatted_address}</span>
+                            {suggestion.provider && (
+                              <span className="text-xs text-gray-500 mt-1 block">
+                                Powered by {suggestion.provider === 'google' ? 'Google Maps' : 'OpenStreetMap'}
+                                {suggestion.confidence && ` • ${suggestion.confidence} confidence`}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
 
-                {isLoading && (
-                  <div className="mt-2 text-sm text-gray-500 flex items-center">
-                    <Loader2 className="animate-spin h-4 w-4 mr-2 text-blue-500" />
-                    Searching...
-                  </div>
-                )}
-
-                {suggestions.length > 0 && (
-                  <div className="absolute left-0 right-0 mx-2 mt-2 border border-gray-200 rounded-xl overflow-hidden z-50 shadow-lg bg-white max-h-60 overflow-y-auto">
-                    {suggestions.map((suggestion, index) => (
-                      <div
-                        key={index}
-                        onClick={() => selectSuggestion(suggestion)}
-                        className="p-3 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-none flex items-start"
-                      >
-                        <MapPin className="h-4 w-4 text-blue-500 mr-2 mt-0.5 flex-shrink-0" />
-                        <div className="flex-1">
-                          <span className="text-gray-800 text-sm block">{suggestion.formatted_address}</span>
-                          {suggestion.provider && (
-                            <span className="text-xs text-gray-500 mt-1 block">
-                              Powered by {suggestion.provider === 'google' ? 'Google Maps' : 'OpenStreetMap'}
-                              {suggestion.confidence && ` • ${suggestion.confidence} confidence`}
-                            </span>
-                          )}
+                {/* Additional Form Fields */}
+                <div className="space-y-6">
+                  {/* House Number & Contact */}
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium mb-2 flex items-center text-gray-700">
+                        <Home className="h-4 w-4 mr-1 text-gray-500" />
+                        House Number
+                      </label>
+                      <div className="relative">
+                        <input
+                          type="text"
+                          name="houseNumber"
+                          value={
+                            activeLocation.type === 'pickup'
+                              ? pickup.houseNumber
+                              : dropoffs[activeLocation.index!].houseNumber
+                          }
+                          onChange={(e) =>
+                            activeLocation.type === 'pickup'
+                              ? handlePickupChange(e)
+                              : handleDropoffChange(activeLocation.index!, e)
+                          }
+                          className="w-full p-3 border border-gray-300 rounded-xl pl-10 shadow-sm focus:ring-2 focus:ring-blue-400 transition text-base"
+                          placeholder="No."
+                        />
+                        <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                          <Home className="h-5 w-5" />
                         </div>
                       </div>
-                    ))}
-                  </div>
-                )}
-              </div>
+                    </div>
 
-              {/* House Number & Contact */}
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium mb-2 flex items-center text-gray-700">
-                    <Home className="h-4 w-4 mr-1 text-gray-500" />
-                    House Number
-                  </label>
-                  <div className="relative">
-                    <input
-                      type="text"
-                      name="houseNumber"
-                      value={
-                        activeLocation.type === 'pickup'
-                          ? pickup.houseNumber
-                          : dropoffs[activeLocation.index!].houseNumber
-                      }
-                      onChange={(e) =>
-                        activeLocation.type === 'pickup'
-                          ? handlePickupChange(e)
-                          : handleDropoffChange(activeLocation.index!, e)
-                      }
-                      className="w-full p-3 border border-gray-300 rounded-xl pl-10 shadow-sm focus:ring-2 focus:ring-blue-400 transition"
-                      placeholder="No."
-                    />
-                    <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
-                      <Home className="h-5 w-5" />
+                    <div>
+                      <label className="block text-sm font-medium mb-2 flex items-center text-gray-700">
+                        <Phone className="h-4 w-4 mr-1 text-gray-500" />
+                        Contact Number
+                      </label>
+                      <div className="relative">
+                        <input
+                          type="tel"
+                          name="contact"
+                          value={
+                            activeLocation.type === 'pickup'
+                              ? pickup.contact
+                              : dropoffs[activeLocation.index!].contact
+                          }
+                          onChange={(e) =>
+                            activeLocation.type === 'pickup'
+                              ? handlePickupChange(e)
+                              : handleDropoffChange(activeLocation.index!, e)
+                          }
+                          className="w-full p-3 border border-gray-300 rounded-xl pl-10 shadow-sm focus:ring-2 focus:ring-blue-400 transition text-base"
+                          placeholder="Phone number"
+                          inputMode="tel"
+                        />
+                        <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                          <Phone className="h-5 w-5" />
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                <div>
-                  <label className="block text-sm font-medium mb-2 flex items-center text-gray-700">
-                    <Phone className="h-4 w-4 mr-1 text-gray-500" />
-                    Contact Number
-                  </label>
-                  <div className="relative">
-                    <input
-                      type="tel"
-                      name="contact"
-                      value={
-                        activeLocation.type === 'pickup'
-                          ? pickup.contact
-                          : dropoffs[activeLocation.index!].contact
-                      }
-                      onChange={(e) =>
-                        activeLocation.type === 'pickup'
-                          ? handlePickupChange(e)
-                          : handleDropoffChange(activeLocation.index!, e)
-                      }
-                      className="w-full p-3 border border-gray-300 rounded-xl pl-10 shadow-sm focus:ring-2 focus:ring-blue-400 transition"
-                      placeholder="Phone number"
-                    />
-                    <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
-                      <Phone className="h-5 w-5" />
+                  {/* Recipient Name */}
+                  <div>
+                    <label className="block text-sm font-medium mb-2 flex items-center text-gray-700">
+                      <User className="h-4 w-4 mr-1 text-gray-500" />
+                      Recipient Name
+                    </label>
+                    <div className="relative">
+                      <input
+                        type="text"
+                        name="name"
+                        value={
+                          activeLocation.type === 'pickup'
+                            ? pickup.name
+                            : dropoffs[activeLocation.index!].name
+                        }
+                        onChange={(e) =>
+                          activeLocation.type === 'pickup'
+                            ? handlePickupChange(e)
+                            : handleDropoffChange(activeLocation.index!, e)
+                        }
+                        className="w-full p-3 border border-gray-300 rounded-xl pl-10 shadow-sm focus:ring-2 focus:ring-blue-400 transition text-base"
+                        placeholder="Full name"
+                      />
+                      <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                        <User className="h-5 w-5" />
+                      </div>
                     </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Recipient Name */}
-              <div>
-                <label className="block text-sm font-medium mb-2 flex items-center text-gray-700">
-                  <User className="h-4 w-4 mr-1 text-gray-500" />
-                  Recipient Name
-                </label>
-                <div className="relative">
-                  <input
-                    type="text"
-                    name="name"
-                    value={
-                      activeLocation.type === 'pickup'
-                        ? pickup.name
-                        : dropoffs[activeLocation.index!].name
-                    }
-                    onChange={(e) =>
-                      activeLocation.type === 'pickup'
-                        ? handlePickupChange(e)
-                        : handleDropoffChange(activeLocation.index!, e)
-                    }
-                    className="w-full p-3 border border-gray-300 rounded-xl pl-10 shadow-sm focus:ring-2 focus:ring-blue-400 transition"
-                    placeholder="Full name"
-                  />
-                  <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
-                    <User className="h-5 w-5" />
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Footer Save Button */}
-            <div className="p-5 border-t border-gray-200 bg-white/80 backdrop-blur-lg">
+            {/* Save Button */}
+            <div className="p-5 border-t border-gray-200 bg-white/90 backdrop-blur-lg sticky bottom-0">
               <button
                 type="button"
                 onClick={closeLocationDetails}
