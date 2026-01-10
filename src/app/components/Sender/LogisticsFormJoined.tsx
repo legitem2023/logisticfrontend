@@ -1,5 +1,5 @@
 'use client';
- 
+
 import { Icon } from '@iconify/react';
 import { showToast } from '../../../../utils/toastify';
 import { getDistanceInKm } from '../../../../utils/getDistanceInKm';
@@ -14,6 +14,10 @@ import LogisticFormLoading from '../Loadings/LogisticFormLoading';
 import { useSelector, useDispatch } from "react-redux";
 import { selectTempUserId } from '../../../../Redux/tempUserSlice';
 import { setActiveIndex } from '../../../../Redux/activeIndexSlice';
+
+// Add Leaflet imports
+import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
+import L from 'leaflet';
 
 import {
   Home,
@@ -34,6 +38,14 @@ import {
 } from 'lucide-react';
 import { decryptToken } from '../../../../utils/decryptToken';
 import ClassicConfirmForm from './ClassicConfirmForm';
+
+// Fix for Leaflet marker icons
+delete (L.Icon.Default.prototype as any)._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: '/leaflet/images/marker-icon-2x.png',
+  iconUrl: '/leaflet/images/marker-icon.png',
+  shadowUrl: '/leaflet/images/marker-shadow.png',
+});
 
 interface Location {
   address: string;
@@ -94,6 +106,17 @@ const GEOCODING_CONFIG = {
     apiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ''
   }
 };
+
+// Add component to update map view
+function UpdateMapView({ coords }: { coords: [number, number] }) {
+  const map = useMap();
+  useEffect(() => {
+    if (coords) {
+      map.setView(coords, 15);
+    }
+  }, [coords, map]);
+  return null;
+}
 
 const LogisticsFormJoined = () => {
   const dispatch = useDispatch();
@@ -159,6 +182,7 @@ const LogisticsFormJoined = () => {
   const [usePerKmCost, setPerKmCost] = useState<number | null>(data?.getVehicleTypes[0]?.perKmRate || null);
   const [distances, setDistances] = useState<number[]>([]);
   const [vehicleName, setvehicleName] = useState<string[]>([]);
+  const [currentMapCenter, setCurrentMapCenter] = useState<[number, number]>([14.5995, 120.9842]); // Manila
 
   // Add address cache ref with proper typing
   const addressCache = useRef<Map<string, CacheEntry>>(new Map());
@@ -379,6 +403,12 @@ const LogisticsFormJoined = () => {
         results = await geocodeWithGoogle(query);
       }
       
+      // Update map center to first result if available
+      if (results.length > 0) {
+        const firstResult = results[0];
+        setCurrentMapCenter([firstResult.geometry.location.lat, firstResult.geometry.location.lng]);
+      }
+      
       addressCache.current.set(cacheKey, {
         results,
         timestamp: Date.now()
@@ -485,6 +515,9 @@ const LogisticsFormJoined = () => {
 
       const { latitude, longitude } = position.coords;
       
+      // Update map center to current location
+      setCurrentMapCenter([latitude, longitude]);
+      
       // Try Google first for better accuracy, fallback to Nominatim
       let address = await reverseGeocode(latitude, longitude, 'google');
       if (address===null || address==="") {
@@ -556,6 +589,7 @@ const LogisticsFormJoined = () => {
         lat: suggestion.geometry.location.lat,
         lng: suggestion.geometry.location.lng
       });
+      setCurrentMapCenter([suggestion.geometry.location.lat, suggestion.geometry.location.lng]);
     } else if (activeLocation?.index !== null) {
       const updatedDropoffs = [...dropoffs];
       updatedDropoffs[activeLocation.index] = {
@@ -565,6 +599,7 @@ const LogisticsFormJoined = () => {
         lng: suggestion.geometry.location.lng
       };
       setDropoffs(updatedDropoffs);
+      setCurrentMapCenter([suggestion.geometry.location.lat, suggestion.geometry.location.lng]);
     }
 
     // Show which provider was used (optional)
@@ -1065,10 +1100,98 @@ const LogisticsFormJoined = () => {
         </form>
       </div>
 
-      {/* Location Details Slide-up Panel */}
+      {/* ENHANCED Location Details Slide-up Panel with Map Background */}
       {activeLocation && (
-        <div className="fixed inset-0 z-50 flex items-end md:items-center justify-end md:justify-center bg-black/40 backdrop-blur-sm transition-opacity duration-300">
-          <div className="bg-white/90 backdrop-blur-lg w-full max-w-md rounded-t-3xl md:rounded-3xl shadow-2xl animate-slide-up md:animate-scale-in fixed bottom-0 h-auto flex flex-col overflow-hidden border border-gray-200">
+        <div className="fixed inset-0 z-50">
+          {/* Map Background - Shows real-time results */}
+          <div className="absolute inset-0">
+            <MapContainer
+              center={currentMapCenter}
+              zoom={13}
+              className="w-full h-full"
+              zoomControl={false}
+              attributionControl={false}
+            >
+              <TileLayer
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+              />
+              
+              <UpdateMapView coords={currentMapCenter} />
+              
+              {/* Show marker for selected location */}
+              {(activeLocation.type === 'pickup' && pickup.lat && pickup.lng) && (
+                <Marker 
+                  position={[pickup.lat, pickup.lng]}
+                  icon={L.icon({
+                    iconUrl: '/leaflet/images/marker-icon.png',
+                    iconRetinaUrl: '/leaflet/images/marker-icon-2x.png',
+                    shadowUrl: '/leaflet/images/marker-shadow.png',
+                    iconSize: [25, 41],
+                    iconAnchor: [12, 41],
+                    popupAnchor: [1, -34],
+                  })}
+                >
+                  <Popup className="text-sm">
+                    <div className="font-semibold">
+                      {activeLocation.type === 'pickup' ? 'Pickup Location' : `Drop-off #${activeLocation.index! + 1}`}
+                    </div>
+                    <div className="text-gray-600 mt-1">{pickup.address}</div>
+                  </Popup>
+                </Marker>
+              )}
+              
+              {(activeLocation.type === 'dropoff' && activeLocation.index !== null && 
+                dropoffs[activeLocation.index].lat && dropoffs[activeLocation.index].lng) && (
+                <Marker 
+                  position={[dropoffs[activeLocation.index].lat!, dropoffs[activeLocation.index].lng!]}
+                  icon={L.icon({
+                    iconUrl: '/leaflet/images/marker-icon.png',
+                    iconRetinaUrl: '/leaflet/images/marker-icon-2x.png',
+                    shadowUrl: '/leaflet/images/marker-shadow.png',
+                    iconSize: [25, 41],
+                    iconAnchor: [12, 41],
+                    popupAnchor: [1, -34],
+                  })}
+                >
+                  <Popup className="text-sm">
+                    <div className="font-semibold">
+                      Drop-off #{activeLocation.index + 1}
+                    </div>
+                    <div className="text-gray-600 mt-1">{dropoffs[activeLocation.index].address}</div>
+                  </Popup>
+                </Marker>
+              )}
+              
+              {/* Show blue markers for search suggestions */}
+              {suggestions.map((suggestion, index) => (
+                <Marker 
+                  key={index} 
+                  position={[suggestion.geometry.location.lat, suggestion.geometry.location.lng]}
+                  eventHandlers={{
+                    click: () => selectSuggestion(suggestion)
+                  }}
+                  icon={L.divIcon({
+                    html: `<div class="w-5 h-5 bg-blue-500 rounded-full border-2 border-white shadow-lg cursor-pointer flex items-center justify-center">
+                            <div class="w-2 h-2 bg-white rounded-full"></div>
+                          </div>`,
+                    className: 'suggestion-marker',
+                    iconSize: [20, 20],
+                    iconAnchor: [10, 10]
+                  })}
+                >
+                  <Popup className="text-sm max-w-xs">
+                    <div className="font-semibold">Search Result</div>
+                    <div className="text-gray-600 mt-1 text-xs">{suggestion.formatted_address}</div>
+                    <div className="mt-2 text-xs text-blue-500">Click to select</div>
+                  </Popup>
+                </Marker>
+              ))}
+            </MapContainer>
+          </div>
+          
+          {/* Foreground Form Panel */}
+          <div className="bg-white/90 backdrop-blur-lg w-full max-w-md rounded-t-3xl md:rounded-3xl shadow-2xl animate-slide-up fixed bottom-0 h-2/3 flex flex-col overflow-hidden border border-gray-200 z-10">
             <div className="p-5 border-b border-gray-200 bg-white/80 backdrop-blur-lg">
               <div className="flex justify-between items-center">
                 <h2 className="text-xl font-semibold flex items-center text-gray-800">
@@ -1078,12 +1201,13 @@ const LogisticsFormJoined = () => {
                 </h2>
                 <button
                   onClick={closeLocationDetails}
-                  className="text-gray-500 hover:text-gray-700 p-2 rounded-full hover:bg-gray-200 transition"
+                  className="text-gray-500 hover:text-gray-700 p-2 rounded-full hover:bg-gray-200 transition bg-white/80 backdrop-blur-sm"
                 >
                   <X className="h-5 w-5" />
                 </button>
               </div>
             </div>
+            
             <div className="p-5 overflow-y-auto flex-grow space-y-6 bg-white/70 backdrop-blur-md">
               {/* Current Location Button */}
               <div className="flex justify-end">
@@ -1115,7 +1239,7 @@ const LogisticsFormJoined = () => {
                         : dropoffs[activeLocation.index!].address
                     }
                     onChange={handleAddressSearch}
-                    className="w-full p-3 border border-gray-300 rounded-xl pl-10 shadow-sm focus:ring-2 focus:ring-blue-400 transition"
+                    className="w-full p-3 border border-gray-300 rounded-xl pl-10 shadow-sm focus:ring-2 focus:ring-blue-400 transition bg-white/90"
                     placeholder="Search address..."
                   />
                   <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
@@ -1175,7 +1299,7 @@ const LogisticsFormJoined = () => {
                           ? handlePickupChange(e)
                           : handleDropoffChange(activeLocation.index!, e)
                       }
-                      className="w-full p-3 border border-gray-300 rounded-xl pl-10 shadow-sm focus:ring-2 focus:ring-blue-400 transition"
+                      className="w-full p-3 border border-gray-300 rounded-xl pl-10 shadow-sm focus:ring-2 focus:ring-blue-400 transition bg-white/90"
                       placeholder="No."
                     />
                     <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
@@ -1203,7 +1327,7 @@ const LogisticsFormJoined = () => {
                           ? handlePickupChange(e)
                           : handleDropoffChange(activeLocation.index!, e)
                       }
-                      className="w-full p-3 border border-gray-300 rounded-xl pl-10 shadow-sm focus:ring-2 focus:ring-blue-400 transition"
+                      className="w-full p-3 border border-gray-300 rounded-xl pl-10 shadow-sm focus:ring-2 focus:ring-blue-400 transition bg-white/90"
                       placeholder="Phone number"
                     />
                     <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
@@ -1233,7 +1357,7 @@ const LogisticsFormJoined = () => {
                         ? handlePickupChange(e)
                         : handleDropoffChange(activeLocation.index!, e)
                     }
-                    className="w-full p-3 border border-gray-300 rounded-xl pl-10 shadow-sm focus:ring-2 focus:ring-blue-400 transition"
+                    className="w-full p-3 border border-gray-300 rounded-xl pl-10 shadow-sm focus:ring-2 focus:ring-blue-400 transition bg-white/90"
                     placeholder="Full name"
                   />
                   <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
