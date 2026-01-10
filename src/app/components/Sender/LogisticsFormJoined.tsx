@@ -1229,7 +1229,8 @@ const LogisticsFormJoined = () => {
               <div className="p-5 space-y-6">
                 
                 {/* Full Address Input - Kept at top for mobile keyboard */}
-                <div className="relative">
+              <div className="relative">
+                <div className="flex flex-row">
                   <div className="block text-sm font-medium mb-2 flex items-center text-gray-700">
                     <MapPin className="h-4 w-4 mr-1 text-gray-500" />
                     Full Address
@@ -1238,21 +1239,20 @@ const LogisticsFormJoined = () => {
                         Location detected
                       </span>
                     )}
+                  </div>
                 {/* Current Location Button */}
-                <div className="flex justify-end">
-                  <button
-                    type="button"
-                    onClick={handleUseCurrentLocation}
-                    className="flex items-center text-sm text-blue-600 hover:text-blue-800 bg-blue-50 hover:bg-blue-100 px-3 py-2 rounded-lg transition-colors"
-                    disabled={isLoading}
-                  >
+                  <div className="flex justify-end">
+                    <button
+                      type="button"
+                      onClick={handleUseCurrentLocation}
+                      className="flex items-center text-sm text-blue-600 hover:text-blue-800 bg-blue-50 hover:bg-blue-100 px-3 py-2 rounded-lg transition-colors"
+                      disabled={isLoading}
+                    >
                     <LocateFixed className="h-4 w-4 mr-2" />
                     {isLoading ? "Getting location..." : "Use Current Location"}
-                  </button>
-                </div>
+                    </button>
                   </div>
-
-
+                </div>
                   <div className="relative">
                     <input
                       ref={inputRef}
