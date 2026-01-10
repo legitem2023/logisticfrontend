@@ -1230,7 +1230,7 @@ const LogisticsFormJoined = () => {
                 
                 {/* Full Address Input - Kept at top for mobile keyboard */}
                 <div className="relative">
-                  <label className="block text-sm font-medium mb-2 flex items-center text-gray-700">
+                  <div className="block text-sm font-medium mb-2 flex items-center text-gray-700">
                     <MapPin className="h-4 w-4 mr-1 text-gray-500" />
                     Full Address
                     {typingCoordinates && !selectedSuggestionCoords && (
@@ -1238,8 +1238,7 @@ const LogisticsFormJoined = () => {
                         Location detected
                       </span>
                     )}
-                  </label>
-                  {/* Current Location Button */}
+                {/* Current Location Button */}
                 <div className="flex justify-end">
                   <button
                     type="button"
@@ -1251,6 +1250,8 @@ const LogisticsFormJoined = () => {
                     {isLoading ? "Getting location..." : "Use Current Location"}
                   </button>
                 </div>
+                  </div>
+
 
                   <div className="relative">
                     <input
