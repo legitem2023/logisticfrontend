@@ -1230,8 +1230,8 @@ const LogisticsFormJoined = () => {
                 
                 {/* Full Address Input - Kept at top for mobile keyboard */}
               <div className="relative">
-                <div className="flex flex-row">
-                  <div className="block text-sm font-medium mb-2 flex items-center text-gray-700">
+                <div className="grid grid-cols-2 w-full">
+                  <div className="block text-sm font-medium flex items-center text-gray-700">
                     <MapPin className="h-4 w-4 mr-1 text-gray-500" />
                     Full Address
                     {typingCoordinates && !selectedSuggestionCoords && (
