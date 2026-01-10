@@ -1163,27 +1163,8 @@ const LogisticsFormJoined = () => {
         <div className="fixed inset-0 z-50 flex items-end md:items-center justify-end md:justify-center bg-black/40 backdrop-blur-sm transition-opacity duration-300">
           <div className="bg-white/95 backdrop-blur-lg w-full max-w-md rounded-t-3xl md:rounded-3xl shadow-2xl animate-slide-up md:animate-scale-in fixed bottom-0 md:relative h-[85vh] md:h-auto flex flex-col overflow-hidden border border-gray-200">
             {/* Header */}
-            <div className="p-5 border-b border-gray-200 bg-white/90 backdrop-blur-lg sticky top-0 z-10">
-              <div className="flex justify-between items-center">
-                <h2 className="text-xl font-semibold flex items-center text-gray-800">
-                  {activeLocation.type === 'pickup'
-                    ? <><Home className="h-5 w-5 mr-2 text-green-500" /> Pickup Details</>
-                    : <><MapPin className="h-5 w-5 mr-2 text-orange-500" /> Drop-off #{activeLocation.index! + 1} Details</>}
-                </h2>
-                <button
-                  onClick={closeLocationDetails}
-                  className="text-gray-500 hover:text-gray-700 p-2 rounded-full hover:bg-gray-200 transition"
-                >
-                  <X className="h-5 w-5" />
-                </button>
-              </div>
-            </div>
-            
-            {/* Scrollable Content Area */}
-            <div className="overflow-y-auto flex-1">
-              {/* Map Preview Section - Shows coordinates from EITHER suggestions OR typing */}
-              {showMapCoords && (
-                <div className="h-48 border-b border-gray-200 flex-shrink-0">
+            {showMapCoords && (
+                <div className="absolute top-0 left-0 h-full w-full border-b border-gray-200 flex-shrink-0">
                   <div className="h-full w-full bg-gray-100 relative">
                     {/* OpenStreetMap Preview */}
                     <iframe
@@ -1222,6 +1203,26 @@ const LogisticsFormJoined = () => {
                   </div>
                 </div>
               )}
+            <div className="p-5 border-b border-gray-200 bg-white/90 backdrop-blur-lg sticky top-0 z-10">
+              <div className="flex justify-between items-center">
+                <h2 className="text-xl font-semibold flex items-center text-gray-800">
+                  {activeLocation.type === 'pickup'
+                    ? <><Home className="h-5 w-5 mr-2 text-green-500" /> Pickup Details</>
+                    : <><MapPin className="h-5 w-5 mr-2 text-orange-500" /> Drop-off #{activeLocation.index! + 1} Details</>}
+                </h2>
+                <button
+                  onClick={closeLocationDetails}
+                  className="text-gray-500 hover:text-gray-700 p-2 rounded-full hover:bg-gray-200 transition"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
+            </div>
+            
+            {/* Scrollable Content Area */}
+            <div className="overflow-y-auto flex-1">
+              {/* Map Preview Section - Shows coordinates from EITHER suggestions OR typing */}
+              
               
               {/* Form Fields */}
               <div className="p-5 space-y-6">
