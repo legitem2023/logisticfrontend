@@ -1227,7 +1227,19 @@ const LogisticsFormJoined = () => {
               
               {/* Form Fields */}
               <div className="p-5 space-y-6">
-                {/* Current Location Button */}
+                
+                {/* Full Address Input - Kept at top for mobile keyboard */}
+                <div className="relative">
+                  <label className="block text-sm font-medium mb-2 flex items-center text-gray-700">
+                    <MapPin className="h-4 w-4 mr-1 text-gray-500" />
+                    Full Address
+                    {typingCoordinates && !selectedSuggestionCoords && (
+                      <span className="ml-2 text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">
+                        Location detected
+                      </span>
+                    )}
+                  </label>
+                  {/* Current Location Button */}
                 <div className="flex justify-end">
                   <button
                     type="button"
@@ -1240,17 +1252,6 @@ const LogisticsFormJoined = () => {
                   </button>
                 </div>
 
-                {/* Full Address Input - Kept at top for mobile keyboard */}
-                <div className="relative">
-                  <label className="block text-sm font-medium mb-2 flex items-center text-gray-700">
-                    <MapPin className="h-4 w-4 mr-1 text-gray-500" />
-                    Full Address
-                    {typingCoordinates && !selectedSuggestionCoords && (
-                      <span className="ml-2 text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">
-                        Location detected
-                      </span>
-                    )}
-                  </label>
                   <div className="relative">
                     <input
                       ref={inputRef}
