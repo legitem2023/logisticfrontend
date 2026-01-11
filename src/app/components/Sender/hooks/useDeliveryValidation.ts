@@ -3,34 +3,44 @@ import { Location } from '../types';
 
 export const useDeliveryValidation = () => {
   const validatePickup = (pickup: Location): boolean => {
+    if (!pickup || typeof pickup !== 'object') {
+      showToast("Pickup data is missing or invalid", 'warning');
+      return false;
+    }
+
     if (!pickup.address) {
       showToast("Please enter a pickup address", 'warning');
       return false;
     }
-    
+
     if (!pickup.houseNumber) {
       showToast("Please enter a house number", 'warning');
       return false;
     }
-    
+
     if (!pickup.contact) {
       showToast("Please enter a contact number", 'warning');
       return false;
     }
-    
+
     if (!pickup.name) {
       showToast("Please enter the sender's name", 'warning');
       return false;
     }
-    
-    if (typeof pickup.lat !== 'number' || typeof pickup.lng !== 'number') {
-      showToast("Pickup coordinates are invalid", 'warning');
+
+    if (typeof pickup.lat !== 'number') {
+      showToast("Pickup latitude is missing or invalid", 'warning');
       return false;
     }
-    
+
+    if (typeof pickup.lng !== 'number') {
+      showToast("Pickup longitude is missing or invalid", 'warning');
+      return false;
+    }
+
     return true;
   };
-  
+
   const validateDropoffs = (dropoffs: Location[]): boolean => {
     for (const [index, dropoff] of dropoffs.entries()) {
       if (!dropoff.address) {
@@ -40,7 +50,7 @@ export const useDeliveryValidation = () => {
     }
     return true;
   };
-  
+
   const validateVehicle = (selectedVehicle: string): boolean => {
     if (!selectedVehicle) {
       showToast('Please select a vehicle type', 'warning');
@@ -48,7 +58,7 @@ export const useDeliveryValidation = () => {
     }
     return true;
   };
-  
+
   const validateDelivery = async ({
     pickup,
     dropoffs,
@@ -60,10 +70,10 @@ export const useDeliveryValidation = () => {
     selectedVehicle: string;
     validateCoordinates: (location: Location) => Promise<Location | null>;
   }): Promise<boolean> => {
-    // Validate coordinates
+    // Validate and get coordinates if missing
     const validatedPickup = await validateCoordinates(pickup);
     if (!validatedPickup) {
-      showToast("Could not find coordinates for pickup address", 'warning');
+      showToast("Could not find coordinates for pickup address. Please select from suggestions or use current location.", 'warning');
       return false;
     }
     
@@ -71,7 +81,7 @@ export const useDeliveryValidation = () => {
       dropoffs.map(async (dropoff) => {
         const validated = await validateCoordinates(dropoff);
         if (!validated) {
-          showToast(`Could not find coordinates for dropoff: ${dropoff.address}`, 'warning');
+          showToast(`Could not find coordinates for dropoff: ${dropoff.address}. Please select from suggestions.`, 'warning');
         }
         return validated;
       })
@@ -86,7 +96,7 @@ export const useDeliveryValidation = () => {
     
     return true;
   };
-  
+
   return {
     validatePickup,
     validateDropoffs,
@@ -94,3 +104,5 @@ export const useDeliveryValidation = () => {
     validateDelivery
   };
 };
+
+export default useDeliveryValidation;
