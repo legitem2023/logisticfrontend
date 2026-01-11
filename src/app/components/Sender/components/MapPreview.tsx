@@ -12,7 +12,7 @@ const MapPreview: React.FC<MapPreviewProps> = ({
   isSelected
 }) => {
   return (
-    <div className="h-64 md:h-48 border-b border-gray-200 flex-shrink-0">
+    <div className="h-full border-b border-gray-200 flex-shrink-0">
       <div className="h-full w-full bg-gray-100 relative">
         <iframe
           width="100%"
