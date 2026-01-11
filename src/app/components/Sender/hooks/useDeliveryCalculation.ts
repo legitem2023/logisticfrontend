@@ -50,3 +50,5 @@ export const useDeliveryCalculation = ({ data }: UseDeliveryCalculationProps) =>
     setDistances
   };
 };
+
+export default useDeliveryCalculation;
