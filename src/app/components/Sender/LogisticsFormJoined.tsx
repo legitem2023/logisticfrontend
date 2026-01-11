@@ -9,10 +9,10 @@ import { showToast } from '../../../../utils/toastify';
 import { getDistanceInKm } from '../../../../utils/getDistanceInKm';
 import { calculateEta } from '../../../../utils/calculateEta';
 import { setActiveIndex } from '../../../../Redux/activeIndexSlice';
-import { selectTempUserId, useSelector } from '../../../../Redux/tempUserSlice';
+import { selectTempUserId } from '../../../../Redux/tempUserSlice';
 import LogisticFormLoading from '../Loadings/LogisticFormLoading';
 import AnimatedCityscape from '../AnimatedCityscape';
-
+import { useSelector, useDispatch } from "react-redux";
 // Import components
 import PickupSection from './components/PickupSection';
 import DropoffSections from './components/DropoffSections';
