@@ -47,7 +47,7 @@ const LocationDetailsPanel: React.FC<LocationDetailsPanelProps> = ({
   onDropoffChange
 }) => {
   const inputRef = useRef<HTMLInputElement>(null);
-  const [isFormSlidUp, setIsFormSlidUp] = useState(false);
+  const [isFormSlidUp, setIsFormSlidUp] = useState(true);
   
   useEffect(() => {
     if (activeLocation && inputRef.current && !isFormSlidUp) {
