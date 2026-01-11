@@ -19,8 +19,8 @@ export const GEOCODING_CONFIG = {
   }
 };
 
-// Address cache (moved from component)
-let addressCache = new Map<string, CacheEntry>();
+// Address cache (moved from component) - FIXED: Changed to const
+const addressCache = new Map<string, CacheEntry>();
 
 // Helper function for confidence calculation
 const calculateNominatimConfidence = (result: any): string => {
@@ -42,7 +42,7 @@ const calculateNominatimConfidence = (result: any): string => {
 };
 
 // Nominatim geocoding
-export const geocodeWithNominatim = async (query: string): Promise<Suggestion[]> => {
+const geocodeWithNominatim = async (query: string): Promise<Suggestion[]> => {
   const params = new URLSearchParams({
     q: encodeURIComponent(query),
     format: String(GEOCODING_CONFIG.NOMINATIM.params.format),
@@ -92,7 +92,7 @@ export const geocodeWithNominatim = async (query: string): Promise<Suggestion[]>
 };
 
 // Google geocoding
-export const geocodeWithGoogle = async (query: string): Promise<Suggestion[]> => {
+const geocodeWithGoogle = async (query: string): Promise<Suggestion[]> => {
   if (!GEOCODING_CONFIG.GOOGLE.apiKey) {
     console.warn('Google Maps API key not configured');
     return [];
