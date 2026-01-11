@@ -1201,7 +1201,7 @@ const LogisticsFormJoined = () => {
                   </div>
                 </div>
               )}
-          <div className="bg-white/95 backdrop-blur-lg w-full max-w-md rounded-t-3xl md:rounded-3xl shadow-2xl animate-slide-up md:animate-scale-in fixed bottom-0 md:relative h-[85vh] md:h-auto flex flex-col overflow-hidden border border-gray-200">
+          <div className="bg-white/95 backdrop-blur-lg w-full max-w-md rounded-t-3xl md:rounded-3xl shadow-2xl animate-slide-up md:animate-scale-in fixed bottom-0 md:relative h-[75vh] md:h-auto flex flex-col overflow-hidden border border-gray-200">
             {/* Header */}
             
             <div className="p-5 border-b border-gray-200 bg-white/90 backdrop-blur-lg sticky top-0 z-10">
