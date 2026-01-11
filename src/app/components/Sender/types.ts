@@ -54,3 +54,25 @@ export interface Service {
   time: string;
   price: string;
 }
+
+export interface DeliveryInput {
+  assignedRiderId: string | null;
+  deliveryFee: number;
+  deliveryType: string;
+  dropoffAddress: string;
+  dropoffLatitude: number | null;
+  dropoffLongitude: number | null;
+  estimatedDeliveryTime: string;
+  eta: string;
+  paymentMethod: string;
+  paymentStatus: string;
+  pickupAddress: string;
+  pickupLatitude: number | null;
+  pickupLongitude: number | null;
+  recipientName: string;
+  recipientPhone: string;
+  senderId: string | undefined;
+  baseRate: number;
+  distance: number;
+  perKmRate: number;
+}
