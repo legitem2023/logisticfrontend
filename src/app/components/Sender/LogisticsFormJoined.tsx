@@ -2,7 +2,8 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useMutation, useQuery } from '@apollo/client';
-import { useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from "react-redux";
+
 import { VEHICLEQUERY } from '../../../../graphql/query';
 import { CREATEDELIVERY } from '../../../../graphql/mutation';
 import { showToast } from '../../../../utils/toastify';
@@ -12,7 +13,6 @@ import { setActiveIndex } from '../../../../Redux/activeIndexSlice';
 import { selectTempUserId } from '../../../../Redux/tempUserSlice';
 import LogisticFormLoading from '../Loadings/LogisticFormLoading';
 import AnimatedCityscape from '../AnimatedCityscape';
-import { useSelector, useDispatch } from "react-redux";
 // Import components
 import PickupSection from './components/PickupSection';
 import DropoffSections from './components/DropoffSections';
