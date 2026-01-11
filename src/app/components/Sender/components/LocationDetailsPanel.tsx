@@ -80,7 +80,7 @@ const LocationDetailsPanel: React.FC<LocationDetailsPanelProps> = ({
       }`}>
         {/* Toggle Handle */}
         <div 
-          className="p-4 border-b border-gray-200 bg-white/90 backdrop-blur-lg cursor-pointer"
+          className="p-4 border-b border-gray-200 bg-white/90 backdrop-blur-lg cursor-pointer rounded-t-3xl md:rounded-3xl"
           onClick={() => setIsFormSlidUp(!isFormSlidUp)}
         >
           <div className="flex justify-between items-center">
