@@ -23,7 +23,7 @@ import DeliveryConfirmationModal from './components/DeliveryConfirmationModal';
 import SuccessMessage from './components/SuccessMessage';
 
 // Import hooks
-import useGeocoding from './hooks/useGeocoding';
+import { useGeocoding } from './hooks/useGeocoding';
 import useDeliveryValidation from './hooks/useDeliveryValidation';
 import useDeliveryCalculation from './hooks/useDeliveryCalculation';
 
