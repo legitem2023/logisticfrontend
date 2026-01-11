@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import { Location, ActiveLocation, Suggestion } from '../types';
 import MapPreview from './MapPreview';
+import AddressDetailsFields from './AddressDetailsFields';
 
 interface LocationDetailsPanelProps {
   activeLocation: ActiveLocation;
@@ -48,7 +49,7 @@ const LocationDetailsPanel: React.FC<LocationDetailsPanelProps> = ({
   const inputRef = useRef<HTMLInputElement>(null);
   
   useEffect(() => {
-    if (inputRef.current) {
+    if (activeLocation && inputRef.current) {
       inputRef.current.focus();
     }
   }, [activeLocation]);
@@ -138,6 +139,13 @@ const LocationDetailsPanel: React.FC<LocationDetailsPanelProps> = ({
                 )}
               </div>
               
+              {isGeocodingLoading && (
+                <div className="mt-2 text-sm text-gray-500 flex items-center">
+                  <Loader2 className="animate-spin h-4 w-4 mr-2 text-blue-500" />
+                  Searching for suggestions...
+                </div>
+              )}
+
               {/* Suggestions Dropdown */}
               {suggestions.length > 0 && (
                 <div className="absolute left-0 right-0 mt-2 border border-gray-200 rounded-xl overflow-hidden z-50 shadow-lg bg-white max-h-60 overflow-y-auto">
