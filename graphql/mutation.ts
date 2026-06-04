@@ -1,6 +1,21 @@
 // graphql/mutation.ts
 import { gql } from '@apollo/client';
 
+// Add this to your existing mutations
+export const GOOGLELOGIN = gql`
+  mutation LoginWithGoogle($input: GoogleLoginInput!) {
+    loginWithGoogle(input: $input) {
+      token
+      user {
+        id
+        email
+        name
+      }
+    }
+  }
+`;
+
+
 
 export const SUBMIT_LOGISTICS_CONTACT_FORM = gql`
   mutation SubmitLogisticsContactForm($formData: ContactFormInput!) {
