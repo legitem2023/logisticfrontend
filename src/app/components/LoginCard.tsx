@@ -55,7 +55,7 @@ export default function LoginCard() {
       } else {
         showToast('Login successful', 'success')
         dispatch(setActiveIndex(1))
-        router.push('/dashboard'); // Redirect after login
+        router.push('/'); // Redirect after login
         window.location.reload()
       }
     } catch (err) {
@@ -71,7 +71,7 @@ export default function LoginCard() {
     setGoogleLoading(true)
     try {
       await signIn('google', { 
-        callbackUrl: '/dashboard', // Redirect after successful login
+        callbackUrl: '/', // Redirect after successful login
         redirect: true
       })
     } catch (error) {
