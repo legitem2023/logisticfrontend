@@ -30,7 +30,7 @@ export default function LoginCard() {
   // Redirect if already logged in
   React.useEffect(() => {
     if (session) {
-      router.push('/dashboard'); // or your desired page
+      router.push('/'); // or your desired page
     }
   }, [session, router]);
 
