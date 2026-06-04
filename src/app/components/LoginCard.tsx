@@ -177,7 +177,7 @@ export default function LoginCard() {
           
           {/* Footer link */}
           <div className="text-center text-sm text-gray-500 mt-6">
-            Don't have an account?{' '}
+            Don&apos;t have an account?{' '}
             <span onClick={()=>{dispatch(setActiveIndex(11))}} className="text-green-600 hover:text-green-800 font-medium transition-colors cursor-pointer">
               Sign up
             </span>
