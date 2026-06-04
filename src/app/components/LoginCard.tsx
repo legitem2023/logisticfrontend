@@ -7,20 +7,20 @@ import { Card, CardContent, CardHeader, CardTitle } from './ui/Card'
 import { Button } from './ui/Button'
 import { Input } from './ui/Input'
 import { Label } from './ui/Label'
-import { signIn } from 'next-auth/react'; // Import signIn from next-auth
-import FacebookLoginButton from './Auth/FacebookLoginButton'
-import GoogleLoginButton from './Auth/GoogleLoginButton'
+import { signIn } from 'next-auth/react';
 import { showToast } from '../../../utils/toastify'
 import { Eye, EyeOff } from 'lucide-react'
 import { FiMail, FiLock } from 'react-icons/fi'
 import CityScape from './AnimatedCityscape';
+import { FcGoogle } from 'react-icons/fc'; // Add Google icon
 
 export default function LoginCard() {
   const router = useRouter()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
-  const [loading, setLoading] = useState(false) // Local loading state
+  const [loading, setLoading] = useState(false)
+  const [googleLoading, setGoogleLoading] = useState(false)
 
   const dispatch = useDispatch()
 
@@ -33,20 +33,18 @@ export default function LoginCard() {
     setLoading(true)
     
     try {
-      // Use NextAuth's signIn function with credentials
       const result = await signIn('credentials', {
         email,
         password,
-        redirect: false, // Don't redirect automatically
+        redirect: false,
       })
-     console.log(result);
+     
       if (result?.error) {
         showToast('Login failed: ' + result.error, 'error')
         console.error('Login error:', result.error)
       } else {
         showToast('Login successful', 'success')
         dispatch(setActiveIndex(1))
-        // Redirect or reload as needed
         window.location.reload()
       }
     } catch (err) {
@@ -54,6 +52,20 @@ export default function LoginCard() {
       showToast('Login failed', 'error')
     } finally {
       setLoading(false)
+    }
+  }
+
+  // Google login handler
+  const handleGoogleLogin = async () => {
+    setGoogleLoading(true)
+    try {
+      await signIn('google', { 
+        callbackUrl: '/' // Redirect after successful login
+      })
+    } catch (error) {
+      console.error('Google login error:', error)
+      showToast('Google login failed', 'error')
+      setGoogleLoading(false)
     }
   }
 
@@ -112,11 +124,12 @@ export default function LoginCard() {
             </button>
           </div>
 
-  <div className="flex justify-end">
-  <a href='/Forgotpassword' className="text-sm text-green-600 hover:text-green-800 font-medium transition-colors">
-    Forgot your password?
-  </a>
-</div>
+          <div className="flex justify-end">
+            <a href='/Forgotpassword' className="text-sm text-green-600 hover:text-green-800 font-medium transition-colors">
+              Forgot your password?
+            </a>
+          </div>
+          
           {/* Login button */}
           <Button
             className="w-full py-3 bg-gradient-to-r from-green-700 to-green-600 hover:from-green-800 hover:to-green-700 text-white font-bold rounded-lg shadow-lg transition-all duration-300 hover:shadow-xl relative overflow-hidden group"
@@ -137,21 +150,35 @@ export default function LoginCard() {
             ) : 'Login'}
           </Button>
 
-          {/*
+          {/* Divider */}
           <div className="flex items-center gap-3 my-6">
             <hr className="flex-grow border-gray-200" />
             <span className="text-gray-400 text-xs font-medium uppercase tracking-wider">OR</span>
             <hr className="flex-grow border-gray-200" />
           </div>
           
-          <GoogleLoginButton />
-          <FacebookLoginButton />
-          */}
+          {/* Google Login Button */}
+          <Button
+            onClick={handleGoogleLogin}
+            disabled={googleLoading}
+            variant="outline"
+            className="w-full py-3 border-2 border-gray-300 hover:border-green-500 hover:bg-green-50 text-gray-700 font-bold rounded-lg shadow-sm transition-all duration-300 flex items-center justify-center gap-3"
+          >
+            {googleLoading ? (
+              <svg className="animate-spin h-5 w-5 text-green-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+            ) : (
+              <FcGoogle className="w-5 h-5" />
+            )}
+            <span>{googleLoading ? 'Connecting...' : 'Continue with Google'}</span>
+          </Button>
           
           {/* Footer link */}
           <div className="text-center text-sm text-gray-500 mt-6">
-            Dont have an account?{' '}
-            <span onClick={()=>{dispatch(setActiveIndex(11))}} className="text-green-600 hover:text-green-800 font-medium transition-colors">
+            Don't have an account?{' '}
+            <span onClick={()=>{dispatch(setActiveIndex(11))}} className="text-green-600 hover:text-green-800 font-medium transition-colors cursor-pointer">
               Sign up
             </span>
           </div>
@@ -159,4 +186,4 @@ export default function LoginCard() {
       </Card>
     </div>
   )
-          }
+}
