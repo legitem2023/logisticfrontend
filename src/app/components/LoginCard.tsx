@@ -1,7 +1,9 @@
+// LoginCard.tsx (updated with session check)
 'use client'
 import React, { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useDispatch } from 'react-redux';
+import { useSession } from 'next-auth/react'; // Add this import
 import { setActiveIndex } from '../../../Redux/activeIndexSlice';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/Card'
 import { Button } from './ui/Button'
@@ -12,10 +14,11 @@ import { showToast } from '../../../utils/toastify'
 import { Eye, EyeOff } from 'lucide-react'
 import { FiMail, FiLock } from 'react-icons/fi'
 import CityScape from './AnimatedCityscape';
-import { FcGoogle } from 'react-icons/fc'; // Add Google icon
+import { FcGoogle } from 'react-icons/fc';
 
 export default function LoginCard() {
   const router = useRouter()
+  const { data: session, status } = useSession(); // Add session check
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
@@ -23,6 +26,13 @@ export default function LoginCard() {
   const [googleLoading, setGoogleLoading] = useState(false)
 
   const dispatch = useDispatch()
+
+  // Redirect if already logged in
+  React.useEffect(() => {
+    if (session) {
+      router.push('/dashboard'); // or your desired page
+    }
+  }, [session, router]);
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -45,6 +55,7 @@ export default function LoginCard() {
       } else {
         showToast('Login successful', 'success')
         dispatch(setActiveIndex(1))
+        router.push('/dashboard'); // Redirect after login
         window.location.reload()
       }
     } catch (err) {
@@ -60,7 +71,8 @@ export default function LoginCard() {
     setGoogleLoading(true)
     try {
       await signIn('google', { 
-        callbackUrl: '/' // Redirect after successful login
+        callbackUrl: '/dashboard', // Redirect after successful login
+        redirect: true
       })
     } catch (error) {
       console.error('Google login error:', error)
@@ -70,6 +82,11 @@ export default function LoginCard() {
   }
 
   const togglePasswordVisibility = () => setShowPassword(!showPassword)
+
+  // Show loading state while checking session
+  if (status === "loading") {
+    return <div className="flex justify-center items-center h-screen">Loading...</div>
+  }
 
   return (
     <div className="flex justify-center p-0">
