@@ -15,7 +15,7 @@ export const GEOCODING_CONFIG = {
   },
   GOOGLE: {
     baseUrl: 'https://maps.googleapis.com/maps/api/geocode/json',
-    apiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ''
+    apiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
   }
 };
 
